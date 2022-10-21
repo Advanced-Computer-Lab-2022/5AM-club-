@@ -1,13 +1,5 @@
 const mongoose = require("mongoose");
-const videoSchema = {
-  link: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
+const exerciseSchema = {
   section: {
     type: mongoose.Types.ObjectId,
     ref: "SubtitleSections",
