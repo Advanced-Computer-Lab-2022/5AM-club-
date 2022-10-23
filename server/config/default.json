@@ -1,5 +1,3 @@
 {
-
-    "mongoURL":"mongodb+srv://5amclub:5amclub@aclapp.oqgqwyl.mongodb.net/?retryWrites=true&w=majority"
- 
+  "mongoURL": "mongodb+srv://amrmohamedyonis:amro2001@cluster0.amahonf.mongodb.net/?retryWrites=true&w=majority"
 }
