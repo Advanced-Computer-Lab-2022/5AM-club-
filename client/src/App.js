@@ -8,13 +8,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/instructor/courses" element={<Instructor />}></Route>
-        <Route path="/instructor" element={<InstructorProfile />}></Route>
+        <Route path='/instructor/courses' element={<Instructor />}></Route>
+        <Route path='/instructor' element={<InstructorProfile />}></Route>
         <Route
-          path="/instructor/create-course"
+          path='/instructor/create-course'
           element={<InstructorCreateCourse />}
         ></Route>
-        <Route path="/" element={<MainPage />}></Route>
+        <Route path='/' element={<MainPage />}></Route>
       </Routes>
     </BrowserRouter>
   );
