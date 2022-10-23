@@ -19,6 +19,10 @@ const instructorSchema = new mongoose.Schema({
     required: true,
   },
   biography: { type: String },
+  courses: {
+    type: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
+    required: true,
+  },
 });
 
 const Instructor = mongoose.model("Instructors", instructorSchema);
