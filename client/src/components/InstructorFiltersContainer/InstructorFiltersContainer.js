@@ -17,7 +17,7 @@ function InstructorFiltersContainer(props) {
     if (filter === "") {
       axios
         .get(
-          "http://localhost:4000/courses/viewcourses/instructor?ID=" +
+          "http://localhost:4000/instructor/viewcourses/?ID=" +
             props.instructorId
         )
         .then((response) => {
@@ -30,7 +30,7 @@ function InstructorFiltersContainer(props) {
     } else {
       axios
         .get(
-          "http://localhost:4000/courses/viewcourses/instructor/filter",
+          "http://localhost:4000/instructor/viewcourses/filter",
 
           {
             params: {

@@ -8,5 +8,5 @@ const port = process.env.port || 4000;
 connect();
 
 app.use(cors());
-app.use("/courses", require("./routes/api/Course"));
+app.use("/instructor", require("./routes/api/Instructor"));
 app.listen(port);
