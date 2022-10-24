@@ -1,0 +1,46 @@
+const Course=require("../models/Course");
+const Instructor=require("../models/Instructor")
+
+
+
+
+app.post("/createCourse", (req, res) => {
+  const newCourse = new Course({
+    title: req.body.title,
+    price: req.body.price,
+    //description
+  });
+  let courseID;
+  newCourse
+    .save((err, cId) => (courseID = cId))
+    .then(() => console.log("Course is added"))
+    .catch((err) => console.log(err));
+
+  let newSubtitle;
+  let counter = 0;
+  for (subtitle of req.body.CourseSubtitles) {
+    newSubtitle = new CourseSubtitles({
+      title: subtitle,
+      course: courseID,
+      minutes: req.body.minutesArr[counter],
+      description: req.body.descriptionArr[counter],
+      order: counter,
+    });
+    counter++;
+    newSubtitle
+      .save()
+      .then(() => console.log("subtitle added succ"))
+      .catch((err) => console.log(err));
+  }
+  let instId;
+  Instructors.findOne({ username: req.body.username })
+    .then((result) => (instId = result._id))
+    .catch((err) => console.log(err));
+  Inst_course = {
+    instructor: instId,
+    course: courseID,
+  };
+  Inst_course.save()
+    .then(() => console.log("inst course added succ"))
+    .catch((err) => console.log(err));
+});
