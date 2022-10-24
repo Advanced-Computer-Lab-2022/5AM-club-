@@ -59,6 +59,7 @@ const courseSchema = new mongoose.Schema({
   preview_video: { type: String },
   outline: { type: String },
   views: { type: Number, default: 0 },
+  description: String,
   promotion: {
     percentage: { type: Number },
     deadline: { type: Date },
