@@ -6,8 +6,7 @@ function InstructorCoursesContainer(props) {
     props.setMainText("");
     axios
       .get(
-        "http://localhost:4000/courses/viewcourses/instructor?ID=" +
-          props.instructorId
+        "http://localhost:4000/instructor/viewcourses?ID=" + props.instructorId
       )
       .then((response) => {
         if (response.data.length === 0)
