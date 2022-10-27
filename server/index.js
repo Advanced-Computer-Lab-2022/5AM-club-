@@ -1,8 +1,7 @@
 const express = require("express");
 const connect = require("./config/database");
 const Course = require("./models/Course");
-const Instructor = require("./models/Instructor");
-const Instructor_Course = require("./models/Instructor_Course");
+
 const app = express();
 const port = process.env.port || 4000;
 const courseRouter = require("./routes/api/Course");
@@ -31,12 +30,15 @@ connect();
   courses: ["635527b4d06fb801bd4d2b89"],
 }).save();*/
 
-/*new Course({
-  title: "ali",
+new Course({
+  title: "alilflhjbasdjsjs",
   minutes: 120,
   rating: 1,
-  price: new Map(),
-  instructors: ["6355091ab4c387ca835c6bfc"],
+  price: 12,
 
-  subject: ["node"],
-}).save();*/
+  subject: ["node", "akm"],
+  summary: "asdas",
+  instructor: ["63552bf06a3ced30a5d55164", "63550f3b2af3e5e9f97d9732"],
+
+  userReviews: [],
+}).save();

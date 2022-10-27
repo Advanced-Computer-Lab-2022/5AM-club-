@@ -2,58 +2,51 @@ const { x } = require("joi");
 const Joi = require("joi");
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
-const InstructorCourse = require("../models/Instructor_Course");
-
-const numberSchema = Joi.object({
-  $gt: Joi.number().min(0),
-  $gte: Joi.number().min(0),
-  $lt: Joi.number().min(0),
-  $lte: Joi.number().min(0),
-  $eq: Joi.number().min(0),
-});
 
 const schema = Joi.object({
-  subject: Joi.string(),
-
-  rating: numberSchema,
-
-  price: numberSchema,
-
-  title: Joi.string(),
-
-  instructor: Joi.string(),
+  searchitem: Joi.string(),
+  rating: Joi.number().min(0).max(5),
+  min: Joi.number().min(0),
+  max: Joi.number().min(0),
 });
 
 const filterCourses = async (req, res) => {
   try {
     let queryStr = JSON.stringify(req.query);
-    queryStr = queryStr.replace(
-      /\b(gt|gte|lt|lte|eq)\b/g,
-      (comp) => `$${comp}`
-    );
     const query = JSON.parse(queryStr);
-    console.log(query);
     const result = schema.validate(query);
 
     if (result.error) {
-      res.status(500).send(result);
+      res.status(400).send(result);
       return;
     }
 
-    if (query.price) {
-      query.price = { $elemMatch: { country: "egypt", price: query.price } };
+    let filter = {};
+    if (query.min) {
+      filter.price.$min = query.min;
+    }
+    if (query.max) {
+      filter.price.$max = query.max;
+    }
+    if (query.rating) {
+      filter.rating = query.rating;
     }
 
-    if (query.instructor) {
-      const ids = await Instructor.find({ username: query.instructor }, "id");
-
-      query.instructor = { $in: ids };
+    if (query.searchitem) {
+      const ids = await Instructor.find(
+        { username: { $regex: query.searchitem } },
+        "id"
+      );
+      query.$or = [
+        { subject: { $regex: query.searchitem } },
+        { instructor: { $in: ids } },
+        { title: { $regex: query.searchitem } },
+      ];
     }
+
     const courses = await Course.find(query);
 
-    if (Object.keys(courses).length === 0)
-      res.send("No thing here go away stupid ");
-    else res.send(courses);
+    res.send(courses);
   } catch (err) {
     res.status(500).send("Server Error");
   }
