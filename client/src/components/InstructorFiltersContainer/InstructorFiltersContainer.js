@@ -26,6 +26,9 @@ function InstructorFiltersContainer(props) {
           else props.setMainText("");
 
           props.setCourses(response.data);
+        })
+        .catch(() => {
+          props.setMainText("You don't have any courses yet");
         });
     } else {
       axios
@@ -46,6 +49,9 @@ function InstructorFiltersContainer(props) {
           if (response.data.length === 0)
             props.setMainText("No courses matched your filters");
           props.setCourses(response.data);
+        })
+        .catch(() => {
+          props.setMainText("No courses matched your filters");
         });
     }
   }, [filter, max, min, subject]);

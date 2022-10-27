@@ -7,6 +7,11 @@ function Instructor() {
   const [mainText, setMainText] = useState("You don't have any courses yet");
   return (
     <div>
+      <InstructorFiltersContainer
+        instructorId={"6352fd68aaa8fae419b3a654"}
+        setCourses={setCourses}
+        setMainText={setMainText}
+      ></InstructorFiltersContainer>
       <InstructorCoursesContainer
         instructorId={"6352fd68aaa8fae419b3a654"}
         courses={courses}
@@ -14,11 +19,6 @@ function Instructor() {
         setMainText={setMainText}
         mainText={mainText}
       ></InstructorCoursesContainer>
-      <InstructorFiltersContainer
-        instructorId={"6352fd68aaa8fae419b3a654"}
-        setCourses={setCourses}
-        setMainText={setMainText}
-      ></InstructorFiltersContainer>
     </div>
   );
 }
