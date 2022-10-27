@@ -5,9 +5,9 @@ function InstructorCoursesContainer(props) {
     props.setCourses([]);
     props.setMainText("");
     axios
-      .get(
-        "http://localhost:4000/instructor/viewcourses?ID=" + props.instructorId
-      )
+      .get("http://localhost:4000/instructor/mycourses?", {
+        ID: props.instructorId,
+      })
       .then((response) => {
         if (response.data.length === 0)
           props.setMainText("You don't have any courses yet");
