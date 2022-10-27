@@ -4,9 +4,15 @@ const connect = require("./config/database");
 
 const app = express();
 const port = process.env.port || 4000;
+const courseRouter = require("./routes/api/courseRoutes");
+const { createCourse } = require("./controllers/InstructorControlleer");
 
 connect();
 
 app.use(cors());
 app.use("/instructor", require("./routes/api/Instructor"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use("/instructor", courseRouter);
 app.listen(port);
+
