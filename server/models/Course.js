@@ -52,7 +52,7 @@ const subtitleSchema = new mongoose.Schema({
 
 const courseSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
-  minutes: { type: Number }, //minutes can't be required or existed during course creation
+  minutes: { type: Number, default: 0 }, //minutes can't be required or existed during course creation
   rating: { type: Number, default: 0 },
   price: { type: Number, required: true },
   subject: { type: [String], required: true }, // predefined or usedefined ?
