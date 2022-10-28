@@ -1,7 +1,14 @@
+const Joi = require("joi");
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
-
+const schema = Joi.object({
+  searchitem: Joi.string(),
+  rating: Joi.number().min(0).max(5),
+  min: Joi.number().min(0),
+  max: Joi.number().min(0),
+  subject: Joi.string(),
+});
 const createCourse = async (req, res) => {
   let { title, price, subject, summary, video_preview, instructor, subtitles } =
     req.body;
@@ -13,7 +20,7 @@ const createCourse = async (req, res) => {
   );
   let instructorIds = instructor.map((inst) => instructorMap[inst]);
   instructorIds.push(req.headers.id);
-  console.log(instructorIds);
+
   const createdCourse = await Course.create({
     title,
     price,
@@ -44,55 +51,50 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getUserCourses = async (req, res) => {
+const getCourses = async (req, res) => {
   try {
-    console.log(req.query.searchitem);
+    //validate query string
+    let queryStr = JSON.stringify(req.query);
+    const query = JSON.parse(queryStr);
+    const result = schema.validate(query);
+    if (result.error) {
+      res.status(400).send("badreq");
+      return;
+    }
     let filter = {};
-    filter.instructor = req.headers.id;
+    let searchItem;
     if (req.query.searchitem) {
       const ids = await Instructor.find(
         { username: { $regex: req.query.searchitem } },
         "id"
       );
-      console.log("inst is " + ids);
-      filter.$or = [
-        { subject: { $regex: req.query.searchitem } },
-        { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchitem } },
-      ];
+
+      searchItem = {
+        $or: [
+          { subject: { $regex: req.query.searchitem } },
+          { instructor: { $in: ids } },
+          { title: { $regex: req.query.searchitem } },
+        ],
+      };
     }
     let standardMin;
-    if (req.query.min) {
-      if (
-        req.headers.authorization &&
-        JSON.parse(req.headers.authorization).country
-      ) {
-        standardMin = await convert(
-          req.query.min,
-          JSON.parse(req.headers.authorization).country,
-          "USD"
-        );
-      } else {
-        standardMin = parseInt(req.query.min);
-      }
-    }
     let standardMax;
-    if (req.query.max) {
-      if (
-        req.headers.authorization &&
-        JSON.parse(req.headers.authorization).country
-      ) {
-        standardMax = await convert(
-          req.query.max,
-          JSON.parse(req.headers.authorization).country,
-          "USD"
-        );
-      } else {
-        standardMax = parseInt(req.query.max);
+    if (req.query.min || req.query.max) {
+      standardMin = parseInt(req.query.min);
+      standardMax = parseInt(req.query.max);
+      if (req.headers.authorization) {
+        const country = JSON.parse(req.headers.authorization).country;
+        if (country) {
+          if (req.query.min)
+            standardMin = await convert(req.query.min, country, "USD");
+          if (req.query.max)
+            standardMax = await convert(req.query.max, country, "USD");
+        }
       }
     }
+
     filter = {
-      ...filter,
+      ...(req.headers.mycourses && { instructor: req.headers.id }),
       ...(req.query.subject && {
         subject: req.query.subject,
       }),
@@ -102,15 +104,25 @@ const getUserCourses = async (req, res) => {
           ...(standardMin && { $gte: standardMin }),
         },
       }),
+      ...(searchItem && searchItem),
+      ...(req.query.rating && { rating: req.query.rating }),
     };
     res.json(await Course.find(filter));
   } catch (err) {
-    console.log(err);
-    res.send("invalid req");
+    res.status(400).send("invalid req");
   }
 };
-
+const findCourseByID = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const course = await Course.findById(id);
+    res.send(course);
+  } catch (err) {
+    res.status(500).send("Server Error");
+  }
+};
 module.exports = {
-  getUserCourses,
+  getCourses,
   createCourse,
+  findCourseByID,
 };

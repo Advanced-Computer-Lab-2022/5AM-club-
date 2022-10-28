@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "autoRestart": "nodemon index"
+    "autoRestart": "nodemon index",
+    "client":"npm start --prefix ../client",
+    "frontback":"concurrently \"npm run autoRestart\" \" npm run client\""
   },
   "author": "",
   "license": "ISC",
