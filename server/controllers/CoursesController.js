@@ -2,6 +2,8 @@ const { x } = require("joi");
 const Joi = require("joi");
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
+const CountryToCurrency = require("country-to-currency");
+const Convert = require("easy-currencies");
 
 const schema = Joi.object({
   searchitem: Joi.string(),
@@ -22,12 +24,29 @@ const filterCourses = async (req, res) => {
     }
 
     let filter = {};
-    if (query.min) {
-      filter.price.$min = query.min;
+    if (req.query.min) {
+      let standardMin;
+      if (req.headers.authorization.country) {
+        standardMin = await Convert(req.query.min)
+          .from(CountryToCurrency[req.headers.authorization.country])
+          .to("USD");
+      } else {
+        standardMin = req.query.min;
+      }
+      filter.price = { $gte: standardMin };
     }
-    if (query.max) {
-      filter.price.$max = query.max;
+
+    if (req.query.max) {
+      let standardMax;
+      if (req.headers.authorization.country) {
+        standardMax = await Convert(req.query.max)
+          .from(CountryToCurrency[req.headers.authorization.country])
+          .to("USD");
+      }
+    } else {
+      standardMax = req.query.max;
     }
+
     if (query.rating) {
       filter.rating = query.rating;
     }
@@ -55,9 +74,8 @@ const filterCourses = async (req, res) => {
 const findCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
-    Course.findById(id).exec((err, course) => {
-      res.send(course);
-    });
+    const course = await Course.findById(id);
+    res.send(course);
   } catch (err) {
     res.status(500).send("Server Error");
   }
