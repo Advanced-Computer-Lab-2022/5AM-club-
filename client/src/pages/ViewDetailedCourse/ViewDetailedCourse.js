@@ -5,6 +5,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import "./ViewDetailedCourse.css";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 
 const timeConvert = (minutes) => {
   const hours = Math.floor(minutes / 60);
@@ -48,52 +49,54 @@ function ViewDetailedCourse(props) {
     console.log(open);
   };
   return (
-    <Card border='dark' className='card'>
-      <Card.Body>
-        <Card.Title>{course.title}</Card.Title>
-        <Card.Text>
-          <div>{course.summary}</div>
-          <div className='attribute'>
-            Total hours: {timeConvert(course.minutes)}
-          </div>
-          <div className='attribute'>Price: {course.price} </div>
-        </Card.Text>
+    <PageWrapper>
+      <Card border='dark' className='card'>
+        <Card.Body>
+          <Card.Title>{course.title}</Card.Title>
+          <Card.Text>
+            <div>{course.summary}</div>
+            <div className='attribute'>
+              Total hours: {timeConvert(course.minutes)}
+            </div>
+            <div className='attribute'>Price: {course.price} </div>
+          </Card.Text>
 
-        <Button variant='outline-success'>BUY NOW</Button>
-        <Card>
-          <Card.Header>Subtitles</Card.Header>
-          <ListGroup variant='flush'>
-            {subtitles.map((subtitle, index) => (
-              <ListGroup.Item>
-                {" "}
-                {subtitle.title} ( {timeConvert(subtitle.minutes)} )
-                <Button
-                  className='right'
-                  variant='outline-success'
-                  onClick={() => {
-                    showSections(index);
-                  }}
-                >
-                  {open.array[index] ? "🡡" : "🡣"}
-                </Button>
-                {open.array[index] === true ? (
-                  <Card>
-                    <Card.Header>Sections</Card.Header>
-                    <ListGroup variant='flush'>
-                      {subtitle.sections.map((section) => (
-                        <ListGroup.Item>
-                          {section.title} ( {timeConvert(section.minutes)} )
-                        </ListGroup.Item>
-                      ))}
-                    </ListGroup>
-                  </Card>
-                ) : null}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Card>
-      </Card.Body>
-    </Card>
+          <Button variant='outline-success'>BUY NOW</Button>
+          <Card>
+            <Card.Header>Subtitles</Card.Header>
+            <ListGroup variant='flush'>
+              {subtitles.map((subtitle, index) => (
+                <ListGroup.Item>
+                  {" "}
+                  {subtitle.title} ( {timeConvert(subtitle.minutes)} )
+                  <Button
+                    className='right'
+                    variant='outline-success'
+                    onClick={() => {
+                      showSections(index);
+                    }}
+                  >
+                    {open.array[index] ? "🡡" : "🡣"}
+                  </Button>
+                  {open.array[index] === true ? (
+                    <Card>
+                      <Card.Header>Sections</Card.Header>
+                      <ListGroup variant='flush'>
+                        {subtitle.sections.map((section) => (
+                          <ListGroup.Item>
+                            {section.title} ( {timeConvert(section.minutes)} )
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    </Card>
+                  ) : null}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Card>
+        </Card.Body>
+      </Card>
+    </PageWrapper>
   );
 }
 
