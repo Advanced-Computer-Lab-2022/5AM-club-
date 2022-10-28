@@ -1,6 +1,7 @@
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
+
 async function getUserCourses(req, res) {
   let lookupCourses = await Instructor.findById(req.headers.id).select({
     courses: 1,
@@ -53,6 +54,7 @@ async function getUserCourses(req, res) {
       },
     }),
   };
+
 
   res.send(await Course.find(filter));
 }

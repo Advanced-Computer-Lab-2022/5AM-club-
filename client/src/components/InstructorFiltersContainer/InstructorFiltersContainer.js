@@ -8,6 +8,7 @@ function InstructorFiltersContainer(props) {
   const [subject, setSubject] = useState("");
 
   const subjectRef = useRef();
+
   const maxRef = useRef();
   const minRef = useRef();
 
@@ -40,6 +41,7 @@ function InstructorFiltersContainer(props) {
         onClick={() => {
           setSubject(subjectRef.current.value);
           props.setMainText(null);
+
         }}
       >
         Go
@@ -49,6 +51,7 @@ function InstructorFiltersContainer(props) {
         <input ref={minRef} type={"number"}></input>
         <p> to </p>
         <input ref={maxRef} type={"number"}></input>
+
         <button
           onClick={() => {
             setMax(maxRef.current.value);
