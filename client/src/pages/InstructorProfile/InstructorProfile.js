@@ -10,6 +10,13 @@ function InstructorProfile() {
       >
         View my Courses
       </button>
+      <button
+        onClick={() => {
+          navigate("create-course");
+        }}
+      >
+        create new course
+      </button>
     </div>
   );
 }
