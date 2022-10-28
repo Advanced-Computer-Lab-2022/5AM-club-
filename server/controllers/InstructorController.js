@@ -1,7 +1,6 @@
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
-const CountryToCurrency = require("country-to-currency");
-const Convert = require("easy-currencies");
+const { convert } = require("../utils/CurrencyConverter");
 
 async function getUserCourses(req, res) {
   let lookupCourses = await Instructor.findById(req.headers.id).select({
@@ -14,31 +13,48 @@ async function getUserCourses(req, res) {
 
   let filter = {};
 
+  let standardMin;
   if (req.query.min) {
-    if (req.headers.authorization.country) {
-      const standardMin = await Convert(req.query.min)
-        .from(CountryToCurrency[req.headers.authorization.country])
-        .to("USD");
+    if (
+      req.headers.authorization &&
+      JSON.parse(req.headers.authorization).country
+    ) {
+      standardMin = await convert(
+        req.query.min,
+        JSON.parse(req.headers.authorization).country,
+        "USD"
+      );
     } else {
-      const standardMin = req.query.min;
+      standardMin = parseInt(req.query.min);
     }
-    filter.price = { $gte: standardMin };
   }
-
+  let standardMax;
   if (req.query.max) {
-    if (req.headers.authorization.country) {
-      const standardMax = await Convert(req.query.max)
-        .from(CountryToCurrency[req.headers.authorization.country])
-        .to("USD");
+    if (
+      req.headers.authorization &&
+      JSON.parse(req.headers.authorization).country
+    ) {
+      standardMax = await convert(
+        req.query.max,
+        JSON.parse(req.headers.authorization).country,
+        "USD"
+      );
     } else {
-      const standardMax = req.query.max;
+      standardMax = parseInt(req.query.max);
     }
-
-    filter.price = { $lte: standardMax };
   }
 
   filter._id = { $in: lookupCourses };
-  console.log(filter);
+  filter = {
+    ...filter,
+    ...((standardMax || standardMin) && {
+      price: {
+        ...(standardMax && { $lte: standardMax }),
+        ...(standardMin && { $gte: standardMin }),
+      },
+    }),
+  };
+
 
   res.send(await Course.find(filter));
 }
