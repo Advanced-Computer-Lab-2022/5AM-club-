@@ -1,12 +1,16 @@
 import { useEffect } from "react";
+import proxy from "../../utils/proxy.json";
 import axios from "axios";
 function InstructorCoursesContainer(props) {
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
     axios
-      .get("http://localhost:4000/instructor/mycourses?", {
-        ID: props.instructorId,
+      .get(proxy.URL + "/instructor/my-courses", {
+        headers: {
+          id: props.instructorId,
+          "content-type": "text/json",
+        },
       })
       .then((response) => {
         if (response.data.length === 0)

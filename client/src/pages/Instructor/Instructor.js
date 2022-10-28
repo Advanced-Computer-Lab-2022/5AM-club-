@@ -8,12 +8,12 @@ function Instructor() {
   return (
     <div>
       <InstructorFiltersContainer
-        instructorId={"6352fd68aaa8fae419b3a654"}
+        instructorId={"635a980afaca5dbffb8da03f"}
         setCourses={setCourses}
         setMainText={setMainText}
       ></InstructorFiltersContainer>
       <InstructorCoursesContainer
-        instructorId={"6352fd68aaa8fae419b3a654"}
+        instructorId={"635a980afaca5dbffb8da03f"}
         courses={courses}
         setCourses={setCourses}
         setMainText={setMainText}
