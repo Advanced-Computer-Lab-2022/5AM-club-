@@ -1,12 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { applyMiddleware } from "redux";
-import { composeWithDevTools } from "@reduxjs/toolkit/dist/devtoolsExtension";
-import { thunk } from "redux-thunk";
-import rootReducer from "./reducer";
 
-const initialState = {};
+export const store = configureStore({
+  reducer: { CourseSlice },
+});
 
-const middleware = [thunk];
-
-const store = configureStore({ reducer: {} });
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
