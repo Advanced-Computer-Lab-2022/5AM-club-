@@ -19,7 +19,9 @@
     "joi": "^17.6.3",
     "mon": "^0.0.8",
     "mongoose": "^6.6.5",
-    "node": "^19.0.0"
+    "node": "^19.0.0",
+    "jsonwebtoken": "^8.5.1"
+    
   },
   "devDependencies": {
     "concurrently": "^7.4.0",

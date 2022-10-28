@@ -10,18 +10,17 @@ const instructorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: { type: String, required: true },
-  country: { type: String, required: true },
-  money_owed: { type: Number, default: 0, required: true },
+  email: { type: String },
+  country: { type: String },
+  money_owed: { type: Number, default: 0 },
   rating: {
     type: Number,
     default: 0,
-    required: true,
   },
   biography: { type: String },
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
-    required: true,
+    default: [],
   },
 });
 
