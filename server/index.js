@@ -3,6 +3,7 @@ const connect = require("./config/database");
 const Course = require("./models/Course");
 const cors = require("cors");
 const app = express();
+const connect = require("./config/database");
 const port = process.env.port || 4000;
 const courseRouter = require("./routes/api/Course");
 connect();

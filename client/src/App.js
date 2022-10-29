@@ -6,6 +6,8 @@ import MainPage from "./pages/MainPage/MainPage";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import InstructorCreateCourse from "./pages/InstructorCreateCourse/InstructorCreateCourse";
 import ViewDetailedCourse from "./pages/ViewDetailedCourse/ViewDetailedCourse";
+import ViewCourses from "./components/ViewCourses/ViewCourses";
+
 function App() {
   return (
     <BrowserRouter>
