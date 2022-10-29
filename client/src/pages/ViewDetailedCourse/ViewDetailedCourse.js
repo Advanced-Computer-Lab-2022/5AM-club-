@@ -4,8 +4,7 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import "./ViewDetailedCourse.css";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
-import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const timeConvert = (minutes) => {
   const hours = Math.floor(minutes / 60);
@@ -17,16 +16,16 @@ const timeConvert = (minutes) => {
 };
 
 function ViewDetailedCourse(props) {
+  const location = useLocation();
   const [course, setCourse] = React.useState({});
   const [subtitles, setSubtitles] = React.useState([]);
   const [open, setOpen] = React.useState({ array: [] });
   //const [country, setCountry] = React.useState(props.country);
   const navigate = useNavigate();
   React.useEffect(() => {
-    console.log("started");
-
+    const id = location.state.id;
     axios
-      .get("http://localhost:4000/courses/635bf46232ff1613410ffa0b") //uselocation front amr
+      .get("http://localhost:4000/courses/" + id) //uselocation front amr
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);
@@ -49,54 +48,52 @@ function ViewDetailedCourse(props) {
     console.log(open);
   };
   return (
-    <PageWrapper>
-      <Card border='dark' className='card'>
-        <Card.Body>
-          <Card.Title>{course.title}</Card.Title>
-          <Card.Text>
-            <div>{course.summary}</div>
-            <div className='attribute'>
-              Total hours: {timeConvert(course.minutes)}
-            </div>
-            <div className='attribute'>Price: {course.price} </div>
-          </Card.Text>
+    <Card border="dark" className="card">
+      <Card.Body>
+        <Card.Title>{course.title}</Card.Title>
 
-          <Button variant='outline-success'>BUY NOW</Button>
-          <Card>
-            <Card.Header>Subtitles</Card.Header>
-            <ListGroup variant='flush'>
-              {subtitles.map((subtitle, index) => (
-                <ListGroup.Item>
-                  {" "}
-                  {subtitle.title} ( {timeConvert(subtitle.minutes)} )
-                  <Button
-                    className='right'
-                    variant='outline-success'
-                    onClick={() => {
-                      showSections(index);
-                    }}
-                  >
-                    {open.array[index] ? "🡡" : "🡣"}
-                  </Button>
-                  {open.array[index] === true ? (
-                    <Card>
-                      <Card.Header>Sections</Card.Header>
-                      <ListGroup variant='flush'>
-                        {subtitle.sections.map((section) => (
-                          <ListGroup.Item>
-                            {section.title} ( {timeConvert(section.minutes)} )
-                          </ListGroup.Item>
-                        ))}
-                      </ListGroup>
-                    </Card>
-                  ) : null}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          </Card>
-        </Card.Body>
-      </Card>
-    </PageWrapper>
+        <div>{course.summary}</div>
+
+        <div className="attribute">
+          Total hours: {timeConvert(course.minutes)}
+        </div>
+        <div className="attribute">Price: {course.price} </div>
+
+        <Button variant="outline-success">BUY NOW</Button>
+        <Card>
+          <Card.Header>Subtitles</Card.Header>
+          <ListGroup variant="flush">
+            {subtitles.map((subtitle, index) => (
+              <ListGroup.Item>
+                {" "}
+                {subtitle.title} ( {timeConvert(subtitle.minutes)} )
+                <Button
+                  className="right"
+                  variant="outline-success"
+                  onClick={() => {
+                    showSections(index);
+                  }}
+                >
+                  {open.array[index] ? "🡡" : "🡣"}
+                </Button>
+                {open.array[index] === true ? (
+                  <Card>
+                    <Card.Header>Sections</Card.Header>
+                    <ListGroup variant="flush">
+                      {subtitle.sections.map((section) => (
+                        <ListGroup.Item>
+                          {section.title} ( {timeConvert(section.minutes)} )
+                        </ListGroup.Item>
+                      ))}
+                    </ListGroup>
+                  </Card>
+                ) : null}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Card>
+      </Card.Body>
+    </Card>
   );
 }
 

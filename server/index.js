@@ -1,6 +1,6 @@
 const express = require("express");
 const connect = require("./config/database");
-const Course = require("./models/Course");
+const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
 const app = express();
 const port = process.env.port || 4000;
@@ -9,12 +9,21 @@ connect();
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-app.use("/courses", courseRouter);
+app.use("/", courseRouter);
 app.use("/instructor", courseRouter);
+app.use("/admin", courseRouter);
+app.use("/trainee", courseRouter);
+app.use("/instructor", userDataRouter);
+app.use("/trainee", userDataRouter);
+app.use("/admin", userDataRouter);
 
 app.listen(port);
 
-/*new Instructor({
+/*
+
+635ad854b2ad88bd8358a5af
+
+new Instructor({
   username: "ali12",
   password: "ali",
   email: "ali",
