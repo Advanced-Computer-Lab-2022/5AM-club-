@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import ListItem from "../ListItemContainer/ListItemContainer";
+import ListItem from "./ListItemContainer";
 import "./TableContainer.css";
 import formatTime from "../../utils/TimeConverter";
 

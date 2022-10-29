@@ -23,11 +23,7 @@ function ViewDetailedCourse(props) {
       });
   }, []);
 
-  return (
-    <PageWrapper>
-      <CourseContainer course={course} subtitles={subtitles} />
-    </PageWrapper>
-  );
+  return <CourseContainer course={course} subtitles={subtitles} />;
 }
 
 export default ViewDetailedCourse;
