@@ -8,6 +8,7 @@ function ViewDetailedCourse(props) {
   const location = useLocation();
   const [course, setCourse] = React.useState({});
   const [subtitles, setSubtitles] = React.useState([]);
+  const [promotion, setPromotion] = React.useState({});
   //const [country, setCountry] = React.useState(props.country);
   const navigate = useNavigate();
   React.useEffect(() => {
@@ -17,13 +18,20 @@ function ViewDetailedCourse(props) {
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);
+        setPromotion(response.data.promotion);
       })
       .catch(() => {
         navigate("/error");
       });
   }, []);
 
-  return <CourseContainer course={course} subtitles={subtitles} />;
+  return (
+    <CourseContainer
+      course={course}
+      subtitles={subtitles}
+      promotion={promotion}
+    />
+  );
 }
 
 export default ViewDetailedCourse;

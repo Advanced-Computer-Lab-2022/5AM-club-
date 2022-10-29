@@ -2,7 +2,7 @@ import React from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import "./ListItemContainer.css";
-import TableContainer from "../TableContainer/TableContainer";
+import TableContainer from "./TableContainer";
 import formatTime from "../../utils/TimeConverter";
 
 function ListItem(props) {

@@ -11,3 +11,10 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+
+.scratched{
+    text-decoration: line-through;
+}
+.red{
+    color:red
+}
