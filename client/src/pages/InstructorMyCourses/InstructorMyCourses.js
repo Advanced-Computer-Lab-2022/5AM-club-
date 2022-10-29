@@ -2,7 +2,7 @@ import { useState } from "react";
 import InstructorCoursesContainer from "../../components/InstructorCoursesContainer/InstructorCoursesContainer";
 import InstructorFiltersContainer from "../../components/InstructorFiltersContainer/InstructorFiltersContainer";
 
-function Instructor() {
+function InstructorMyCourses() {
   const [courses, setCourses] = useState([]);
   const [mainText, setMainText] = useState("You don't have any courses yet");
   return (
@@ -22,4 +22,4 @@ function Instructor() {
     </div>
   );
 }
-export default Instructor;
+export default InstructorMyCourses;

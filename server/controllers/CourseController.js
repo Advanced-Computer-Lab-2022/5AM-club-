@@ -2,7 +2,7 @@ const Joi = require("joi");
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
-const schema = Joi.object({
+const filterSchema = Joi.object({
   searchitem: Joi.string(),
   rating: Joi.number().min(0).max(5),
   min: Joi.number().min(0),
@@ -19,7 +19,7 @@ const createCourse = async (req, res) => {
     {}
   );
   let instructorIds = instructor.map((inst) => instructorMap[inst]);
-  instructorIds.push(req.headers.id);
+  instructorIds.push(req.headers.authorization.id);
 
   const createdCourse = await Course.create({
     title,
@@ -56,7 +56,7 @@ const getCourses = async (req, res) => {
     //validate query string
     let queryStr = JSON.stringify(req.query);
     const query = JSON.parse(queryStr);
-    const result = schema.validate(query);
+    const result = filterSchema.validate(query);
     if (result.error) {
       res.status(400).send("badreq");
       return;
@@ -94,7 +94,9 @@ const getCourses = async (req, res) => {
     }
 
     filter = {
-      ...(req.headers.mycourses && { instructor: req.headers.id }),
+      ...(req.headers.authorization.id && {
+        instructor: req.headers.authorization.id,
+      }),
       ...(req.query.subject && {
         subject: req.query.subject,
       }),

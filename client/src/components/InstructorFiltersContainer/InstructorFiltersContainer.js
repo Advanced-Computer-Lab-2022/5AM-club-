@@ -18,8 +18,9 @@ function InstructorFiltersContainer(props) {
     axios
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
-          id: props.instructorId,
-          "content-type": "text/json",
+          authorization: {
+            id: props.instructorId,
+          },
         },
         params: { min: min, max: max, subject: subject },
       })
@@ -41,7 +42,6 @@ function InstructorFiltersContainer(props) {
         onClick={() => {
           setSubject(subjectRef.current.value);
           props.setMainText(null);
-
         }}
       >
         Go
