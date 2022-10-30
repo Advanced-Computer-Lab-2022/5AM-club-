@@ -24,22 +24,22 @@ function InstructorCreateCourse() {
     //   </button>
     // </form>
 
-    <div className="create">
-      <input className="inp" type={"text"} placeholder="course title"></input>
+    <div className='create'>
+      <input className='inp' type={"text"} placeholder='course title'></input>
       <br />
       <br />
-      <input className="inp" type={"text"} placeholder="subjects "></input>
+      <input className='inp' type={"text"} placeholder='subjects '></input>
       <br />
       <br />
-      <input className="inp" type={"text"} placeholder="price"></input>
+      <input className='inp' type={"text"} placeholder='price'></input>
       <br />
       <TextField
         hiddenLabel
-        id="filled-hidden-label-small"
-        placeholder="Small"
-        variant="outlined"
-        label="name"
-        size="small"
+        id='filled-hidden-label-small'
+        placeholder='Small'
+        variant='outlined'
+        label='name'
+        size='small'
         value={name}
         onChange={(e) => {
           setName(e.target.value);
