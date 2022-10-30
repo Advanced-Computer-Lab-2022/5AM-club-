@@ -3,7 +3,7 @@ import axios from "axios";
 import "./ViewDetailedCourse.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import CourseContainer from "../../components/CourseContainer/CourseContainer";
-
+import proxy from "../../utils/proxy.json";
 function ViewDetailedCourse(props) {
   const location = useLocation();
   const [course, setCourse] = React.useState({});
@@ -14,7 +14,7 @@ function ViewDetailedCourse(props) {
   React.useEffect(() => {
     const id = location.state.id;
     axios
-      .get("http://localhost:4000/courses/" + id) //uselocation front amr
+      .get(proxy.URL + "/courses/" + id) //uselocation front amr
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);

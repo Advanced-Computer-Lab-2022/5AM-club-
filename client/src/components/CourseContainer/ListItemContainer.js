@@ -11,7 +11,7 @@ function ListItem(props) {
     setOpen(!open);
   };
   return (
-    <ListGroup.Item>
+    <ListGroup.Item key={props.index}>
       {" "}
       {props.element.title} ( {formatTime(props.element.minutes)} )
       {props.subelements && (

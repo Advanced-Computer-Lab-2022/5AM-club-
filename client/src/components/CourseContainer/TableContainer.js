@@ -9,15 +9,18 @@ function TableContainer(props) {
   return (
     <Card>
       <Card.Header>{props.title}</Card.Header>
-      <ListGroup variant='flush'>
-        {props.elements.map((element) => (
-          <ListItem
-            element={element}
-            subelements={element.sections}
-            subelementsTitle={"Sections"}
-          />
-        ))}
-      </ListGroup>
+      <Card.Body>
+        <ListGroup variant='flush'>
+          {props.elements.map((element, index) => (
+            <ListItem
+              element={element}
+              subelements={element.sections}
+              subelementsTitle={"Sections"}
+              key={index}
+            />
+          ))}
+        </ListGroup>
+      </Card.Body>
     </Card>
   );
 }
