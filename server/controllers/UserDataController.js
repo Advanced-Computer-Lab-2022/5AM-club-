@@ -13,6 +13,25 @@ const countrySchema = Joi.object({
     .required(),
 });
 
+async function getUsers(req, res) {
+  let User;
+  switch (req.headers.type) {
+    case "trainee":
+      User = await Trainee.find();
+      break;
+    case "admin":
+      User = await Admin.find();
+      break;
+    case "instructor":
+      User = await Instructor.find();
+      break;
+    default:
+      res.status(400).send("Invalid UserType");
+      break;
+  }
+  res.send(User);
+}
+
 async function getUser(req, res) {
   if (req.headers.id) {
     const id = req.headers.id;
@@ -85,4 +104,4 @@ async function setCountry(req, res) {
     res.status(400).send("Missing Id");
   }
 }
-module.exports = { setCountry, getUser };
+module.exports = { setCountry, getUser, getUsers };

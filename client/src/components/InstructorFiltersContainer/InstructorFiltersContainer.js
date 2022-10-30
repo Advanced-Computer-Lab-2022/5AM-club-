@@ -36,14 +36,7 @@ function InstructorFiltersContainer(props) {
     <div>
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
-      <button
-        onClick={() => {
-          setSubject(subjectRef.current.value);
-          props.setMainText(null);
-        }}
-      >
-        Go
-      </button>
+
       <div>
         <p>Filter by price:</p>
         <input ref={minRef} type={"number"}></input>
@@ -54,6 +47,8 @@ function InstructorFiltersContainer(props) {
           onClick={() => {
             setMax(maxRef.current.value);
             setMin(minRef.current.value);
+            setSubject(subjectRef.current.value);
+            props.setMainText(null);
           }}
         >
           Go

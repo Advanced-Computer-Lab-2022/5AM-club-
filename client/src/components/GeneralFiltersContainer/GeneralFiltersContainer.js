@@ -15,16 +15,10 @@ function TraineeFiltersContainer(props) {
   const [country, setCountry] = useState("United States");
   const [searchItem, setSearchItem] = useState("");
   const location = useLocation();
-  /*
-  {location.pathname.includes("trainee") ? (
-   
-  ) : location.pathname.includes("instructor") ? (
-    
-  ) : location.pathname.includes("admin") ? (
-   
-  ) : (
-   
-  )}*/
+
+  useEffect(() => {
+    setSearchItem(location.state.searchItem);
+  }, [location.state.searchItem]);
   useEffect(() => {
     if (
       location.pathname.includes("trainee") ||
@@ -45,13 +39,19 @@ function TraineeFiltersContainer(props) {
         .catch(() => {});
     } else {
     }
-  });
+  }, []);
   useUpdateEffect(() => {
     props.setCourses([]);
     props.setMainText("");
     axios
       .get(proxy.URL + "/trainee/courses", {
-        params: { min: min, max: max, subject: subject, rating: rating },
+        params: {
+          min: min,
+          max: max,
+          subject: subject,
+          rating: rating,
+          searchitem: searchItem,
+        },
         headers: { country: country },
       })
       .then((response) => {
@@ -62,7 +62,7 @@ function TraineeFiltersContainer(props) {
       .catch(() => {
         props.setMainText("No courses matched your filters");
       });
-  }, [max, min, subject, rating]);
+  }, [max, min, subject, rating, searchItem]);
 
   return (
     <div>

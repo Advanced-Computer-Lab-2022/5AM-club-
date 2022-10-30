@@ -50,15 +50,15 @@ const getCourses = async (req, res) => {
   let searchItem;
   if (req.query.searchitem) {
     const ids = await Instructor.find(
-      { username: { $regex: req.query.searchitem } },
+      { username: { $regex: req.query.searchitem, $options: "i" } },
       "id"
     );
 
     searchItem = {
       $or: [
-        { subject: { $regex: req.query.searchitem } },
+        { subject: { $regex: req.query.searchitem, $options: "i" } },
         { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchitem } },
+        { title: { $regex: req.query.searchitem, $options: "i" } },
       ],
     };
   }

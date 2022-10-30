@@ -16,9 +16,8 @@ import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
 function App() {
   return (
     <>
-      <Header></Header>
-
       <BrowserRouter>
+        <Header></Header>
         <Routes>
           <Route path='/Admin/add-user' element={<AdminAddUser />}></Route>
 
@@ -53,8 +52,8 @@ function App() {
           <Route path='/admin' element={<AdminPage />}></Route>
           <Route path='/' element={<MainPage />}></Route>
         </Routes>
+        <Footer></Footer>
       </BrowserRouter>
-      <Footer></Footer>
     </>
   );
 }
