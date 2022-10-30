@@ -1,8 +1,58 @@
 const mongoose = require("mongoose");
 
+const videoSchema = {
+  link: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+};
+
+const exerciseSchema = {};
+
+const sectionSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  minutes: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  content: {
+    type: { video: { type: videoSchema }, exercise: { type: exerciseSchema } },
+  },
+});
+
+const subtitleSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+
+  minutes: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  sections: {
+    type: [sectionSchema],
+  },
+});
+
 const courseSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
-  minutes: { type: Number, required: true },
+  minutes: { type: Number, default: 0 }, //minutes can't be required or existed during course creation
   rating: { type: Number, default: 0 },
   price: { type: Number, required: true },
   subject: { type: [String], required: true }, // predefined or usedefined ?
@@ -46,56 +96,6 @@ const courseSchema = new mongoose.Schema({
   },
   subtitles: { type: [subtitleSchema] },
 });
-
-const subtitleSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-
-  minutes: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  sections: {
-    type: [sectionSchema],
-  },
-});
-
-const sectionSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  minutes: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: { video: { type: videoSchema }, exercise: { type: exerciseSchema } },
-  },
-});
-
-const videoSchema = {
-  link: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-};
-
-const exerciseSchema = {};
 
 const Course = mongoose.model("Courses", courseSchema);
 

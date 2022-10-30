@@ -1,0 +1,46 @@
+.header-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+  background-color: #05041a;
+  height: 80px;
+}
+.logo {
+  cursor: pointer;
+}
+.signup-login {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.logout-profile {
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.searchbar {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 36px;
+  width: 60vw;
+  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
+}
+.search-input {
+  height: 30px;
+  width: 60vw;
+  border-radius: 20px;
+}
+.search-input:hover {
+  outline: 4px solid #d73a01;
+}
+.search {
+  cursor: pointer;
+  height: 30px;
+}

@@ -1,7 +1,56 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import Instructor from "./pages/InstructorMyCourses/InstructorMyCourses";
+import MainPage from "./pages/MainPage/MainPage";
+import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
+import InstructorCreateCourse from "./pages/InstructorCreateCourse/InstructorCreateCourse";
+import ViewDetailedCourse from "./pages/ViewDetailedCourse/ViewDetailedCourse";
+import ViewCourses from "./pages/ViewCourses/ViewCourses";
+import Header from "./layouts/Header/Header";
+import Footer from "./layouts/Footer/Footer";
+import TraineeProfile from "./pages/TraineeProfile/TraineeProfile";
 function App() {
-  return;
+  return (
+    <>
+      <Header></Header>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/instructor/my-courses" element={<Instructor />}></Route>
+
+          <Route
+            path="/instructor/create-course"
+            element={<InstructorCreateCourse />}
+          ></Route>
+          <Route
+            path="/trainee/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route path="/trainee/courses" element={<ViewCourses />}></Route>
+          <Route
+            path="/instructor/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route path="/instructor/courses" element={<ViewCourses />}></Route>
+          <Route
+            path="/admin/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route path="/admin/courses" element={<ViewCourses />}></Route>
+          <Route path="/courses" element={<ViewCourses />}></Route>
+          <Route
+            path="/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route path="/instructor" element={<InstructorProfile />}></Route>
+          <Route path="/trainee" element={<TraineeProfile />}></Route>
+          <Route path="/" element={<MainPage />}></Route>
+        </Routes>
+      </BrowserRouter>
+      <Footer></Footer>
+    </>
+  );
 }
 
 export default App;

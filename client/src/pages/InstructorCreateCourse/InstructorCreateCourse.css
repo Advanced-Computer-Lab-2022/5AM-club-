@@ -1,0 +1,13 @@
+.create{
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+.inp{
+    text-align: center;
+    width: fit-content;
+    display: block;
+    margin: auto;
+}
