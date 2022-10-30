@@ -18,9 +18,7 @@ function InstructorFiltersContainer(props) {
     axios
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
-          authorization: {
-            id: props.instructorId,
-          },
+          id: props.instructorId,
         },
         params: { min: min, max: max, subject: subject },
       })

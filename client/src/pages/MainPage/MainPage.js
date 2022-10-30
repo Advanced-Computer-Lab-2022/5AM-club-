@@ -1,6 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
+import proxy from "../../utils/proxy.json";
 
 function MainPage() {
+  const [trainees, setTrainees] = useState();
+  const [instructors, setInstructors] = useState();
+  const [admin, setAdmin] = useState();
+
+  useEffect(() => {
+    axios.get(proxy.URL + "/search");
+  }, []);
   const navigate = useNavigate();
   return (
     <div>

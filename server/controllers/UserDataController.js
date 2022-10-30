@@ -13,57 +13,76 @@ const countrySchema = Joi.object({
     .required(),
 });
 
+async function getUser(req, res) {
+  if (req.headers.id) {
+    const id = req.headers.id;
+    let User;
+
+    switch (req.headers.type) {
+      case "trainee":
+        User = await Trainee.findById(id);
+        break;
+      case "admin":
+        User = await Admin.findById(id);
+        break;
+      case "instructor":
+        User = await Instructor.findById(id);
+        break;
+      default:
+        res.status(400).send("Invalid UserType");
+        break;
+    }
+    res.send(User);
+  }
+}
+
 async function setCountry(req, res) {
   const valid = countrySchema.validate(req.body);
-  console.log(req.headers);
+
   if (valid.error) {
     res.status(400).send("Invalid Country");
     return;
   }
-  if (req.headers.authorization) {
-    const authorization = JSON.parse(req.headers.authorization);
-    if (authorization.id) {
-      const id = authorization.id;
-      let User;
 
-      switch (authorization.type) {
-        case "trainee":
-          User = await Trainee.findByIdAndUpdate(
-            id,
-            {
-              country: req.body.country,
-            },
-            { new: true }
-          );
-          break;
-        case "admin":
-          User = await Admin.findByIdAndUpdate(
-            id,
-            {
-              country: req.body.country,
-            },
-            { new: true }
-          );
-          break;
-        case "instructor":
-          User = await Instructor.findByIdAndUpdate(
-            id,
-            {
-              country: req.body.country,
-            },
-            { new: true }
-          );
-          break;
-        default:
-          res.status(400).send("Invalid UserType");
-          break;
-      }
-      res.send(User);
-    } else {
-      res.status(400).send("Missing Id");
+  if (req.headers.id) {
+    const id = req.headers.id;
+    let User;
+
+    switch (req.headers.type) {
+      case "trainee":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            country: req.body.country,
+          },
+          { new: true }
+        );
+        break;
+      case "admin":
+        User = await Admin.findByIdAndUpdate(
+          id,
+          {
+            country: req.body.country,
+          },
+          { new: true }
+        );
+        break;
+      case "instructor":
+        User = await Instructor.findByIdAndUpdate(
+          id,
+          {
+            country: req.body.country,
+          },
+          { new: true }
+        );
+        break;
+      default:
+        res.status(400).send("Invalid UserType");
+        break;
     }
+    res.send(User);
   } else {
-    res.status(400).send("Invalid request");
+    res.status(400).send("Missing Id");
   }
 }
-module.exports = { setCountry };
+module.exports = { setCountry, getUser };
