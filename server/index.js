@@ -4,6 +4,10 @@ const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
 const app = express();
 const port = process.env.port || 4000;
+
+
+app.use("/admin",require("./routes/api/Admin"))
+
 const courseRouter = require("./routes/api/Course");
 connect();
 app.use(express.json({ extended: false }));
@@ -85,3 +89,4 @@ new Instructor({
     },
   ],
 }).save();*/
+
