@@ -5,9 +5,6 @@ const cors = require("cors");
 const app = express();
 const port = process.env.port || 4000;
 
-
-app.use("/admin",require("./routes/api/Admin"))
-
 const courseRouter = require("./routes/api/Course");
 connect();
 app.use(express.json({ extended: false }));
@@ -19,6 +16,7 @@ app.use("/admin", courseRouter);
 app.use("/trainee", courseRouter);
 app.use("/instructor", userDataRouter);
 app.use("/trainee", userDataRouter);
+app.use("/admin", require("./routes/api/Admin"));
 app.use("/admin", userDataRouter);
 
 app.listen(port);
@@ -89,4 +87,3 @@ new Instructor({
     },
   ],
 }).save();*/
-
