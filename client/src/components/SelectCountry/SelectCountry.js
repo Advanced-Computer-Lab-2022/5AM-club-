@@ -5,9 +5,8 @@ import DropDown from "react-dropdown";
 import "react-dropdown/style.css";
 import countries from "../../utils/Countries.json";
 function SelectCountry(props) {
-  const [country, setCountry] = useState(props.country);
+  const [country, setCountry] = useState();
   useUpdateEffect(() => {
-    console.log(typeof ('{"type":' + props.type + ', "id":' + props.id + "}"));
     axios
       .put(
         "http://localhost:4000/" + props.type + "/set-country",
@@ -16,8 +15,8 @@ function SelectCountry(props) {
         },
         {
           headers: {
-            authorization:
-              '{"type":"' + props.type + '", "id":"' + props.id + '"}',
+            type: props.type,
+            id: props.id,
           },
         }
       )
