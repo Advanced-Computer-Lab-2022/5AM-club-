@@ -17,10 +17,6 @@ import { Delete, WidthNormal } from "@mui/icons-material";
 import axios from "axios"
 
 
-
-
-  
-
 function InstructorCreateCourse() {
 
 
@@ -246,6 +242,7 @@ function InstructorCreateCourse() {
         </form>
       </Container>
     </PageWrapper>
+
   );
 }
 export default InstructorCreateCourse;

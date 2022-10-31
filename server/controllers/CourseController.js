@@ -1,7 +1,8 @@
-const { Course } = require("../models/Course");
+
+const Joi = require("joi");
+const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
-
 const createCourse = async (req, res) => {
   console.log(req.body);
   let {
@@ -31,7 +32,7 @@ const createCourse = async (req, res) => {
   );
   let instructorIds = instructor.map((inst) => instructorMap[inst]);
   instructorIds.push(req.headers.id);
-  console.log(instructorIds);
+
   const createdCourse = await Course.create({
     title,
     price,
@@ -62,73 +63,79 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getUserCourses = async (req, res) => {
-  try {
-    console.log(req.query.searchitem);
-    let filter = {};
-    filter.instructor = req.headers.id;
-    if (req.query.searchitem) {
-      const ids = await Instructor.find(
-        { username: { $regex: req.query.searchitem } },
-        "id"
-      );
-      console.log("inst is " + ids);
-      filter.$or = [
-        { subject: { $regex: req.query.searchitem } },
+const getCourses = async (req, res) => {
+  //validate query string
+  let filter = {};
+  let searchItem;
+  if (req.query.searchitem) {
+    const ids = await Instructor.find(
+      { username: { $regex: req.query.searchitem, $options: "i" } },
+      "id"
+    );
+
+    searchItem = {
+      $or: [
+        { subject: { $regex: req.query.searchitem, $options: "i" } },
         { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchitem } },
-      ];
-    }
-    let standardMin;
-    if (req.query.min) {
-      if (
-        req.headers.authorization &&
-        JSON.parse(req.headers.authorization).country
-      ) {
-        standardMin = await convert(
-          req.query.min,
-          JSON.parse(req.headers.authorization).country,
-          "USD"
-        );
-      } else {
-        standardMin = parseInt(req.query.min);
-      }
-    }
-    let standardMax;
-    if (req.query.max) {
-      if (
-        req.headers.authorization &&
-        JSON.parse(req.headers.authorization).country
-      ) {
-        standardMax = await convert(
-          req.query.max,
-          JSON.parse(req.headers.authorization).country,
-          "USD"
-        );
-      } else {
-        standardMax = parseInt(req.query.max);
-      }
-    }
-    filter = {
-      ...filter,
-      ...(req.query.subject && {
-        subject: req.query.subject,
-      }),
-      ...((standardMax || standardMin) && {
-        price: {
-          ...(standardMax && { $lte: standardMax }),
-          ...(standardMin && { $gte: standardMin }),
-        },
-      }),
+        { title: { $regex: req.query.searchitem, $options: "i" } },
+      ],
     };
-    res.json(await Course.find(filter));
+  }
+  let standardMin;
+  let standardMax;
+  if (req.query.min || req.query.max) {
+    standardMin = parseInt(req.query.min);
+    standardMax = parseInt(req.query.max);
+    if (req.headers.country) {
+      const country = req.headers.country;
+      if (country) {
+        if (req.query.min)
+          standardMin = await convert(req.query.min, country, "United States");
+        if (req.query.max)
+          standardMax = await convert(req.query.max, country, "United States");
+      }
+    }
+  }
+  filter = {
+    ...(req.headers.id && {
+      // here remember
+      instructor: req.headers.id,
+    }),
+    ...(req.query.subject && {
+      subject: req.query.subject,
+    }),
+    ...((standardMax || standardMin || standardMax === 0) && {
+      price: {
+        ...((standardMax || standardMax === 0) && { $lte: standardMax }),
+        ...(standardMin && { $gte: standardMin }),
+      },
+    }),
+    ...(searchItem && searchItem),
+    ...(req.query.rating && { rating: parseInt(req.query.rating) }),
+  };
+  console.log(filter);
+  let courses = await Course.find(filter);
+  for (let course of courses) {
+    course.price = await convert(
+      course.price,
+      "United States",
+      req.headers.country
+    );
+  }
+
+  res.json(courses);
+};
+const findCourseByID = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const course = await Course.findById(id);
+    res.send(course);
   } catch (err) {
-    console.log(err);
-    res.send("invalid req");
+    res.status(500).send("Server Error");
   }
 };
-
 module.exports = {
-  getUserCourses,
+  getCourses,
   createCourse,
+  findCourseByID,
 };

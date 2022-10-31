@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function InstructorProfile() {
   const navigate = useNavigate();
   return (
@@ -6,6 +7,13 @@ function InstructorProfile() {
       <button
         onClick={() => {
           navigate("courses");
+        }}
+      >
+        View Courses
+      </button>
+      <button
+        onClick={() => {
+          navigate("my-courses");
         }}
       >
         View my Courses
@@ -17,6 +25,10 @@ function InstructorProfile() {
       >
         create new course
       </button>
+      <SelectCountry
+        type="instructor"
+        id="6355091ab4c387ca835c6bfc"
+      ></SelectCountry>
     </div>
   );
 }
