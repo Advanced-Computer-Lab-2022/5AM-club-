@@ -1,19 +1,21 @@
 import axios from "axios";
 import "./ViewCourses.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
 
 function ViewCourses() {
   const [mainText, setMainText] = useState("");
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [courses, setCourses] = useState([]);
   useEffect(() => {
-    setCourses([]);
-    axios.get("http://localhost:4000/courses").then((response) => {
-      setCourses(response.data);
-    });
+    if (!location.state?.searchItem) {
+      setCourses([]);
+      axios.get("http://localhost:4000/courses").then((response) => {
+        setCourses(response.data);
+      });
+    }
   }, []);
   return (
     <>

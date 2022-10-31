@@ -7,6 +7,10 @@ import countries from "../../utils/Countries.json";
 function SelectCountry(props) {
   const [country, setCountry] = useState();
   useUpdateEffect(() => {
+    if (!props.type) {
+      localStorage.setItem("country", country);
+      return;
+    }
     axios
       .put(
         "http://localhost:4000/" + props.type + "/set-country",

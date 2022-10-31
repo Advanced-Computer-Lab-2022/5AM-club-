@@ -16,8 +16,8 @@ app.use("/admin", courseRouter);
 app.use("/trainee", courseRouter);
 app.use("/instructor", userDataRouter);
 app.use("/trainee", userDataRouter);
-app.use("/admin", require("./routes/api/Admin"));
 app.use("/admin", userDataRouter);
+app.use("/", userDataRouter);
 
 app.listen(port);
 
