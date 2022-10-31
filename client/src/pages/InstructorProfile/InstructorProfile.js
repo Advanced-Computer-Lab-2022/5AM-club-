@@ -6,6 +6,13 @@ function InstructorProfile() {
     <div>
       <button
         onClick={() => {
+          navigate("courses");
+        }}
+      >
+        View Courses
+      </button>
+      <button
+        onClick={() => {
           navigate("my-courses");
         }}
       >
