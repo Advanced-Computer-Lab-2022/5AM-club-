@@ -71,9 +71,9 @@ const getCourses = async (req, res) => {
       const country = req.headers.country;
       if (country) {
         if (req.query.min)
-          standardMin = await convert(req.query.min, country, "USD");
+          standardMin = await convert(req.query.min, country, "United States");
         if (req.query.max)
-          standardMax = await convert(req.query.max, country, "USD");
+          standardMax = await convert(req.query.max, country, "United States");
       }
     }
   }
@@ -95,7 +95,16 @@ const getCourses = async (req, res) => {
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
   console.log(filter);
-  res.json(await Course.find(filter));
+  let courses = await Course.find(filter);
+  for (let course of courses) {
+    course.price = await convert(
+      course.price,
+      "United States",
+      req.headers.country
+    );
+  }
+
+  res.json(courses);
 };
 const findCourseByID = async (req, res) => {
   const id = req.params.id;

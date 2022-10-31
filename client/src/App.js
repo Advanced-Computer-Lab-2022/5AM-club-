@@ -20,9 +20,7 @@ function App() {
         <Header></Header>
         <Routes>
           <Route path="/Admin/add-user" element={<AdminAddUser />}></Route>
-
           <Route path="/instructor/my-courses" element={<Instructor />}></Route>
-
           <Route
             path="/instructor/create-course"
             element={<InstructorCreateCourse />}
@@ -32,7 +30,15 @@ function App() {
             element={<ViewDetailedCourse />}
           ></Route>
           <Route
+            path="/corporate-trainee/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route
             path="/individual-trainee/courses"
+            element={<ViewCourses />}
+          ></Route>
+          <Route
+            path="/corporate-trainee/courses"
             element={<ViewCourses />}
           ></Route>
           <Route
@@ -55,6 +61,7 @@ function App() {
             path="/individual-trainee"
             element={<TraineeProfile />}
           ></Route>
+          <Route path="/corporate-trainee" element={<TraineeProfile />}></Route>
           <Route path="/admin" element={<AdminPage />}></Route>
           <Route path="/" element={<MainPage />}></Route>
         </Routes>

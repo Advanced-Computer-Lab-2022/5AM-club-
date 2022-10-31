@@ -6,15 +6,22 @@ import { width } from "@mui/system";
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 
 function MainPage() {
-  const [trainees, setTrainees] = useState([]);
+  const [corporateTrainees, setCorporateTrainees] = useState([]);
+  const [individualTrainees, setIndividualTrainees] = useState([]);
   const [instructors, setInstructors] = useState([]);
   const [admins, setAdmins] = useState([]);
 
   useEffect(() => {
     axios
-      .get(proxy.URL + "/get-users", { headers: { type: "trainee" } })
+      .get(proxy.URL + "/get-users", { headers: { type: "corporate" } })
       .then((response) => {
-        setTrainees(response.data);
+        setCorporateTrainees(response.data);
+      })
+      .catch(() => {});
+    axios
+      .get(proxy.URL + "/get-users", { headers: { type: "individual" } })
+      .then((response) => {
+        setIndividualTrainees(response.data);
       })
       .catch(() => {});
     axios
@@ -59,15 +66,30 @@ function MainPage() {
           })}
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <p>Trainees</p>
+          <p>Individual Trainees</p>
           <button
             onClick={() => {
-              navigate("trainee");
+              navigate("individual-trainee");
             }}
           >
-            {trainees[0]?.username}
+            {individualTrainees[0]?.username}
           </button>
-          {trainees.map((trainee, index) => {
+          {individualTrainees.map((trainee, index) => {
+            return index !== 0 ? (
+              <div key={trainee.username}> {trainee.username}</div>
+            ) : null;
+          })}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>Corporate Trainees</p>
+          <button
+            onClick={() => {
+              navigate("corporate-trainee");
+            }}
+          >
+            {corporateTrainees[0]?.username}
+          </button>
+          {corporateTrainees.map((trainee, index) => {
             return index !== 0 ? (
               <div key={trainee.username}> {trainee.username}</div>
             ) : null;

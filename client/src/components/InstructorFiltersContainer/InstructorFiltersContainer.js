@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import proxy from "../../utils/proxy.json";
 import { useUpdateEffect } from "react-use";
 import axios from "axios";
@@ -6,7 +6,9 @@ function InstructorFiltersContainer(props) {
   const [max, setMax] = useState();
   const [min, setMin] = useState();
   const [subject, setSubject] = useState("");
+  const [searchItem, setSearchItem] = useState("");
 
+  const searchRef = useRef();
   const subjectRef = useRef();
 
   const maxRef = useRef();
@@ -19,8 +21,14 @@ function InstructorFiltersContainer(props) {
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
           id: props.instructorId,
+          country: props.country,
         },
-        params: { min: min, max: max, subject: subject },
+        params: {
+          min: min,
+          max: max,
+          subject: subject,
+          searchitem: searchItem,
+        },
       })
       .then((response) => {
         if (response.data.length === 0)
@@ -34,6 +42,9 @@ function InstructorFiltersContainer(props) {
 
   return (
     <div>
+      <p>Search:</p>
+      <input ref={searchRef} type={"text"}></input>
+
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
 
@@ -48,6 +59,7 @@ function InstructorFiltersContainer(props) {
             setMax(maxRef.current.value);
             setMin(minRef.current.value);
             setSubject(subjectRef.current.value);
+            setSearchItem(searchRef.current.value);
             props.setMainText(null);
           }}
         >

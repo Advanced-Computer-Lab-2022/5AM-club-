@@ -24,8 +24,12 @@ const addUserSchema = Joi.object({
 async function getUsers(req, res) {
   let User;
   switch (req.headers.type) {
-    case "trainee":
-      User = await Trainee.find();
+    case "individual":
+      User = await Trainee.find({ type: "individual" });
+      break;
+    case "corporate":
+      User = await Trainee.find({ type: "corporate" });
+      console.log(User);
       break;
     case "admin":
       User = await Admin.find();
@@ -74,7 +78,7 @@ async function setCountry(req, res) {
   if (req.headers.id) {
     const id = req.headers.id;
     let User;
-
+    console.log(req.headers, req.body);
     switch (req.headers.type) {
       case "trainee":
         User = await Trainee.findByIdAndUpdate(
@@ -86,6 +90,7 @@ async function setCountry(req, res) {
         );
         break;
       case "admin":
+        console.log(req.body.country);
         User = await Admin.findByIdAndUpdate(
           id,
           {
@@ -155,7 +160,7 @@ async function addTrainee(req, res) {
   const newCorporateTrainee = new Trainee({
     ...req.body,
     courses: [],
-    type: "corprate",
+    type: "corporate",
   });
   await newCorporateTrainee
     .save()
