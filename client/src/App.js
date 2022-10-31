@@ -21,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/Admin/add-user" element={<AdminAddUser />}></Route>
           <Route path="/instructor/my-courses" element={<Instructor />}></Route>
+
           <Route
             path="/instructor/create-course"
             element={<InstructorCreateCourse />}
