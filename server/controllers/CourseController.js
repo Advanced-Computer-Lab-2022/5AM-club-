@@ -77,7 +77,6 @@ const getCourses = async (req, res) => {
       }
     }
   }
-
   filter = {
     ...(req.headers.id && {
       // here remember
@@ -86,9 +85,9 @@ const getCourses = async (req, res) => {
     ...(req.query.subject && {
       subject: req.query.subject,
     }),
-    ...((standardMax || standardMin) && {
+    ...((standardMax || standardMin || standardMax === 0) && {
       price: {
-        ...(standardMax && { $lte: standardMax }),
+        ...((standardMax || standardMax === 0) && { $lte: standardMax }),
         ...(standardMin && { $gte: standardMin }),
       },
     }),

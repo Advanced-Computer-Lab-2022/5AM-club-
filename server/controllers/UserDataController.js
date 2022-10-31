@@ -12,6 +12,14 @@ const countrySchema = Joi.object({
     )
     .required(),
 });
+const addUserSchema = Joi.object({
+  username: Joi.string().required().messages({
+    "string.empty": `"Username" cannot be an empty field`,
+  }),
+  password: Joi.string().required().messages({
+    "string.empty": `"Password" cannot be an empty field`,
+  }),
+});
 
 async function getUsers(req, res) {
   let User;
@@ -104,4 +112,63 @@ async function setCountry(req, res) {
     res.status(400).send("Missing Id");
   }
 }
-module.exports = { setCountry, getUser, getUsers };
+async function addAdmin(req, res) {
+  const result = addUserSchema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  const newAdmin = new Admin(req.body);
+
+  await newAdmin
+    .save()
+    .then((response) => {
+      res.send("Admin added successfully!");
+    })
+    .catch((err) => res.status(400).send("username already used "));
+}
+
+async function addInstructor(req, res) {
+  const result = addUserSchema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  const newInstructor = new Instructor(req.body);
+
+  await newInstructor
+    .save()
+    .then((response) => {
+      res.send("Instructor added successfully!");
+    })
+    .catch((err) => res.status(400).send("Username already used"));
+}
+
+async function addTrainee(req, res) {
+  const result = addUserSchema.validate(req.body);
+  console.log(result.error);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+
+  const newCorporateTrainee = new Trainee({
+    ...req.body,
+    courses: [],
+    type: "corprate",
+  });
+  await newCorporateTrainee
+    .save()
+    .then((response) => {
+      res.send("Trainee added successfully!");
+    })
+    .catch((err) => res.status(400).send("Username already used"));
+}
+module.exports = {
+  setCountry,
+  getUser,
+  getUsers,
+  addAdmin,
+  addInstructor,
+  addTrainee,
+};

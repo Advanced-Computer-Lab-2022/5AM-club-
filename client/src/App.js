@@ -19,38 +19,44 @@ function App() {
       <BrowserRouter>
         <Header></Header>
         <Routes>
-          <Route path='/Admin/add-user' element={<AdminAddUser />}></Route>
+          <Route path="/Admin/add-user" element={<AdminAddUser />}></Route>
 
-          <Route path='/instructor/my-courses' element={<Instructor />}></Route>
+          <Route path="/instructor/my-courses" element={<Instructor />}></Route>
 
           <Route
-            path='/instructor/create-course'
+            path="/instructor/create-course"
             element={<InstructorCreateCourse />}
           ></Route>
           <Route
-            path='/trainee/courses/view-course'
+            path="/individual-trainee/courses/view-course"
             element={<ViewDetailedCourse />}
           ></Route>
-          <Route path='/trainee/courses' element={<ViewCourses />}></Route>
           <Route
-            path='/instructor/courses/view-course'
-            element={<ViewDetailedCourse />}
+            path="/individual-trainee/courses"
+            element={<ViewCourses />}
           ></Route>
-          <Route path='/instructor/courses' element={<ViewCourses />}></Route>
           <Route
-            path='/admin/courses/view-course'
+            path="/instructor/courses/view-course"
             element={<ViewDetailedCourse />}
           ></Route>
-          <Route path='/admin/courses' element={<ViewCourses />}></Route>
-          <Route path='/courses' element={<ViewCourses />}></Route>
+          <Route path="/instructor/courses" element={<ViewCourses />}></Route>
           <Route
-            path='/courses/view-course'
+            path="/admin/courses/view-course"
             element={<ViewDetailedCourse />}
           ></Route>
-          <Route path='/instructor' element={<InstructorProfile />}></Route>
-          <Route path='/trainee' element={<TraineeProfile />}></Route>
-          <Route path='/admin' element={<AdminPage />}></Route>
-          <Route path='/' element={<MainPage />}></Route>
+          <Route path="/admin/courses" element={<ViewCourses />}></Route>
+          <Route path="/courses" element={<ViewCourses />}></Route>
+          <Route
+            path="/courses/view-course"
+            element={<ViewDetailedCourse />}
+          ></Route>
+          <Route path="/instructor" element={<InstructorProfile />}></Route>
+          <Route
+            path="/individual-trainee"
+            element={<TraineeProfile />}
+          ></Route>
+          <Route path="/admin" element={<AdminPage />}></Route>
+          <Route path="/" element={<MainPage />}></Route>
         </Routes>
         <Footer></Footer>
       </BrowserRouter>

@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import proxy from "../../utils/proxy.json";
+import { width } from "@mui/system";
+import SelectCountry from "../../components/SelectCountry/SelectCountry";
 
 function MainPage() {
   const [trainees, setTrainees] = useState([]);
@@ -31,44 +33,64 @@ function MainPage() {
 
   const navigate = useNavigate();
   return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <button
-          onClick={() => {
-            navigate("instructor");
-          }}
-        >
-          Instructor Page
-        </button>
-        {instructors.map((instructor, idx) => {
-          idx !== 0 && <p key={instructor.username}> {instructor.username}</p>;
-        })}
+    <>
+      {" "}
+      <button
+        onClick={() => {
+          navigate("courses");
+        }}
+      >
+        View Courses
+      </button>
+      <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>Instructors</p>{" "}
+          <button
+            onClick={() => {
+              navigate("instructor");
+            }}
+          >
+            {instructors[0]?.username}
+          </button>
+          {instructors.map((instructor, index) => {
+            return index !== 0 ? (
+              <p key={instructor.username}> {instructor.username} </p>
+            ) : null;
+          })}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>Trainees</p>
+          <button
+            onClick={() => {
+              navigate("trainee");
+            }}
+          >
+            {trainees[0]?.username}
+          </button>
+          {trainees.map((trainee, index) => {
+            return index !== 0 ? (
+              <div key={trainee.username}> {trainee.username}</div>
+            ) : null;
+          })}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <p>Admins</p>{" "}
+          <button
+            onClick={() => {
+              navigate("admin");
+            }}
+          >
+            {admins[0]?.username}
+          </button>
+          {admins.map((admin, index) => {
+            return index !== 0 ? (
+              <p key={admin.username}> {admin.username}</p>
+            ) : null;
+          })}
+        </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <button
-          onClick={() => {
-            navigate("trainee");
-          }}
-        >
-          Trainee Page
-        </button>
-        {trainees.map((trainee, idx) => {
-          idx !== 0 && <p key={trainee.username}> {trainee.username}</p>;
-        })}
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <button
-          onClick={() => {
-            navigate("admin");
-          }}
-        >
-          Admin Page
-        </button>
-        {admins.map((admin, idx) => {
-          idx !== 0 && <p key={admin.username}> {admin.username}</p>;
-        })}
-      </div>
-    </div>
+      <SelectCountry></SelectCountry>
+    </>
   );
 }
 export default MainPage;

@@ -17,8 +17,8 @@ function TraineeFiltersContainer(props) {
   const location = useLocation();
 
   useEffect(() => {
-    setSearchItem(location.state.searchItem);
-  }, [location.state.searchItem]);
+    setSearchItem(location.state?.searchItem);
+  }, [location.state?.searchItem]);
   useEffect(() => {
     if (
       location.pathname.includes("trainee") ||
@@ -36,8 +36,11 @@ function TraineeFiltersContainer(props) {
         .then((response) => {
           setCountry(response.data.country);
         })
-        .catch(() => {});
+        .catch(() => {
+          setCountry("United States");
+        });
     } else {
+      setCountry(localStorage.getItem("country"));
     }
   }, []);
   useUpdateEffect(() => {
