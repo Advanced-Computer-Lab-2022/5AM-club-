@@ -87,7 +87,6 @@ function ViewCourses() {
           </div>
         ))}
       </div>
-
       <p>{mainText} </p>
     </>
   );

@@ -38,7 +38,7 @@ function InstructorFiltersContainer(props) {
       .catch(() => {
         props.setMainText("No courses matched your filters");
       });
-  }, [max, min, subject]);
+  }, [max, min, subject, searchItem]);
 
   return (
     <div>

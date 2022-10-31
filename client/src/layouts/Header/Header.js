@@ -18,11 +18,13 @@ function Header() {
   function handleLogout() {}
   function handleProfile() {}
   function handleSearch() {
+    console.log(location.pathname);
     if (location.pathname.includes("individual")) {
       navigate("/individual-trainee/courses", {
         state: { searchItem: searchRef.current.value },
       });
     } else if (location.pathname.includes("corporate")) {
+      console.log("ASf");
       navigate("/corporate-trainee/courses", {
         state: { searchItem: searchRef.current.value },
       });
@@ -42,7 +44,14 @@ function Header() {
   }
   return (
     <div className="header-container">
-      <img src={logo} alt="Logo" className="logo"></img>
+      <img
+        src={logo}
+        alt="Logo"
+        className="logo"
+        onClick={() => {
+          navigate("/");
+        }}
+      ></img>
       <div className="searchbar">
         <input
           ref={searchRef}

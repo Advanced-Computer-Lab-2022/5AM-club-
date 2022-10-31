@@ -29,11 +29,11 @@ function InstructorCoursesContainer(props) {
         <div key={course.title}>
           {course.title +
             " price: " +
+            course.price +
             " " +
             CountryToCurrency[
               countries.values.find((e) => e.name === props.country).code
-            ] +
-            course.price}
+            ]}
         </div>
       ))}
     </div>

@@ -1,6 +1,5 @@
-
 const Joi = require("joi");
-const Course = require("../models/Course");
+const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
@@ -24,13 +23,8 @@ const createCourse = async (req, res) => {
     };
   }); //courseSubs contain the _id of all created subtitles
 
-  console.log(courseSubs);
-  const instructors = await Instructor.find();
-  const instructorMap = instructors.reduce(
-    (inst, acc) => ({ ...acc, [inst.username]: inst.id }),
-    {}
-  );
-  let instructorIds = instructor.map((inst) => instructorMap[inst]);
+  const instructors = await Instructor.find({ username: { $in: instructor } });
+  let instructorIds = instructors.map((inst) => inst._id.valueOf());
   instructorIds.push(req.headers.id);
 
   const createdCourse = await Course.create({
@@ -65,6 +59,7 @@ const createCourse = async (req, res) => {
 
 const getCourses = async (req, res) => {
   //validate query string
+  console.log(req.headers, "balabizo");
   let filter = {};
   let searchItem;
   if (req.query.searchitem) {
@@ -115,12 +110,14 @@ const getCourses = async (req, res) => {
   };
   console.log(filter);
   let courses = await Course.find(filter);
-  for (let course of courses) {
-    course.price = await convert(
-      course.price,
-      "United States",
-      req.headers.country
-    );
+  if (req.headers.country) {
+    for (let course of courses) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
   }
 
   res.json(courses);
@@ -129,6 +126,13 @@ const findCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
     const course = await Course.findById(id);
+    if (req.headers.country) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
     res.send(course);
   } catch (err) {
     res.status(500).send("Server Error");
