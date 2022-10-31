@@ -65,6 +65,7 @@ const createCourse = async (req, res) => {
 
 const getCourses = async (req, res) => {
   //validate query string
+  console.log(req.headers, "balabizo");
   let filter = {};
   let searchItem;
   if (req.query.searchitem) {
@@ -115,12 +116,14 @@ const getCourses = async (req, res) => {
   };
   console.log(filter);
   let courses = await Course.find(filter);
-  for (let course of courses) {
-    course.price = await convert(
-      course.price,
-      "United States",
-      req.headers.country
-    );
+  if (req.headers.country) {
+    for (let course of courses) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
   }
 
   res.json(courses);
@@ -129,6 +132,13 @@ const findCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
     const course = await Course.findById(id);
+    if (req.headers.country) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
     res.send(course);
   } catch (err) {
     res.status(500).send("Server Error");

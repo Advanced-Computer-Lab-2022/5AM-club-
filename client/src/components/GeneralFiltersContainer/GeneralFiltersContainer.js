@@ -4,7 +4,7 @@ import { useUpdateEffect } from "react-use";
 import { useLocation } from "react-router-dom";
 
 import axios from "axios";
-function TraineeFiltersContainer(props) {
+function GeneralFiltersContainer(props) {
   const [max, setMax] = useState();
   const [min, setMin] = useState();
   const [subject, setSubject] = useState("");
@@ -17,32 +17,36 @@ function TraineeFiltersContainer(props) {
   const location = useLocation();
 
   useEffect(() => {
-    setSearchItem(location.state?.searchItem);
+    if (location.state?.searchItem !== null) {
+      setSearchItem(location.state?.searchItem);
+    }
   }, [location.state?.searchItem]);
 
   useUpdateEffect(() => {
     props.setCourses([]);
     props.setMainText("");
-    axios
-      .get(proxy.URL + "/trainee/courses", {
-        params: {
-          min: min,
-          max: max,
-          subject: subject,
-          rating: rating,
-          searchitem: searchItem,
-        },
-        headers: { country: props.country },
-      })
-      .then((response) => {
-        if (response.data.length === 0)
+    if (props.country) {
+      axios
+        .get(proxy.URL + "/trainee/courses", {
+          params: {
+            min: min,
+            max: max,
+            subject: subject,
+            rating: rating,
+            searchitem: searchItem,
+          },
+          headers: { country: props.country },
+        })
+        .then((response) => {
+          if (response.data.length === 0)
+            props.setMainText("No courses matched your filters");
+          props.setCourses(response.data);
+        })
+        .catch(() => {
           props.setMainText("No courses matched your filters");
-        props.setCourses(response.data);
-      })
-      .catch(() => {
-        props.setMainText("No courses matched your filters");
-      });
-  }, [max, min, subject, rating, searchItem]);
+        });
+    }
+  }, [max, min, subject, rating, searchItem, props.country]);
 
   return (
     <div>
@@ -75,4 +79,4 @@ function TraineeFiltersContainer(props) {
     </div>
   );
 }
-export default TraineeFiltersContainer;
+export default GeneralFiltersContainer;

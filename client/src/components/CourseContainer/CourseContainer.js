@@ -5,6 +5,8 @@ import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
 import formatTime from "../../utils/TimeConverter";
 import { useLocation } from "react-router-dom";
+import CountryToCurrency from "country-to-currency";
+import countries from "../../utils/Countries.json";
 
 function CourseContainer(props) {
   const location = useLocation();
@@ -17,7 +19,7 @@ function CourseContainer(props) {
         <div className="attribute">
           Total hours: {formatTime(props.course.minutes)}
         </div>
-        {location.pathname.includes("individual") && (
+        {!location.pathname.includes("corporate") && (
           <div className="attribute">
             Price:{" "}
             {props.promotion &&
@@ -26,7 +28,12 @@ function CourseContainer(props) {
                 <span className="scratched">{props.course.price} </span>
                 <span>
                   {(props.course.price * (100 - props.promotion.percentage)) /
-                    100}{" "}
+                    100 +
+                    (" " +
+                      CountryToCurrency[
+                        countries.values.find((e) => e.name === props.country)
+                          ?.code
+                      ])}
                 </span>
                 <span className="red">
                   (-{props.promotion.percentage}% till{" "}
@@ -34,7 +41,14 @@ function CourseContainer(props) {
                 </span>
               </>
             ) : (
-              props.course.price
+              <>
+                {props.course.price +
+                  (" " +
+                    CountryToCurrency[
+                      countries.values.find((e) => e.name === props.country)
+                        ?.code
+                    ])}
+              </>
             )}
           </div>
         )}
