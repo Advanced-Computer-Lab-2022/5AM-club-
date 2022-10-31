@@ -1,11 +1,30 @@
+
 const Joi = require("joi");
 const Course = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
-  let { title, price, subject, summary, video_preview, instructor, subtitles } =
-    req.body;
+  console.log(req.body);
+  let {
+    title,
+    price,
+    subject,
+    summary,
+    video_preview,
+    instructor,
+    subtitles,
+    subDescriptions,
+  } = req.body;
   //instructor = [...instructor, req.headers.id];
+  let i = 0;
+  const courseSubs = subtitles.map((subtitle, idx) => {
+    return {
+      title: subtitle,
+      description: subDescriptions[idx],
+    };
+  }); //courseSubs contain the _id of all created subtitles
+
+  console.log(courseSubs);
   const instructors = await Instructor.find();
   const instructorMap = instructors.reduce(
     (inst, acc) => ({ ...acc, [inst.username]: inst.id }),
@@ -21,7 +40,7 @@ const createCourse = async (req, res) => {
     summary,
     video_preview,
     instructor: instructorIds,
-    subtitles,
+    subtitles: courseSubs,
   });
   for (const id of instructorIds) {
     Instructor.findByIdAndUpdate(id, {
