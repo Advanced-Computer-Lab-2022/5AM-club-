@@ -13,21 +13,18 @@ import "./InstructorCreateCourse.css";
 import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 import { Box, Container } from "@mui/system";
 import AddSubtitle from "../../components/AddSubtitle";
+import { Delete, WidthNormal } from "@mui/icons-material";
+import axios from "axios"
 
-const axios = require('axios')
-const onSubmit=(async(e)=>{
-  const res= await axios.post('localhost:3000/create-course', {
-    Name: 'Fred',
-    Age: '23'
-  })
-  return res;
-}
 
-)
+
 
   
 
 function InstructorCreateCourse() {
+
+
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -35,9 +32,21 @@ function InstructorCreateCourse() {
   const [instructor, setInstructor] = useState("");
   const [video_preview, setVideo_preview] = useState("");
   const [subtNum,setSubtNum]=useState([]);
+  const [subtitles, SetSubtitles] = useState([]);
   //   useEffect(() => {
   //     console.log(name);
   //   }, [name]);
+
+
+  const onSubmit=(async(obj)=>{
+    try{
+    axios.post('http://localhost:4000/instructor/create-course',obj,{headers:{id:"6355091ab4c387ca835c6bfc"}} ).then((res)=>console.log(res))
+    console.log("submitting");
+    //return res;
+    }catch(err){console.log(err);}
+  }
+  
+  )
 
 
   return (
@@ -132,14 +141,103 @@ function InstructorCreateCourse() {
                 // name = e.target.value;
               }}
             />
-            <AddSubtitle />
+            {subtitles.map((element, idx) => (
+        <div
+        key={"div"+idx}
+          style={{
+            backgroundColor: "lightgray",
+            borderRadius: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            padding: "15px",
+          }}
+        >
+          <Button
+            key={"btn" + { idx }}
+            style={{ maxWidth: "20px" }}
+            variant="outlined"
+            startIcon={<Delete style={{ color: "red", width: "20px" }} />}
+            onClick={() => {
+              console.log(subtitles);
+              SetSubtitles([
+                ...subtitles.slice(0, idx),
+                ...subtitles.slice(idx + 1),
+              ]);
+              console.log(subtitles);
+            }}
+          ></Button>
+          <TextField
+            key={"subtitle" + { idx }}
+            hiddenLabel
+            id={"subtitle" + { idx }}
+            variant="outlined"
+            label={"Course Subtitle " + (idx + 1)}
+            style={{ backgroundColor: "white" }}
+            // value={element.title}
+            onChange={(e) => {
+              subtitles[idx].title = e.target.value;
+            }}
+          />
+          <TextField
+            hiddenLabel
+            key={"subtitledesc" + { idx }}
+            id={"subtitleDesc" + { idx }}
+            variant="outlined"
+            label={"Course Subtitle Description " + (idx + 1)}
+            style={{ backgroundColor: "white" }}
+            multiline
+            minRows={3}
+            //value={element.subtitleDescription}
+            onChange={(e) => {
+              subtitles[idx].description = e.target.value;
+            }}
+          />
+        </div>
+      ))}
+      <div id="btns" style={{ display: "flex" }}>
+        <Button
+          id="addSub"
+          style={{
+            marginRight: "auto",
+            backgroundColor: "green",
+            color: "white",
+          }}
+          onClick={() =>
+            SetSubtitles([...subtitles, { title: "", description: "" }])
+          }
+        >
+          Add Subtitle{" "}
+        </Button>
+        <Button
+          id="removeSub"
+          style={{
+            marginLeft: "auto",
+            backgroundColor: "red",
+            color: "white",
+          }}
+          onClick={() => SetSubtitles(subtitles.slice(0, -1))}
+        >
+          remove Subtitle{" "}
+        </Button>
+      </div>
            
             <Button type="submit" variant="contained" onClick={(e)=>{
               e.preventDefault();
+              const subs=subtitles.map((sub)=>sub.title);
+              const subsdesc=subtitles.map((sub)=>sub.description)
               const obj={
-                title, description, amount, instructor, subjects, video_preview
+                title, 
+                summary:description, 
+                price:amount, 
+                instructor:instructor.split(","), 
+                subject:subjects.split(","), 
+                video_preview,
+                subtitles:subs,
+                subDescriptions:subsdesc
               }
               console.log(obj);
+              onSubmit(obj);
             }
             }>
               Submit

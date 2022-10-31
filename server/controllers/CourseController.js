@@ -3,6 +3,7 @@ const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 
 const createCourse = async (req, res) => {
+  console.log(req.body);
   let {
     title,
     price,
