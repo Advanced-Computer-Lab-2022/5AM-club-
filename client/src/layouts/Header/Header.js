@@ -18,8 +18,12 @@ function Header() {
   function handleLogout() {}
   function handleProfile() {}
   function handleSearch() {
-    if (location.pathname.includes("trainee")) {
-      navigate("/trainee/courses", {
+    if (location.pathname.includes("individual")) {
+      navigate("/individual-trainee/courses", {
+        state: { searchItem: searchRef.current.value },
+      });
+    } else if (location.pathname.includes("corporate")) {
+      navigate("/corporate-trainee/courses", {
         state: { searchItem: searchRef.current.value },
       });
     } else if (location.pathname.includes("admin")) {

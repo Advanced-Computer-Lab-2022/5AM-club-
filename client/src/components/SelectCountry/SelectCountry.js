@@ -5,8 +5,9 @@ import DropDown from "react-dropdown";
 import "react-dropdown/style.css";
 import countries from "../../utils/Countries.json";
 function SelectCountry(props) {
-  const [country, setCountry] = useState();
+  const [country, setCountry] = useState("");
   useUpdateEffect(() => {
+    console.log(country);
     if (!props.type) {
       localStorage.setItem("country", country);
       return;
