@@ -7,6 +7,7 @@ import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/Ge
 import proxy from "../../utils/proxy.json";
 import CountryToCurrency from "country-to-currency";
 import countries from "../../utils/Countries.json";
+import formatTime from "../../utils/TimeConverter";
 function ViewCourses() {
   const [mainText, setMainText] = useState("");
   const navigate = useNavigate();
@@ -62,12 +63,14 @@ function ViewCourses() {
       <div>
         View Courses: <br />
         {courses.map((c) => (
-          <div className="course-item" key={c.title}>
+          <div className='course-item' key={c.title}>
             <div>
               {c.title +
                 (!location.pathname.includes("corporate-trainee")
                   ? " price: " +
                     c.price +
+                    " totalhours: " +
+                    formatTime(c.minutes) +
                     " " +
                     CountryToCurrency[
                       countries.values.find((e) => e.name === country).code

@@ -13,6 +13,16 @@ const videoSchema = {
 
 const exerciseSchema = {};
 
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
+};
+
 const sectionSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -75,17 +85,7 @@ const courseSchema = new mongoose.Schema({
     required: true,
   },
   userReviews: {
-    type: [
-      {
-        user: {
-          type: mongoose.Types.ObjectId,
-          ref: "Trainees",
-          required: true,
-        },
-        review: { type: String },
-        rating: { type: Number },
-      },
-    ],
+    type: [reviewSchema],
     required: true,
   },
   owners: {
@@ -110,6 +110,7 @@ const Course = mongoose.model("Courses", courseSchema);
 // const Exercise = mongoose.model("Exercise", exerciseSchema);
 module.exports = {
   Course,
+  reviewSchema,
   // Subtitle,
   // Section,
   // Exercise,

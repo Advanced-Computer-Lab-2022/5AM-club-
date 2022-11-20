@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { reviewSchema } = require("./Course.js");
 
 const instructorSchema = new mongoose.Schema({
   username: {
@@ -21,6 +22,10 @@ const instructorSchema = new mongoose.Schema({
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
     default: [],
+  },
+  userReviews: {
+    type: [reviewSchema],
+    required: true,
   },
 });
 

@@ -2,6 +2,10 @@ const Joi = require("joi");
 const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
+const setCoursePromotionSchema = Joi.object({
+  percentage: Joi.number().min(0).max(100),
+  deadline: Joi.date(),
+});
 const createCourse = async (req, res) => {
   console.log(req.body);
   let {
@@ -138,8 +142,24 @@ const findCourseByID = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+const setCoursePromotion = async (req, res) => {
+  const id = req.params.id;
+  const valid = setCoursePromotionSchema.validate();
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+  const course = await Course.findByIdAndUpdate(
+    id,
+    {
+      promotion: req.body.promotion,
+    },
+    { new: true }
+  );
+};
 module.exports = {
   getCourses,
   createCourse,
   findCourseByID,
+  setCoursePromotion,
 };

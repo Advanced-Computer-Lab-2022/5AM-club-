@@ -4,8 +4,11 @@ const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
 const app = express();
 const port = process.env.port || 4000;
+const { Course } = require("./models/Course");
+const Instructor = require("./models/Instructor");
 
 const courseRouter = require("./routes/api/Course");
+const reviewRouter = require("./routes/api/Review");
 connect();
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
@@ -18,6 +21,8 @@ app.use("/instructor", userDataRouter);
 app.use("/trainee", userDataRouter);
 app.use("/admin", userDataRouter);
 app.use("/", userDataRouter);
+app.use("/instructor", reviewRouter);
+app.use("/trainee", reviewRouter);
 
 app.listen(port);
 
@@ -25,15 +30,15 @@ app.listen(port);
 
 635ad854b2ad88bd8358a5af
 
+
 new Instructor({
   username: "ali12",
   password: "ali",
   email: "ali",
   country: "ali",
   money_owed: 0,
-  rating: 0,
-  courses: ["635527b4d06fb801bd4d2b89"],
-}).save();*/
+}).save();
+*/
 
 /*new Course({
   title: "Node.js API Masterclass With MongoDB & Express",

@@ -12,6 +12,7 @@ const countrySchema = Joi.object({
     )
     .required(),
 });
+
 const addUserSchema = Joi.object({
   username: Joi.string().required().messages({
     "string.empty": `"Username" cannot be an empty field`,
@@ -19,6 +20,13 @@ const addUserSchema = Joi.object({
   password: Joi.string().required().messages({
     "string.empty": `"Password" cannot be an empty field`,
   }),
+});
+
+const editEmailSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+const editBiographySchema = Joi.object({
+  biography: Joi.string(),
 });
 
 async function getUsers(req, res) {
@@ -169,6 +177,55 @@ async function addTrainee(req, res) {
     })
     .catch((err) => res.status(400).send("Username already used"));
 }
+
+async function editEmailInstructor(req, res) {
+  console.log(req.body);
+  const valid = editEmailSchema.validate(req.body);
+  console.log(valid);
+  if (valid.error) {
+    res.status(400).send("Invalid Email");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        email: req.body.email,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
+
+async function editBiographyInstructor(req, res) {
+  const valid = editBiographySchema.validate(req.body);
+
+  if (valid.error) {
+    res.status(400).send("Invalid Biography");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        biography: req.body.biography,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
 module.exports = {
   setCountry,
   getUser,
@@ -176,4 +233,6 @@ module.exports = {
   addAdmin,
   addInstructor,
   addTrainee,
+  editBiographyInstructor,
+  editEmailInstructor,
 };
