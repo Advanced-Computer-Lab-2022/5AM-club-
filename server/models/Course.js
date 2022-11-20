@@ -5,6 +5,10 @@ const videoSchema = {
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
 };
 
 const exerciseSchema = {
@@ -12,6 +16,46 @@ const exerciseSchema = {
   choices: { type: [Object], required: true },
   answers: { type: [String], required: true },
   exerciseType: { type: String, required: true },
+};
+
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
+};
+
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
+};
+
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
+};
+
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
 };
 
 const reviewSchema = {

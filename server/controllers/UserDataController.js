@@ -182,6 +182,55 @@ async function addTrainee(req, res) {
     .catch((err) => res.status(400).send("Username already used"));
 }
 
+async function editEmailInstructor(req, res) {
+  console.log(req.body);
+  const valid = editEmailSchema.validate(req.body);
+  console.log(valid);
+  if (valid.error) {
+    res.status(400).send("Invalid Email");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        email: req.body.email,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
+
+async function editBiographyInstructor(req, res) {
+  const valid = editBiographySchema.validate(req.body);
+
+  if (valid.error) {
+    res.status(400).send("Invalid Biography");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        biography: req.body.biography,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
+
 async function signUp(req, res) {
   const result = addUserSchema.validate(req.body);
   console.log(result.error);
@@ -316,6 +365,8 @@ module.exports = {
   addAdmin,
   addInstructor,
   addTrainee,
+  editBiographyInstructor,
+  editEmailInstructor,
   signUp,
   login,
   editBiographyInstructor,

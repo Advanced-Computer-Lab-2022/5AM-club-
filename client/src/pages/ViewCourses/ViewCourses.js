@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
 import countries from "../../utils/Countries.json";
+import formatTime from "../../utils/TimeConverter";
 import proxy from "../../utils/proxy.json";
 import formatTime from "../../utils/TimeConverter";
 function ViewCourses() {

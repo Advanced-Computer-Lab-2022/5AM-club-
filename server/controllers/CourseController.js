@@ -2,6 +2,12 @@ const Joi = require("joi");
 const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
+const setCoursePromotionSchema = Joi.object({
+  percentage: Joi.number().min(0).max(100),
+  deadline: Joi.date(),
+});
+const createCourse = async (req, res) => {
+  console.log(req.body);
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
@@ -168,6 +174,41 @@ const findCourseByID = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+const setCoursePromotion = async (req, res) => {
+  const id = req.params.id;
+  const valid = setCoursePromotionSchema.validate();
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+  const course = await Course.findByIdAndUpdate(
+    id,
+    {
+      promotion: req.body.promotion,
+    },
+    { new: true }
+  );
+};
+
+async function updateCourse(req, res) {
+  const valid = courseSchema.validate(req.body);
+  if (valid.error) {
+    console.log(valid.error);
+    res.status(400).json("Invalid Course Object");
+    return;
+  }
+  const course = await Course.findByIdAndUpdate(req.params.courseid, req.body, {
+    new: true,
+  });
+  if (req.headers.country) {
+    course.price = await convert(
+      course.price,
+      "United States",
+      req.headers.country
+    );
+  }
+  res.send(course);
+}
 
 async function updateCourse(req, res) {
   const valid = courseSchema.validate(req.body);
@@ -364,5 +405,4 @@ module.exports = {
   getCourses,
   createCourse,
   findCourseByID,
-  setCoursePromotion,
 };
