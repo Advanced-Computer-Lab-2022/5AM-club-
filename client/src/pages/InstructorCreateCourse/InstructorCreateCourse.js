@@ -140,18 +140,21 @@ function InstructorCreateCourse() {
                 variant="outlined"
                 startIcon={<Delete style={{ color: "red", width: "20px" }} />}
                 onClick={() => {
-                  console.log(subtitles);
-                  SetSubtitles([
-                    ...subtitles.slice(0, idx),
-                    ...subtitles.slice(idx + 1),
-                  ]);
-                  console.log(subtitles);
+                  SetSubtitles((subtitles) => {
+                    const newSubtitles = [];
+                    subtitles.map((subtitle, index) => {
+                      if (!(idx === index)) {
+                        newSubtitles.push(subtitle);
+                      }
+                    });
+                    return newSubtitles;
+                  });
                 }}
               ></Button>
               <TextField
-                key={"subtitle" + { idx }}
+                key={element.title + idx + 1}
                 hiddenLabel
-                id={"subtitle" + { idx }}
+                id={element.title + idx + 1}
                 variant="outlined"
                 label={"Course Subtitle " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
@@ -159,11 +162,12 @@ function InstructorCreateCourse() {
                 onChange={(e) => {
                   subtitles[idx].title = e.target.value;
                 }}
+                defaultValue={element.title}
               />
               <TextField
                 hiddenLabel
-                key={"subtitledesc" + { idx }}
-                id={"subtitleDesc" + { idx }}
+                key={idx + element.description}
+                id={idx + element.description}
                 variant="outlined"
                 label={"Course Subtitle Description " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
@@ -173,6 +177,7 @@ function InstructorCreateCourse() {
                 onChange={(e) => {
                   subtitles[idx].description = e.target.value;
                 }}
+                defaultValue={element.description}
               />
             </div>
           ))}
