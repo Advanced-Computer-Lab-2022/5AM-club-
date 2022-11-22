@@ -1,18 +1,17 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, memo } from "react";
 import {
   TextField,
   FormControl,
   InputLabel,
-  FilledInput,
   InputAdornment,
   OutlinedInput,
   Button,
 } from "@mui/material";
 import "./InstructorCreateCourse.css";
 import { Box, Container } from "@mui/system";
-import { Delete, WidthNormal } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import axios from "axios";
+import proxy from "../../utils/proxy.json";
 
 function InstructorCreateCourse() {
   const [title, setTitle] = useState("");
@@ -21,24 +20,18 @@ function InstructorCreateCourse() {
   const [subjects, setSubjects] = useState("");
   const [instructor, setInstructor] = useState("");
   const [video_preview, setVideo_preview] = useState("");
-  const [subtNum, setSubtNum] = useState([]);
   const [subtitles, SetSubtitles] = useState([]);
-  //   useEffect(() => {
-  //     console.log(name);
-  //   }, [name]);
 
   const onSubmit = async (obj) => {
     try {
       axios
-        .post("http://localhost:4000/instructor/create-course", obj, {
-          headers: { id: "6355091ab4c387ca835c6bfc" },
+        .post(proxy.URL + "instructor/create-course", obj, {
+          headers: {
+            id: "", // TODO : Replace empty string with id from token,
+          },
         })
-        .then((res) => console.log(res));
-      console.log("submitting");
-      //return res;
-    } catch (err) {
-      console.log(err);
-    }
+        .then((res) => {});
+    } catch (err) {}
   };
 
   return (
@@ -227,7 +220,6 @@ function InstructorCreateCourse() {
                 subtitles: subs,
                 subDescriptions: subsdesc,
               };
-              console.log(obj);
               onSubmit(obj);
             }}
           >
@@ -238,4 +230,4 @@ function InstructorCreateCourse() {
     </Container>
   );
 }
-export default InstructorCreateCourse;
+export default memo(InstructorCreateCourse);

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import proxy from "../../utils/proxy.json";
 import { useUpdateEffect } from "react-use";
 import { useLocation } from "react-router-dom";
@@ -25,35 +25,35 @@ function GeneralFiltersContainer(props) {
   useUpdateEffect(() => {
     props.setCourses([]);
     props.setMainText("");
-    if (props.country) {
-      axios
-        .get(proxy.URL + "/trainee/courses", {
-          params: {
-            min: min,
-            max: max,
-            subject: subject,
-            rating: rating,
-            searchitem: searchItem,
-          },
-          headers: { country: props.country },
-        })
-        .then((response) => {
-          if (response.data.length === 0)
-            props.setMainText("No courses matched your filters");
-          props.setCourses(response.data);
-        })
-        .catch(() => {
+    axios
+      .get(proxy.URL + "/trainee/courses", {
+        params: {
+          min: min,
+          max: max,
+          subject: subject,
+          rating: rating,
+          searchitem: searchItem,
+        },
+        headers: {
+          country: "", // TODO : Fill empty string with country from token, if no token get from localstorage
+        },
+      })
+      .then((response) => {
+        if (response.data.length === 0)
           props.setMainText("No courses matched your filters");
-        });
-    }
-  }, [max, min, subject, rating, searchItem, props.country]);
+        props.setCourses(response.data);
+      })
+      .catch(() => {
+        props.setMainText("No courses matched your filters");
+      });
+  }, [max, min, subject, rating, searchItem]);
 
   return (
     <div>
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
 
-      {!location.pathname.includes("corporate-trainee") && (
+      {!"corporate" && ( // TODO : Check it's not corporate
         <div>
           <p>Filter by price:</p>
           <input ref={minRef} type={"number"}></input>
@@ -79,4 +79,4 @@ function GeneralFiltersContainer(props) {
     </div>
   );
 }
-export default GeneralFiltersContainer;
+export default memo(GeneralFiltersContainer);

@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { memo } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Instructor from "./pages/InstructorMyCourses/InstructorMyCourses";
@@ -19,9 +20,8 @@ function App() {
       <BrowserRouter>
         <Header></Header>
         <Routes>
-          <Route path="/Admin/add-user" element={<AdminAddUser />}></Route>
+          <Route path="/admin/add-user" element={<AdminAddUser />}></Route>
           <Route path="/instructor/my-courses" element={<Instructor />}></Route>
-
           <Route
             path="/instructor/create-course"
             element={<InstructorCreateCourse />}
@@ -72,4 +72,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);

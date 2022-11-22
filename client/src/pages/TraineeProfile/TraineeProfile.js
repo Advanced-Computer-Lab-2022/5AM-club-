@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { memo } from "react";
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function TraineeProfile() {
   const navigate = useNavigate();
-  const location = useLocation();
   return (
     <div>
       <button
@@ -12,15 +12,8 @@ function TraineeProfile() {
       >
         View Courses
       </button>
-      <SelectCountry
-        type="trainee"
-        id={
-          location.pathname.includes("individual")
-            ? "635e992a99ecb836d834f7fd"
-            : "635f05a51832d2cde2c26d88"
-        }
-      ></SelectCountry>
+      <SelectCountry></SelectCountry>
     </div>
   );
 }
-export default TraineeProfile;
+export default memo(TraineeProfile);
