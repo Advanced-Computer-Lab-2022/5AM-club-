@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 import "./AdminAddUser.css";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import proxy from "../../utils/proxy.json";
@@ -73,4 +73,4 @@ function AdminAddUser() {
   );
 }
 
-export default AdminAddUser;
+export default memo(AdminAddUser);

@@ -4,9 +4,10 @@ const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
 const app = express();
 const port = process.env.port || 4000;
-
 const courseRouter = require("./routes/api/Course");
+
 connect();
+
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
@@ -20,7 +21,6 @@ app.use("/admin", userDataRouter);
 app.use("/", userDataRouter);
 
 app.listen(port);
-
 /*
 
 635ad854b2ad88bd8358a5af

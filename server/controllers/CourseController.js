@@ -3,6 +3,8 @@ const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
+  //TODO: Joi Validation
+
   console.log(req.body);
   let {
     title,
@@ -138,7 +140,87 @@ const findCourseByID = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
+async function addSubtitle(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findByIdAndUpdate(
+    req.params.courseid,
+    { $push: { subtitles: req.body } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function deleteSubtitle(req, res) {
+  const course = await Course.findByIdAndUpdate(
+    req.params.courseid,
+    { $pull: { subtitles: [{ _id: req.params.subtitleid }] } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function updateSubtitle(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findOneAndUpdate(
+    {
+      _id: req.params.courseid,
+      subtitles: { $elemMatch: { _id: req.params.subtitleid } },
+    },
+    { $set: { "subtitles.$": req.body } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function addSection(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.params.subtitleid) subtitle.push(req.body);
+  }
+  await course.save();
+  res.send(course);
+}
+
+async function deleteSection(req, res) {
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.subtitleid) {
+      subtitle.filter((section) => section._id !== req.params.sectionid);
+    }
+  }
+  await course.save();
+  res.send(course);
+}
+
+async function updateSection(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.params.subtitleid) {
+      for (let section of subtitle) {
+        if (section._id === req.params.sectionid) section = req.body;
+      }
+    }
+  }
+  await course.save();
+  res.send(course);
+}
+
 module.exports = {
+  addSubtitle,
+  deleteSubtitle,
+  updateSubtitle,
+  addSection,
+  deleteSection,
+  updateSection,
   getCourses,
   createCourse,
   findCourseByID,

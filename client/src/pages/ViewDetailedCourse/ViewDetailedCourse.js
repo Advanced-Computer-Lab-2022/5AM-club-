@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import "./ViewDetailedCourse.css";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useUpdateEffect } from "react-use";
+import { useEffect, memo } from "react";
+import { useLocation } from "react-router-dom";
 import CourseContainer from "../../components/CourseContainer/CourseContainer";
 import proxy from "../../utils/proxy.json";
 function ViewDetailedCourse(props) {
@@ -10,56 +10,29 @@ function ViewDetailedCourse(props) {
   const [course, setCourse] = React.useState({});
   const [subtitles, setSubtitles] = React.useState([]);
   const [promotion, setPromotion] = React.useState({});
-  const [country, setCountry] = React.useState("");
-  const navigate = useNavigate();
-  React.useEffect(() => {
-    if (
-      location.pathname.includes("trainee") ||
-      location.pathname.includes("instructor") ||
-      location.pathname.includes("admin")
-    ) {
-      axios
-        .get(proxy.URL + "/get-user", {
-          headers: location.pathname.includes("individual-trainee")
-            ? { id: "635e992a99ecb836d834f7fd", type: "trainee" }
-            : location.pathname.includes("corporate-trainee")
-            ? { id: "635f05a51832d2cde2c26d88", type: "trainee" }
-            : location.pathname.includes("instructor")
-            ? { id: "6355091ab4c387ca835c6bfc", type: "instructor" }
-            : { id: "635e98ca99ecb836d834f7fc", type: "admin" },
-        })
-        .then((response) => {
-          setCountry(response.data.country);
-        })
-        .catch(() => {
-          setCountry("United States");
-        });
-    } else {
-      setCountry(localStorage.getItem("country"));
-    }
-  }, []);
-  useUpdateEffect(() => {
-    const id = location.state.id;
+
+  useEffect(() => {
     axios
-      .get(proxy.URL + "/courses/" + id, { headers: { country: country } })
+      .get(proxy.URL + "/courses/" + location.state.id, {
+        headers: {
+          country: "", // TODO : Replace with user's country from token, or from localstorage } })
+        },
+      })
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);
         setPromotion(response.data.promotion);
       })
-      .catch(() => {
-        navigate("/error");
-      });
-  }, [country]);
+      .catch(() => {});
+  }, [location.state.id]);
 
   return (
     <CourseContainer
       course={course}
-      country={country}
       subtitles={subtitles}
       promotion={promotion}
     />
   );
 }
 
-export default ViewDetailedCourse;
+export default memo(ViewDetailedCourse);

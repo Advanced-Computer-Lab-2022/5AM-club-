@@ -5,11 +5,7 @@ const Admin = require("../models/Admin");
 const Instructor = require("../models/Instructor");
 const countrySchema = Joi.object({
   country: Joi.string()
-    .valid(
-      ...countries.values.map((e) => {
-        return e.name;
-      })
-    )
+    .valid(...Object.keys(countries))
     .required(),
 });
 const addUserSchema = Joi.object({

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, memo } from "react";
 import proxy from "../../utils/proxy.json";
 import { useUpdateEffect } from "react-use";
 import axios from "axios";
@@ -10,7 +10,6 @@ function InstructorFiltersContainer(props) {
 
   const searchRef = useRef();
   const subjectRef = useRef();
-
   const maxRef = useRef();
   const minRef = useRef();
 
@@ -20,8 +19,8 @@ function InstructorFiltersContainer(props) {
     axios
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
-          id: props.instructorId,
-          country: props.country,
+          id: "", // TODO : Fill empty string with id from token
+          country: "", // TODO : Fill empty string with country from token
         },
         params: {
           min: min,
@@ -69,4 +68,4 @@ function InstructorFiltersContainer(props) {
     </div>
   );
 }
-export default InstructorFiltersContainer;
+export default memo(InstructorFiltersContainer);

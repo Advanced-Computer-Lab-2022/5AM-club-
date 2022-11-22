@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { memo } from "react";
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function AdminPage() {
   const navigate = useNavigate();
@@ -9,10 +10,10 @@ function AdminPage() {
           navigate("add-user");
         }}
       >
-        add User
+        Add User
       </button>
-      <SelectCountry type="admin" id="635e98ca99ecb836d834f7fc"></SelectCountry>
+      <SelectCountry></SelectCountry>
     </div>
   );
 }
-export default AdminPage;
+export default memo(AdminPage);
