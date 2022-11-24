@@ -1,21 +1,24 @@
-import React from "react";
 import axios from "axios";
 import "./ViewDetailedCourse.css";
-import { useEffect, memo } from "react";
+import { useEffect, useState, memo } from "react";
 import { useLocation } from "react-router-dom";
 import CourseContainer from "../../components/CourseContainer/CourseContainer";
 import proxy from "../../utils/proxy.json";
-function ViewDetailedCourse(props) {
+import { useSelector } from "react-redux";
+function ViewDetailedCourse() {
+  const token = useSelector((state) => state.token.value);
+
   const location = useLocation();
-  const [course, setCourse] = React.useState({});
-  const [subtitles, setSubtitles] = React.useState([]);
-  const [promotion, setPromotion] = React.useState({});
+
+  const [course, setCourse] = useState({});
+  const [subtitles, setSubtitles] = useState([]);
+  const [promotion, setPromotion] = useState({});
 
   useEffect(() => {
     axios
       .get(proxy.URL + "/courses/" + location.state.id, {
         headers: {
-          country: "", // TODO : Replace with user's country from token, or from localstorage } })
+          country: token ? token.country : localStorage.getItem("country"),
         },
       })
       .then((response) => {
@@ -24,7 +27,7 @@ function ViewDetailedCourse(props) {
         setPromotion(response.data.promotion);
       })
       .catch(() => {});
-  }, [location.state.id]);
+  }, [location.state.id, token]);
 
   return (
     <CourseContainer

@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node index",
     "autoRestart": "nodemon index",
-    "client":"npm start --prefix ../client",
-    "frontback":"concurrently \"npm run autoRestart\" \" npm run client\""
+    "client": "npm start --prefix ../client",
+    "frontback": "concurrently \"npm run autoRestart\" \" npm run client\""
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +23,6 @@
     "mongoose": "^6.6.5",
     "node": "^19.0.0",
     "jsonwebtoken": "^8.5.1"
-    
   },
   "devDependencies": {
     "concurrently": "^7.4.0",

@@ -3,26 +3,35 @@ import "./ViewCourses.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
-import CountryToCurrency from "country-to-currency";
 import countries from "../../utils/Countries.json";
+import { useSelector } from "react-redux";
+import proxy from "../../utils/proxy.json";
 function ViewCourses() {
+  const token = useSelector((state) => state.token.value);
+
   const navigate = useNavigate();
   const location = useLocation();
-  const [mainText, setMainText] = useState("");
+  const [mainText, setMainText] = useState("Loading Courses...");
   const [courses, setCourses] = useState([]);
+
   useEffect(() => {
     setCourses([]);
     axios
-      .get("http://localhost:4000/courses", {
+      .get(proxy.URL + "/courses", {
         headers: {
-          country: "", // TODO: Replace empty string with country from token
+          country: token ? token.country : localStorage.getItem("country"),
         },
         params: { searchItem: location.state?.searchItem },
       })
       .then((response) => {
+        if (response.data.length === 0)
+          setMainText("No courses are available yet");
+        else setMainText("");
+
         setCourses(response.data);
       });
-  }, [location.state?.searchItem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
   return (
     <>
       <GeneralFiltersContainer
@@ -35,16 +44,18 @@ function ViewCourses() {
           <div className="course-item" key={c.title}>
             <div>
               {c.title +
-                (!"" // TODO: Check if not corporate
+                (token?.type !== "corporate"
                   ? " price: " +
                     c.price +
                     " " +
-                    CountryToCurrency[
-                      countries.values.find(
+                    countries[
+                      Object.keys(countries).find(
                         (e) =>
-                          e.name ===
-                          "" /* Replace empty string with country from token, or localstorage*/
-                      ).code
+                          e ===
+                          (token
+                            ? token.country
+                            : localStorage.getItem("country"))
+                      )
                     ]
                   : "") +
                 " rating:" +

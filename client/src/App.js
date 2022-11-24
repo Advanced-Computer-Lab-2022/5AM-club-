@@ -13,8 +13,14 @@ import Footer from "./layouts/Footer/Footer";
 import TraineeProfile from "./pages/TraineeProfile/TraineeProfile";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
+import { useDispatch } from "react-redux";
+import { set } from "./utils/TokenSlice";
 
 function App() {
+  const dispatch = useDispatch();
+  if (localStorage.getItem("token")) {
+    dispatch(set(localStorage.getItem("token")));
+  }
   return (
     <>
       <BrowserRouter>

@@ -1,17 +1,19 @@
 import proxy from "../../utils/proxy.json";
 import axios from "axios";
 import { useEffect, memo } from "react";
-import CountryToCurrency from "country-to-currency";
+import { useSelector } from "react-redux";
 import countries from "../../utils/Countries.json";
 function InstructorCoursesContainer(props) {
+  const token = useSelector((state) => state.token.value);
+
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
     axios
       .get(proxy.URL + "/instructor/my-courses", {
         headers: {
-          id: "", // TODO : Fill empty string with id from token
-          country: "", // TODO : Fill empty string with country from token
+          id: token.id,
+          country: token.country,
         },
       })
       .then((response) => {
@@ -20,7 +22,7 @@ function InstructorCoursesContainer(props) {
         else props.setMainText("");
         props.setCourses(response.data);
       });
-  }, [props]);
+  }, [props, token.id, token.country]);
   return (
     <div>
       <div>{props.mainText}</div>
@@ -30,9 +32,7 @@ function InstructorCoursesContainer(props) {
             " price: " +
             course.price +
             " " +
-            CountryToCurrency[
-              countries.values.find((e) => e.name === props.country).code
-            ]}
+            countries[Object.keys(countries).find((e) => e === token.country)]}
         </div>
       ))}
     </div>
