@@ -22,4 +22,5 @@ router.post("/add-corporate-trainee", UserDataController.addTrainee);
 router.post("/signUp", UserDataController.signUp);
 router.post("/login", UserDataController.login);
 
+router.put("/change-password", UserDataController.changePassword);
 module.exports = router;

@@ -367,6 +367,64 @@ async function editBiographyInstructor(req, res) {
     res.status(400).send("Missing Id");
   }
 }
+async function changePassword(req, res) {
+  
+  if (req.headers.id) {
+    const id = req.headers.id;
+    let User;
+    console.log(req.headers, req.body);
+    switch (req.headers.type) {
+      case "trainee":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            password: req.body.password,
+          },
+          { new: true }
+        );
+        break;
+      case "instructor":
+        User = await Instructor.findByIdAndUpdate(
+          id,
+          {
+            password: req.body.password,
+          },
+          { new: true }
+        );
+        break;
+      default:
+        res.status(400).send("Invalid UserType");
+        break;
+    }
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
+
+async function editBiographyInstructor(req, res) {
+  const valid = editBiographySchema.validate(req.body);
+
+  if (valid.error) {
+    res.status(400).send("Invalid Biography");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        biography: req.body.biography,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
 
 async function getCourseInstructor(req, res) {
   res.send(await Instructor.find({ courses: ObjectId(req.query.courseid) }));
@@ -387,4 +445,5 @@ module.exports = {
   editEmailInstructor,
   getTraineeCourse,
   updateTraineeCourse,
+  changePassword
 };
