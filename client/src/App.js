@@ -16,6 +16,8 @@ import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
 import { useDispatch } from "react-redux";
 import { set } from "./utils/TokenSlice";
 
+import Login from "./pages/login";
+import SignUp from "./pages/SignUp/SignUp";
 function App() {
   const dispatch = useDispatch();
   if (localStorage.getItem("token")) {
@@ -70,6 +72,8 @@ function App() {
           ></Route>
           <Route path="/corporate-trainee" element={<TraineeProfile />}></Route>
           <Route path="/admin" element={<AdminPage />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/signUp" element={<SignUp />}></Route>
           <Route path="/" element={<MainPage />}></Route>
         </Routes>
         <Footer></Footer>

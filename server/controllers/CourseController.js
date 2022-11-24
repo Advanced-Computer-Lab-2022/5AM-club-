@@ -3,8 +3,9 @@ const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
-  //TODO: Joi Validation
-
+  console.log(req.body);
+  if (req.user.type !== "instructor")
+    res.status(401).json({ message: "not instructor" });
   let {
     title,
     price,

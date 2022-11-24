@@ -66,7 +66,7 @@ const courseSchema = new mongoose.Schema({
     required: true,
   },
   instructor: {
-    type: [{ type: mongoose.Types.ObjectId, ref: "Instructors" }],
+    type: [{ type: mongoose.Types.ObjectId, ref: "Instructor" }],
     required: true,
   },
   userReviews: {
