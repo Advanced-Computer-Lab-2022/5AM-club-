@@ -30,6 +30,7 @@ function Login() {
       axios.post("http://localhost:4000/login", obj).then((res) => {
         console.log(res);
         window.localStorage.setItem("accessToken", res.data.accessToken);
+
         console.log(window.localStorage.getItem("accessToken"));
         if (res.data.type === "admin") navigate("../admin");
         if (res.data.type === "instructor") navigate("../instructor");
