@@ -1,32 +1,30 @@
-import { useState, useRef, memo } from "react";
+import { useRef, memo } from "react";
 import proxy from "../../utils/proxy.json";
-import { useUpdateEffect } from "react-use";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
 function InstructorFiltersContainer(props) {
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
-  const [subject, setSubject] = useState("");
-  const [searchItem, setSearchItem] = useState("");
+  const token = useSelector((state) => state.token.value);
 
   const searchRef = useRef();
   const subjectRef = useRef();
   const maxRef = useRef();
   const minRef = useRef();
 
-  useUpdateEffect(() => {
+  function handleFilter() {
     props.setCourses([]);
     props.setMainText("");
     axios
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
-          id: "", // TODO : Fill empty string with id from token
-          country: "", // TODO : Fill empty string with country from token
+          id: token.id,
+          country: token.country,
         },
         params: {
-          min: min,
-          max: max,
-          subject: subject,
-          searchitem: searchItem,
+          min: minRef.current.value,
+          max: maxRef.current.value,
+          subject: subjectRef,
+          searchitem: searchRef.current.value,
         },
       })
       .then((response) => {
@@ -37,7 +35,7 @@ function InstructorFiltersContainer(props) {
       .catch(() => {
         props.setMainText("No courses matched your filters");
       });
-  }, [max, min, subject, searchItem]);
+  }
 
   return (
     <div>
@@ -53,17 +51,7 @@ function InstructorFiltersContainer(props) {
         <p> to </p>
         <input ref={maxRef} type={"number"}></input>
 
-        <button
-          onClick={() => {
-            setMax(maxRef.current.value);
-            setMin(minRef.current.value);
-            setSubject(subjectRef.current.value);
-            setSearchItem(searchRef.current.value);
-            props.setMainText(null);
-          }}
-        >
-          Go
-        </button>
+        <button onClick={handleFilter}>Go</button>
       </div>
     </div>
   );

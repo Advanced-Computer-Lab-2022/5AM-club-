@@ -4,10 +4,11 @@ import Button from "react-bootstrap/Button";
 import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
 import formatTime from "../../utils/TimeConverter";
-import CountryToCurrency from "country-to-currency";
 import countries from "../../utils/Countries.json";
+import { useSelector } from "react-redux";
 
 function CourseContainer(props) {
+  const token = useSelector((state) => state.token.value);
   return (
     <Card border="dark" className="card">
       <Card.Body>
@@ -17,7 +18,7 @@ function CourseContainer(props) {
         <div className="attribute">
           Total hours: {formatTime(props.course.minutes)}
         </div>
-        {!"corporate" && ( // TODO : Check it's not corporate
+        {token?.type !== "coporate" && (
           <div className="attribute">
             Price:{" "}
             {props.promotion &&
@@ -28,8 +29,14 @@ function CourseContainer(props) {
                   {(props.course.price * (100 - props.promotion.percentage)) /
                     100 +
                     (" " +
-                      CountryToCurrency[
-                        countries.values.find((e) => e.name === "")?.code // TODO : Replace empty string with country from token or localstorage
+                      countries[
+                        Object.keys(countries).find(
+                          (e) =>
+                            e ===
+                            (token
+                              ? token.country
+                              : localStorage.getItem("country"))
+                        )
                       ])}
                 </span>
                 <span className="red">
@@ -41,15 +48,21 @@ function CourseContainer(props) {
               <>
                 {props.course.price +
                   (" " +
-                    CountryToCurrency[
-                      countries.values.find((e) => e.name === "")?.code // TODO : Replace empty string with country from token, or localstorage
+                    countries[
+                      Object.keys(countries).find(
+                        (e) =>
+                          e ===
+                          (token
+                            ? token.country
+                            : localStorage.getItem("country"))
+                      )
                     ])}
               </>
             )}
           </div>
         )}
 
-        {"individual" && ( // TODO : Check it's individual
+        {token?.type === "individual" && (
           <Button variant="outline-success">BUY NOW</Button>
         )}
         <div className="attribute"> Content: </div>

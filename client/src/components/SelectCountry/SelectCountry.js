@@ -4,23 +4,24 @@ import DropDown from "react-dropdown";
 import "react-dropdown/style.css";
 import countries from "../../utils/Countries.json";
 import proxy from "../../utils/proxy.json";
+import { useSelector } from "react-redux";
 
 function SelectCountry() {
+  const token = useSelector((state) => state.token.value);
   function changeCountry(e) {
-    if (true) {
-      // TODO : Change to check on token
+    if (!token) {
       localStorage.setItem("country", e.value);
       return;
     }
     axios.put(
-      proxy.URL + "" + "/set-country", // TODO : Fill empty string with type from token
+      proxy.URL + "/" + token.type + "/set-country",
       {
-        country: e.target.value,
+        country: e.value,
       },
       {
         headers: {
-          type: "", // TODO : Fill empty string with type from token
-          id: "", // TODO : Fill empty string with id from token
+          type: token.type,
+          id: token.id,
         },
       }
     );
@@ -30,7 +31,7 @@ function SelectCountry() {
     <DropDown
       onChange={changeCountry}
       options={Object.keys(countries).sort()}
-      placeholder="" // TODO : Fill empty string with country from token, or localstorage
+      placeholder={token ? token.country : localStorage.getItem("country")}
     ></DropDown>
   );
 }

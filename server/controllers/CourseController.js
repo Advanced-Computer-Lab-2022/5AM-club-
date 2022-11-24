@@ -5,7 +5,6 @@ const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
   //TODO: Joi Validation
 
-  console.log(req.body);
   let {
     title,
     price,
@@ -16,14 +15,14 @@ const createCourse = async (req, res) => {
     subtitles,
     subDescriptions,
   } = req.body;
-  //instructor = [...instructor, req.headers.id];
+
   let i = 0;
   const courseSubs = subtitles.map((subtitle, idx) => {
     return {
       title: subtitle,
       description: subDescriptions[idx],
     };
-  }); //courseSubs contain the _id of all created subtitles
+  });
 
   const instructors = await Instructor.find({ username: { $in: instructor } });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
@@ -41,7 +40,6 @@ const createCourse = async (req, res) => {
   for (const id of instructorIds) {
     Instructor.findByIdAndUpdate(id, {
       $push: { courses: createdCourse._id },
-      // courses: [...courses, createCourse._id],
     });
   }
   if (createdCourse) {
@@ -60,21 +58,19 @@ const createCourse = async (req, res) => {
 };
 
 const getCourses = async (req, res) => {
-  //validate query string
-  console.log(req.headers, "balabizo");
   let filter = {};
   let searchItem;
-  if (req.query.searchitem) {
+  if (req.query.searchItem) {
     const ids = await Instructor.find(
-      { username: { $regex: req.query.searchitem, $options: "i" } },
+      { username: { $regex: req.query.searchItem, $options: "i" } },
       "id"
     );
 
     searchItem = {
       $or: [
-        { subject: { $regex: req.query.searchitem, $options: "i" } },
+        { subject: { $regex: req.query.searchItem, $options: "i" } },
         { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchitem, $options: "i" } },
+        { title: { $regex: req.query.searchItem, $options: "i" } },
       ],
     };
   }
@@ -91,11 +87,11 @@ const getCourses = async (req, res) => {
         if (req.query.max)
           standardMax = await convert(req.query.max, country, "United States");
       }
+      console.log(standardMin);
     }
   }
   filter = {
     ...(req.headers.id && {
-      // here remember
       instructor: req.headers.id,
     }),
     ...(req.query.subject && {
@@ -110,7 +106,6 @@ const getCourses = async (req, res) => {
     ...(searchItem && searchItem),
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
-  console.log(filter);
   let courses = await Course.find(filter);
   if (req.headers.country) {
     for (let course of courses) {
@@ -121,7 +116,7 @@ const getCourses = async (req, res) => {
       );
     }
   }
-
+  console.log(filter);
   res.json(courses);
 };
 const findCourseByID = async (req, res) => {

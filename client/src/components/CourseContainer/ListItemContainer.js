@@ -1,4 +1,4 @@
-import { React, memo } from "react";
+import { useState, memo } from "react";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import "./ListItemContainer.css";
@@ -6,7 +6,7 @@ import TableContainer from "./TableContainer";
 import formatTime from "../../utils/TimeConverter";
 
 function ListItem(props) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const switchOpen = () => {
     setOpen(!open);
   };

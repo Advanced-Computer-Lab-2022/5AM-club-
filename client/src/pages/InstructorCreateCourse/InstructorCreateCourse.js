@@ -12,8 +12,10 @@ import { Box, Container } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import axios from "axios";
 import proxy from "../../utils/proxy.json";
-
+import { useSelector } from "react-redux";
 function InstructorCreateCourse() {
+  const token = useSelector((state) => state.token.value);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -27,7 +29,7 @@ function InstructorCreateCourse() {
       axios
         .post(proxy.URL + "instructor/create-course", obj, {
           headers: {
-            id: "", // TODO : Replace empty string with id from token,
+            id: token.id,
           },
         })
         .then((res) => {});
@@ -43,9 +45,7 @@ function InstructorCreateCourse() {
             display: "flex",
             flexDirection: "column",
             gap: "15px",
-            // justifyContent: "space-evenly",
             alignItems: "center",
-            // minHeight: "50rem",
             width: "100%",
             "& > *": {
               width: "100%",
@@ -98,9 +98,7 @@ function InstructorCreateCourse() {
 
           <FormControl>
             <InputLabel htmlFor="outlined-adornment">Course Price</InputLabel>
-            {/* Course Price */}
             <OutlinedInput
-              // label="Course Price"
               id="outlined-adornment-amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -119,7 +117,6 @@ function InstructorCreateCourse() {
             minRows="4"
             onChange={(e) => {
               setDescription(e.target.value);
-              // name = e.target.value;
             }}
           />
           {subtitles.map((element, idx) => (
@@ -158,7 +155,6 @@ function InstructorCreateCourse() {
                 variant="outlined"
                 label={"Course Subtitle " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
-                // value={element.title}
                 onChange={(e) => {
                   subtitles[idx].title = e.target.value;
                 }}
@@ -173,7 +169,6 @@ function InstructorCreateCourse() {
                 style={{ backgroundColor: "white" }}
                 multiline
                 minRows={3}
-                //value={element.subtitleDescription}
                 onChange={(e) => {
                   subtitles[idx].description = e.target.value;
                 }}

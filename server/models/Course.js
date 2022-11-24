@@ -53,7 +53,7 @@ const courseSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
   rating: { type: Number, default: 0 },
   price: { type: Number, required: true },
-  subject: { type: [String], required: true }, // predefined or usedefined ?
+  subject: { type: [String], required: true },
   preview_video: { type: String },
   outline: { type: String },
   views: { type: Number, default: 0 },

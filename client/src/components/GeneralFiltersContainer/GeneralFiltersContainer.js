@@ -1,41 +1,39 @@
-import { useState, useRef, useEffect, memo } from "react";
+import { useRef, memo } from "react";
 import proxy from "../../utils/proxy.json";
-import { useUpdateEffect } from "react-use";
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import useOnChange from "@utilityjs/use-on-change";
 
 import axios from "axios";
 function GeneralFiltersContainer(props) {
-  const [max, setMax] = useState();
-  const [min, setMin] = useState();
-  const [subject, setSubject] = useState("");
-  const [rating, setRating] = useState();
   const ratingRef = useRef();
   const subjectRef = useRef();
   const maxRef = useRef();
   const minRef = useRef();
-  const [searchItem, setSearchItem] = useState("");
+
   const location = useLocation();
 
-  useEffect(() => {
-    if (location.state?.searchItem !== null) {
-      setSearchItem(location.state?.searchItem);
-    }
-  }, [location.state?.searchItem]);
+  const token = useSelector((state) => state.token.value);
 
-  useUpdateEffect(() => {
+  useOnChange(location.state?.searchItem, handleFilter);
+
+  function handleFilter() {
     props.setCourses([]);
     props.setMainText("");
     axios
       .get(proxy.URL + "/trainee/courses", {
         params: {
-          min: min,
-          max: max,
-          subject: subject,
-          rating: rating,
-          searchitem: searchItem,
+          min: minRef.current.value,
+          max: maxRef.current.value,
+          subject: subjectRef.current.value,
+          rating: ratingRef.current.value,
+          searchItem:
+            location.state?.searchItem !== null
+              ? location.state?.searchItem
+              : null,
         },
         headers: {
-          country: "", // TODO : Fill empty string with country from token, if no token get from localstorage
+          country: token ? token.country : localStorage.getItem("country"),
         },
       })
       .then((response) => {
@@ -46,14 +44,14 @@ function GeneralFiltersContainer(props) {
       .catch(() => {
         props.setMainText("No courses matched your filters");
       });
-  }, [max, min, subject, rating, searchItem]);
+  }
 
   return (
     <div>
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
 
-      {!"corporate" && ( // TODO : Check it's not corporate
+      {token?.type !== "corporate" && (
         <div>
           <p>Filter by price:</p>
           <input ref={minRef} type={"number"}></input>
@@ -65,17 +63,7 @@ function GeneralFiltersContainer(props) {
       <p>Filter by rating:</p>
       <input ref={ratingRef} type={"number"}></input>
 
-      <button
-        onClick={() => {
-          setMax(maxRef.current?.value);
-          setMin(minRef.current?.value);
-          setSubject(subjectRef.current.value);
-          setRating(ratingRef.current.value);
-          props.setMainText(null);
-        }}
-      >
-        Go
-      </button>
+      <button onClick={handleFilter}>Go</button>
     </div>
   );
 }
