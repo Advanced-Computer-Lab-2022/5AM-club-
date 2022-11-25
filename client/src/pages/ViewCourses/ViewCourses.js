@@ -4,11 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
 import countries from "../../utils/Countries.json";
-import { useSelector } from "react-redux";
 import proxy from "../../utils/proxy.json";
 function ViewCourses() {
-  const token = useSelector((state) => state.token.value);
-
   const navigate = useNavigate();
   const location = useLocation();
   const [mainText, setMainText] = useState("Loading Courses...");
@@ -19,7 +16,7 @@ function ViewCourses() {
     axios
       .get(proxy.URL + "/courses", {
         headers: {
-          country: token ? token.country : localStorage.getItem("country"),
+          country: localStorage.getItem("country"),
         },
         params: { searchItem: location.state?.searchItem },
       })
@@ -31,7 +28,7 @@ function ViewCourses() {
         setCourses(response.data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, []);
   return (
     <>
       <GeneralFiltersContainer
@@ -44,17 +41,13 @@ function ViewCourses() {
           <div className="course-item" key={c.title}>
             <div>
               {c.title +
-                (token?.type !== "corporate"
+                (localStorage.getItem("type") !== "corporate"
                   ? " price: " +
                     c.price +
                     " " +
                     countries[
                       Object.keys(countries).find(
-                        (e) =>
-                          e ===
-                          (token
-                            ? token.country
-                            : localStorage.getItem("country"))
+                        (e) => e === localStorage.getItem("country")
                       )
                     ]
                   : "") +

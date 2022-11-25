@@ -2,26 +2,34 @@ const express = require("express");
 const router = express.Router();
 const CourseController = require("../../controllers/CourseController");
 const authenticateToken = require("../../middleware/authentication");
-const { checkID } = require("../../middleware/Validation");
-router.get("/my-courses", checkID, CourseController.getCourses);
-router.put(
-  "/my-courses/editcourse/:courseid/",
-  checkID,
-  CourseController.addSubtitle
-);
+
+router.get("/my-courses", CourseController.getCourses);
+router.get("/courses", CourseController.getCourses);
+router.get("/courses/:id", CourseController.findCourseByID);
+
+router.put("/my-courses/edit-course/:courseid/", CourseController.addSubtitle);
 router.put(
   "/my-courses/edit-course/:courseid/:subtitleid",
-  checkID,
   CourseController.addSection
 );
 router.put(
-  "/my-courses/edit-course/:courseid/:subtitleid/:sectionid",
-  checkID,
+  "/my-courses/edit-course/:courseid/edit-subtitle/:subtitleid",
+  CourseController.updateSubtitle
+);
+router.put(
+  "/my-courses/edit-course/:courseid/:subtitleid/edit-section/:sectionid",
+
   CourseController.updateSection
 );
+router.put(
+  "/my-courses/edit-course/:courseid/delete-subtitle/:subtitleid/",
+  CourseController.deleteSubtitle
+);
+router.put(
+  "/my-courses/edit-course/:courseid/:subtitleid/delete-section/:sectionid",
+  CourseController.deleteSection
+);
 
-router.get("/courses", CourseController.getCourses);
-router.get("/courses/:id", CourseController.findCourseByID);
 router.post("/create-course", CourseController.createCourse);
 
 module.exports = router;

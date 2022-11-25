@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-//import { Navigate, useNavigate } from "react-router-dom";
+import proxy from "../../utils/proxy.json";
 import {
   TextField,
   FormControl,
@@ -10,33 +10,25 @@ import {
   OutlinedInput,
   Button,
 } from "@mui/material";
-//import "./InstructorCreateCourse.css";
-//import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 import { Box, Container } from "@mui/system";
-//import AddSubtitle from "../../components/AddSubtitle";
-//import { Delete } from "@mui/icons-material";
 import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   useEffect(() => {
-  //     console.log(name);
-  //   }, [name]);
-
   const onSubmit = async (obj) => {
     try {
-      axios.post("http://localhost:4000/login", obj).then((res) => {
-        console.log(res);
-        window.localStorage.setItem("accessToken", res.data.accessToken);
-
-        console.log(window.localStorage.getItem("accessToken"));
+      axios.post(proxy.URL + "/login", obj).then((res) => {
+        console.log(res.data);
+        window.localStorage.setItem("token", res.data.accessToken);
+        window.localStorage.setItem("id", res.data.id);
+        window.localStorage.setItem("type", res.data.type);
+        window.localStorage.setItem("country", res.data.country);
         if (res.data.type === "admin") navigate("../admin");
         if (res.data.type === "instructor") navigate("../instructor");
         if (res.data.type === "individual") navigate("../individual-trainee");
         if (res.data.type === "corporate") navigate("../corporate-trainee");
-        //window.location.href = `/admin`; //to where
       });
       console.log("loging in");
       //return res;

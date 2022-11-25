@@ -29,11 +29,8 @@ function SignUp() {
     try {
       axios.post("http://localhost:3000/signUp", obj).then((res) => {
         console.log(res);
-        window.localStorage.setItem("accessToken", res.data.accessToken);
-        console.log(
-          "token from back",
-          window.localStorage.getItem("accessToken")
-        );
+        window.localStorage.setItem("token", res.data.accessToken);
+        console.log("token from back", window.localStorage.getItem("token"));
         navigate("../individual-trainee");
 
         //window.location.href = `/admin`; //to where
