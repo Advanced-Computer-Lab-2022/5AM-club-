@@ -2,9 +2,16 @@ import proxy from "../../utils/proxy.json";
 import axios from "axios";
 import { useEffect, memo } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 function InstructorCoursesContainer(props) {
   const token = useSelector((state) => state.token.value);
+
+  const navigate = useNavigate();
+
+  function editCourse(c) {
+    navigate("/edit-course", { state: { id: c.id } });
+  }
 
   useEffect(() => {
     props.setCourses([]);
@@ -27,13 +34,24 @@ function InstructorCoursesContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <div key={course.id}>
-          {course.title +
-            " price: " +
-            course.price +
-            " " +
-            countries[Object.keys(countries).find((e) => e === token.country)]}
-        </div>
+        <>
+          <div key={course.id}>
+            {course.title +
+              " price: " +
+              course.price +
+              " " +
+              countries[
+                Object.keys(countries).find((e) => e === token.country)
+              ]}
+          </div>
+          <button
+            onClick={() => {
+              editCourse(course.id);
+            }}
+          >
+            Edit Course
+          </button>
+        </>
       ))}
     </div>
   );
