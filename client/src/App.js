@@ -16,8 +16,7 @@ import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
 import { useDispatch } from "react-redux";
 import { set } from "./utils/TokenSlice";
 import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCourse";
-
-import Login from "./pages/login";
+import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 function App() {
   const dispatch = useDispatch();

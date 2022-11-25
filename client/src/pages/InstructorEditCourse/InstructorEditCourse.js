@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import proxy from "../../utils/proxy.json";
 import EditCourse from "../../components/EditCourse/EditCourse";
 function InstructorEditCourse() {
-  const [course, setCourse] = useState({});
+  const [course, setCourse] = useState();
 
   const location = useLocation();
 
@@ -14,9 +14,11 @@ function InstructorEditCourse() {
     });
   }, []);
 
+  console.log(course);
+
   return (
     <div>
-      <EditCourse course={course}></EditCourse>
+      <EditCourse course={course} setCourse={setCourse}></EditCourse>
     </div>
   );
 }

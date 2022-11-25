@@ -12,10 +12,7 @@ import { Box, Container } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import axios from "axios";
 import proxy from "../../utils/proxy.json";
-import { useSelector } from "react-redux";
 function InstructorCreateCourse() {
-  const token = useSelector((state) => state.token.value);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -26,14 +23,12 @@ function InstructorCreateCourse() {
 
   const onSubmit = async (obj) => {
     try {
-      axios
-        .post(proxy.URL + "instructor/create-course", obj, {
-          headers: {
-            id: token.id,
-          },
-        })
-        .then((res) => {});
-    } catch (err) {}
+      axios.post(proxy.URL + "/instructor/create-course", obj, {
+        headers: {
+          id: localStorage.getItem("id"),
+        },
+      });
+    } catch (error) {}
   };
 
   return (

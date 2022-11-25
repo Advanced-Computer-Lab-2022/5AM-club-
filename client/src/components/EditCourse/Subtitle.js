@@ -5,6 +5,7 @@ import Section from "./Section";
 import { RadioGroup, RadioButton } from "react-radio-buttons";
 import axios from "axios";
 import { useState } from "react";
+import "./Subtitle.css";
 function Subtitle(props) {
   const [showDescription, setShowDescription] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -29,10 +30,15 @@ function Subtitle(props) {
   }
 
   function finishEdit() {
+    console.log({
+      ...subtitle,
+      title: titleRef.current.value,
+      description: descriptionRef.current.value,
+    });
     axios
       .put(
         proxy.URL +
-          "/my-courses/edit-course/" +
+          "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/edit-subtitle/" +
           subtitle._id,
@@ -40,6 +46,11 @@ function Subtitle(props) {
           ...subtitle,
           title: titleRef.current.value,
           description: descriptionRef.current.value,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       )
       .then((response) => {
@@ -100,9 +111,9 @@ function Subtitle(props) {
       {!editing && (
         <div>
           <p>{subtitle.title}</p>
-          <link onClick={toggleDescription}>
+          <p className="description" onClick={toggleDescription}>
             {showDescription ? "Hide Description" : "Show Description"}
-          </link>
+          </p>
           {showDescription && (
             <div>
               <p>Description:</p>

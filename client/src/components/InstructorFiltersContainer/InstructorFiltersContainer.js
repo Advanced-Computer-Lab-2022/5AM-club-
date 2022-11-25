@@ -1,11 +1,8 @@
 import { useRef, memo } from "react";
 import proxy from "../../utils/proxy.json";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 function InstructorFiltersContainer(props) {
-  const token = useSelector((state) => state.token.value);
-
   const searchRef = useRef();
   const subjectRef = useRef();
   const maxRef = useRef();
@@ -17,8 +14,8 @@ function InstructorFiltersContainer(props) {
     axios
       .get(proxy.URL + "/instructor/my-courses/", {
         headers: {
-          id: token.id,
-          country: token.country,
+          id: localStorage.getItem("id"),
+          country: localStorage.getItem("country"),
         },
         params: {
           min: minRef.current.value,

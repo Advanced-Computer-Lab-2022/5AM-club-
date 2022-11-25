@@ -1,0 +1,7 @@
+.description {
+  color: rgb(41, 173, 255);
+}
+.description:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

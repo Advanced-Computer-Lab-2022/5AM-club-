@@ -1,17 +1,21 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import Subtitle from "./Subtitle";
 function EditCourse(props) {
-  const [course, setCourse] = useState(props.course);
+  console.log(props.course?.subtitles);
   return (
     <div>
       <div>Subtitles:</div>
-      {course.subtitles.map((subtitle) => (
-        <Subtitle
-          subtitle={subtitle}
-          courseid={course.courseid}
-          setCourse={setCourse}
-        ></Subtitle>
-      ))}
+      {props.course
+        ? props.course.subtitles.map((subtitle) => (
+            <div>
+              <Subtitle
+                subtitle={subtitle}
+                courseid={props.course._id}
+                setCourse={props.setCourse}
+              ></Subtitle>
+            </div>
+          ))
+        : null}
     </div>
   );
 }
