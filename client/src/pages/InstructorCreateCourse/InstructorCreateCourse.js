@@ -1,45 +1,39 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, memo } from "react";
 import {
   TextField,
   FormControl,
   InputLabel,
-  FilledInput,
   InputAdornment,
   OutlinedInput,
   Button,
 } from "@mui/material";
 import "./InstructorCreateCourse.css";
 import { Box, Container } from "@mui/system";
-import { Delete, WidthNormal } from "@mui/icons-material";
+import { Delete } from "@mui/icons-material";
 import axios from "axios";
-
+import proxy from "../../utils/proxy.json";
+import { useSelector } from "react-redux";
 function InstructorCreateCourse() {
+  const token = useSelector((state) => state.token.value);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [subjects, setSubjects] = useState("");
   const [instructor, setInstructor] = useState("");
   const [video_preview, setVideo_preview] = useState("");
-  const [subtNum, setSubtNum] = useState([]);
   const [subtitles, SetSubtitles] = useState([]);
-  //   useEffect(() => {
-  //     console.log(name);
-  //   }, [name]);
-  console.log(subtitles);
 
   const onSubmit = async (obj) => {
     try {
       axios
-        .post("http://localhost:4000/instructor/create-course", obj, {
-          headers: { id: "6355091ab4c387ca835c6bfc" },
+        .post(proxy.URL + "instructor/create-course", obj, {
+          headers: {
+            id: token.id,
+          },
         })
-        .then((res) => console.log(res));
-      console.log("submitting");
-      //return res;
-    } catch (err) {
-      console.log(err);
-    }
+        .then((res) => {});
+    } catch (err) {}
   };
 
   return (
@@ -51,9 +45,7 @@ function InstructorCreateCourse() {
             display: "flex",
             flexDirection: "column",
             gap: "15px",
-            // justifyContent: "space-evenly",
             alignItems: "center",
-            // minHeight: "50rem",
             width: "100%",
             "& > *": {
               width: "100%",
@@ -106,9 +98,7 @@ function InstructorCreateCourse() {
 
           <FormControl>
             <InputLabel htmlFor="outlined-adornment">Course Price</InputLabel>
-            {/* Course Price */}
             <OutlinedInput
-              // label="Course Price"
               id="outlined-adornment-amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
@@ -127,7 +117,6 @@ function InstructorCreateCourse() {
             minRows="4"
             onChange={(e) => {
               setDescription(e.target.value);
-              // name = e.target.value;
             }}
           />
           {subtitles.map((element, idx) => (
@@ -166,7 +155,6 @@ function InstructorCreateCourse() {
                 variant="outlined"
                 label={"Course Subtitle " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
-                // value={element.title}
                 onChange={(e) => {
                   subtitles[idx].title = e.target.value;
                 }}
@@ -181,7 +169,6 @@ function InstructorCreateCourse() {
                 style={{ backgroundColor: "white" }}
                 multiline
                 minRows={3}
-                //value={element.subtitleDescription}
                 onChange={(e) => {
                   subtitles[idx].description = e.target.value;
                 }}
@@ -233,7 +220,6 @@ function InstructorCreateCourse() {
                 subtitles: subs,
                 subDescriptions: subsdesc,
               };
-              console.log(obj);
               onSubmit(obj);
             }}
           >
@@ -244,4 +230,4 @@ function InstructorCreateCourse() {
     </Container>
   );
 }
-export default InstructorCreateCourse;
+export default memo(InstructorCreateCourse);

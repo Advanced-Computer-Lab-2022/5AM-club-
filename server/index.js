@@ -10,6 +10,7 @@ const Instructor = require("./models/Instructor");
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
 connect();
+
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
@@ -25,7 +26,6 @@ app.use("/instructor", reviewRouter);
 app.use("/trainee", reviewRouter);
 
 app.listen(port);
-
 /*
 
 635ad854b2ad88bd8358a5af

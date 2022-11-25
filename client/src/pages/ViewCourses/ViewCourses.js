@@ -1,64 +1,43 @@
 import axios from "axios";
 import "./ViewCourses.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useUpdateEffect } from "react-use";
+import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
-import proxy from "../../utils/proxy.json";
-import CountryToCurrency from "country-to-currency";
 import countries from "../../utils/Countries.json";
+import { useSelector } from "react-redux";
+import proxy from "../../utils/proxy.json";
 import formatTime from "../../utils/TimeConverter";
 function ViewCourses() {
-  const [mainText, setMainText] = useState("");
+  const token = useSelector((state) => state.token.value);
+
   const navigate = useNavigate();
   const location = useLocation();
+  const [mainText, setMainText] = useState("Loading Courses...");
   const [courses, setCourses] = useState([]);
-  const [country, setCountry] = useState("");
+
   useEffect(() => {
-    if (
-      location.pathname.includes("trainee") ||
-      location.pathname.includes("instructor") ||
-      location.pathname.includes("admin")
-    ) {
-      axios
-        .get(proxy.URL + "/get-user", {
-          headers: location.pathname.includes("individual-trainee")
-            ? { id: "635e992a99ecb836d834f7fd", type: "trainee" }
-            : location.pathname.includes("corporate-trainee")
-            ? { id: "635f05a51832d2cde2c26d88", type: "trainee" }
-            : location.pathname.includes("instructor")
-            ? { id: "6355091ab4c387ca835c6bfc", type: "instructor" }
-            : { id: "635e98ca99ecb836d834f7fc", type: "admin" },
-        })
-        .then((response) => {
-          setCountry(response.data.country);
-        })
-        .catch(() => {
-          setCountry("United States");
-        });
-    } else {
-      setCountry(localStorage.getItem("country"));
-    }
-  }, []);
-  useUpdateEffect(() => {
-    console.log(country);
-    if (!location.state?.searchItem) {
-      setCourses([]);
-      axios
-        .get("http://localhost:4000/courses", {
-          headers: { country: country },
-        })
-        .then((response) => {
-          setCourses(response.data);
-        });
-    }
-  }, [country]);
+    setCourses([]);
+    axios
+      .get(proxy.URL + "/courses", {
+        headers: {
+          country: token ? token.country : localStorage.getItem("country"),
+        },
+        params: { searchItem: location.state?.searchItem },
+      })
+      .then((response) => {
+        if (response.data.length === 0)
+          setMainText("No courses are available yet");
+        else setMainText("");
+
+        setCourses(response.data);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
   return (
     <>
       <GeneralFiltersContainer
         setCourses={setCourses}
         setMainText={setMainText}
-        country={country}
       ></GeneralFiltersContainer>
       <div>
         View Courses: <br />
@@ -66,14 +45,20 @@ function ViewCourses() {
           <div className='course-item' key={c.title}>
             <div>
               {c.title +
-                (!location.pathname.includes("corporate-trainee")
+                (token?.type !== "corporate"
                   ? " price: " +
                     c.price +
                     " totalhours: " +
                     formatTime(c.minutes) +
                     " " +
-                    CountryToCurrency[
-                      countries.values.find((e) => e.name === country).code
+                    countries[
+                      Object.keys(countries).find(
+                        (e) =>
+                          e ===
+                          (token
+                            ? token.country
+                            : localStorage.getItem("country"))
+                      )
                     ]
                   : "") +
                 " rating:" +
@@ -95,4 +80,4 @@ function ViewCourses() {
   );
 }
 
-export default ViewCourses;
+export default memo(ViewCourses);

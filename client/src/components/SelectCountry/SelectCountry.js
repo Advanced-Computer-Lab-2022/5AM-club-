@@ -1,46 +1,39 @@
 import axios from "axios";
-import { useUpdateEffect } from "react-use";
-import { useState } from "react";
+import { memo } from "react";
 import DropDown from "react-dropdown";
 import "react-dropdown/style.css";
 import countries from "../../utils/Countries.json";
-function SelectCountry(props) {
-  const [country, setCountry] = useState("");
-  useUpdateEffect(() => {
-    console.log(country);
-    if (!props.type) {
-      localStorage.setItem("country", country);
+import proxy from "../../utils/proxy.json";
+import { useSelector } from "react-redux";
+
+function SelectCountry() {
+  const token = useSelector((state) => state.token.value);
+  function changeCountry(e) {
+    if (!token) {
+      localStorage.setItem("country", e.value);
       return;
     }
-    axios
-      .put(
-        "http://localhost:4000/" + props.type + "/set-country",
-        {
-          country: country,
+    axios.put(
+      proxy.URL + "/" + token.type + "/set-country",
+      {
+        country: e.value,
+      },
+      {
+        headers: {
+          type: token.type,
+          id: token.id,
         },
-        {
-          headers: {
-            type: props.type,
-            id: props.id,
-          },
-        }
-      )
-      .then(() => {})
-      .catch(() => {
-        setCountry("United States");
-      });
-  }, [country]);
+      }
+    );
+  }
+
   return (
     <DropDown
-      onChange={(e) => {
-        setCountry(e.value);
-      }}
-      options={countries.values.map((e) => {
-        return e.name;
-      })}
-      placeholder="Select your Country"
+      onChange={changeCountry}
+      options={Object.keys(countries).sort()}
+      placeholder={token ? token.country : localStorage.getItem("country")}
     ></DropDown>
   );
 }
 
-export default SelectCountry;
+export default memo(SelectCountry);

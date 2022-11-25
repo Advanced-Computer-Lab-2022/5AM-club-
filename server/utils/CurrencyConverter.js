@@ -1,12 +1,12 @@
-const CountryToCurrency = require("country-to-currency");
-const EasyCurrencies = require("easy-currencies");
+const rates = require("./rates.json");
 const countries = require("./Countries.json");
-
 async function convert(value, from, to) {
-  console.log(from, to);
-  if (value === 0) return 0;
-  return EasyCurrencies.Convert(value)
-    .from(CountryToCurrency[countries.values.find((e) => e.name === from).code])
-    .to(CountryToCurrency[countries.values.find((e) => e.name === to).code]);
+  try {
+    valueInFrom = value / rates[countries[from]];
+    return valueInFrom * rates[countries[to]];
+  } catch (e) {
+    console.log(rates[countries[from]]);
+    return value;
+  }
 }
-module.exports = { convert: convert };
+module.exports = { convert };

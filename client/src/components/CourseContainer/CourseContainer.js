@@ -1,15 +1,14 @@
-import React from "react";
+import { memo } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
 import formatTime from "../../utils/TimeConverter";
-import { useLocation } from "react-router-dom";
-import CountryToCurrency from "country-to-currency";
 import countries from "../../utils/Countries.json";
+import { useSelector } from "react-redux";
 
 function CourseContainer(props) {
-  const location = useLocation();
+  const token = useSelector((state) => state.token.value);
   return (
     <Card border="dark" className="card">
       <Card.Body>
@@ -19,7 +18,7 @@ function CourseContainer(props) {
         <div className="attribute">
           Total hours: {formatTime(props.course.minutes)}
         </div>
-        {!location.pathname.includes("corporate") && (
+        {token?.type !== "coporate" && (
           <div className="attribute">
             Price:{" "}
             {props.promotion &&
@@ -30,9 +29,14 @@ function CourseContainer(props) {
                   {(props.course.price * (100 - props.promotion.percentage)) /
                     100 +
                     (" " +
-                      CountryToCurrency[
-                        countries.values.find((e) => e.name === props.country)
-                          ?.code
+                      countries[
+                        Object.keys(countries).find(
+                          (e) =>
+                            e ===
+                            (token
+                              ? token.country
+                              : localStorage.getItem("country"))
+                        )
                       ])}
                 </span>
                 <span className="red">
@@ -44,16 +48,21 @@ function CourseContainer(props) {
               <>
                 {props.course.price +
                   (" " +
-                    CountryToCurrency[
-                      countries.values.find((e) => e.name === props.country)
-                        ?.code
+                    countries[
+                      Object.keys(countries).find(
+                        (e) =>
+                          e ===
+                          (token
+                            ? token.country
+                            : localStorage.getItem("country"))
+                      )
                     ])}
               </>
             )}
           </div>
         )}
 
-        {location.pathname.includes("individual") && (
+        {token?.type === "individual" && (
           <Button variant="outline-success">BUY NOW</Button>
         )}
         <div className="attribute"> Content: </div>
@@ -63,4 +72,4 @@ function CourseContainer(props) {
   );
 }
 
-export default CourseContainer;
+export default memo(CourseContainer);

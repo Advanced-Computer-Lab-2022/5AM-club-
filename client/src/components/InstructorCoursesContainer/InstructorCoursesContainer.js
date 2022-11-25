@@ -1,18 +1,19 @@
 import proxy from "../../utils/proxy.json";
 import axios from "axios";
-import { useUpdateEffect } from "react-use";
-import CountryToCurrency from "country-to-currency";
+import { useEffect, memo } from "react";
+import { useSelector } from "react-redux";
 import countries from "../../utils/Countries.json";
 function InstructorCoursesContainer(props) {
-  useUpdateEffect(() => {
+  const token = useSelector((state) => state.token.value);
+
+  useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
     axios
       .get(proxy.URL + "/instructor/my-courses", {
         headers: {
-          id: props.instructorId,
-          country: props.country,
-          "content-type": "text/json",
+          id: token.id,
+          country: token.country,
         },
       })
       .then((response) => {
@@ -21,22 +22,20 @@ function InstructorCoursesContainer(props) {
         else props.setMainText("");
         props.setCourses(response.data);
       });
-  }, [props.country]);
+  }, [props, token.id, token.country]);
   return (
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <div key={course.title}>
+        <div key={course.id}>
           {course.title +
             " price: " +
             course.price +
             " " +
-            CountryToCurrency[
-              countries.values.find((e) => e.name === props.country).code
-            ]}
+            countries[Object.keys(countries).find((e) => e === token.country)]}
         </div>
       ))}
     </div>
   );
 }
-export default InstructorCoursesContainer;
+export default memo(InstructorCoursesContainer);

@@ -20,7 +20,7 @@ const instructorSchema = new mongoose.Schema({
   },
   biography: { type: String },
   courses: {
-    type: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
+    type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
     default: [],
   },
   userReviews: {
@@ -29,5 +29,5 @@ const instructorSchema = new mongoose.Schema({
   },
 });
 
-const Instructor = mongoose.model("Instructors", instructorSchema);
+const Instructor = mongoose.model("Instructor", instructorSchema);
 module.exports = Instructor;

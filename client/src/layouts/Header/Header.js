@@ -1,43 +1,41 @@
-import { useRef, useState } from "react";
+import { useRef, memo } from "react";
 import logo from "../../assets/Header/logo.svg";
-import signin from "../../assets/Header/signin.svg";
+import signup from "../../assets/Header/signup.svg";
 import login from "../../assets/Header/login.svg";
 import logout from "../../assets/Header/logout.svg";
 import profile from "../../assets/Header/profile.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 function Header() {
+  const token = useSelector((state) => state.token.value);
+
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const searchRef = useRef();
-  function handleSignin() {}
-  function handleLogin() {}
-  function handleLogout() {}
+
+  function handleSignup() {
+    // TODO: set token in redux store
+    // TODO: save token in local storage
+  }
+  function handleLogin() {
+    // TODO: set token in redux store
+    // TODO: save token in local storage
+  }
+  function handleLogout() {
+    // TODO: remove token from redux store
+    // TODO: remove token from local storage
+  }
   function handleProfile() {}
   function handleSearch() {
-    console.log(location.pathname);
-    if (location.pathname.includes("individual")) {
-      navigate("/individual-trainee/courses", {
-        state: { searchItem: searchRef.current.value },
-      });
-    } else if (location.pathname.includes("corporate")) {
-      console.log("ASf");
-      navigate("/corporate-trainee/courses", {
-        state: { searchItem: searchRef.current.value },
-      });
-    } else if (location.pathname.includes("admin")) {
-      navigate("/admin/courses", {
-        state: { searchItem: searchRef.current.value },
-      });
-    } else if (location.pathname.includes("instructor")) {
-      navigate("/instructor/courses", {
-        state: { searchItem: searchRef.current.value },
-      });
-    } else {
-      navigate("/courses", {
+    navigate((token ? "/" + token.type : "") + "/courses", {
+      state: { searchItem: searchRef.current.value },
+    });
+  }
+  function handleEnter(e) {
+    if (e.key === "Enter") {
+      navigate((token ? "/" + token.type : "") + "/courses", {
         state: { searchItem: searchRef.current.value },
       });
     }
@@ -57,7 +55,7 @@ function Header() {
           ref={searchRef}
           type={"text"}
           className="search-input"
-          onSubmit={handleSearch}
+          onKeyUp={handleEnter}
         ></input>
         <img
           src={search}
@@ -66,14 +64,14 @@ function Header() {
           className="search"
         ></img>
       </div>
-      {!isAuthenticated && (
+      {!token && (
         <div className="signup-login">
-          <img src={signin} alt="signin" onClick={handleSignin}></img>
+          <img src={signup} alt="signup" onClick={handleSignup}></img>
           <img src={login} alt="login" onClick={handleLogin}></img>
         </div>
       )}
 
-      {isAuthenticated && (
+      {token && (
         <div className="logout-profile">
           <img src={logout} alt="logout" onClick={handleLogout}></img>
           <img src={profile} alt="profile" onClick={handleProfile}></img>
@@ -82,4 +80,4 @@ function Header() {
     </div>
   );
 }
-export default Header;
+export default memo(Header);

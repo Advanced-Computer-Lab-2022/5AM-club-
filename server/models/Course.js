@@ -46,11 +46,6 @@ const subtitleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
-  // minutes: {
-  //   type: Number,
-  //   required: true,
-  // },
   description: {
     type: String,
     required: true,
@@ -59,16 +54,16 @@ const subtitleSchema = new mongoose.Schema({
     type: [sectionSchema],
   },
 });
+
 subtitleSchema.virtual("minutes").get(() => {
   this.sections.reduce((prev, cur) => prev?.minutes + cur?.minutes, 0);
 });
 
 const courseSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
-  //minutes: { type: Number, default: 0 }, //minutes can't be required or existed during course creation
   rating: { type: Number, default: 0 },
   price: { type: Number, required: true },
-  subject: { type: [String], required: true }, // predefined or usedefined ?
+  subject: { type: [String], required: true },
   preview_video: { type: String },
   outline: { type: String },
   views: { type: Number, default: 0 },
@@ -81,7 +76,7 @@ const courseSchema = new mongoose.Schema({
     required: true,
   },
   instructor: {
-    type: [{ type: mongoose.Types.ObjectId, ref: "Instructors" }],
+    type: [{ type: mongoose.Types.ObjectId, ref: "Instructor" }],
     required: true,
   },
   userReviews: {
@@ -99,15 +94,13 @@ const courseSchema = new mongoose.Schema({
   },
   subtitles: { type: [subtitleSchema] },
 });
+
 courseSchema.virtual("minutes").get(() => {
   this.subtitles.reduce((prev, cur) => prev?.minutes + cur?.minutes, 0);
 });
 
 const Course = mongoose.model("Courses", courseSchema);
-// const Subtitle = mongoose.model("Subtitle", subtitleSchema);
-// const Section = mongoose.model("Section", sectionSchema);
-// const Video = mongoose.model("Video", videoSchema);
-// const Exercise = mongoose.model("Exercise", exerciseSchema);
+
 module.exports = {
   Course,
   reviewSchema,

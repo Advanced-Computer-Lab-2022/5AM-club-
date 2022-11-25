@@ -1,15 +1,15 @@
+require("dotenv").config();
 const countries = require("../utils/Countries.json");
 const Joi = require("joi");
 const Trainee = require("../models/Trainee");
 const Admin = require("../models/Admin");
 const Instructor = require("../models/Instructor");
+const nameChecker = require("../utils/checkNames");
+const jwt = require("jsonwebtoken");
+
 const countrySchema = Joi.object({
   country: Joi.string()
-    .valid(
-      ...countries.values.map((e) => {
-        return e.name;
-      })
-    )
+    .valid(...Object.keys(countries))
     .required(),
 });
 
@@ -178,6 +178,64 @@ async function addTrainee(req, res) {
     .catch((err) => res.status(400).send("Username already used"));
 }
 
+async function signUp(req, res) {
+  const result = addUserSchema.validate(req.body);
+  console.log(result.error);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  //console.log(req.body.username);
+  const foundDup = await nameChecker(req.body.username);
+  if (foundDup) {
+    console.log("found dupp");
+    res.status(401).send("username already used!!");
+  } else {
+    const newindividualTrainee = new Trainee({
+      ...req.body,
+      courses: [],
+      type: "individual",
+    });
+
+    await newindividualTrainee
+      .save()
+      .then((response) => {
+        login(req, res);
+        //res.send("Trainee added successfully!");
+      })
+      .catch((err) => res.status(400).send("Username already used"));
+  }
+}
+const login = async (req, res) => {
+  const user = { ...req.body };
+  const admins = await Admin.find({
+    username: user.username,
+    password: user.password,
+  });
+  const instructors = await Instructor.find({
+    username: user.username,
+    password: user.password,
+  });
+  const trainees = await Trainee.find({
+    username: user.username,
+    password: user.password,
+  });
+  console.log(admins, instructors, trainees);
+  if (!admins.length && !instructors.length && !trainees.length) {
+    res.status(401).send("Wrong Username or Password");
+  } else {
+    if (admins) user.type = "admin";
+    if (instructors) user.type = "instructor";
+    if (trainees.length > 0) {
+      console.log(trainees);
+      user.type = trainees[0].type;
+    }
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
+    //console.log();
+    res.json({ accessToken, type: user.type });
+  }
+};
+
 async function editEmailInstructor(req, res) {
   console.log(req.body);
   const valid = editEmailSchema.validate(req.body);
@@ -233,6 +291,8 @@ module.exports = {
   addAdmin,
   addInstructor,
   addTrainee,
+  signUp,
+  login,
   editBiographyInstructor,
   editEmailInstructor,
 };

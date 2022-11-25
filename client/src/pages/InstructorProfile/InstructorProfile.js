@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { memo } from "react";
+
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function InstructorProfile() {
   const navigate = useNavigate();
@@ -25,11 +27,8 @@ function InstructorProfile() {
       >
         create new course
       </button>
-      <SelectCountry
-        type="instructor"
-        id="6355091ab4c387ca835c6bfc"
-      ></SelectCountry>
+      <SelectCountry></SelectCountry>
     </div>
   );
 }
-export default InstructorProfile;
+export default memo(InstructorProfile);

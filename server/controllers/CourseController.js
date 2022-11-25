@@ -8,6 +8,8 @@ const setCoursePromotionSchema = Joi.object({
 });
 const createCourse = async (req, res) => {
   console.log(req.body);
+  if (req.user.type !== "instructor")
+    res.status(401).json({ message: "not instructor" });
   let {
     title,
     price,
@@ -18,14 +20,14 @@ const createCourse = async (req, res) => {
     subtitles,
     subDescriptions,
   } = req.body;
-  //instructor = [...instructor, req.headers.id];
+
   let i = 0;
   const courseSubs = subtitles.map((subtitle, idx) => {
     return {
       title: subtitle,
       description: subDescriptions[idx],
     };
-  }); //courseSubs contain the _id of all created subtitles
+  });
 
   const instructors = await Instructor.find({ username: { $in: instructor } });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
@@ -43,7 +45,6 @@ const createCourse = async (req, res) => {
   for (const id of instructorIds) {
     Instructor.findByIdAndUpdate(id, {
       $push: { courses: createdCourse._id },
-      // courses: [...courses, createCourse._id],
     });
   }
   if (createdCourse) {
@@ -62,21 +63,19 @@ const createCourse = async (req, res) => {
 };
 
 const getCourses = async (req, res) => {
-  //validate query string
-  console.log(req.headers, "balabizo");
   let filter = {};
   let searchItem;
-  if (req.query.searchitem) {
+  if (req.query.searchItem) {
     const ids = await Instructor.find(
-      { username: { $regex: req.query.searchitem, $options: "i" } },
+      { username: { $regex: req.query.searchItem, $options: "i" } },
       "id"
     );
 
     searchItem = {
       $or: [
-        { subject: { $regex: req.query.searchitem, $options: "i" } },
+        { subject: { $regex: req.query.searchItem, $options: "i" } },
         { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchitem, $options: "i" } },
+        { title: { $regex: req.query.searchItem, $options: "i" } },
       ],
     };
   }
@@ -93,11 +92,11 @@ const getCourses = async (req, res) => {
         if (req.query.max)
           standardMax = await convert(req.query.max, country, "United States");
       }
+      console.log(standardMin);
     }
   }
   filter = {
     ...(req.headers.id && {
-      // here remember
       instructor: req.headers.id,
     }),
     ...(req.query.subject && {
@@ -112,7 +111,6 @@ const getCourses = async (req, res) => {
     ...(searchItem && searchItem),
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
-  console.log(filter);
   let courses = await Course.find(filter);
   if (req.headers.country) {
     for (let course of courses) {
@@ -123,7 +121,7 @@ const getCourses = async (req, res) => {
       );
     }
   }
-
+  console.log(filter);
   res.json(courses);
 };
 const findCourseByID = async (req, res) => {
@@ -142,6 +140,80 @@ const findCourseByID = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
+async function addSubtitle(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findByIdAndUpdate(
+    req.params.courseid,
+    { $push: { subtitles: req.body } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function deleteSubtitle(req, res) {
+  const course = await Course.findByIdAndUpdate(
+    req.params.courseid,
+    { $pull: { subtitles: [{ _id: req.params.subtitleid }] } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function updateSubtitle(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findOneAndUpdate(
+    {
+      _id: req.params.courseid,
+      subtitles: { $elemMatch: { _id: req.params.subtitleid } },
+    },
+    { $set: { "subtitles.$": req.body } },
+    {
+      new: true,
+    }
+  );
+  res.send(course);
+}
+
+async function addSection(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.params.subtitleid) subtitle.push(req.body);
+  }
+  await course.save();
+  res.send(course);
+}
+
+async function deleteSection(req, res) {
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.subtitleid) {
+      subtitle.filter((section) => section._id !== req.params.sectionid);
+    }
+  }
+  await course.save();
+  res.send(course);
+}
+
+async function updateSection(req, res) {
+  //TODO: Joi Validation
+  const course = await Course.findById(req.params.courseid);
+  for (let subtitle of course.subtitles) {
+    if (subtitle._id === req.params.subtitleid) {
+      for (let section of subtitle) {
+        if (section._id === req.params.sectionid) section = req.body;
+      }
+    }
+  }
+  await course.save();
+  res.send(course);
+}
+
 const setCoursePromotion = async (req, res) => {
   const id = req.params.id;
   const valid = setCoursePromotionSchema.validate();
@@ -158,6 +230,12 @@ const setCoursePromotion = async (req, res) => {
   );
 };
 module.exports = {
+  addSubtitle,
+  deleteSubtitle,
+  updateSubtitle,
+  addSection,
+  deleteSection,
+  updateSection,
   getCourses,
   createCourse,
   findCourseByID,

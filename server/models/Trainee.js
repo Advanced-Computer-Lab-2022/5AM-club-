@@ -29,10 +29,10 @@ const traineeSchema = new mongoose.Schema({
     expiryDateMonth: { type: Number, max: 12 },
   },
   courses: {
-    type: [{ type: mongoose.Types.ObjectId, ref: "Courses" }],
+    type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
     required: true,
   },
 });
 
-const Trainee = mongoose.model("Trainees", traineeSchema);
+const Trainee = mongoose.model("Trainee", traineeSchema);
 module.exports = Trainee;
