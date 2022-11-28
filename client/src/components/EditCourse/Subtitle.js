@@ -11,6 +11,11 @@ import {
   Radio,
   FormLabel,
 } from "@material-ui/core";
+import plus from "../../assets/EditCourse/plusblack.png";
+import cancel from "../../assets/EditCourse/cancelblack.png";
+import edit from "../../assets/EditCourse/edit.png";
+import trash from "../../assets/EditCourse/delete.png";
+import { formatTime } from "../../utils/Helpers";
 
 function Subtitle(props) {
   const [showDescription, setShowDescription] = useState(false);
@@ -22,6 +27,8 @@ function Subtitle(props) {
   const [type, setType] = useState("exercise");
   const [video, setVideo] = useState();
   const [exercise, setExercise] = useState();
+  const [invalidURL, setInvalidURL] = useState(false);
+  const [expandSections, setExpandSections] = useState(false);
 
   const sectionTitleRef = useRef();
   const sectionDescriptionRef = useRef();
@@ -32,7 +39,6 @@ function Subtitle(props) {
   const descriptionRef = useRef();
 
   function toggleDescription(e) {
-    e.preventDefault();
     setShowDescription(!showDescription);
   }
   function toggleEditing() {
@@ -54,7 +60,7 @@ function Subtitle(props) {
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            country: localStorage.getItem("country"),
           },
         }
       )
@@ -74,7 +80,12 @@ function Subtitle(props) {
           "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/delete-subtitle/" +
-          props.subtitle._id
+          props.subtitle._id,
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
+        }
       )
       .then((response) => {
         props.setCourse(response.data);
@@ -86,52 +97,131 @@ function Subtitle(props) {
   }
 
   function addSection() {
-    axios
-      .put(
-        proxy.URL +
-          "/instructor/my-courses/edit-course/" +
-          props.courseid +
-          "/" +
-          props.subtitle._id,
-        {
-          title: sectionTitleRef.current.value,
-          description: sectionDescriptionRef.current.value,
-          minutes: sectionMinutesRef.current.value,
-          content:
-            type === "exercise"
-              ? {
-                  questions: new Array(exerciseRef.current.value).fill(null),
-                  answers: new Array(exerciseRef.current.value).fill(null),
-                }
-              : { link: videoRef.current.value },
-        }
+    setInvalidURL(false);
+    if (type === "exercise") {
+      axios
+        .put(
+          proxy.URL +
+            "/instructor/my-courses/edit-course/" +
+            props.courseid +
+            "/" +
+            props.subtitle._id +
+            "/add-section",
+          {
+            title: sectionTitle,
+            description: sectionDescription,
+            minutes: sectionMinutes,
+            content: {
+              exercise: {
+                questions: new Array(exercise).fill(null),
+                answers: new Array(exercise).fill(null),
+                choices: new Array(exercise).fill(null),
+              },
+            },
+          },
+          {
+            headers: {
+              country: localStorage.getItem("country"),
+            },
+          }
+        )
+        .then((response) => {
+          props.setCourse(response.data);
+          setAddingSection(false);
+          setSectionTitle("");
+          setSectionDescription("");
+          setSectionMinutes("");
+          setType("exercise");
+          setInvalidURL(false);
+        })
+        .catch(() => {
+          setInvalidURL(true);
+        });
+      return;
+    }
+    if (
+      type === "video" &&
+      video?.match(
+        /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
       )
-      .then((response) => {
-        props.setCourse(response.data);
-        setAddingSection(false);
-        setSectionTitle("");
-        setSectionDescription("");
-        setSectionMinutes("");
-        setType("exercise");
-      });
+    ) {
+      axios
+        .get(
+          "https://www.youtube.com/oembed?format=json&url=/watch?v=" +
+            video?.substring(video?.lastIndexOf("=") + 1)
+        )
+        .then(() => {
+          axios
+            .put(
+              proxy.URL +
+                "/instructor/my-courses/edit-course/" +
+                props.courseid +
+                "/" +
+                props.subtitle._id +
+                "/add-section",
+              {
+                title: sectionTitleRef.current.value,
+                description: sectionDescriptionRef.current.value,
+                minutes: sectionMinutesRef.current.value,
+                content: { video: { link: videoRef.current.value } },
+              },
+              {
+                headers: {
+                  country: localStorage.getItem("country"),
+                },
+              }
+            )
+            .then((response) => {
+              props.setCourse(response.data);
+              setAddingSection(false);
+              setSectionTitle("");
+              setSectionDescription("");
+              setSectionMinutes("");
+              setType("exercise");
+              setInvalidURL(false);
+            })
+            .catch(() => {
+              setInvalidURL(true);
+            });
+        });
+    } else setInvalidURL(true);
+  }
+  function toggleExpandSections() {
+    setExpandSections(!expandSections);
   }
 
   return (
     <div>
       {!editing && (
-        <div>
-          <p>{props.subtitle.title}</p>
-          <p className="description" onClick={toggleDescription}>
-            {showDescription ? "Hide Description" : "Show Description"}
-          </p>
+        <div className="subtitle-header">
+          <div>
+            <p>{props.subtitle.title}</p>
+
+            <p>
+              {"Length : " +
+                (props.subtitle.minutes
+                  ? formatTime(props.subtitle.minutes)
+                  : "0m")}
+            </p>
+          </div>
           {showDescription && (
-            <div>
-              <p>Description:</p>
-              {props.subtitle.description}
-            </div>
+            <>
+              <p style={{ marginLeft: "20px" }}>Description:</p>
+
+              <TextareaAutosize
+                defaultValue={props.subtitle.description}
+                className="description-wrapper"
+                readOnly={true}
+              ></TextareaAutosize>
+            </>
           )}
-          <button onClick={toggleEditing}>Edit</button>
-          <button onClick={deleteSubtitle}>Delete</button>
+          <div className="edit-subtitle">
+            <button className="btn btn-info" onClick={toggleDescription}>
+              {showDescription ? "Hide Description" : "Show Description"}
+            </button>
+            <img src={edit} alt="edit" onClick={toggleEditing}></img>
+            <img src={trash} alt="trash" onClick={deleteSubtitle}></img>
+          </div>
         </div>
       )}
       {editing && (
@@ -145,10 +235,34 @@ function Subtitle(props) {
             ref={descriptionRef}
             defaultValue={props.subtitle.description}
           ></TextareaAutosize>
-          <button onClick={finishEdit}>Done</button>
+          <button class="btn btn-success" onClick={finishEdit}>
+            Done
+          </button>
         </div>
       )}
-      <button onClick={toggleAddingSection}>Add Section</button>
+      <div>
+        <div>
+          <button className="btn btn-secondary" onClick={toggleExpandSections}>
+            {expandSections ? "Hide Sections" : "Show Sections"}
+          </button>
+        </div>
+        {expandSections ? "Sections:" : ""}
+        {expandSections &&
+          props.subtitle.sections.map((section) => (
+            <div key={section._id} className="editable-container">
+              <Section
+                section={section}
+                courseid={props.courseid}
+                subtitleid={props.subtitle._id}
+                setCourse={props.setCourse}
+              ></Section>
+            </div>
+          ))}
+      </div>
+      <div onClick={toggleAddingSection} className="add-section-button">
+        <img src={addingSection ? cancel : plus} alt="plus"></img>
+        {addingSection ? "Cancel" : "Add Section"}
+      </div>
       {addingSection && (
         <>
           <div>
@@ -164,6 +278,7 @@ function Subtitle(props) {
                     setType(e.target.value);
                     setVideo();
                     setExercise();
+                    setInvalidURL(false);
                   }}
                 >
                   <FormControlLabel
@@ -227,30 +342,25 @@ function Subtitle(props) {
               ></input>
             </>
           )}
+          {invalidURL && (
+            <p style={{ color: "red" }}>Invalid youtube video link. </p>
+          )}
           {type &&
           sectionDescription &&
-          sectionMinutes &&
+          sectionMinutes > 0 &&
           sectionTitle &&
-          ((exercise && type === "exercise") || (video && type === "video")) ? (
-            <button onClick={addSection}>Done</button>
+          ((exercise > 0 && type === "exercise") ||
+            (video && type === "video")) ? (
+            <button onClick={addSection} className="btn btn-success">
+              Done
+            </button>
           ) : (
-            <button disabled>Done</button>
+            <button disabled className="btn btn-success">
+              Done
+            </button>
           )}
         </>
       )}
-      <div>
-        Sections:
-        {props.subtitle.sections.map((section) => (
-          <div key={section._id} className="editable-container">
-            <Section
-              section={section}
-              courseid={props.courseid}
-              subtitleid={props.subtitle._id}
-              setCourse={props.setCourse}
-            ></Section>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

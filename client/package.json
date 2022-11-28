@@ -27,7 +27,8 @@
     "react-scripts": "5.0.1",
     "react-textarea-autosize": "^8.4.0",
     "react-use": "^17.4.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "youtube-validate": "^1.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
