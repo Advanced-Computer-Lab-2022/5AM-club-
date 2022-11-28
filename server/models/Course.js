@@ -26,35 +26,36 @@ const sectionSchema = new mongoose.Schema({
     required: true,
   },
   content: {
-    type: { video: { type: videoSchema }, exercise: { type: exerciseSchema } },
+    type: {
+      video: { type: videoSchema },
+      exercise: { type: exerciseSchema },
+    },
   },
 });
 
-const subtitleSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
+const subtitleSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    sections: {
+      type: [sectionSchema],
+    },
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  sections: {
-    type: [sectionSchema],
-  },
-});
-
-subtitleSchema.virtual("minutes").get(() => {
-  this.sections.reduce((prev, cur) => prev?.minutes + cur?.minutes, 0);
-});
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
 
 const courseSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
-  rating: { type: Number, default: 0 },
+  rating: { type: Number, default: 5 },
   price: { type: Number, required: true },
   subject: { type: [String], required: true },
   preview_video: { type: String },
-  outline: { type: String },
   views: { type: Number, default: 0 },
   promotion: {
     percentage: { type: Number },
@@ -92,13 +93,21 @@ const courseSchema = new mongoose.Schema({
     ],
   },
   subtitles: { type: [subtitleSchema] },
+  minutes: {
+    type: Number,
+    default: function () {
+      let result = 0;
+      for (subtitle of this.subtitles) {
+        for (section of subtitle.sections) {
+          result += section.minutes;
+        }
+      }
+      return result;
+    },
+  },
 });
 
-courseSchema.virtual("minutes").get(() => {
-  this.subtitles.reduce((prev, cur) => prev?.minutes + cur?.minutes, 0);
-});
-
-const Course = mongoose.model("Courses", courseSchema);
+const Course = mongoose.model("courses", courseSchema);
 
 module.exports = {
   Course,

@@ -1,17 +1,27 @@
-import { memo, useRef } from "react";
+import { memo, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import proxy from "../../utils/proxy.json";
 import Section from "./Section";
-import { RadioGroup, RadioButton } from "react-radio-buttons";
 import axios from "axios";
-import { useState } from "react";
 import "./Subtitle.css";
+import {
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormLabel,
+} from "@material-ui/core";
+
 function Subtitle(props) {
   const [showDescription, setShowDescription] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [subtitle, setSubtitle] = useState(props.subtitle);
   const [addingSection, setAddingSection] = useState(false);
+  const [sectionTitle, setSectionTitle] = useState();
+  const [sectionDescription, setSectionDescription] = useState();
+  const [sectionMinutes, setSectionMinutes] = useState();
   const [type, setType] = useState("exercise");
+  const [video, setVideo] = useState();
+  const [exercise, setExercise] = useState();
 
   const sectionTitleRef = useRef();
   const sectionDescriptionRef = useRef();
@@ -30,20 +40,15 @@ function Subtitle(props) {
   }
 
   function finishEdit() {
-    console.log({
-      ...subtitle,
-      title: titleRef.current.value,
-      description: descriptionRef.current.value,
-    });
     axios
       .put(
         proxy.URL +
           "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/edit-subtitle/" +
-          subtitle._id,
+          props.subtitle._id,
         {
-          ...subtitle,
+          ...props.subtitle,
           title: titleRef.current.value,
           description: descriptionRef.current.value,
         },
@@ -66,10 +71,10 @@ function Subtitle(props) {
     axios
       .put(
         proxy.URL +
-          "/my-courses/edit-course/" +
+          "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/delete-subtitle/" +
-          subtitle._id
+          props.subtitle._id
       )
       .then((response) => {
         props.setCourse(response.data);
@@ -84,10 +89,10 @@ function Subtitle(props) {
     axios
       .put(
         proxy.URL +
-          "/my-courses/edit-course/" +
+          "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/" +
-          subtitle._id,
+          props.subtitle._id,
         {
           title: sectionTitleRef.current.value,
           description: sectionDescriptionRef.current.value,
@@ -103,6 +108,11 @@ function Subtitle(props) {
       )
       .then((response) => {
         props.setCourse(response.data);
+        setAddingSection(false);
+        setSectionTitle("");
+        setSectionDescription("");
+        setSectionMinutes("");
+        setType("exercise");
       });
   }
 
@@ -110,14 +120,14 @@ function Subtitle(props) {
     <div>
       {!editing && (
         <div>
-          <p>{subtitle.title}</p>
+          <p>{props.subtitle.title}</p>
           <p className="description" onClick={toggleDescription}>
             {showDescription ? "Hide Description" : "Show Description"}
           </p>
           {showDescription && (
             <div>
               <p>Description:</p>
-              {subtitle.description}
+              {props.subtitle.description}
             </div>
           )}
           <button onClick={toggleEditing}>Edit</button>
@@ -129,11 +139,11 @@ function Subtitle(props) {
           <input
             type="text"
             ref={titleRef}
-            defaultValue={subtitle.title}
+            defaultValue={props.subtitle.title}
           ></input>
           <TextareaAutosize
             ref={descriptionRef}
-            defaultValue={subtitle.description}
+            defaultValue={props.subtitle.description}
           ></TextareaAutosize>
           <button onClick={finishEdit}>Done</button>
         </div>
@@ -141,33 +151,87 @@ function Subtitle(props) {
       <button onClick={toggleAddingSection}>Add Section</button>
       {addingSection && (
         <>
-          <RadioGroup
+          <div>
+            <div style={{ display: "inline-block" }}>
+              <FormControl>
+                <FormLabel id="controlled-radio-buttons-group">Type</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={type}
+                  onChange={(e) => {
+                    setType(e.target.value);
+                    setVideo();
+                    setExercise();
+                  }}
+                >
+                  <FormControlLabel
+                    value="exercise"
+                    control={<Radio />}
+                    label="Exercise"
+                  />
+                  <FormControlLabel
+                    value="video"
+                    control={<Radio />}
+                    label="Video"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+          </div>
+          <p>Enter section title:</p>
+          <input
+            type="text"
+            ref={sectionTitleRef}
             onChange={(e) => {
-              setType(e.target.value);
+              setSectionTitle(e.target.value);
             }}
-            horizontal
-          >
-            <RadioButton value="exercise">Exercise</RadioButton>
-            <RadioButton value="video">Video</RadioButton>
-          </RadioGroup>
-          <p>Enter section title:</p> <input ref={sectionTitleRef}></input>
-          <p>Enter section minutes:</p> <input ref={sectionMinutesRef}></input>
+          ></input>
+          <p>Enter section minutes:</p>
+          <input
+            type="number"
+            ref={sectionMinutesRef}
+            onChange={(e) => {
+              setSectionMinutes(e.target.value);
+            }}
+          ></input>
           <p>Enter section description:</p>
-          <TextareaAutosize ref={sectionDescriptionRef}></TextareaAutosize>
+          <TextareaAutosize
+            ref={sectionDescriptionRef}
+            onChange={(e) => {
+              setSectionDescription(e.target.value);
+            }}
+          ></TextareaAutosize>
           {type === "video" && (
             <>
               <p>Enter Video URL:</p>
-              <input ref={videoRef} type="text"></input>
+              <input
+                ref={videoRef}
+                type="text"
+                onChange={(e) => {
+                  setVideo(e.target.value);
+                }}
+              ></input>
             </>
           )}
           {type === "exercise" && (
             <>
               <p>Enter the number of questions in the exercise:</p>
-              <input ref={exerciseRef} type="text" inputmode="numeric"></input>
+              <input
+                ref={exerciseRef}
+                type="number"
+                onChange={(e) => {
+                  setExercise(e.target.value);
+                }}
+              ></input>
             </>
           )}
-          {(videoRef.current.value && type === "video") ||
-          (exerciseRef.current.value && type === "exercise") ? (
+          {type &&
+          sectionDescription &&
+          sectionMinutes &&
+          sectionTitle &&
+          ((exercise && type === "exercise") || (video && type === "video")) ? (
             <button onClick={addSection}>Done</button>
           ) : (
             <button disabled>Done</button>
@@ -175,13 +239,16 @@ function Subtitle(props) {
         </>
       )}
       <div>
-        {subtitle.sections.map((section) => (
-          <Section
-            section={section}
-            courseid={props.courseid}
-            subtitleid={subtitle._id}
-            setCourse={props.setCourse}
-          ></Section>
+        Sections:
+        {props.subtitle.sections.map((section) => (
+          <div key={section._id} className="editable-container">
+            <Section
+              section={section}
+              courseid={props.courseid}
+              subtitleid={props.subtitle._id}
+              setCourse={props.setCourse}
+            ></Section>
+          </div>
         ))}
       </div>
     </div>

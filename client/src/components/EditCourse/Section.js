@@ -4,6 +4,6 @@ import axios from "axios";
 import { RadioGroup, RadioButton } from "react-radio-buttons";
 
 function Section(props) {
-  return <div>{props.section}</div>;
+  return <div>{props.section.title}</div>;
 }
 export default memo(Section);

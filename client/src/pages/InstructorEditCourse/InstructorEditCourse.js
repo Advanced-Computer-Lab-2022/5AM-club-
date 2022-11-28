@@ -5,20 +5,34 @@ import proxy from "../../utils/proxy.json";
 import EditCourse from "../../components/EditCourse/EditCourse";
 function InstructorEditCourse() {
   const [course, setCourse] = useState();
-
+  const [instructor, setInstructor] = useState();
   const location = useLocation();
 
   useEffect(() => {
-    axios.get(proxy.URL + "/courses/" + location.state?.id).then((response) => {
-      setCourse(response.data);
-    });
+    axios
+      .get(proxy.URL + "/courses/" + location.state?.id, {
+        headers: {
+          country: localStorage.getItem("country"),
+        },
+      })
+      .then((response) => {
+        setCourse(response.data);
+        axios
+          .get(proxy.URL + "/get-course-instructor", {
+            params: { courseid: response.data._id },
+          })
+          .then((response) => {
+            setInstructor(response.data);
+          });
+      });
   }, []);
-
-  console.log(course);
-
   return (
     <div>
-      <EditCourse course={course} setCourse={setCourse}></EditCourse>
+      <EditCourse
+        course={course}
+        instructor={instructor}
+        setCourse={setCourse}
+      ></EditCourse>
     </div>
   );
 }
