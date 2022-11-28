@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
-import formatTime from "../../utils/TimeConverter";
+import { formatTime } from "../../utils/Helpers";
 import countries from "../../utils/Countries.json";
 
 function CourseContainer(props) {

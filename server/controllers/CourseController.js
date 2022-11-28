@@ -3,8 +3,6 @@ const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const createCourse = async (req, res) => {
-  console.log(req.body);
-
   let {
     title,
     price,
@@ -38,9 +36,13 @@ const createCourse = async (req, res) => {
     subtitles: courseSubs,
   });
   for (const id of instructorIds) {
-    Instructor.findByIdAndUpdate(id, {
-      $push: { courses: createdCourse._id },
-    });
+    await Instructor.findByIdAndUpdate(
+      id,
+      {
+        $push: { courses: createdCourse._id.valueOf() },
+      },
+      { upsert: true }
+    );
   }
   if (createdCourse) {
     res.status(201).json({
@@ -132,9 +134,17 @@ const findCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
+    console.log(err);
     res.status(500).send("Server Error");
   }
 };
+
+async function editCourse(req, res) {
+  const course = await Course.findByIdAndUpdate(req.params.courseid, req.body, {
+    new: true,
+  });
+  res.send(course);
+}
 
 async function addSubtitle(req, res) {
   //TODO: Joi Validation
@@ -149,9 +159,10 @@ async function addSubtitle(req, res) {
 }
 
 async function deleteSubtitle(req, res) {
+  console.log(req.params);
   const course = await Course.findByIdAndUpdate(
     req.params.courseid,
-    { $pull: { subtitles: [{ _id: req.params.subtitleid }] } },
+    { $pull: { subtitles: { _id: req.params.subtitleid } } },
     {
       new: true,
     }
@@ -176,19 +187,24 @@ async function updateSubtitle(req, res) {
 
 async function addSection(req, res) {
   //TODO: Joi Validation
+  console.log(req.params, "asdkjfb");
   const course = await Course.findById(req.params.courseid);
   for (let subtitle of course.subtitles) {
-    if (subtitle._id === req.params.subtitleid) subtitle.push(req.body);
+    if (subtitle._id.valueOf() === req.params.subtitleid)
+      subtitle.sections.push(req.body);
   }
   await course.save();
+  console.log(course);
   res.send(course);
 }
 
 async function deleteSection(req, res) {
   const course = await Course.findById(req.params.courseid);
   for (let subtitle of course.subtitles) {
-    if (subtitle._id === req.subtitleid) {
-      subtitle.filter((section) => section._id !== req.params.sectionid);
+    if (subtitle._id.valueOf() === req.subtitleid) {
+      subtitle.filter(
+        (section) => section._id.valueOf() !== req.params.sectionid
+      );
     }
   }
   await course.save();
@@ -199,9 +215,9 @@ async function updateSection(req, res) {
   //TODO: Joi Validation
   const course = await Course.findById(req.params.courseid);
   for (let subtitle of course.subtitles) {
-    if (subtitle._id === req.params.subtitleid) {
+    if (subtitle._id.valueOf() === req.params.subtitleid) {
       for (let section of subtitle) {
-        if (section._id === req.params.sectionid) section = req.body;
+        if (section._id.valueOf() === req.params.sectionid) section = req.body;
       }
     }
   }
@@ -210,6 +226,7 @@ async function updateSection(req, res) {
 }
 
 module.exports = {
+  editCourse,
   addSubtitle,
   deleteSubtitle,
   updateSubtitle,

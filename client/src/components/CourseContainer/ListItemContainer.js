@@ -3,7 +3,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import "./ListItemContainer.css";
 import TableContainer from "./TableContainer";
-import formatTime from "../../utils/TimeConverter";
+import { formatTime } from "../../utils/Helpers";
 
 function ListItem(props) {
   const [open, setOpen] = useState(false);

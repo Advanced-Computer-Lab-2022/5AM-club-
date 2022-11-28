@@ -10,4 +10,5 @@ router.post("/add-instructor", UserDataController.addInstructor);
 router.post("/add-corporate-trainee", UserDataController.addTrainee);
 router.post("/signUp", UserDataController.signUp);
 router.post("/login", UserDataController.login);
+router.get("/get-course-instructor", UserDataController.getCourseInstructor);
 module.exports = router;
