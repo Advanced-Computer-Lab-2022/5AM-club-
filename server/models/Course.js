@@ -5,13 +5,12 @@ const videoSchema = {
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-    required: true,
-  },
 };
 
-const exerciseSchema = {};
+const exerciseSchema = {
+  questions: { type: [String] },
+  answers: { type: [String] },
+};
 
 const reviewSchema = {
   user: {

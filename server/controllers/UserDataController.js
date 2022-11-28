@@ -224,15 +224,30 @@ const login = async (req, res) => {
   if (!admins.length && !instructors.length && !trainees.length) {
     res.status(401).send("Wrong Username or Password");
   } else {
-    if (admins) user.type = "admin";
-    if (instructors) user.type = "instructor";
+    if (admins.length !== 0) {
+      user.type = "admin";
+      user._id = admins[0]._id;
+      user.country = admins[0].country;
+    }
+    if (instructors.length !== 0) {
+      user.type = "instructor";
+      user._id = instructors[0]._id;
+      user.country = instructors[0].country;
+    }
     if (trainees.length > 0) {
       console.log(trainees);
+      user._id = trainees[0]._id;
+      user.country = trainees[0].country;
       user.type = trainees[0].type;
     }
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
     //console.log();
-    res.json({ accessToken, type: user.type });
+    res.json({
+      accessToken,
+      type: user.type,
+      country: user.country,
+      id: user._id.valueOf(),
+    });
   }
 };
 

@@ -15,8 +15,8 @@ import AdminPage from "./pages/AdminPage/AdminPage";
 import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
 import { useDispatch } from "react-redux";
 import { set } from "./utils/TokenSlice";
-
-import Login from "./pages/login";
+import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCourse";
+import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 function App() {
   const dispatch = useDispatch();
@@ -30,6 +30,10 @@ function App() {
         <Routes>
           <Route path="/admin/add-user" element={<AdminAddUser />}></Route>
           <Route path="/instructor/my-courses" element={<Instructor />}></Route>
+          <Route
+            path="/instructor/my-courses/edit-course"
+            element={<InstructorEditCourse />}
+          ></Route>
           <Route
             path="/instructor/create-course"
             element={<InstructorCreateCourse />}

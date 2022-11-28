@@ -1,7 +1,6 @@
 import { useRef, memo } from "react";
 import proxy from "../../utils/proxy.json";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 import useOnChange from "@utilityjs/use-on-change";
 
 import axios from "axios";
@@ -12,8 +11,6 @@ function GeneralFiltersContainer(props) {
   const minRef = useRef();
 
   const location = useLocation();
-
-  const token = useSelector((state) => state.token.value);
 
   useOnChange(location.state?.searchItem, handleFilter);
 
@@ -33,7 +30,8 @@ function GeneralFiltersContainer(props) {
               : null,
         },
         headers: {
-          country: token ? token.country : localStorage.getItem("country"),
+          authorization: localStorage.getItem("token"),
+          country: localStorage.getItem("country"),
         },
       })
       .then((response) => {
@@ -51,7 +49,7 @@ function GeneralFiltersContainer(props) {
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
 
-      {token?.type !== "corporate" && (
+      {localStorage.getItem("type") !== "corporate" && (
         <div>
           <p>Filter by price:</p>
           <input ref={minRef} type={"number"}></input>

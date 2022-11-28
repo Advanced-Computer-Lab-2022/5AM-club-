@@ -5,10 +5,8 @@ import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
 import formatTime from "../../utils/TimeConverter";
 import countries from "../../utils/Countries.json";
-import { useSelector } from "react-redux";
 
 function CourseContainer(props) {
-  const token = useSelector((state) => state.token.value);
   return (
     <Card border="dark" className="card">
       <Card.Body>
@@ -18,7 +16,7 @@ function CourseContainer(props) {
         <div className="attribute">
           Total hours: {formatTime(props.course.minutes)}
         </div>
-        {token?.type !== "coporate" && (
+        {localStorage.getItem("type") !== "corporate" && (
           <div className="attribute">
             Price:{" "}
             {props.promotion &&
@@ -31,11 +29,7 @@ function CourseContainer(props) {
                     (" " +
                       countries[
                         Object.keys(countries).find(
-                          (e) =>
-                            e ===
-                            (token
-                              ? token.country
-                              : localStorage.getItem("country"))
+                          (e) => e === localStorage.getItem("country")
                         )
                       ])}
                 </span>
@@ -50,11 +44,7 @@ function CourseContainer(props) {
                   (" " +
                     countries[
                       Object.keys(countries).find(
-                        (e) =>
-                          e ===
-                          (token
-                            ? token.country
-                            : localStorage.getItem("country"))
+                        (e) => e === localStorage.getItem("country")
                       )
                     ])}
               </>
@@ -62,7 +52,7 @@ function CourseContainer(props) {
           </div>
         )}
 
-        {token?.type === "individual" && (
+        {localStorage.getItem("type") === "individual" && (
           <Button variant="outline-success">BUY NOW</Button>
         )}
         <div className="attribute"> Content: </div>
