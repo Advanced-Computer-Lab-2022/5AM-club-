@@ -3,13 +3,16 @@ import proxy from "../../utils/proxy.json";
 import { memo, useRef, useState } from "react";
 import Subtitle from "./Subtitle";
 import TextareaAutosize from "react-textarea-autosize";
-import { formatTime, displayNames, displayValues } from "../../utils/Helpers";
+import { formatTime, displayValues } from "../../utils/Helpers";
 import { Box, Rating } from "@mui/material";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import countries from "../../utils/Countries.json";
 import CourseVideo from "./CourseVideo";
 import "./EditCourse.css";
-import plus from "../../assets/EditCourse/plus.png";
+import plus from "../../assets/EditCourse/plusgrey.png";
+import cancel from "../../assets/EditCourse/cancelgrey.png";
+import edit from "../../assets/EditCourse/edit.png";
+import convert from "../../utils/CurrencyConverter";
 function EditCourse(props) {
   const [addingSubtitle, setAddingSubtitle] = useState(false);
   const [subtitleTitle, setSubtitleTitle] = useState("");
@@ -19,8 +22,20 @@ function EditCourse(props) {
   function addSubtitle() {
     axios
       .put(
-        proxy.URL + "/instructor/my-courses/edit-course/" + props.course._id,
-        { title: subtitleTitle, description: subtitleDescription, sections: [] }
+        proxy.URL +
+          "/instructor/my-courses/edit-course/" +
+          props.course._id +
+          "/add-subtitle",
+        {
+          title: subtitleTitle,
+          description: subtitleDescription,
+          sections: [],
+        },
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
+        }
       )
       .then((response) => {
         props.setCourse(response.data);
@@ -32,13 +47,24 @@ function EditCourse(props) {
   function toggleAddingSubtitle() {
     setAddingSubtitle(!addingSubtitle);
   }
-  function editCourse() {
+  async function editCourse() {
+    const newPrice = await convert(
+      props.course.price,
+      localStorage.getItem("country"),
+      "United States"
+    );
     axios
       .put(
         proxy.URL + "/instructor/my-courses/edit-course/" + props.course._id,
         {
           ...props.course,
           summary: description,
+          price: newPrice,
+        },
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
         }
       )
       .then((response) => {
@@ -119,6 +145,7 @@ function EditCourse(props) {
           ></TextareaAutosize>
           {editingDescripton ? (
             <button
+              className="btn btn-success"
               onClick={() => {
                 toggleEditingDescription();
                 editCourse();
@@ -127,17 +154,29 @@ function EditCourse(props) {
               Done
             </button>
           ) : (
-            <button onClick={toggleEditingDescription}>Edit Description</button>
+            <img
+              className="edit-button"
+              src={edit}
+              alt="edit"
+              onClick={toggleEditingDescription}
+            ></img>
           )}
         </div>
       </div>
       <div className="editable-container">
-        <CourseVideo></CourseVideo>
+        <CourseVideo
+          course={props.course}
+          setCourse={props.setCourse}
+          url={props.course?.preview_video}
+        ></CourseVideo>
       </div>
       <div>Subtitles:</div>
       {props.course
         ? props.course.subtitles.map((subtitle) => (
-            <div key={subtitle._id} className="editable-container">
+            <div
+              key={subtitle._id}
+              className="editable-container subtitle-container"
+            >
               <Subtitle
                 subtitle={subtitle}
                 courseid={props.course._id}
@@ -147,7 +186,8 @@ function EditCourse(props) {
           ))
         : null}
       <div onClick={toggleAddingSubtitle} className="add-subtitle-button">
-        <img src={plus} alt="plus"></img>Add Subtitle
+        <img src={addingSubtitle ? cancel : plus} alt="plus"></img>
+        {addingSubtitle ? "Cancel" : "Add Subtitle"}
       </div>
       {addingSubtitle && (
         <>
@@ -167,9 +207,21 @@ function EditCourse(props) {
             }}
           ></TextareaAutosize>
           {subtitleTitle && subtitleDescription ? (
-            <button onClick={addSubtitle}>Done</button>
+            <div className="done-button-wrapper">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={addSubtitle}
+              >
+                Done
+              </button>
+            </div>
           ) : (
-            <button disabled>Done</button>
+            <div className="done-button-wrapper">
+              <button type="button" className="btn btn-success" disabled>
+                Done
+              </button>
+            </div>
           )}
         </>
       )}

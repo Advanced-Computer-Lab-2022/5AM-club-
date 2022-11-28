@@ -24,7 +24,8 @@
     "jsonwebtoken": "^8.5.1",
     "mon": "^0.0.8",
     "mongoose": "^6.6.5",
-    "node": "^19.0.0"
+    "node": "^19.0.0",
+    "youtube-validate": "^1.2.4"
   },
   "devDependencies": {
     "concurrently": "^7.4.0",
