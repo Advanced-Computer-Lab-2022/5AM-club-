@@ -184,7 +184,15 @@ courseSchema.virtual("minutes").get(function () {
   return result;
 });
 
-const Course = mongoose.model("courses", courseSchema);
+courseSchema.virtual("rating").get(() => {
+  let rating = 0;
+  this.userReviews.forEach((element) => {
+    rating += element.rating;
+  });
+  rating = (rating / this.userReviews.length).toPrecision(2);
+  return rating;
+});
+const Course = mongoose.model("Courses", courseSchema);
 
 module.exports = {
   Course,

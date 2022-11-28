@@ -1,8 +1,10 @@
 import proxy from "../../utils/proxy.json";
 import axios from "axios";
 import { useEffect, memo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 import countries from "../../utils/Countries.json";
+
 function InstructorCoursesContainer(props) {
   const navigate = useNavigate();
   function editCourse(_id) {
@@ -49,7 +51,17 @@ function InstructorCoursesContainer(props) {
           >
             Edit Course
           </button>
-        </div>
+          <button
+            onClick={() => {
+              navigate("view-course-rating", {
+                state: { course: course },
+              });
+            }}
+          >
+            {" "}
+            reviews
+          </button>
+        </>
       ))}
     </div>
   );

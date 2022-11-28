@@ -6,7 +6,6 @@ const app = express();
 const port = process.env.port || 4000;
 const { Course } = require("./models/Course");
 const Instructor = require("./models/Instructor");
-
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
 connect();
