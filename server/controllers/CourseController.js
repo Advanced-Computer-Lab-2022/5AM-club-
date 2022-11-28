@@ -174,21 +174,6 @@ const findCourseByID = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
-const setCoursePromotion = async (req, res) => {
-  const id = req.params.id;
-  const valid = setCoursePromotionSchema.validate();
-  if (valid.error) {
-    res.status(400).send("Invalid Promotion");
-    return;
-  }
-  const course = await Course.findByIdAndUpdate(
-    id,
-    {
-      promotion: req.body.promotion,
-    },
-    { new: true }
-  );
-};
 
 async function updateCourse(req, res) {
   const valid = courseSchema.validate(req.body);
