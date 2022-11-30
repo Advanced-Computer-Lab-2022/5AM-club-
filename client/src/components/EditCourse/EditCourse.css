@@ -1,0 +1,112 @@
+textarea {
+  resize: none;
+  padding: 10px;
+
+  border-radius: 20px;
+}
+.description-textarea {
+  min-height: 80px;
+  width: 500px;
+}
+.edit-course-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: gray;
+  border-radius: 20px;
+  margin: 150px;
+  margin-top: 50px;
+}
+
+.course-attribute {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: rgb(48, 48, 48);
+}
+.rating {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: rgb(48, 48, 48);
+}
+.rating > p {
+  display: inline;
+  color: white;
+  margin: 8px;
+}
+.rating-box {
+  margin-top: 5px;
+  display: inline;
+}
+.course-attribute > p {
+  display: inline;
+  color: white;
+  margin: 8px;
+}
+.course-attribute-title {
+  display: inline-block;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1rem;
+}
+.header-wrapper {
+  margin: 1rem;
+}
+.properties-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.edit-button {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.empty-star {
+  color: white;
+}
+.editable-container {
+  border: solid #000;
+  border-width: 1px;
+  border-radius: 20px;
+  padding: 10px;
+}
+.add-subtitle-button {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  height: 80px;
+  background-color: rgb(48, 48, 48);
+  color: white;
+}
+.add-subtitle-button > img {
+  height: 40px;
+  width: 40px;
+  margin: 10px;
+}
+.add-subtitle-button:hover {
+  background-color: rgb(93, 93, 93);
+}
+.subtitle-container {
+  background-color: rgb(223, 223, 223);
+}
+.done-button-wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  text-align: end;
+}
+.done-button-wrapper > button {
+  border-radius: 20px;
+}
+.subtitles-text {
+  font-size: 3rem;
+}

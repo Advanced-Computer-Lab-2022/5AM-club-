@@ -1,4 +1,5 @@
 require("dotenv").config();
+const ObjectId = require("bson-objectid");
 const countries = require("../utils/Countries.json");
 const Joi = require("joi");
 const Trainee = require("../models/Trainee");
@@ -147,8 +148,12 @@ async function addInstructor(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  const newInstructor = new Instructor(req.body);
-
+  const newInstructor = new Instructor({
+    ...req.body,
+    email: "",
+    country: "United States",
+    biography: "",
+  });
   await newInstructor
     .save()
     .then((response) => {
@@ -159,7 +164,6 @@ async function addInstructor(req, res) {
 
 async function addTrainee(req, res) {
   const result = addUserSchema.validate(req.body);
-  console.log(result.error);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
     return;
@@ -299,7 +303,13 @@ async function editBiographyInstructor(req, res) {
     res.status(400).send("Missing Id");
   }
 }
+
+async function getCourseInstructor(req, res) {
+  res.send(await Instructor.find({ courses: ObjectId(req.query.courseid) }));
+}
+
 module.exports = {
+  getCourseInstructor,
   setCountry,
   getUser,
   getUsers,

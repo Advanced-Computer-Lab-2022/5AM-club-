@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 function InstructorCoursesContainer(props) {
   const navigate = useNavigate();
-  console.log(props.courses);
   function editCourse(_id) {
     navigate("edit-course", { state: { id: _id } });
   }
@@ -31,8 +30,8 @@ function InstructorCoursesContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <>
-          <div key={course._id}>
+        <div key={course._id}>
+          <div>
             {course.title +
               " price: " +
               course.price +
@@ -50,7 +49,7 @@ function InstructorCoursesContainer(props) {
           >
             Edit Course
           </button>
-        </>
+        </div>
       ))}
     </div>
   );

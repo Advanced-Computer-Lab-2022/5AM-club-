@@ -5,8 +5,10 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.11",
+    "@mui/material": "^5.10.15",
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -14,6 +16,7 @@
     "@utilityjs/use-on-change": "^1.0.3",
     "axios": "^1.1.3",
     "bootstrap": "^5.2.2",
+    "material-ui": "^0.20.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
@@ -24,7 +27,8 @@
     "react-scripts": "5.0.1",
     "react-textarea-autosize": "^8.4.0",
     "react-use": "^17.4.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "youtube-validate": "^1.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
