@@ -302,8 +302,8 @@ async function deleteSection(req, res) {
 }
 
 async function updateSection(req, res) {
-  console.log(req.body);
   const valid = sectionSchema.validate(req.body);
+
   if (valid.error) {
     res.status(400).send("Invalid Section Object");
     return;
@@ -316,11 +316,14 @@ async function updateSection(req, res) {
           section.title = req.body.title;
           section.description = req.body.description;
           section.minutes = req.body.minutes;
+          section.content = req.body.content;
         }
       }
     }
   }
+  console.log(req.body, "body");
   await course.save();
+  console.log(course.subtitles[0].sections[0].content, "content");
   if (req.headers.country) {
     course.price = await convert(
       course.price,
