@@ -1,9 +1,9 @@
 import { memo } from "react";
 import ReviewsPage from "../../components/ReviewContainer/ReviewsPage";
-import "./ViewCourseReviews.css";
+import "./TraineeViewCourseReviews.css";
 import { useLocation } from "react-router-dom";
-function ViewCourseReviews() {
+function TraineeViewCourseReviews() {
   const location = useLocation();
   return <ReviewsPage item={location.state.course} type='course' />;
 }
-export default memo(ViewCourseReviews);
+export default memo(TraineeViewCourseReviews);

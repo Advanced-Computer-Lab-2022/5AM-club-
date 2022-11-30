@@ -23,10 +23,8 @@ const addUserSchema = Joi.object({
   }),
 });
 
-const editEmailSchema = Joi.object({
+const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
-});
-const editBiographySchema = Joi.object({
   biography: Joi.string(),
 });
 
@@ -66,7 +64,7 @@ async function getUser(req, res) {
         User = await Admin.findById(id);
         break;
       case "instructor":
-        User = await Instructor.findById(id);
+        User = await Instructor.findById(id).populate("userReviews.user");
         break;
       default:
         res.status(400).send("Invalid UserType");
@@ -182,9 +180,9 @@ async function addTrainee(req, res) {
     .catch((err) => res.status(400).send("Username already used"));
 }
 
-async function editEmailInstructor(req, res) {
+async function editPersonalInformationInstructor(req, res) {
   console.log(req.body);
-  const valid = editEmailSchema.validate(req.body);
+  const valid = editPersonalInformationSchema.validate(req.body);
   console.log(valid);
   if (valid.error) {
     res.status(400).send("Invalid Email");
@@ -193,38 +191,9 @@ async function editEmailInstructor(req, res) {
 
   if (req.headers.id) {
     const id = req.headers.id;
-    console.log(req.headers, req.body);
-    const User = await Instructor.findByIdAndUpdate(
-      id,
-      {
-        email: req.body.email,
-      },
-      { new: true }
-    );
-    res.send(User);
-  } else {
-    res.status(400).send("Missing Id");
-  }
-}
-
-async function editBiographyInstructor(req, res) {
-  const valid = editBiographySchema.validate(req.body);
-
-  if (valid.error) {
-    res.status(400).send("Invalid Biography");
-    return;
-  }
-
-  if (req.headers.id) {
-    const id = req.headers.id;
-    console.log(req.headers, req.body);
-    const User = await Instructor.findByIdAndUpdate(
-      id,
-      {
-        biography: req.body.biography,
-      },
-      { new: true }
-    );
+    const User = await Instructor.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     res.send(User);
   } else {
     res.status(400).send("Missing Id");
@@ -365,8 +334,7 @@ module.exports = {
   addAdmin,
   addInstructor,
   addTrainee,
-  editBiographyInstructor,
-  editEmailInstructor,
+  editPersonalInformationInstructor,
   signUp,
   login,
   editBiographyInstructor,

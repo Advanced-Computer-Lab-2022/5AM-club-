@@ -4,7 +4,7 @@ const Instructor = require("../models/Instructor");
 const { convert } = require("../utils/CurrencyConverter");
 const setCoursePromotionSchema = Joi.object({
   percentage: Joi.number().min(0).max(100),
-  deadline: Joi.date(),
+  deadline: Joi.date().greater(Date.now()),
 });
 const createCourse = async (req, res) => {
   console.log(req.body);
@@ -129,9 +129,10 @@ const getCourses = async (req, res) => {
     }
   }
   filter = {
-    ...(req.headers.id && {
-      instructor: req.headers.id,
-    }),
+    ...(req.headers.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.headers.id }
+        : { owners: req.headers.id })),
     ...(req.query.subject && {
       subject: req.query.subject,
     }),
@@ -144,7 +145,9 @@ const getCourses = async (req, res) => {
     ...(searchItem && searchItem),
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
-  let courses = await Course.find(filter);
+  let courses = await Course.find(filter)
+    .populate("instructor")
+    .populate("userReviews.user");
   if (req.headers.country) {
     for (let course of courses) {
       course.price = await convert(
@@ -366,8 +369,10 @@ async function updateSection(req, res) {
 
 const setCoursePromotion = async (req, res) => {
   const id = req.params.id;
-  const valid = setCoursePromotionSchema.validate();
+  console.log(req.body);
+  const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
+    console.log(valid.error);
     res.status(400).send("Invalid Promotion");
     return;
   }
@@ -379,6 +384,7 @@ const setCoursePromotion = async (req, res) => {
     { new: true }
   );
 };
+
 module.exports = {
   updateCourse,
   addSubtitle,

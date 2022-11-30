@@ -12,6 +12,13 @@ function TraineeProfile() {
       >
         View Courses
       </button>
+      <button
+        onClick={() => {
+          navigate("my-courses");
+        }}
+      >
+        View My Courses
+      </button>
       <SelectCountry></SelectCountry>
     </div>
   );

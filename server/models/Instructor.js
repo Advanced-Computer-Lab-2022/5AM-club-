@@ -29,5 +29,15 @@ const instructorSchema = new mongoose.Schema({
   },
 });
 
+instructorSchema.virtual("instructorRating").get(function () {
+  let rating = 0;
+  this.userReviews.forEach((element) => {
+    rating += element.rating;
+  });
+  rating = (rating / this.userReviews.length).toPrecision(2);
+  console.log("done");
+  return rating;
+});
+instructorSchema.set("toJSON", { getters: true, virtuals: true });
 const Instructor = mongoose.model("Instructor", instructorSchema);
 module.exports = Instructor;

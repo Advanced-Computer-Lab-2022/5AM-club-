@@ -34,5 +34,5 @@ const traineeSchema = new mongoose.Schema({
   },
 });
 
-const Trainee = mongoose.model("Trainee", traineeSchema);
+const Trainee = mongoose.model("Trainees", traineeSchema);
 module.exports = Trainee;

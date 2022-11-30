@@ -36,7 +36,10 @@ router.put(
 
 router.get("/courses", CourseController.getCourses);
 router.get("/courses/:id", CourseController.findCourseByID);
-router.put("/courses/:id/set-promotion", CourseController.setCoursePromotion);
+router.put(
+  "/my-courses/:id/set-promotion",
+  CourseController.setCoursePromotion
+);
 router.post("/create-course", CourseController.createCourse);
 
 module.exports = router;

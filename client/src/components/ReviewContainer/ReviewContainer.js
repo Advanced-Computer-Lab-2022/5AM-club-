@@ -1,23 +1,35 @@
 import { useEffect, useState, memo } from "react";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import "./ReviewContainer.css";
-function ReviewContainer() {
+function ReviewContainer(props) {
   return (
-    <div>
-      <div>
+    <Card sx={{ m: 2, p: 2 }}>
+      <Typography
+        gutterBottom
+        variant='h5'
+        component='div'
+        sx={{ display: "flex", alignItems: "center" }}
+      >
         <Rating
           name='read-only'
           defaultValue={props.userReview.rating}
-          size='meduim '
+          size='small'
           sx={{
             color: "success.main",
           }}
+          precision={0.5}
           readOnly
         />
-        {" " + props.userReview.rating + " by " + props.userReview.user.name}
-      </div>
-      <div>{props.userReview.review}</div>
-    </div>
+        {" (" +
+          props.userReview.rating +
+          ") " +
+          " by " +
+          props.userReview.user.username}
+      </Typography>
+      <Typography variant='h6'>{props.userReview.review} </Typography>
+    </Card>
   );
 }
 export default memo(ReviewContainer);
