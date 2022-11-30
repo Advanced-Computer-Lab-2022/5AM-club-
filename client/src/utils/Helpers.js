@@ -31,4 +31,11 @@ const displayValues = (items) => {
   }
 };
 
-module.exports = { displayValues, displayNames, formatTime };
+const hasEmptyString = (obj) => {
+  for (let key in obj) {
+    if (obj[key] === "") return true;
+  }
+  return false;
+};
+
+module.exports = { hasEmptyString, displayValues, displayNames, formatTime };

@@ -1,0 +1,28 @@
+.edit-question-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.edit-question-container > img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.choices-button {
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+}
+.choices-edit-container {
+  display: flex;
+  flex-direction: row;
+}
+.question {
+  display: flex;
+  flex-direction: row;
+}
+.trash {
+  margin-left: auto;
+  margin-right: 0;
+  align-self: center;
+}

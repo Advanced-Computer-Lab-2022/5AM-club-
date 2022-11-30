@@ -46,6 +46,8 @@ function EditCourse(props) {
   }
   function toggleAddingSubtitle() {
     setAddingSubtitle(!addingSubtitle);
+    setSubtitleDescription("");
+    setSubtitleTitle("");
   }
   async function editCourse() {
     const newPrice = await convert(
@@ -170,7 +172,7 @@ function EditCourse(props) {
           url={props.course?.preview_video}
         ></CourseVideo>
       </div>
-      <div>Subtitles:</div>
+      <p className="subtitles-text">Subtitles:</p>
       {props.course
         ? props.course.subtitles.map((subtitle) => (
             <div

@@ -13,7 +13,8 @@ textarea {
   flex-direction: column;
   background-color: gray;
   border-radius: 20px;
-  margin: 80px;
+  margin: 150px;
+  margin-top: 50px;
 }
 
 .course-attribute {
@@ -66,9 +67,6 @@ textarea {
   cursor: pointer;
 }
 
-.title-text {
-  font-size: 2rem;
-}
 .empty-star {
   color: white;
 }
@@ -108,4 +106,7 @@ textarea {
 }
 .done-button-wrapper > button {
   border-radius: 20px;
+}
+.subtitles-text {
+  font-size: 3rem;
 }

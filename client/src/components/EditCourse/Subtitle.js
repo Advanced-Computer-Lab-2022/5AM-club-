@@ -26,19 +26,21 @@ function Subtitle(props) {
   const [sectionMinutes, setSectionMinutes] = useState();
   const [type, setType] = useState("exercise");
   const [video, setVideo] = useState();
-  const [exercise, setExercise] = useState();
+  const [exercise, setExercise] = useState("quiz");
   const [invalidURL, setInvalidURL] = useState(false);
   const [expandSections, setExpandSections] = useState(false);
 
   const sectionTitleRef = useRef();
   const sectionDescriptionRef = useRef();
   const sectionMinutesRef = useRef();
-  const exerciseRef = useRef();
   const videoRef = useRef();
   const titleRef = useRef();
   const descriptionRef = useRef();
 
   function toggleDescription(e) {
+    setVideo();
+    setExercise("quiz");
+    setInvalidURL(false);
     setShowDescription(!showDescription);
   }
   function toggleEditing() {
@@ -113,9 +115,10 @@ function Subtitle(props) {
             minutes: sectionMinutes,
             content: {
               exercise: {
-                questions: new Array(exercise).fill(null),
-                answers: new Array(exercise).fill(null),
-                choices: new Array(exercise).fill(null),
+                questions: [],
+                answers: [],
+                choices: [],
+                exerciseType: exercise,
               },
             },
           },
@@ -132,6 +135,7 @@ function Subtitle(props) {
           setSectionDescription("");
           setSectionMinutes("");
           setType("exercise");
+          setExercise("quiz");
           setInvalidURL(false);
         })
         .catch(() => {
@@ -177,6 +181,7 @@ function Subtitle(props) {
               setSectionTitle("");
               setSectionDescription("");
               setSectionMinutes("");
+              setExercise("quiz");
               setType("exercise");
               setInvalidURL(false);
             })
@@ -195,7 +200,7 @@ function Subtitle(props) {
       {!editing && (
         <div className="subtitle-header">
           <div>
-            <p>{props.subtitle.title}</p>
+            <p className="title-text">{props.subtitle.title}</p>
 
             <p>
               {"Length : " +
@@ -246,7 +251,7 @@ function Subtitle(props) {
             {expandSections ? "Hide Sections" : "Show Sections"}
           </button>
         </div>
-        {expandSections ? "Sections:" : ""}
+        {expandSections ? <p className="sections-text">Sections:</p> : ""}
         {expandSections &&
           props.subtitle.sections.map((section) => (
             <div key={section._id} className="editable-container">
@@ -277,7 +282,7 @@ function Subtitle(props) {
                   onChange={(e) => {
                     setType(e.target.value);
                     setVideo();
-                    setExercise();
+                    setExercise("quiz");
                     setInvalidURL(false);
                   }}
                 >
@@ -330,27 +335,43 @@ function Subtitle(props) {
               ></input>
             </>
           )}
-          {type === "exercise" && (
-            <>
-              <p>Enter the number of questions in the exercise:</p>
-              <input
-                ref={exerciseRef}
-                type="number"
-                onChange={(e) => {
-                  setExercise(e.target.value);
-                }}
-              ></input>
-            </>
-          )}
+
           {invalidURL && (
             <p style={{ color: "red" }}>Invalid youtube video link. </p>
+          )}
+
+          {type === "exercise" && (
+            <div>
+              <FormControl>
+                <FormLabel id="exercise-radio-buttons-group">Type</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="exercise-radio-buttons-group"
+                  name="exercise-radio-buttons-group"
+                  value={exercise}
+                  onChange={(e) => {
+                    setExercise(e.target.value);
+                  }}
+                >
+                  <FormControlLabel
+                    value="quiz"
+                    control={<Radio />}
+                    label="Quiz"
+                  />
+                  <FormControlLabel
+                    value="exam"
+                    control={<Radio />}
+                    label="Exam"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
           )}
           {type &&
           sectionDescription &&
           sectionMinutes > 0 &&
           sectionTitle &&
-          ((exercise > 0 && type === "exercise") ||
-            (video && type === "video")) ? (
+          ((video && type === "video") || (exercise && type === "exercise")) ? (
             <button onClick={addSection} className="btn btn-success">
               Done
             </button>
