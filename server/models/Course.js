@@ -28,46 +28,6 @@ const reviewSchema = {
   rating: { type: Number },
 };
 
-const reviewSchema = {
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "Trainees",
-    required: true,
-  },
-  review: { type: String },
-  rating: { type: Number },
-};
-
-const reviewSchema = {
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "Trainees",
-    required: true,
-  },
-  review: { type: String },
-  rating: { type: Number },
-};
-
-const reviewSchema = {
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "Trainees",
-    required: true,
-  },
-  review: { type: String },
-  rating: { type: Number },
-};
-
-const reviewSchema = {
-  user: {
-    type: mongoose.Types.ObjectId,
-    ref: "Trainees",
-    required: true,
-  },
-  review: { type: String },
-  rating: { type: Number },
-};
-
 const sectionSchema = new mongoose.Schema({
   title: {
     type: String,

@@ -77,7 +77,7 @@ function InstructorCoursesContainer(props) {
             {" "}
             set promotion
           </button>
-        </>
+        </div>
       ))}
     </div>
   );

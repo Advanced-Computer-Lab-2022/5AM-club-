@@ -6,8 +6,6 @@ const setCoursePromotionSchema = Joi.object({
   percentage: Joi.number().min(0).max(100),
   deadline: Joi.date().greater(Date.now()),
 });
-const createCourse = async (req, res) => {
-  console.log(req.body);
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
@@ -34,10 +32,6 @@ const subtitleSchema = Joi.object({
   sections: Joi.array().items(Joi.object()).required(),
 }).unknown();
 
-const setCoursePromotionSchema = Joi.object({
-  percentage: Joi.number().min(0).max(100),
-  deadline: Joi.date(),
-});
 const createCourse = async (req, res) => {
   let {
     title,
@@ -369,6 +363,7 @@ async function updateSection(req, res) {
 
 const setCoursePromotion = async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   console.log(req.body);
   const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
@@ -379,10 +374,14 @@ const setCoursePromotion = async (req, res) => {
   const course = await Course.findByIdAndUpdate(
     id,
     {
-      promotion: req.body.promotion,
+      promotion: {
+        percentage: req.body.percentage,
+        deadline: req.body.deadline,
+      },
     },
     { new: true }
   );
+  res.send("done");
 };
 
 module.exports = {
@@ -396,4 +395,5 @@ module.exports = {
   getCourses,
   createCourse,
   findCourseByID,
+  setCoursePromotion,
 };
