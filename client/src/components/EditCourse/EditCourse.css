@@ -1,7 +1,6 @@
 textarea {
   resize: none;
   padding: 10px;
-
   border-radius: 20px;
 }
 .description-textarea {
@@ -13,8 +12,9 @@ textarea {
   flex-direction: column;
   background-color: gray;
   border-radius: 20px;
-  margin: 150px;
+  margin: 250px;
   margin-top: 50px;
+  overflow: hidden;
 }
 
 .course-attribute {
@@ -25,6 +25,27 @@ textarea {
   border-radius: 10px;
   background-color: rgb(48, 48, 48);
 }
+.course-attribute > img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.course-attribute-input::-webkit-outer-spin-button,
+.course-attribute-input::-webkit-inner-spin-button,
+.course-attribute-input {
+  background-color: transparent;
+  border: 0px;
+  color: white;
+  outline: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin: 0;
+  -moz-appearance: textfield;
+}
+
 .rating {
   display: inline-flex;
   flex-direction: row;
@@ -60,6 +81,7 @@ textarea {
   display: flex;
   flex-direction: row;
   gap: 10px;
+  flex-wrap: wrap;
 }
 .edit-button {
   width: 50px;
@@ -109,4 +131,10 @@ textarea {
 }
 .subtitles-text {
   font-size: 3rem;
+}
+.price-text {
+  color: white;
+  margin: auto;
+  margin-left: 8px;
+  align-self: center;
 }

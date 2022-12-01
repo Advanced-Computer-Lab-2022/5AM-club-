@@ -40,7 +40,6 @@ const createCourse = async (req, res) => {
     subDescriptions,
   } = req.body;
 
-  let i = 0;
   const courseSubs = subtitles.map((subtitle, idx) => {
     return {
       title: subtitle,
