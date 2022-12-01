@@ -5,6 +5,7 @@ import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
 import countries from "../../utils/Countries.json";
 import proxy from "../../utils/proxy.json";
+import formatTime from "../../utils/Helpers";
 function ViewCourses() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -38,12 +39,14 @@ function ViewCourses() {
       <div>
         View Courses: <br />
         {courses.map((c) => (
-          <div className="course-item" key={c.title}>
+          <div className='course-item' key={c.title}>
             <div>
               {c.title +
                 (localStorage.getItem("type") !== "corporate"
                   ? " price: " +
                     c.price +
+                    " totalhours: " +
+                    formatTime(c.minutes) +
                     " " +
                     countries[
                       Object.keys(countries).find(

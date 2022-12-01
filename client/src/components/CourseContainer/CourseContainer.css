@@ -18,3 +18,21 @@
 .red{
     color:red
 }
+.reviewCard{
+    margin-left: 2rem;
+    margin-right: 
+    2rem;
+    margin-top: 2rem;
+    padding: 2rem;
+   
+
+}
+.topRight{
+    position:absolute; top:0; right:0;
+    margin:1rem;
+}
+.bottomRight{
+    right:0;
+    margin: 1rem;
+  
+}

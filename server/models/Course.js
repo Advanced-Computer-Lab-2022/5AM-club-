@@ -5,6 +5,10 @@ const videoSchema = {
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
 };
 
 const exerciseSchema = {
@@ -12,6 +16,16 @@ const exerciseSchema = {
   choices: { type: [Object], required: true },
   answers: { type: [String], required: true },
   exerciseType: { type: String, required: true },
+};
+
+const reviewSchema = {
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: "Trainees",
+    required: true,
+  },
+  review: { type: String },
+  rating: { type: Number },
 };
 
 const sectionSchema = new mongoose.Schema({
@@ -120,8 +134,23 @@ courseSchema.virtual("minutes").get(function () {
   return result;
 });
 
-const Course = mongoose.model("courses", courseSchema);
+courseSchema.virtual("courseRating").get(function () {
+  let rating = 0;
+  this.userReviews.forEach((element) => {
+    rating += element.rating;
+  });
+  rating = (rating / this.userReviews.length).toPrecision(2);
+  console.log("done");
+  return rating;
+});
+courseSchema.set("toJSON", { getters: true, virtuals: true });
+
+const Course = mongoose.model("Courses", courseSchema);
 
 module.exports = {
   Course,
+  reviewSchema,
+  // Subtitle,
+  // Section,
+  // Exercise,
 };

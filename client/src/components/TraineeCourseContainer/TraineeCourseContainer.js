@@ -5,21 +5,18 @@ import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 
-function InstructorCoursesContainer(props) {
+function TraineeCourseContainer(props) {
   const navigate = useNavigate();
-  function editCourse(_id) {
-    navigate("edit-course", { state: { id: _id } });
-  }
-
+  console.log(props.courses);
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
     axios
-      .get(proxy.URL + "/instructor/my-courses", {
+      .get(proxy.URL + "/Trainee/my-courses", {
         headers: {
           id: localStorage.getItem("id"),
           country: localStorage.getItem("country"),
-          type: "instructor",
+          type: localStorage.getItem("type"),
         },
       })
       .then((response) => {
@@ -33,8 +30,8 @@ function InstructorCoursesContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <div key={course._id}>
-          <div>
+        <>
+          <div key={course._id}>
             {course.title +
               " price: " +
               course.price +
@@ -48,38 +45,18 @@ function InstructorCoursesContainer(props) {
               course.courseRating}
           </div>
           <button
-            key='Edit Course'
             onClick={() => {
-              editCourse(course._id);
-            }}
-          >
-            Edit Course
-          </button>
-          <button
-            key='reviews'
-            onClick={() => {
-              navigate("view-course-reviews", {
+              navigate("view-course-details", {
                 state: { course: course },
               });
             }}
           >
             {" "}
-            reviews
+            Show Details
           </button>
-          <button
-            key='set promotion'
-            onClick={() => {
-              navigate("set-course-promotion", {
-                state: { course: course },
-              });
-            }}
-          >
-            {" "}
-            set promotion
-          </button>
-        </div>
+        </>
       ))}
     </div>
   );
 }
-export default memo(InstructorCoursesContainer);
+export default memo(TraineeCourseContainer);
