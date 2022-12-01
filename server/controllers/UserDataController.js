@@ -7,6 +7,7 @@ const Admin = require("../models/Admin");
 const Instructor = require("../models/Instructor");
 const nameChecker = require("../utils/checkNames");
 const jwt = require("jsonwebtoken");
+const TraineeCourse = require("../models/TraineeCourse");
 
 const countrySchema = Joi.object({
   country: Joi.string()
@@ -27,6 +28,43 @@ const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
   biography: Joi.string(),
 });
+
+async function getTraineeCourse(req, res) {
+  res.send(
+    await TraineeCourse.find({
+      traineeId: ObjectId(req.body.traineeId),
+      courseId: ObjectId(req.body.courseId),
+    })
+  );
+}
+
+async function updateTraineeCourse(req, res) {
+  const test = await Course.findById(req.body.courseId);
+  let noSections = 0;
+  for (let subtitle of test.subtitles) {
+    noSections += subtitle.sections.length;
+  }
+  if (noSections !== progress.length) {
+    res.status(409);
+    return;
+  }
+  const traineeCourses = await TraineeCourse.findOneAndUpdate(
+    {
+      traineeId: ObjectId(req.body.traineeId),
+      courseId: ObjectId(req.body.courseId),
+    },
+    {
+      progress: req.body.progress,
+      answers: req.body.answers,
+      notes: req.body.notes,
+      lastSection: req.body.lastSection,
+    },
+    {
+      new: true,
+    }
+  );
+  res.send(traineeCourses);
+}
 
 async function getUsers(req, res) {
   let User;
@@ -339,4 +377,6 @@ module.exports = {
   login,
   editBiographyInstructor,
   editEmailInstructor,
+  getTraineeCourse,
+  updateTraineeCourse,
 };
