@@ -1,14 +1,18 @@
 import axios from "axios";
 import { memo, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import proxy from "../../utils/proxy.json";
 import { useUpdateEffect } from "react-use";
 import Subtitles from "../../components/TakeCourse/Subtitles";
+import Content from "../../components/TakeCourse/Content";
+import "./TraineeTakeCourse.css";
+
 function TraineeTakeCourse() {
   const [course, setCourse] = useState();
   const [trainee, setTrainee] = useState();
   const [traineeCourse, setTraineeCourse] = useState();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -32,10 +36,13 @@ function TraineeTakeCourse() {
             axios
               .get(proxy.URL + "/get-trainee-course", {
                 // TODO : use token instead of id
-                traineeId: location.state?.traineeId,
-                courseId: location.state?.courseId,
+                headers: {
+                  traineeId: location.state?.traineeId,
+                  courseId: location.state?.courseId,
+                },
               })
               .then((response) => {
+                console.log(response);
                 setTraineeCourse(response.data);
               });
           });
@@ -43,9 +50,10 @@ function TraineeTakeCourse() {
   }, []);
 
   useUpdateEffect(() => {
+    if (traineeCourse) console.log(traineeCourse);
     axios
       .put(proxy.URL + "/edit-trainee-course", {
-        // TODO : use token instead of id
+        // TODO : use token instead of id------------------ bta3tna
         lastSection: traineeCourse.lastSection,
         traineeId: location.state?.traineeId,
         courseId: location.state?.courseId,
@@ -53,24 +61,37 @@ function TraineeTakeCourse() {
         answers: traineeCourse.answers,
         notes: traineeCourse.notes,
       })
-      .then((response) => {
-        setTraineeCourse(response.data);
+      .catch((error) => {
+        console.log(error);
+        if (error.response.status === 409) {
+          navigate(0);
+        }
       });
   }, [traineeCourse]);
 
+  console.log(traineeCourse);
   return (
-    <div className="take-course-wrapper">
-      <div className="content-notes-wrapper">
-        <div className="content"></div>
-        <div className="notes"></div>
+    <div style={{ display: "flex" }}>
+      <div className="take-course-wrapper">
+        <div className="content-notes-wrapper">
+          <div className="content">
+            <Content
+              course={course}
+              traineeCourse={traineeCourse}
+              setTraineeCourse={setTraineeCourse}
+            ></Content>
+          </div>
+          <div className="notes"></div>
+        </div>
+        <div className="subtitles">
+          <Subtitles
+            course={course}
+            setTraineeCourse={setTraineeCourse}
+            traineeCourse={traineeCourse}
+          ></Subtitles>
+        </div>
       </div>
-      <div className="subtitles">
-        <Subtitles
-          course={course}
-          setTraineeCourse={setTraineeCourse}
-          traineeCourse={traineeCourse}
-        ></Subtitles>
-      </div>
+      <div style={{ flex: "1" }}></div>
     </div>
   );
 }

@@ -150,6 +150,7 @@ const getCourses = async (req, res) => {
       );
     }
   }
+  console.log(courses, "Balabizo");
   console.log(filter);
   res.json(courses);
 };

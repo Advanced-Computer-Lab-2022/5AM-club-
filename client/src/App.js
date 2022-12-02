@@ -128,11 +128,11 @@ function App() {
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/" element={<MainPage />}></Route>
           <Route
-            path="/individual-trainee/take-course"
+            path="/individual-trainee/my-courses/view-course-details/take-course"
             element={<TraineeTakeCourse />}
           ></Route>
           <Route
-            path="/corporate-trainee/take-course"
+            path="/corporate-trainee/my-courses/view-course-details/take-course"
             element={<TraineeTakeCourse />}
           ></Route>
         </Routes>
