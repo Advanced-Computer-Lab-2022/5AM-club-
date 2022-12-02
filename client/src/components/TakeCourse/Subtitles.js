@@ -3,9 +3,10 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import "./Subtitles.css";
-let flag = true;
+import CheckIcon from "@mui/icons-material/Check";
+import { replaceAt } from "../../utils/Helpers";
 
 function Subtitles(props) {
   const [chosenSubtitles, setChosenSubtitles] = useState([]);
@@ -13,6 +14,7 @@ function Subtitles(props) {
   const [chosenSection, setChosenSection] = useState(
     props.traineeCourse?.lastSection
   );
+
   let sectionPosition = new Array(props.course?.subtitles.length + 1 || 0).fill(
     0
   );
@@ -23,7 +25,8 @@ function Subtitles(props) {
   }
 
   useEffect(() => {
-    if (flag) {
+    if (props.flag) {
+      console.log(props.course, props.traineeCourse);
       let chosen = props.traineeCourse?.lastSection;
 
       let chosenSubtitlenum = 0;
@@ -41,15 +44,16 @@ function Subtitles(props) {
           chosenSubtitlenum++;
         }
       }
-      console.log(props.course);
 
       let temp = new Array(props.course?.subtitles.length).fill(false);
       temp[chosenSubtitlenum] = true;
 
       setChosenSubtitles(temp);
-      if (props.course && props.traineeCourse) flag = false;
+      if (props.course && props.traineeCourse) {
+        props.setFlag(false);
+      }
     }
-  }, [props.course, props.traineeCourse?.lastSection]);
+  }, [props.course, props.traineeCourse]);
 
   useEffect(() => {
     let completedSub = new Array(props.course?.subtitles.length).fill(false);
@@ -73,7 +77,6 @@ function Subtitles(props) {
     setChosenSection(props.traineeCourse?.lastSection);
   }, [props.traineeCourse?.lastSection, props.course?.subtitles]);
 
-  console.log(chosenSubtitles);
   return (
     <div>
       {props.course?.subtitles.map((subtitle, index) => {
@@ -107,14 +110,23 @@ function Subtitles(props) {
                         : "")
                     }
                     onClick={() => {
-                      setChosenSection(sectionPosition[index] + index2);
-                      props.setTraineeCourse({
+                      props.updateTraineeCourse({
                         ...props.traineeCourse,
+                        progress: section.content.video
+                          ? replaceAt(
+                              props.traineeCourse.progress,
+                              sectionPosition[index] + index2,
+                              true
+                            )
+                          : props.traineeCourse.progress,
                         lastSection: sectionPosition[index] + index2,
                       });
                     }}
                   >
                     {section.title}
+                    {props.traineeCourse?.progress[
+                      sectionPosition[index] + index2
+                    ] && <CheckIcon></CheckIcon>}
                   </div>
                 );
               })}

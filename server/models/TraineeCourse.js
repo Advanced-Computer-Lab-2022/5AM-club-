@@ -6,6 +6,7 @@ const traineeCourseSchema = new mongoose.Schema({
   answers: { type: [[Number]], required: true },
   notes: { type: [Object], required: true },
   lastSection: { type: Number, required: true },
+  grades: { type: [Number], required: true },
 });
 
 const TraineeCourse = mongoose.model("TraineeCourse", traineeCourseSchema);

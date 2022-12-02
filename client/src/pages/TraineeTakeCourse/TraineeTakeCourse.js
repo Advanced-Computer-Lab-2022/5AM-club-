@@ -13,7 +13,7 @@ function TraineeTakeCourse() {
   const [traineeCourse, setTraineeCourse] = useState();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [flag, setFlag] = useState(false);
   useEffect(() => {
     axios
       .get(proxy.URL + "/courses/" + location.state?.courseId, {
@@ -42,15 +42,16 @@ function TraineeTakeCourse() {
                 },
               })
               .then((response) => {
-                console.log(response);
                 setTraineeCourse(response.data);
               });
           });
       });
+
+    setFlag(true);
   }, []);
 
-  useUpdateEffect(() => {
-    if (traineeCourse) console.log(traineeCourse);
+  function updateTraineeCourse(traineeCourse) {
+    console.log(traineeCourse);
     axios
       .put(proxy.URL + "/edit-trainee-course", {
         // TODO : use token instead of id------------------ bta3tna
@@ -59,15 +60,18 @@ function TraineeTakeCourse() {
         courseId: location.state?.courseId,
         progress: traineeCourse.progress,
         answers: traineeCourse.answers,
+        grades: traineeCourse.grades,
         notes: traineeCourse.notes,
       })
+      .then((response) => {
+        setTraineeCourse(response.data);
+      })
       .catch((error) => {
-        console.log(error);
         if (error.response.status === 409) {
           navigate(0);
         }
       });
-  }, [traineeCourse]);
+  }
 
   return (
     <div className="take-course-wrapper">
@@ -76,15 +80,17 @@ function TraineeTakeCourse() {
           <Content
             course={course}
             traineeCourse={traineeCourse}
-            setTraineeCourse={setTraineeCourse}
+            updateTraineeCourse={updateTraineeCourse}
           ></Content>
         </div>
         <div className="notes"></div>
       </div>
       <div className="subtitles">
         <Subtitles
+          setFlag={setFlag}
+          flag={flag}
           course={course}
-          setTraineeCourse={setTraineeCourse}
+          updateTraineeCourse={updateTraineeCourse}
           traineeCourse={traineeCourse}
         ></Subtitles>
       </div>

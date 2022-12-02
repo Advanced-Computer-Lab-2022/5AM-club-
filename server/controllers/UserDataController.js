@@ -62,6 +62,7 @@ async function updateTraineeCourse(req, res) {
       answers: req.body.answers,
       notes: req.body.notes,
       lastSection: req.body.lastSection,
+      grades: req.body.grades,
     },
     {
       new: true,

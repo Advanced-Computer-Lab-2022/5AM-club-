@@ -38,4 +38,26 @@ const hasEmptyString = (obj) => {
   return false;
 };
 
-module.exports = { hasEmptyString, displayValues, displayNames, formatTime };
+const hasNull = (arr) => {
+  if (arr.length === 0) return true;
+
+  for (let e of arr) {
+    if (e === null) return true;
+  }
+  return false;
+};
+
+const replaceAt = (arr, index, value) => {
+  const ret = arr.slice(0);
+  ret[index] = value;
+  return ret;
+};
+
+module.exports = {
+  replaceAt,
+  hasEmptyString,
+  displayValues,
+  displayNames,
+  formatTime,
+  hasNull,
+};
