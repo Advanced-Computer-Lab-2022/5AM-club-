@@ -5,8 +5,9 @@ const Joi = require("joi");
 const Trainee = require("../models/Trainee");
 const Admin = require("../models/Admin");
 const Instructor = require("../models/Instructor");
-const nameChecker = require("../utils/checkNames");
+const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
+const TraineeCourse = require("../models/TraineeCourse");
 
 const countrySchema = Joi.object({
   country: Joi.string()
@@ -27,6 +28,47 @@ const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
   biography: Joi.string(),
 });
+
+async function getTraineeCourse(req, res) {
+  console.log(req.headers, "-------------------------------------");
+
+  res.send(
+    await TraineeCourse.findOne({
+      traineeId: req.headers.traineeid,
+      courseId: req.headers.courseid,
+    })
+  );
+}
+
+async function updateTraineeCourse(req, res) {
+  console.log(req.body);
+  const test = await Course.findById(req.body.courseId);
+  let noSections = 0;
+  for (let subtitle of test.subtitles) {
+    noSections += subtitle.sections.length;
+  }
+  if (noSections !== req.body.progress.length) {
+    res.status(409).send();
+    return;
+  }
+
+  const traineeCourses = await TraineeCourse.findOneAndUpdate(
+    {
+      traineeId: ObjectId(req.body.traineeId),
+      courseId: ObjectId(req.body.courseId),
+    },
+    {
+      progress: req.body.progress,
+      answers: req.body.answers,
+      notes: req.body.notes,
+      lastSection: req.body.lastSection,
+    },
+    {
+      new: true,
+    }
+  );
+  res.send(traineeCourses);
+}
 
 async function getUsers(req, res) {
   let User;
@@ -57,7 +99,10 @@ async function getUser(req, res) {
     let User;
 
     switch (req.headers.type) {
-      case "trainee":
+      case "corporate":
+        User = await Trainee.findById(id);
+        break;
+      case "individual":
         User = await Trainee.findById(id);
         break;
       case "admin":
@@ -339,4 +384,6 @@ module.exports = {
   login,
   editBiographyInstructor,
   editEmailInstructor,
+  getTraineeCourse,
+  updateTraineeCourse,
 };

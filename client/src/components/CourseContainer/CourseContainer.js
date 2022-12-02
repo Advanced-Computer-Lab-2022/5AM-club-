@@ -37,27 +37,26 @@ function CourseContainer(props) {
       .catch((err) => {});
   };
   return (
-    <Card border='dark' className='card'>
+    <Card border="dark" className="card">
       <Card.Body>
         <Card.Title>{props.course.title}</Card.Title>
-
         <Card.Text>{props.course.summary}</Card.Text>
-        <div className='attribute'>
+        <div className="attribute">
           Created By:{" "}
           {props.course.instructor.map(
             (instructor) => instructor.username + " "
           )}
         </div>
-        <div className='attribute'>
+        <div className="attribute">
           Total hours: {formatTime(props.course.minutes)}
         </div>
         {localStorage.getItem("type") !== "corporate" && props.owned !== true && (
-          <div className='attribute'>
+          <div className="attribute">
             Price:{" "}
             {props.promotion &&
             new Date(props.promotion.deadline) > new Date() ? (
               <>
-                <span className='scratched'>{props.course.price} </span>
+                <span className="scratched">{props.course.price} </span>
                 <span>
                   {(props.course.price * (100 - props.promotion.percentage)) /
                     100 +
@@ -68,7 +67,7 @@ function CourseContainer(props) {
                         )
                       ])}
                 </span>
-                <span className='red'>
+                <span className="red">
                   (-{props.promotion.percentage}% till{" "}
                   {new Date(props.promotion.deadline).toDateString()})
                 </span>
@@ -86,37 +85,45 @@ function CourseContainer(props) {
             )}
           </div>
         )}
-
-        {localStorage.getItem("type") === "individual" &&
-          (props.owned !== true ? (
-            <Button variant='outline-success'>BUY NOW</Button>
-          ) : (
-            <Button variant='outline-success' onClick={() => {}}>
-              Go to course
-            </Button>
-          ))}
-
-        {props.owned === true && <div className='attribute'>Progress: 0%</div>}
-        <div className='attribute'> Content: </div>
-        <TableContainer title={"Subtitles"} elements={props.subtitles} />
-        <Card className='reviewCard'>
+        {localStorage.getItem("type") === "individual" && !props.owned && (
+          <Button variant="outline-success">BUY NOW</Button>
+        )}
+        {props.owned && (
           <Button
-            variant='outline-success'
-            className='topRight'
+            variant="outline-success"
+            onClick={() => {
+              navigate("take-course", {
+                state: {
+                  courseId: props.course._id,
+                  traineeId: localStorage.getItem("id"),
+                },
+              });
+            }}
+          >
+            Go to course
+          </Button>
+        )}
+        {props.owned === true && <div className="attribute">Progress: 0%</div>}
+        <div className="attribute"> Content: </div>
+        <TableContainer title={"Subtitles"} elements={props.subtitles} />
+        <Card className="reviewCard">
+          <Button
+            variant="outline-success"
+            className="topRight"
             onClick={() => {}}
           >
             View all reviews
           </Button>
           <Typography
-            variant='h6'
+            variant="h6"
             sx={{ display: "flex", alignItems: "center" }}
           >
             Average Course Rating:{" "}
             {props.course.courseRating && (
               <Rating
-                name='read-only'
+                name="read-only"
                 defaultValue={parseFloat(props.course.courseRating)}
-                size='meduim'
+                size="meduim"
                 sx={{
                   color: "success.main",
                 }}
@@ -126,7 +133,7 @@ function CourseContainer(props) {
             )}
             {" (" + props.course.courseRating + ") "}
           </Typography>
-          <Typography variant='h6'>Reviews: </Typography>
+          <Typography variant="h6">Reviews: </Typography>
           {props.course.userReviews.length <= 2 ? (
             props.course.userReviews.map((userReview, i) => (
               <ReviewContainer key={i} userReview={userReview} />
@@ -146,16 +153,16 @@ function CourseContainer(props) {
           <MuiCard sx={{ m: 2, p: 2 }}>
             <h4> Your Review</h4>
             <Box
-              component='form'
+              component="form"
               fullWidth
               onSubmit={handleSubmit}
-              autoComplete='off'
+              autoComplete="off"
             >
               <h5>Rating: </h5>
               <Rating
-                name='read-only'
+                name="read-only"
                 defaultValue={rating}
-                size='meduim'
+                size="meduim"
                 sx={{
                   color: "success.main",
                 }}
@@ -163,18 +170,18 @@ function CourseContainer(props) {
               />
               <h5>Review:</h5>
               <TextField
-                size='small'
+                size="small"
                 fullWidth
                 multiline
-                id='email'
+                id="email"
                 value={review}
                 onChange={(e) => setReview(e.target.value)}
               />
             </Box>
           </MuiCard>
           <Button
-            variant='outline-success'
-            className='bottomRight'
+            variant="outline-success"
+            className="bottomRight"
             onClick={() => {
               navigate("view-course-reviews", {
                 state: { course: props.course },
