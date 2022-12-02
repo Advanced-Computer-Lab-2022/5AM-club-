@@ -36,13 +36,14 @@ function Content(props) {
   console.log(sectionNumber, subtitleNumber);
 
   return (
-    <div>
+    <>
       {props.traineeCourse &&
         (props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
           .video ? (
           <iframe
             title="course-video"
-            className="content-wrapper"
+            className="iframe"
+            width="inherit"
             src={props.course?.subtitles[subtitleNumber].sections[
               sectionNumber
             ].content.video.link.replace("watch?v=", "embed/")}
@@ -52,7 +53,7 @@ function Content(props) {
         ) : (
           <div> Exercise</div>
         ))}
-    </div>
+    </>
   );
 }
 

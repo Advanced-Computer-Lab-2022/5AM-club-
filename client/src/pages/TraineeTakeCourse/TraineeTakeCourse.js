@@ -69,29 +69,25 @@ function TraineeTakeCourse() {
       });
   }, [traineeCourse]);
 
-  console.log(traineeCourse);
   return (
-    <div style={{ display: "flex" }}>
-      <div className="take-course-wrapper">
-        <div className="content-notes-wrapper">
-          <div className="content">
-            <Content
-              course={course}
-              traineeCourse={traineeCourse}
-              setTraineeCourse={setTraineeCourse}
-            ></Content>
-          </div>
-          <div className="notes"></div>
-        </div>
-        <div className="subtitles">
-          <Subtitles
+    <div className="take-course-wrapper">
+      <div className="content-notes-wrapper">
+        <div className="content">
+          <Content
             course={course}
-            setTraineeCourse={setTraineeCourse}
             traineeCourse={traineeCourse}
-          ></Subtitles>
+            setTraineeCourse={setTraineeCourse}
+          ></Content>
         </div>
+        <div className="notes"></div>
       </div>
-      <div style={{ flex: "1" }}></div>
+      <div className="subtitles">
+        <Subtitles
+          course={course}
+          setTraineeCourse={setTraineeCourse}
+          traineeCourse={traineeCourse}
+        ></Subtitles>
+      </div>
     </div>
   );
 }
