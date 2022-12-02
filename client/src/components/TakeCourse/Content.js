@@ -30,6 +30,7 @@ function Content(props) {
     sectionNumber = -1;
   }
 
+<<<<<<< HEAD
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
@@ -58,6 +59,8 @@ function Content(props) {
   }, [props.traineeCourse?.lastSection]);
 
   console.log(traineeAnswers);
+=======
+>>>>>>> bfb63cd (various fixes)
   return (
     <>
       {props.traineeCourse &&

@@ -77,6 +77,8 @@ function Subtitles(props) {
     setChosenSection(props.traineeCourse?.lastSection);
   }, [props.traineeCourse?.lastSection, props.course?.subtitles]);
 
+  console.log(chosenSection, chosenSubtitles);
+
   return (
     <div>
       {props.course?.subtitles.map((subtitle, index) => {

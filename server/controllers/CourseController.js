@@ -91,6 +91,7 @@ const createCourse = async (req, res) => {
 const getCourses = async (req, res) => {
   let filter = {};
   let searchItem;
+
   if (req.query.searchItem) {
     const ids = await Instructor.find(
       { username: { $regex: req.query.searchItem, $options: "i" } },
@@ -155,12 +156,12 @@ const getCourses = async (req, res) => {
       );
     }
   }
-  console.log(courses, "Balabizo");
-  console.log(filter);
+
   res.json(courses);
 };
 const findCourseByID = async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   try {
     const course = await Course.findById(id).populate("userReviews.user");
     if (req.headers.country) {

@@ -24,7 +24,7 @@ function ViewDetailedCourse() {
         setPromotion(response.data.promotion);
       })
       .catch(() => {});
-  }, [location.state.id]);
+  }, [location.state?.id]);
 
   return (
     <CourseContainer
