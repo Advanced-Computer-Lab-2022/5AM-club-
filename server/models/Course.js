@@ -5,10 +5,6 @@ const videoSchema = {
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-    required: true,
-  },
 };
 
 const exerciseSchema = {

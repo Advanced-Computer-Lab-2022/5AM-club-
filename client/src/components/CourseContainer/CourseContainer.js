@@ -7,9 +7,8 @@ import MuiCard from "@mui/material/Card";
 import Button from "react-bootstrap/Button";
 import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
-import { formatTime } from "../../utils/Helpers";
+import { formatTime, getProgress } from "../../utils/Helpers";
 import countries from "../../utils/Countries.json";
-
 import EmbeddedReviewPage from "../../components/ReviewContainer/EmbeddedReviewPage";
 
 function CourseContainer(props) {
@@ -19,6 +18,7 @@ function CourseContainer(props) {
     courseReview: {},
     instructorReview: [],
   });
+  const [traineeCourse, setTraineeCourse] = useState();
 
   useEffect(() => {
     if (props.owned === true) {
@@ -31,8 +31,18 @@ function CourseContainer(props) {
           { headers: { id: localStorage.getItem("id") } }
         )
         .then((res) => {
-          console.log(res.data.instructorReview);
           setMyReviews(res.data);
+          axios
+            .get(proxy.URL + "/get-trainee-course", {
+              // TODO : use token instead of id
+              headers: {
+                traineeId: localStorage.getItem("id"),
+                courseId: props.course.id,
+              },
+            })
+            .then((response) => {
+              setTraineeCourse(response.data);
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -107,7 +117,11 @@ function CourseContainer(props) {
             Go to course
           </Button>
         )}
-        {props.owned === true && <div className='attribute'>Progress: 0%</div>}
+        {props.owned === true && (
+          <div className='attribute'>
+            Progress: {getProgress(traineeCourse?.progress) * 100}%
+          </div>
+        )}
         <div className='attribute'> Content: </div>
         <TableContainer title={"Subtitles"} elements={props.subtitles} />
         <EmbeddedReviewPage

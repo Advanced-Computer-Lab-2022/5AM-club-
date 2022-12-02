@@ -63,25 +63,25 @@ function Content(props) {
       {props.traineeCourse &&
         (content.video ? (
           <iframe
-            title="course-video"
-            className="iframe"
-            width="inherit"
+            title='course-video'
+            className='iframe'
+            width='inherit'
             src={content.video.link.replace("watch?v=", "embed/")}
-            frameBorder="0"
+            frameBorder='0'
             allowFullScreen
           ></iframe>
         ) : (
-          <div className="exercise">
+          <div className='exercise'>
             {content.exercise.questions.map((question, index) => {
               return (
-                <div className="question" key={question + index}>
+                <div className='question' key={question + index}>
                   {question + ": "}
                   <FormControl>
-                    <FormLabel id="exercise-radio-buttons-group"></FormLabel>
+                    <FormLabel id='exercise-radio-buttons-group'></FormLabel>
                     <RadioGroup
                       row
-                      aria-labelledby="exercise-radio-buttons-group"
-                      name="exercise-radio-buttons-group"
+                      aria-labelledby='exercise-radio-buttons-group'
+                      name='exercise-radio-buttons-group'
                       onChange={(e) => {
                         let temp = [...traineeAnswers];
                         temp[index] = parseInt(e.target.value);
@@ -92,7 +92,7 @@ function Content(props) {
                         checked={
                           done && traineeAnswers
                             ? traineeAnswers[index] === 1
-                            : false
+                            : undefined
                         }
                         value={"1"}
                         control={<Radio />}
@@ -103,7 +103,7 @@ function Content(props) {
                         checked={
                           done && traineeAnswers
                             ? traineeAnswers[index] === 2
-                            : false
+                            : undefined
                         }
                         value={"2"}
                         control={<Radio />}
@@ -114,7 +114,7 @@ function Content(props) {
                         checked={
                           done && traineeAnswers
                             ? traineeAnswers[index] === 3
-                            : false
+                            : undefined
                         }
                         value={"3"}
                         control={<Radio />}
@@ -125,7 +125,7 @@ function Content(props) {
                         checked={
                           done && traineeAnswers
                             ? traineeAnswers[index] === 4
-                            : false
+                            : undefined
                         }
                         value={"4"}
                         control={<Radio />}
@@ -166,7 +166,7 @@ function Content(props) {
             )}
             {!props.traineeCourse.progress[props.traineeCourse.lastSection] && (
               <button
-                className="btn btn-success"
+                className='btn btn-success'
                 onClick={handleSubmit}
                 disabled={hasNull(traineeAnswers)}
               >

@@ -39,10 +39,11 @@ const hasEmptyString = (obj) => {
 };
 
 const hasNull = (arr) => {
+  if (!arr) return true;
   if (arr.length === 0) return true;
 
   for (let e of arr) {
-    if (e === null) return true;
+    if (e === null || e === undefined) return true;
   }
   return false;
 };
@@ -53,6 +54,16 @@ const replaceAt = (arr, index, value) => {
   return ret;
 };
 
+// count percentage of true values in an array
+const getProgress = (arr) => {
+  let count = 0;
+  if (!arr || arr.length === 0) return 0;
+  for (let e of arr) {
+    if (e) count++;
+  }
+  return count / arr.length;
+};
+
 module.exports = {
   replaceAt,
   hasEmptyString,
@@ -60,4 +71,5 @@ module.exports = {
   displayNames,
   formatTime,
   hasNull,
+  getProgress,
 };

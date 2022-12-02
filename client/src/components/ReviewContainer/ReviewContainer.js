@@ -4,14 +4,23 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import "./ReviewContainer.css";
 function ReviewContainer(props) {
-  console.log(props.userReview.user, "asd");
+  console.log(
+    props.userReview,
+    !props.myReview && props.userReview.user._id === localStorage.getItem("id"),
+    "asd"
+  );
   if (
     !props.myReview &&
     props.userReview.user._id === localStorage.getItem("id")
   )
     return <></>;
   return (
-    <Card sx={{ m: 2, p: 2 }}>
+    <Card
+      sx={{ m: 2, p: 2 }}
+      style={{
+        height: "fit-content",
+      }}
+    >
       <Typography
         gutterBottom
         variant='h5'

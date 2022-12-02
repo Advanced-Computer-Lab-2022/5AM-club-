@@ -6,7 +6,7 @@ import ReviewContainer from "./ReviewContainer";
 function ReviewsPage(props) {
   console.log(props);
   return (
-    <Card>
+    <Card style={{ display: "flex", flexDirection: "column" }}>
       <Typography gutterBottom variant='h5' component='div'>
         {props.type === "course" ? props.item.title : props.item?.username}
       </Typography>

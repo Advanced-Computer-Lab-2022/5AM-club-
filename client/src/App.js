@@ -71,6 +71,10 @@ function App() {
             element={<InstructorReviews />}
           ></Route>
           <Route
+            path='/instructor/reviews'
+            element={<InstructorReviews />}
+          ></Route>
+          <Route
             path='/instructor/my-courses/edit-course'
             element={<InstructorEditCourse />}
           ></Route>
