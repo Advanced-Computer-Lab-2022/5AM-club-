@@ -1,6 +1,14 @@
-import { height } from "@mui/system";
-import { memo } from "react";
+import { memo, useState } from "react";
+import {
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormLabel,
+} from "@material-ui/core";
 import "./Content.css";
+import { hasNull } from "../../utils/Helpers";
+import { useUpdate, useUpdateEffect } from "react-use";
 function Content(props) {
   let subtitleNumber = 0;
   let counter = props.traineeCourse?.lastSection;
@@ -8,17 +16,6 @@ function Content(props) {
 
   for (let i = 0; i < props.course?.subtitles.length; i++) {
     for (let j = 0; j < props.course?.subtitles[i].sections.length; j++) {
-      console.log(
-        props.traineeCourse,
-        "Iteation: " +
-          i +
-          " // " +
-          j +
-          " Counter: " +
-          counter +
-          " Section Number: " +
-          sectionNumber
-      );
       counter--;
       sectionNumber -= -1;
 
@@ -33,25 +30,150 @@ function Content(props) {
     sectionNumber = -1;
   }
 
-  console.log(sectionNumber, subtitleNumber);
+  let content = props.traineeCourse
+    ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
+    : undefined;
 
+  const done = props.traineeCourse?.progress[props.traineeCourse?.lastSection];
+  const [traineeAnswers, setTraineeAnswers] = useState();
+  function handleSubmit() {
+    let grade = 0;
+    let correctAnswers = content.exercise.answers;
+
+    for (let i = 0; i < correctAnswers.length; i++) {
+      if (traineeAnswers[i] === correctAnswers[i]) grade++;
+    }
+
+    props.traineeCourse.progress[props.traineeCourse.lastSection] = true;
+    props.traineeCourse.answers[props.traineeCourse.lastSection] =
+      traineeAnswers;
+    props.traineeCourse.grades[props.traineeCourse.lastSection] = grade;
+    console.log(props.traineeCourse);
+    props.updateTraineeCourse(props.traineeCourse);
+  }
+  useUpdateEffect(() => {
+    setTraineeAnswers(
+      props.traineeCourse?.answers[props.traineeCourse?.lastSection]
+    );
+  }, [props.traineeCourse?.lastSection]);
+
+  console.log(traineeAnswers);
   return (
     <>
       {props.traineeCourse &&
-        (props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
-          .video ? (
+        (content.video ? (
           <iframe
             title="course-video"
             className="iframe"
             width="inherit"
-            src={props.course?.subtitles[subtitleNumber].sections[
-              sectionNumber
-            ].content.video.link.replace("watch?v=", "embed/")}
+            src={content.video.link.replace("watch?v=", "embed/")}
             frameBorder="0"
             allowFullScreen
           ></iframe>
         ) : (
-          <div> Exercise</div>
+          <div className="exercise">
+            {content.exercise.questions.map((question, index) => {
+              return (
+                <div className="question" key={question + index}>
+                  {question + ": "}
+                  <FormControl>
+                    <FormLabel id="exercise-radio-buttons-group"></FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="exercise-radio-buttons-group"
+                      name="exercise-radio-buttons-group"
+                      onChange={(e) => {
+                        let temp = [...traineeAnswers];
+                        temp[index] = parseInt(e.target.value);
+                        setTraineeAnswers(temp);
+                      }}
+                    >
+                      <FormControlLabel
+                        checked={
+                          done && traineeAnswers
+                            ? traineeAnswers[index] === 1
+                            : false
+                        }
+                        value={"1"}
+                        control={<Radio />}
+                        label={content.exercise.choices[index].c1}
+                        disabled={done}
+                      />
+                      <FormControlLabel
+                        checked={
+                          done && traineeAnswers
+                            ? traineeAnswers[index] === 2
+                            : false
+                        }
+                        value={"2"}
+                        control={<Radio />}
+                        label={content.exercise.choices[index].c2}
+                        disabled={done}
+                      />
+                      <FormControlLabel
+                        checked={
+                          done && traineeAnswers
+                            ? traineeAnswers[index] === 3
+                            : false
+                        }
+                        value={"3"}
+                        control={<Radio />}
+                        label={content.exercise.choices[index].c3}
+                        disabled={done}
+                      />
+                      <FormControlLabel
+                        checked={
+                          done && traineeAnswers
+                            ? traineeAnswers[index] === 4
+                            : false
+                        }
+                        value={"4"}
+                        control={<Radio />}
+                        label={content.exercise.choices[index].c4}
+                        disabled={done}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+
+                  {done && (
+                    <div>
+                      {" "}
+                      <p>
+                        {" "}
+                        {"The correct answer is: " +
+                          content.exercise.choices[index][
+                            "c" + content.exercise.answers[index]
+                          ]}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {done && (
+              <div>
+                {" "}
+                <p>
+                  {" "}
+                  {"Your grade is:" +
+                    props.traineeCourse.grades[
+                      props.traineeCourse.lastSection
+                    ] +
+                    "/" +
+                    content.exercise.questions.length}{" "}
+                </p>
+              </div>
+            )}
+            {!props.traineeCourse.progress[props.traineeCourse.lastSection] && (
+              <button
+                className="btn btn-success"
+                onClick={handleSubmit}
+                disabled={hasNull(traineeAnswers)}
+              >
+                Submit
+              </button>
+            )}
+          </div>
         ))}
     </>
   );

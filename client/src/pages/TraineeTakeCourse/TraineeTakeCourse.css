@@ -13,7 +13,7 @@
   padding: 0;
 }
 .subtitles {
-  min-width: 600px;
+  min-width: 30vw;
 }
 .content {
   flex-grow: 1;
