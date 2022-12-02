@@ -6,7 +6,7 @@ import ReviewContainer from "./ReviewContainer";
 function ReviewsPage(props) {
   console.log(props);
   return (
-    <Card>
+    <Card style={{ display: "flex", flexDirection: "column" }}>
       <Typography gutterBottom variant='h5' component='div'>
         {props.type === "course" ? props.item.title : props.item?.username}
       </Typography>
@@ -36,7 +36,11 @@ function ReviewsPage(props) {
       </Typography>
       <Typography variant='h6'>Reviews: </Typography>
       {props.item?.userReviews?.map((userReview) => (
-        <ReviewContainer key={userReview} userReview={userReview} />
+        <ReviewContainer
+          key={userReview}
+          userReview={userReview}
+          myReview={localStorage.getItem("id") === userReview.user._id}
+        />
       ))}
     </Card>
   );

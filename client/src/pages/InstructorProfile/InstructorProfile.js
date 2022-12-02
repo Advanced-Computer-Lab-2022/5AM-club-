@@ -30,7 +30,7 @@ function InstructorProfile() {
       </button>
       <button
         onClick={() => {
-          navigate("my-reviews");
+          navigate("reviews");
         }}
       >
         view my reviews

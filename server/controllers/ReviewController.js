@@ -22,6 +22,7 @@ const addCourseReview = async (req, res) => {
   const valid = reviewSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send(valid.error);
+    return;
   }
   if (req.headers.id) {
     const course = await Course.findByIdAndUpdate(
@@ -47,16 +48,18 @@ const addCourseReview = async (req, res) => {
 const editCourseReview = async (req, res) => {
   const courseId = req.params.id;
   console.log(req.headers.id);
+  console.log(req.body);
   const valid = reviewSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send(valid.error);
+    return;
   }
 
   if (req.headers.id) {
     const course = await Course.updateOne(
       {
         _id: courseId,
-        userReviews: { $elemMatch: { user: "635f05a51832d2cde2c26d88" } },
+        userReviews: { $elemMatch: { user: req.headers.id } },
       },
       {
         $set: {
@@ -75,8 +78,11 @@ const editCourseReview = async (req, res) => {
 const addInstructorReview = async (req, res) => {
   const id = req.params.id;
   const valid = reviewSchema.validate(req.body);
+  console.log(req.body);
   if (valid.error) {
+    console.log(valid.error);
     res.status(400).send(valid.error);
+    return;
   }
   if (req.headers.id) {
     const instructor = await Instructor.findByIdAndUpdate(
@@ -94,7 +100,7 @@ const addInstructorReview = async (req, res) => {
         new: true,
       }
     );
-    res.send("Review added successfully");
+    res.status(200).send("Review added successfully");
   } else {
     res.status(400).send("Missing ID");
   }
@@ -104,6 +110,7 @@ const editInstructorReview = async (req, res) => {
   const valid = reviewSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send(valid.error);
+    return;
   }
   if (req.headers.id) {
     const instructor = await Instructor.updateOne(
@@ -122,10 +129,39 @@ const editInstructorReview = async (req, res) => {
   }
 };
 
+const getTraineeReviews = async (req, res) => {
+  const id = req.headers.id;
+  const courseId = req.params.id;
+  const reviews = {};
+  const course = await Course.findById(courseId).select({
+    userReviews: { $elemMatch: { user: id } },
+  });
+
+  const courseInstructors = await Course.findById(courseId).populate(
+    "instructor"
+  );
+
+  reviews.instructorReview = [];
+  let i = 0;
+  for (const instructor of courseInstructors.instructor) {
+    reviews.instructorReview[i] = instructor.userReviews.find(
+      (review) => review.user.toString() === id
+    );
+    console.log(reviews.instructorReview[i]);
+    !reviews.instructorReview[i] && (reviews.instructorReview[i] = {});
+    i++;
+  }
+
+  reviews.courseReview = course.userReviews ? course.userReviews[0] : {};
+
+  res.send(reviews);
+};
+
 module.exports = {
   getMyReviews,
   addInstructorReview,
   editInstructorReview,
   addCourseReview,
   editCourseReview,
+  getTraineeReviews,
 };

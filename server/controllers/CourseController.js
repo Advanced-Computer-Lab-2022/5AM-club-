@@ -139,7 +139,12 @@ const getCourses = async (req, res) => {
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
   let courses = await Course.find(filter)
-    .populate("instructor")
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "userReviews.user",
+      },
+    })
     .populate("userReviews.user");
   if (req.headers.country) {
     for (let course of courses) {
