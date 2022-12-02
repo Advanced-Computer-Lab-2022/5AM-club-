@@ -4,6 +4,12 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import "./ReviewContainer.css";
 function ReviewContainer(props) {
+  console.log(props.userReview.user, "asd");
+  if (
+    !props.myReview &&
+    props.userReview.user._id === localStorage.getItem("id")
+  )
+    return <></>;
   return (
     <Card sx={{ m: 2, p: 2 }}>
       <Typography
@@ -26,7 +32,7 @@ function ReviewContainer(props) {
           props.userReview.rating +
           ") " +
           " by " +
-          props.userReview.user.username}
+          (props.myReview === true ? "You" : props.userReview.user.username)}
       </Typography>
       <Typography variant='h6'>{props.userReview.review} </Typography>
     </Card>

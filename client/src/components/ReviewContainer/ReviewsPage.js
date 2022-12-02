@@ -36,7 +36,11 @@ function ReviewsPage(props) {
       </Typography>
       <Typography variant='h6'>Reviews: </Typography>
       {props.item?.userReviews?.map((userReview) => (
-        <ReviewContainer key={userReview} userReview={userReview} />
+        <ReviewContainer
+          key={userReview}
+          userReview={userReview}
+          myReview={localStorage.getItem("id") === userReview.user._id}
+        />
       ))}
     </Card>
   );
