@@ -1,9 +1,9 @@
 import axios from "axios";
-import "./viewContract.css";
+import "./ViewContract.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
 import proxy from "../../utils/proxy.json";
-
+import { TextareaAutosize } from "@mui/material";
 function ViewContract() {
     const [instructor,setInstructor]= useState({})
     
@@ -21,9 +21,10 @@ function ViewContract() {
   const navigate = useNavigate();
   const [mainText, setMainText] = useState("Loading Contract...");
   const [contract, setContract] = useState([]);
+  console.log(instructor);
 function acceptContract(){
     //TODO : CHANGE FROM ID TO TOKEN
-    axios.get(proxy.url+"/accept-contract",{headers:{id:localStorage.getitem("id")}}).then(()=>{navigate("/instructor")})
+    axios.get(proxy.URL+"/accept-contract",{headers:{id:localStorage.getItem("id")}}).then(()=>{navigate("/instructor")})
 }
   useEffect(() => {
     setContract([]);
@@ -31,6 +32,7 @@ function acceptContract(){
       .get(proxy.URL + "/view-contract", {
       })
       .then((response) => {
+        console.log(response.data);
         if (response.data.length === 0)
           setMainText("No contract is available yet");
         else setMainText("");
@@ -38,7 +40,7 @@ function acceptContract(){
         setContract(response.data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  },[]);
   return (
     <>
     {mainText}

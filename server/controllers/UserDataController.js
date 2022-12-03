@@ -495,18 +495,19 @@ async function changePasswordEmail(req, res) {
 }
 
 async function viewContract(req,res) {
-    const Contract = await Contract.find();
-    res.send(Contract);
+    const contract = await Contract.findOne();
+    res.send(contract.description);
 }
 async function acceptContract(req,res){
   let id = req.headers.id;
+  console.log("hello");
   await Instructor.findByIdAndUpdate(
     id,
     {
       accepted: true,
     },
   );
-
+res.send("accepted");
 }
 module.exports = {
   getCourseInstructor,

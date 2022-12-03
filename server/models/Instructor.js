@@ -32,7 +32,7 @@ const instructorSchema = new mongoose.Schema({
   passwordTimeout:{ type: Date,},
 
   accepted:{
-    type: boolean,
+    type: Boolean,
     required: true,
     default: false,
   }
