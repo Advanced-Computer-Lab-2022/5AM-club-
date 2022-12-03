@@ -23,4 +23,7 @@ router.post("/signUp", UserDataController.signUp);
 router.post("/login", UserDataController.login);
 
 router.put("/change-password", UserDataController.changePassword);
+router.put("/change-password-email", UserDataController.changePasswordEmail);
+router.get("/view-contract",UserDataController.viewContract);
+router.put("/accept-contract",UserDataController.acceptContract);
 module.exports = router;

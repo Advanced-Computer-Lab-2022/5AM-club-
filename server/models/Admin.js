@@ -13,6 +13,7 @@ const adminSchema = new mongoose.Schema({
   country: {
     type: String,
   },
+  passwordTimeout:{ type: Date,}
 });
 const Admin = mongoose.model("Admin", adminSchema);
 module.exports = Admin;
