@@ -9,6 +9,9 @@ const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
 const TraineeCourse = require("../models/TraineeCourse");
 
+const {passwordStrength} = require ('check-password-strength');
+const nodemailer = require("nodemailer");
+const Contract = require("../models/Contract");
 const countrySchema = Joi.object({
   country: Joi.string()
     .valid(...Object.keys(countries))
@@ -367,11 +370,145 @@ async function editBiographyInstructor(req, res) {
     res.status(400).send("Missing Id");
   }
 }
+async function changePassword(req, res) {
+  const pass= req.headers.password;
+  if(passwordStrength(pass).value !== "Strong" ){
+    res.status(400).send(passwordStrength(pass).value);
+    return;
+  }
+  if (req.headers.id) {
+    const id = req.headers.id;
+    let User;
+    console.log(req.headers, req.body);
+    switch (req.headers.type) {
+      case "trainee":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            password: req.body.password,
+          },
+          { new: true }
+        );
+        break;
+      case "instructor":
+        User = await Instructor.findByIdAndUpdate(
+          id,
+          {
+            password: req.body.password,
+          },
+          { new: true }
+        );
+        break;
+      default:
+        res.status(400).send("Invalid UserType");
+        break;
+    }
+    res.send("Password changed successfully");
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
+
+async function editBiographyInstructor(req, res) {
+  const valid = editBiographySchema.validate(req.body);
+
+  if (valid.error) {
+    res.status(400).send("Invalid Biography");
+    return;
+  }
+
+  if (req.headers.id) {
+    const id = req.headers.id;
+    console.log(req.headers, req.body);
+    const User = await Instructor.findByIdAndUpdate(
+      id,
+      {
+        biography: req.body.biography,
+      },
+      { new: true }
+    );
+    res.send(User);
+  } else {
+    res.status(400).send("Missing Id");
+  }
+}
 
 async function getCourseInstructor(req, res) {
   res.send(await Instructor.find({ courses: ObjectId(req.query.courseid) }));
 }
 
+async function changePasswordEmail(req, res) {
+  const email = req.headers.email;
+  let testAccount = await nodemailer.createTestAccount();
+  let transporter = nodemailer.createTransport({
+    host:
+    "smtp.ethereal.email",
+    port: 587,
+    secure: false,
+
+    auth: {
+      user: testAccount.user,
+      pass: testAccount.pass,
+    }
+  });
+  let info = await transporter.sendMail({
+    from: "mahmoud200040@hotmail.com",
+    to: "mahmoud200040@hotmail.com",
+    subject: "change password",
+    // TODO: CHANGE ID TO TOKEN DECRYPTION
+    html: "<html><head></head><body><a href="+proxy.URL+"/change-password/"+req.headers.id+" target=\"_blank\" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>",
+  });
+  // TODO: CHANGE ID TO TOKEN DECRYPTION
+  let id = req.headers.id;
+  switch (req.headers.type) {
+    case "trainee":
+      await Trainee.findByIdAndUpdate(
+        id,
+        {
+          passwordTimeout: new Date(),
+        },
+        { new: true }
+      );
+      break;
+    case "instructor":
+      await Instructor.findByIdAndUpdate(
+        id,
+        {
+          passwordTimeout: new Date(),
+        },
+        { new: true }
+      );
+      case "admin":
+         await Admin.findByIdAndUpdate(
+          id,
+          {
+            passwordTimeout: new Date(),
+          },
+          { new: true }
+        );
+      break;
+    default:
+      break;
+    }
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+}
+
+async function viewContract(req,res) {
+    const contract = await Contract.findOne();
+    res.send(contract.description);
+}
+async function acceptContract(req,res){
+  let id = req.headers.id;
+  console.log("hello");
+  await Instructor.findByIdAndUpdate(
+    id,
+    {
+      accepted: true,
+    },
+  );
+res.send("accepted");
+}
 module.exports = {
   getCourseInstructor,
   setCountry,
@@ -387,4 +524,8 @@ module.exports = {
   editEmailInstructor,
   getTraineeCourse,
   updateTraineeCourse,
+  changePassword,
+  changePasswordEmail,
+  viewContract,
+  acceptContract
 };

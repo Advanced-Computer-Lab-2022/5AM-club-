@@ -34,7 +34,7 @@ function TraineeTakeCourse() {
             setTraineeCourse(response.data);
           });
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps;
+    // eslint-disable-next-line 
 
     setFlag(true);
   }, []);

@@ -25,6 +25,7 @@ import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCou
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 import TraineeTakeCourse from "./pages/TraineeTakeCourse/TraineeTakeCourse";
+import ViewContract from "./pages/ViewContract/ViewContract";
 
 function App() {
   if (!localStorage.getItem("country"))
@@ -270,6 +271,14 @@ function App() {
             element={
               <PrivateRoute type={"instructor"}>
                 <InstructorEditCourse />
+              </PrivateRoute>
+            }
+          ></Route>
+          <Route
+            path="/instructor/view-contract"
+            element={
+              <PrivateRoute type={"instructor"}>
+                <ViewContract/>
               </PrivateRoute>
             }
           ></Route>

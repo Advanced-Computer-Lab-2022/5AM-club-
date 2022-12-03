@@ -33,6 +33,7 @@ const traineeSchema = new mongoose.Schema({
     type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
     required: true,
   },
+  passwordTimeout:{ type: Date,}
 });
 
 const Trainee = mongoose.model("Trainees", traineeSchema);

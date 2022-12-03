@@ -1,3 +1,4 @@
+const { boolean } = require("joi");
 const mongoose = require("mongoose");
 const { reviewSchema } = require("./Course.js");
 
@@ -27,6 +28,14 @@ const instructorSchema = new mongoose.Schema({
     type: [reviewSchema],
     required: true,
   },
+  
+  passwordTimeout:{ type: Date,},
+
+  accepted:{
+    type: Boolean,
+    required: true,
+    default: false,
+  }
 });
 
 instructorSchema.virtual("instructorRating").get(function () {
