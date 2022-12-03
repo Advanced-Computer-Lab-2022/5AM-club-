@@ -2,14 +2,12 @@ import axios from "axios";
 import { memo, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import proxy from "../../utils/proxy.json";
-import { useUpdateEffect } from "react-use";
 import Subtitles from "../../components/TakeCourse/Subtitles";
 import Content from "../../components/TakeCourse/Content";
 import "./TraineeTakeCourse.css";
 
 function TraineeTakeCourse() {
   const [course, setCourse] = useState();
-  const [trainee, setTrainee] = useState();
   const [traineeCourse, setTraineeCourse] = useState();
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,29 +21,20 @@ function TraineeTakeCourse() {
       })
       .then((response) => {
         setCourse(response.data);
+
         axios
-          .get(proxy.URL + "/get-user", {
+          .get(proxy.URL + "/get-trainee-course", {
             // TODO : use token instead of id
             headers: {
-              id: location.state?.traineeId,
-              type: localStorage.getItem("type"),
+              traineeId: location.state?.traineeId,
+              courseId: location.state?.courseId,
             },
           })
           .then((response) => {
-            setTrainee(response.data);
-            axios
-              .get(proxy.URL + "/get-trainee-course", {
-                // TODO : use token instead of id
-                headers: {
-                  traineeId: location.state?.traineeId,
-                  courseId: location.state?.courseId,
-                },
-              })
-              .then((response) => {
-                setTraineeCourse(response.data);
-              });
+            setTraineeCourse(response.data);
           });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps;
 
     setFlag(true);
   }, []);

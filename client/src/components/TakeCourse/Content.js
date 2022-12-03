@@ -5,17 +5,20 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 import "./Content.css";
 import { hasNull } from "../../utils/Helpers";
-import { useUpdate, useUpdateEffect } from "react-use";
+import { useUpdateEffect } from "react-use";
+
 function Content(props) {
   let subtitleNumber = 0;
   let counter = props.traineeCourse?.lastSection;
   let sectionNumber = -1;
-
+  console.log(props.course?.subtitles);
   for (let i = 0; i < props.course?.subtitles.length; i++) {
+    console.log(props.course?.subtitles[i].sections.length);
     for (let j = 0; j < props.course?.subtitles[i].sections.length; j++) {
+      console.log();
       counter--;
       sectionNumber -= -1;
 
@@ -29,7 +32,7 @@ function Content(props) {
     }
     sectionNumber = -1;
   }
-
+  console.log(subtitleNumber, sectionNumber);
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
@@ -57,31 +60,33 @@ function Content(props) {
     );
   }, [props.traineeCourse?.lastSection]);
 
-  console.log(traineeAnswers);
   return (
     <>
       {props.traineeCourse &&
         (content.video ? (
-          <iframe
-            title='course-video'
-            className='iframe'
-            width='inherit'
-            src={content.video.link.replace("watch?v=", "embed/")}
-            frameBorder='0'
-            allowFullScreen
-          ></iframe>
+          <div className="iframe">
+            <iframe
+              key={content.video.link.replace("watch?v=", "embed/")}
+              title="course-video"
+              width="inherit"
+              className="iframe"
+              src={content.video.link.replace("watch?v=", "embed/")}
+              frameBorder="0"
+              allowFullScreen
+            ></iframe>
+          </div>
         ) : (
-          <div className='exercise'>
+          <div className="exercise">
             {content.exercise.questions.map((question, index) => {
               return (
-                <div className='question' key={question + index}>
+                <div className="question" key={question + index}>
                   {question + ": "}
                   <FormControl>
-                    <FormLabel id='exercise-radio-buttons-group'></FormLabel>
+                    <FormLabel id="exercise-radio-buttons-group"></FormLabel>
                     <RadioGroup
                       row
-                      aria-labelledby='exercise-radio-buttons-group'
-                      name='exercise-radio-buttons-group'
+                      aria-labelledby="exercise-radio-buttons-group"
+                      name="exercise-radio-buttons-group"
                       onChange={(e) => {
                         let temp = [...traineeAnswers];
                         temp[index] = parseInt(e.target.value);
@@ -134,7 +139,6 @@ function Content(props) {
                       />
                     </RadioGroup>
                   </FormControl>
-
                   {done && (
                     <div>
                       {" "}
@@ -166,7 +170,7 @@ function Content(props) {
             )}
             {!props.traineeCourse.progress[props.traineeCourse.lastSection] && (
               <button
-                className='btn btn-success'
+                className="btn btn-success"
                 onClick={handleSubmit}
                 disabled={hasNull(traineeAnswers)}
               >
@@ -175,6 +179,12 @@ function Content(props) {
             )}
           </div>
         ))}
+      <p>
+        {
+          props.course?.subtitles[subtitleNumber]?.sections[sectionNumber]
+            ?.description
+        }
+      </p>
     </>
   );
 }

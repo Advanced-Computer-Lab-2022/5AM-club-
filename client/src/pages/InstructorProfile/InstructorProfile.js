@@ -4,7 +4,6 @@ import { memo } from "react";
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function InstructorProfile() {
   const navigate = useNavigate();
-  const location = useLocation();
   return (
     <div>
       <button
@@ -30,7 +29,7 @@ function InstructorProfile() {
       </button>
       <button
         onClick={() => {
-          navigate("reviews");
+          navigate("my-reviews");
         }}
       >
         view my reviews

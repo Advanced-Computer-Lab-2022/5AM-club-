@@ -1,14 +1,9 @@
-import { useEffect, useState, memo } from "react";
+import { memo } from "react";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import "./ReviewContainer.css";
 function ReviewContainer(props) {
-  console.log(
-    props.userReview,
-    !props.myReview && props.userReview.user._id === localStorage.getItem("id"),
-    "asd"
-  );
   if (
     !props.myReview &&
     props.userReview.user._id === localStorage.getItem("id")
@@ -23,14 +18,14 @@ function ReviewContainer(props) {
     >
       <Typography
         gutterBottom
-        variant='h5'
-        component='div'
+        variant="h5"
+        component="div"
         sx={{ display: "flex", alignItems: "center" }}
       >
         <Rating
-          name='read-only'
+          name="read-only"
           defaultValue={props.userReview.rating}
-          size='small'
+          size="small"
           sx={{
             color: "success.main",
           }}
@@ -43,7 +38,7 @@ function ReviewContainer(props) {
           " by " +
           (props.myReview === true ? "You" : props.userReview.user.username)}
       </Typography>
-      <Typography variant='h6'>{props.userReview.review} </Typography>
+      <Typography variant="h6">{props.userReview.review} </Typography>
     </Card>
   );
 }

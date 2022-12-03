@@ -119,6 +119,27 @@ const courseSchema = new mongoose.Schema(
   { toJSON: { virtuals: true } }
 );
 
+courseSchema.virtual("valid").get(function () {
+  flag = true;
+  if (this.subtitles.length == 0) flag = false;
+  for (subtitle of this.subtitles) {
+    if (subtitle.sections.length == 0) {
+      flag = false;
+      break;
+    }
+    for (section of subtitle.sections) {
+      if (
+        section.content.exercise &&
+        section.content.exercise.questions.length == 0
+      ) {
+        flag = false;
+        break;
+      }
+    }
+  }
+  return flag;
+});
+
 courseSchema.virtual("minutes").get(function () {
   let result = 0;
   for (subtitle of this.subtitles) {
@@ -136,7 +157,6 @@ courseSchema.virtual("courseRating").get(function () {
     rating += element.rating;
   });
   rating = (rating / this.userReviews.length).toPrecision(2);
-  console.log("done");
   return rating;
 });
 courseSchema.set("toJSON", { getters: true, virtuals: true });

@@ -1,4 +1,5 @@
 import { useState, memo } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   FormControl,
@@ -21,13 +22,25 @@ function InstructorCreateCourse() {
   const [video_preview, setVideo_preview] = useState("");
   const [subtitles, SetSubtitles] = useState([]);
 
+  const navigate = useNavigate();
+
   const onSubmit = async (obj) => {
     try {
-      axios.post(proxy.URL + "/instructor/create-course", obj, {
-        headers: {
-          id: localStorage.getItem("id"),
-        },
-      });
+      axios
+        .post(
+          proxy.URL + "/instructor/create-course",
+          { ...obj },
+          {
+            headers: {
+              id: localStorage.getItem("id"),
+            },
+          }
+        )
+        .then((response) => {
+          navigate("/instructor/my-courses/edit-course", {
+            state: { id: response.data._id },
+          });
+        });
     } catch (error) {}
   };
 
@@ -49,9 +62,9 @@ function InstructorCreateCourse() {
         >
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            variant='outlined'
-            label='Course Title'
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="Course Title"
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -59,10 +72,10 @@ function InstructorCreateCourse() {
           />
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            placeholder='sub1,sub2,sub3...etc'
-            variant='outlined'
-            label='Course Subjects'
+            id="filled-hidden-label-small"
+            placeholder="sub1,sub2,sub3...etc"
+            variant="outlined"
+            label="Course Subjects"
             value={subjects}
             onChange={(e) => {
               setSubjects(e.target.value);
@@ -70,10 +83,10 @@ function InstructorCreateCourse() {
           />
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            placeholder='Instructor1,Instructor2...etc'
-            variant='outlined'
-            label='Course Instructors'
+            id="filled-hidden-label-small"
+            placeholder="Instructor1,Instructor2...etc"
+            variant="outlined"
+            label="Course Instructors"
             value={instructor}
             onChange={(e) => {
               setInstructor(e.target.value);
@@ -81,10 +94,10 @@ function InstructorCreateCourse() {
           />
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            placeholder='preview video URL'
-            variant='outlined'
-            label='Course Preview Video'
+            id="filled-hidden-label-small"
+            placeholder="preview video URL"
+            variant="outlined"
+            label="Course Preview Video"
             value={video_preview}
             onChange={(e) => {
               setVideo_preview(e.target.value);
@@ -92,24 +105,24 @@ function InstructorCreateCourse() {
           />
 
           <FormControl>
-            <InputLabel htmlFor='outlined-adornment'>Course Price</InputLabel>
+            <InputLabel htmlFor="outlined-adornment">Course Price</InputLabel>
             <OutlinedInput
-              id='outlined-adornment-amount'
+              id="outlined-adornment-amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               startAdornment={
-                <InputAdornment position='start'>$</InputAdornment>
+                <InputAdornment position="start">$</InputAdornment>
               }
-              label='Course Price'
+              label="Course Price"
             />
           </FormControl>
           <TextField
-            id='filled-hidden-label-small'
-            variant='outlined'
-            label='Course Description'
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="Course Description"
             value={description}
             multiline
-            minRows='4'
+            minRows="4"
             onChange={(e) => {
               setDescription(e.target.value);
             }}
@@ -129,7 +142,7 @@ function InstructorCreateCourse() {
               <Button
                 key={"btn" + { idx }}
                 style={{ maxWidth: "20px" }}
-                variant='outlined'
+                variant="outlined"
                 startIcon={<Delete style={{ color: "red", width: "20px" }} />}
                 onClick={() => {
                   SetSubtitles((subtitles) => {
@@ -138,6 +151,7 @@ function InstructorCreateCourse() {
                       if (!(idx === index)) {
                         newSubtitles.push(subtitle);
                       }
+                      return;
                     });
                     return newSubtitles;
                   });
@@ -147,7 +161,7 @@ function InstructorCreateCourse() {
                 key={element.title + idx + 1}
                 hiddenLabel
                 id={element.title + idx + 1}
-                variant='outlined'
+                variant="outlined"
                 label={"Course Subtitle " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
                 onChange={(e) => {
@@ -159,7 +173,7 @@ function InstructorCreateCourse() {
                 hiddenLabel
                 key={idx + element.description}
                 id={idx + element.description}
-                variant='outlined'
+                variant="outlined"
                 label={"Course Subtitle Description " + (idx + 1)}
                 style={{ backgroundColor: "white" }}
                 multiline
@@ -171,9 +185,9 @@ function InstructorCreateCourse() {
               />
             </div>
           ))}
-          <div id='btns' style={{ display: "flex" }}>
+          <div id="btns" style={{ display: "flex" }}>
             <Button
-              id='addSub'
+              id="addSub"
               style={{
                 marginRight: "auto",
                 backgroundColor: "green",
@@ -186,7 +200,7 @@ function InstructorCreateCourse() {
               Add Subtitle{" "}
             </Button>
             <Button
-              id='removeSub'
+              id="removeSub"
               style={{
                 marginLeft: "auto",
                 backgroundColor: "red",
@@ -199,8 +213,8 @@ function InstructorCreateCourse() {
           </div>
 
           <Button
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
             onClick={(e) => {
               e.preventDefault();
               const subs = subtitles.map((sub) => sub.title);
@@ -211,9 +225,11 @@ function InstructorCreateCourse() {
                 price: amount,
                 instructor: instructor.split(","),
                 subject: subjects.split(","),
-                video_preview,
+                preview_video: video_preview,
                 subtitles: subs,
                 subDescriptions: subsdesc,
+                rating: 5,
+                views: 0,
               };
               onSubmit(obj);
             }}

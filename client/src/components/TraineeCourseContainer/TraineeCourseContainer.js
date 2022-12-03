@@ -1,8 +1,7 @@
 import proxy from "../../utils/proxy.json";
 import axios from "axios";
 import { useEffect, memo } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 
 function TraineeCourseContainer(props) {
@@ -25,35 +24,40 @@ function TraineeCourseContainer(props) {
         else props.setMainText("");
         props.setCourses(response.data);
       });
+    //eslint-disable-next-line
   }, []);
   return (
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
         <>
-          <div key={course._id}>
-            {course.title +
-              " price: " +
-              course.price +
-              " " +
-              countries[
-                Object.keys(countries).find(
-                  (e) => e === localStorage.getItem("country")
-                )
-              ] +
-              " rating: " +
-              course.courseRating}
-          </div>
-          <button
-            onClick={() => {
-              navigate("view-course-details", {
-                state: { course: course },
-              });
-            }}
-          >
-            {" "}
-            Show Details
-          </button>
+          {course.valid && (
+            <>
+              <div key={course._id}>
+                {course.title +
+                  " price: " +
+                  course.price +
+                  " " +
+                  countries[
+                    Object.keys(countries).find(
+                      (e) => e === localStorage.getItem("country")
+                    )
+                  ] +
+                  " rating: " +
+                  course.courseRating}
+              </div>
+              <button
+                onClick={() => {
+                  navigate("view-course-details", {
+                    state: { course: course },
+                  });
+                }}
+              >
+                {" "}
+                Show Details
+              </button>
+            </>
+          )}
         </>
       ))}
     </div>

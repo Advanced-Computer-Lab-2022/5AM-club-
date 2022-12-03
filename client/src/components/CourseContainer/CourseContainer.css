@@ -1,41 +1,40 @@
-.card{
-    margin-left: 2rem;
-    margin-right: 
-    2rem;
-    margin-top: 2rem;
-   
-
+.card {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
 }
-.attribute{
-    font-size: large;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+.attribute {
+  font-size: large;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.scratched{
-    text-decoration: line-through;
+.scratched {
+  text-decoration: line-through;
 }
-.red{
-    color:red
+.red {
+  color: red;
 }
-.reviewCard{
-    margin-left: 2rem;
-    margin-right: 
-    2rem;
-    margin-top: 2rem;
-    padding: 2rem;
-   
-
+.reviewCard {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
+  padding: 2rem;
 }
-.topRight{
-    position:absolute; top:0; right:0;
-    margin:1rem;
+.topRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 1rem;
 }
-.bottomRight{
-    right:0;
-    margin: 1rem;
-  
+.bottomRight {
+  right: 0;
+  margin: 1rem;
 }
-.marginedTop{
-    margin-top: 1rem;
+.marginedTop {
+  margin-top: 1rem;
+}
+.preview_video {
+  width: 40vw;
+  height: 50vh;
 }

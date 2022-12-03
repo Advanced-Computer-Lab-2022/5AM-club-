@@ -5,7 +5,7 @@ import { useEffect, useState, memo } from "react";
 import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
 import countries from "../../utils/Countries.json";
 import proxy from "../../utils/proxy.json";
-import formatTime from "../../utils/Helpers";
+import { formatTime } from "../../utils/Helpers";
 function ViewCourses() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,8 +28,9 @@ function ViewCourses() {
 
         setCourses(response.data);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line
   }, []);
+  console.log(courses);
   return (
     <>
       <GeneralFiltersContainer
@@ -39,33 +40,37 @@ function ViewCourses() {
       <div>
         View Courses: <br />
         {courses.map((c) => (
-          <div className='course-item' key={c.title}>
-            <div>
-              {c.title +
-                (localStorage.getItem("type") !== "corporate"
-                  ? " price: " +
-                    c.price +
-                    " totalhours: " +
-                    formatTime(c.minutes) +
-                    " " +
-                    countries[
-                      Object.keys(countries).find(
-                        (e) => e === localStorage.getItem("country")
-                      )
-                    ]
-                  : "") +
-                " rating:" +
-                c.rating}
-            </div>
-            <button
-              onClick={() => {
-                navigate("view-course", { state: { id: c._id } });
-              }}
-            >
-              {" "}
-              Show details
-            </button>
-          </div>
+          <>
+            {c.valid && (
+              <div className="course-item" key={c.title}>
+                <div>
+                  {c.title +
+                    (localStorage.getItem("type") !== "corporate"
+                      ? " price: " +
+                        c.price +
+                        " " +
+                        countries[
+                          Object.keys(countries).find(
+                            (e) => e === localStorage.getItem("country")
+                          )
+                        ] +
+                        " Total Length: " +
+                        formatTime(c.minutes) +
+                        " "
+                      : "") +
+                    " rating: " +
+                    c.rating}
+                </div>
+                <button
+                  onClick={() => {
+                    navigate("view-course", { state: { id: c._id } });
+                  }}
+                >
+                  Show details
+                </button>
+              </div>
+            )}
+          </>
         ))}
       </div>
       <p>{mainText} </p>

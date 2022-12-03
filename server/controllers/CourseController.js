@@ -38,7 +38,9 @@ const createCourse = async (req, res) => {
     price,
     subject,
     summary,
-    video_preview,
+    rating,
+    views,
+    preview_video,
     instructor,
     subtitles,
     subDescriptions,
@@ -60,7 +62,9 @@ const createCourse = async (req, res) => {
     price,
     subject,
     summary,
-    video_preview,
+    rating,
+    views,
+    preview_video,
     instructor: instructorIds,
     subtitles: courseSubs,
   });
@@ -74,15 +78,7 @@ const createCourse = async (req, res) => {
     );
   }
   if (createdCourse) {
-    res.status(201).json({
-      title: createdCourse.title,
-      price: createdCourse.price,
-      subject: createdCourse.subject,
-      summary: createdCourse.summary,
-      video_preview: createdCourse.video_preview,
-      instructor: instructorIds,
-      subtitles: createdCourse.subtitles,
-    });
+    res.status(200).send(createdCourse);
   } else {
     res.status(400).json({ message: "Invalid User Data" });
   }
@@ -91,6 +87,7 @@ const createCourse = async (req, res) => {
 const getCourses = async (req, res) => {
   let filter = {};
   let searchItem;
+
   if (req.query.searchItem) {
     const ids = await Instructor.find(
       { username: { $regex: req.query.searchItem, $options: "i" } },
@@ -118,7 +115,6 @@ const getCourses = async (req, res) => {
         if (req.query.max)
           standardMax = await convert(req.query.max, country, "United States");
       }
-      console.log(standardMin);
     }
   }
   filter = {
@@ -155,12 +151,12 @@ const getCourses = async (req, res) => {
       );
     }
   }
-  console.log(courses, "Balabizo");
-  console.log(filter);
+
   res.json(courses);
 };
 const findCourseByID = async (req, res) => {
   const id = req.params.id;
+  console.log(req.params, "<======================");
   try {
     const course = await Course.findById(id).populate("userReviews.user");
     if (req.headers.country) {
@@ -173,7 +169,7 @@ const findCourseByID = async (req, res) => {
     res.send(course);
   } catch (err) {
     console.log(err);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server s Error");
   }
 };
 
@@ -241,7 +237,6 @@ async function addSubtitle(req, res) {
 }
 
 async function deleteSubtitle(req, res) {
-  console.log(req.params);
   const course = await Course.findByIdAndUpdate(
     req.params.courseid,
     { $pull: { subtitles: { _id: req.params.subtitleid } } },
@@ -286,7 +281,6 @@ async function updateSubtitle(req, res) {
 }
 
 async function addSection(req, res) {
-  console.log(req.body);
   const valid = sectionSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send("Invalid Section Object");
@@ -309,7 +303,6 @@ async function addSection(req, res) {
 }
 
 async function deleteSection(req, res) {
-  console.log(req.params.sectionid);
   const course = await Course.findById(req.params.courseid);
   for (let subtitle of course.subtitles) {
     if (subtitle._id.valueOf() === req.params.subtitleid) {
@@ -320,7 +313,6 @@ async function deleteSection(req, res) {
         1
       );
     }
-    console.log(subtitle.sections);
   }
   await course.save();
   if (req.headers.country) {
@@ -353,9 +345,7 @@ async function updateSection(req, res) {
       }
     }
   }
-  console.log(req.body, "body");
   await course.save();
-  console.log(course.subtitles[0].sections[0].content, "content");
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -368,8 +358,7 @@ async function updateSection(req, res) {
 
 const setCoursePromotion = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
-  console.log(req.body);
+
   const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
     console.log(valid.error);

@@ -17,9 +17,9 @@
     "@utilityjs/use-on-change": "^1.0.3",
     "axios": "^1.1.3",
     "bootstrap": "^5.2.2",
+    "material-ui": "^0.20.2",
     "moment": "^2.29.4",
     "moment-jalaali": "^0.9.6",
-    "material-ui": "^0.20.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
@@ -27,6 +27,7 @@
     "react-radio-buttons": "^1.2.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.2",
+    "react-router-guards": "^1.0.2",
     "react-scripts": "5.0.1",
     "react-textarea-autosize": "^8.4.0",
     "react-use": "^17.4.0",
@@ -57,5 +58,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:4000/"
+  "proxy": "http://localhost:8888/"
 }

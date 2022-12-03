@@ -5,10 +5,14 @@ const authenticateToken = require("../../middleware/authentication");
 
 router.get("/my-courses", CourseController.getCourses);
 router.get("/courses", CourseController.getCourses);
-router.get("/courses/:id", CourseController.findCourseByID);
-router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
+router.get("/courses/:id", CourseController.findCourseByID);
 
+router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
+router.put(
+  "/my-courses/:id/set-promotion",
+  CourseController.setCoursePromotion
+);
 router.put(
   "/my-courses/edit-course/:courseid/add-subtitle",
   CourseController.addSubtitle
@@ -34,12 +38,6 @@ router.put(
   CourseController.deleteSection
 );
 
-router.get("/courses", CourseController.getCourses);
-router.get("/courses/:id", CourseController.findCourseByID);
-router.put(
-  "/my-courses/:id/set-promotion",
-  CourseController.setCoursePromotion
-);
 router.post("/create-course", CourseController.createCourse);
 
 module.exports = router;

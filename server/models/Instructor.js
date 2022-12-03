@@ -35,7 +35,6 @@ instructorSchema.virtual("instructorRating").get(function () {
     rating += element.rating;
   });
   rating = (rating / this.userReviews.length).toPrecision(2);
-  console.log("done");
   return rating;
 });
 instructorSchema.set("toJSON", { getters: true, virtuals: true });

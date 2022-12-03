@@ -1,5 +1,6 @@
 .take-course-wrapper {
   display: flex;
+  height: 70%;
   flex-direction: row;
   flex-grow: 2;
 }
@@ -13,7 +14,7 @@
   padding: 0;
 }
 .subtitles {
-  min-width: 30vw;
+  width: 30vw;
 }
 .content {
   flex-grow: 1;

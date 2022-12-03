@@ -1,9 +1,27 @@
-.subtitle-section {
-  border: 1px solid #0f0f0f;
-  background-color: rgb(60, 65, 65);
+.subtitle-header {
+  display: flex;
+  flex-direction: row;
+  font-weight: 600;
+  font-size: xx-large;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
 }
-.subtitle-section :hover {
-  background-color: rgb(30, 35, 35);
+
+.subtitle-section-text {
+  margin-top: 20px;
+  padding: 5px;
+  cursor: pointer;
+  border: 1px solid #0f0f0f;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: row;
+  font-weight: 600;
+  gap: 10px;
+}
+
+.chosen:hover {
+  background-color: rgb(150, 255, 168);
 }
 .chosen {
   background-color: rgb(150, 206, 168);

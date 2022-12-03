@@ -3,9 +3,8 @@ const connect = require("./config/database");
 const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
 const app = express();
-const port = process.env.port || 4000;
-const { Course } = require("./models/Course");
-const Instructor = require("./models/Instructor");
+const port = process.env.port || 8888;
+const path = require("path");
 
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
@@ -14,16 +13,23 @@ connect();
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
-app.use("/", courseRouter);
-app.use("/instructor", courseRouter);
-app.use("/admin", courseRouter);
-app.use("/trainee", courseRouter);
-app.use("/instructor", userDataRouter);
-app.use("/trainee", userDataRouter);
-app.use("/admin", userDataRouter);
-app.use("/", userDataRouter);
-app.use("/instructor", reviewRouter);
-app.use("/trainee", reviewRouter);
+app.use("/api/", courseRouter);
+app.use("/api/instructor", courseRouter);
+app.use("/api/admin", courseRouter);
+app.use("/api/trainee", courseRouter);
+app.use("/api/instructor", userDataRouter);
+app.use("/api/trainee", userDataRouter);
+app.use("/api/admin", userDataRouter);
+app.use("/api/", userDataRouter);
+app.use("/api/instructor", reviewRouter);
+app.use("/api/trainee", reviewRouter);
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
 
 app.listen(port);
 /*
