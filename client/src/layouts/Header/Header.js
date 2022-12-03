@@ -23,15 +23,31 @@ function Header() {
   }
   function handleProfile() {}
   function handleSearch() {
-    navigate(localStorage.getItem("type") + "/courses", {
-      state: { searchItem: searchRef.current.value },
-    });
+    navigate(
+      (localStorage.getItem("type") === "individual" ||
+      localStorage.getItem("type") === "corporate"
+        ? localStorage.getItem("type") + "-trainee"
+        : localStorage.getItem("type")
+        ? localStorage.getItem("type")
+        : "") + "/courses",
+      {
+        state: { searchItem: searchRef.current.value },
+      }
+    );
   }
   function handleEnter(e) {
     if (e.key === "Enter") {
-      navigate(localStorage.getItem("type") + "/courses", {
-        state: { searchItem: searchRef.current.value },
-      });
+      navigate(
+        (localStorage.getItem("type") === "individual" ||
+        localStorage.getItem("type") === "corporate"
+          ? localStorage.getItem("type") + "-trainee"
+          : localStorage.getItem("type")
+          ? localStorage.getItem("type")
+          : "") + "/courses",
+        {
+          state: { searchItem: searchRef.current.value },
+        }
+      );
     }
   }
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useState, memo } from "react";
+import { memo } from "react";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
@@ -7,20 +7,20 @@ function ReviewsPage(props) {
   console.log(props);
   return (
     <Card style={{ display: "flex", flexDirection: "column" }}>
-      <Typography gutterBottom variant='h5' component='div'>
+      <Typography gutterBottom variant="h5" component="div">
         {props.type === "course" ? props.item.title : props.item?.username}
       </Typography>
-      <Typography variant='h6' sx={{ display: "flex", alignItems: "center" }}>
+      <Typography variant="h6" sx={{ display: "flex", alignItems: "center" }}>
         Average Rating:{" "}
         {(props.item.courseRating || props.item.instructorRating) && (
           <Rating
-            name='read-only'
+            name="read-only"
             defaultValue={
               props.type === "course"
                 ? parseFloat(props.item.courseRating)
                 : parseFloat(props.item.instructorRating)
             }
-            size='meduim'
+            size="meduim"
             sx={{
               color: "success.main",
             }}
@@ -34,7 +34,7 @@ function ReviewsPage(props) {
             : props.item?.instructorRating) +
           ") "}
       </Typography>
-      <Typography variant='h6'>Reviews: </Typography>
+      <Typography variant="h6">Reviews: </Typography>
       {props.item?.userReviews?.map((userReview) => (
         <ReviewContainer
           key={userReview}

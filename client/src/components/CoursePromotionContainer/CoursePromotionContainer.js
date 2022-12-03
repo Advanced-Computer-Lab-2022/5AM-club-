@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import { DateTimePicker } from "@mui/x-date-pickers";
 import moment from "moment";
 function CoursePromotionContainer(props) {
   const [percentage, setPercentage] = useState(0);
@@ -37,38 +36,38 @@ function CoursePromotionContainer(props) {
   };
   return (
     <Card sx={{ m: 2, p: 2 }}>
-      <Typography gutterBottom variant='h5' component='div'>
+      <Typography gutterBottom variant="h5" component="div">
         {props.course.title}
       </Typography>
-      <Box component='form' onSubmit={handleSubmit} autoComplete='off'>
-        <Typography variant='h6' sx={{ m: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} autoComplete="off">
+        <Typography variant="h6" sx={{ m: 1 }}>
           percentage
         </Typography>
         <TextField
           sx={{ m: 1 }}
-          variant='outlined'
-          size='small'
+          variant="outlined"
+          size="small"
           fullWidth
-          type='number'
+          type="number"
           InputProps={{ inputProps: { min: 0, max: 100 } }}
-          id='percentage'
+          id="percentage"
           value={percentage}
           onChange={(e) => setPercentage(e.target.value)}
         />
-        <Typography variant='h6' sx={{ m: 1 }}>
+        <Typography variant="h6" sx={{ m: 1 }}>
           deadline
         </Typography>
         <TextField
           sx={{ m: 1 }}
-          type='datetime-local'
+          type="datetime-local"
           rows={4}
           fullWidth
-          id='deadline'
+          id="deadline"
           value={deadline}
           onChange={(e) => setDeadline(e.target.value)}
         />
 
-        <Button variant='outlined' color='success' sx={{ m: 1 }} type='submit'>
+        <Button variant="outlined" color="success" sx={{ m: 1 }} type="submit">
           Set promotion
         </Button>
       </Box>

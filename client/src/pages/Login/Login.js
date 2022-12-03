@@ -1,15 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import proxy from "../../utils/proxy.json";
-import {
-  TextField,
-  FormControl,
-  InputLabel,
-  FilledInput,
-  InputAdornment,
-  OutlinedInput,
-  Button,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import axios from "axios";
 
@@ -20,18 +12,15 @@ function Login() {
   const onSubmit = async (obj) => {
     try {
       axios.post(proxy.URL + "/login", obj).then((res) => {
-        console.log(res.data);
-        window.localStorage.setItem("token", res.data.accessToken);
-        window.localStorage.setItem("id", res.data.id);
-        window.localStorage.setItem("type", res.data.type);
-        window.localStorage.setItem("country", res.data.country);
+        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("id", res.data.id);
+        localStorage.setItem("type", res.data.type);
+        localStorage.setItem("country", res.data.country);
         if (res.data.type === "admin") navigate("../admin");
         if (res.data.type === "instructor") navigate("../instructor");
         if (res.data.type === "individual") navigate("../individual-trainee");
         if (res.data.type === "corporate") navigate("../corporate-trainee");
       });
-      console.log("loging in");
-      //return res;
     } catch (err) {
       console.log(err);
     }
@@ -46,9 +35,7 @@ function Login() {
             display: "flex",
             flexDirection: "column",
             gap: "15px",
-            // justifyContent: "space-evenly",
             alignItems: "center",
-            // minHeight: "50rem",
             width: "100%",
             "& > *": {
               width: "100%",
@@ -57,9 +44,9 @@ function Login() {
         >
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            variant='outlined'
-            label='user name'
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="user name"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value);
@@ -67,10 +54,10 @@ function Login() {
           />
           <TextField
             hiddenLabel
-            id='filled-hidden-label-small'
-            placeholder='password'
-            variant='outlined'
-            label='password'
+            id="filled-hidden-label-small"
+            placeholder="password"
+            variant="outlined"
+            label="password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -78,8 +65,8 @@ function Login() {
           />
 
           <Button
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
             onClick={(e) => {
               e.preventDefault();
               const obj = {
@@ -92,7 +79,11 @@ function Login() {
           >
             login
           </Button>
-          <Button href='http://localhost:4000/signup'>
+          <Button
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
             Don't have an Account?
           </Button>
         </Box>

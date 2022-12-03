@@ -130,6 +130,7 @@ const editInstructorReview = async (req, res) => {
 };
 
 const getTraineeReviews = async (req, res) => {
+  console.log("WTFFFF");
   const id = req.headers.id;
   const courseId = req.params.id;
   const reviews = {};

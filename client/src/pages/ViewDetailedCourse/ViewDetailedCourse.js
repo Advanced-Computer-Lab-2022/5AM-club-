@@ -12,6 +12,7 @@ function ViewDetailedCourse() {
   const [promotion, setPromotion] = useState({});
 
   useEffect(() => {
+    console.log(location.state.id, "Asdffd");
     axios
       .get(proxy.URL + "/courses/" + location.state.id, {
         headers: {
@@ -19,11 +20,14 @@ function ViewDetailedCourse() {
         },
       })
       .then((response) => {
+        console.log(response.data, "ASDf");
         setCourse(response.data);
         setSubtitles(response.data.subtitles);
         setPromotion(response.data.promotion);
       })
-      .catch(() => {});
+      .catch(() => {
+        console.log("alsdfnm");
+      });
   }, [location.state?.id]);
 
   return (

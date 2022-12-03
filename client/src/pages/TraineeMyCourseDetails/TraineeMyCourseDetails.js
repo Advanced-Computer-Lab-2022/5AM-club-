@@ -1,4 +1,3 @@
-import axios from "axios";
 import "./TraineeMyCourseDetails.css";
 import { memo } from "react";
 import { useLocation } from "react-router-dom";

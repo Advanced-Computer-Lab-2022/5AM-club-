@@ -25,6 +25,7 @@ function InstructorEditCourse() {
             setInstructor(response.data);
           });
       });
+    //eslint-disable-next-line
   }, []);
   return (
     <div>

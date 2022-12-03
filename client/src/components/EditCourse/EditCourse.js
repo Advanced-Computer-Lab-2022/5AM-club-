@@ -3,7 +3,7 @@ import proxy from "../../utils/proxy.json";
 import { memo, useEffect, useRef, useState } from "react";
 import Subtitle from "./Subtitle";
 import TextareaAutosize from "react-textarea-autosize";
-import { formatTime, displayValues } from "../../utils/Helpers";
+import { formatTime } from "../../utils/Helpers";
 import { Box, Rating } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import AddIcon from "@mui/icons-material/Add";

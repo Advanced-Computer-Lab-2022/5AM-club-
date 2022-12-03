@@ -11,6 +11,7 @@ function InstructorPersonalInformation() {
     axios
       .get(proxy.URL + "/get-user", {
         headers: {
+          // TODO : replace id with token
           id: window.localStorage.getItem("id"),
           type: "instructor",
         },

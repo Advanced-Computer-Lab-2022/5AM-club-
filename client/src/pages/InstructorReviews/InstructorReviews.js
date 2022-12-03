@@ -1,7 +1,7 @@
 import proxy from "../../utils/proxy";
 import axios from "axios";
 import { useState, useEffect, memo } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import ReviewsPage from "../../components/ReviewContainer/ReviewsPage";
 import "./InstructorReviews.css";
 
@@ -23,7 +23,8 @@ function InstructorReviews() {
         setInstructor(res.data);
       })
       .catch((err) => {});
+    //eslint-disable-next-line
   }, []);
-  return <ReviewsPage item={instructor} type='instructor' />;
+  return <ReviewsPage item={instructor} type="instructor" />;
 }
 export default memo(InstructorReviews);

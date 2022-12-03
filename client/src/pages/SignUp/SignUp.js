@@ -1,15 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import proxy from "../../utils/proxy.json";
 //import { Navigate, useNavigate } from "react-router-dom";
-import {
-  TextField,
-  FormControl,
-  InputLabel,
-  FilledInput,
-  InputAdornment,
-  OutlinedInput,
-  Button,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 //import "./InstructorCreateCourse.css";
 //import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 import { Box, Container } from "@mui/system";
@@ -27,7 +20,7 @@ function SignUp() {
 
   const onSubmit = async (obj) => {
     try {
-      axios.post("http://localhost:3000/signUp", obj).then((res) => {
+      axios.post(proxy.URL + "/signUp", obj).then((res) => {
         console.log(res);
         window.localStorage.setItem("token", res.data.accessToken);
         console.log("token from back", window.localStorage.getItem("token"));

@@ -5,4 +5,7 @@
 .exercise {
   height: 100%;
   width: 100%;
+  align-items: center;
+  justify-content: center;
+  border: 5px solid rgb(150, 206, 168);
 }

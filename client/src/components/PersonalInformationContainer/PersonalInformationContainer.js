@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
 function PersonalInformationContainer(props) {
   const [email, setEmail] = useState(props.instructor.email);
   const [biography, setBiography] = useState(props.instructor.biography);
@@ -32,35 +31,35 @@ function PersonalInformationContainer(props) {
   };
   return (
     <Card sx={{ m: 2, p: 2 }}>
-      <Typography gutterBottom variant='h5' component='div'>
+      <Typography gutterBottom variant="h5" component="div">
         Personal Information
       </Typography>
-      <Box component='form' onSubmit={handleSubmit} autoComplete='off'>
-        <Typography variant='h6' sx={{ m: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} autoComplete="off">
+        <Typography variant="h6" sx={{ m: 1 }}>
           Email
         </Typography>
         <TextField
           sx={{ m: 1 }}
-          variant='outlined'
-          size='small'
+          variant="outlined"
+          size="small"
           fullWidth
-          id='email'
+          id="email"
           InputProps={{
             readOnly: !editable,
           }}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <Typography variant='h6' sx={{ m: 1 }}>
+        <Typography variant="h6" sx={{ m: 1 }}>
           Biography
         </Typography>
         <TextField
           sx={{ m: 1 }}
-          variant='outlined'
+          variant="outlined"
           multiline
           rows={4}
           fullWidth
-          id='biography'
+          id="biography"
           InputProps={{
             readOnly: !editable,
           }}
@@ -69,18 +68,18 @@ function PersonalInformationContainer(props) {
         />
         {editable === true ? (
           <Button
-            variant='outlined'
-            color='success'
+            variant="outlined"
+            color="success"
             sx={{ m: 1 }}
-            type='submit'
+            type="submit"
           >
             Save
           </Button>
         ) : (
           <div>
             <Button
-              variant='outlined'
-              color='success'
+              variant="outlined"
+              color="success"
               sx={{ m: 1 }}
               onClick={() => {
                 setEditable(true);

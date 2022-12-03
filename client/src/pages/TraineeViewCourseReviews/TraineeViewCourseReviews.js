@@ -17,7 +17,9 @@ function TraineeViewCourseReviews() {
       .catch((err) => {
         console.log(err);
       });
+
+    //eslint-disable-next-line
   }, []);
-  return course && <ReviewsPage item={course} type='course' />;
+  return course && <ReviewsPage item={course} type="course" />;
 }
 export default memo(TraineeViewCourseReviews);
