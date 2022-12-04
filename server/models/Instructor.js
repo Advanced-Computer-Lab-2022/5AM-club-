@@ -28,17 +28,18 @@ const instructorSchema = new mongoose.Schema({
     type: [reviewSchema],
     required: true,
   },
-  
-  passwordTimeout:{ type: Date,},
 
-  accepted:{
+  passwordTimeout: { type: Date },
+
+  accepted: {
     type: Boolean,
     required: true,
     default: false,
-  }
+  },
 });
 
 instructorSchema.virtual("instructorRating").get(function () {
+  if (this.userReviews.length == 0) return -1;
   let rating = 0;
   this.userReviews.forEach((element) => {
     rating += element.rating;
