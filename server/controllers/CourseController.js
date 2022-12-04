@@ -88,7 +88,6 @@ const createCourse = async (req, res) => {
 const getCourses = async (req, res) => {
   let filter = {};
   let searchItem;
-  console.log(req.query.searchItem);
 
   if (req.query.searchItem) {
     const ids = await Instructor.find(
@@ -169,7 +168,6 @@ const findCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
-    console.log(err);
     res.status(500).send("Server s Error");
   }
 };
@@ -177,7 +175,6 @@ const findCourseByID = async (req, res) => {
 async function updateCourse(req, res) {
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
-    console.log(valid.error);
     res.status(400).json("Invalid Course Object");
     return;
   }
@@ -431,7 +428,6 @@ const setCoursePromotion = async (req, res) => {
 
   const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
-    console.log(valid.error);
     res.status(400).send("Invalid Promotion");
     return;
   }

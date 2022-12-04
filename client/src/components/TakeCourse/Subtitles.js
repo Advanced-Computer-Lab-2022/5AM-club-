@@ -32,7 +32,6 @@ function Subtitles(props) {
 
   useEffect(() => {
     if (props.flag) {
-      console.log(props.course, props.traineeCourse);
       let chosen = props.traineeCourse?.lastSection;
 
       let chosenSubtitlenum = 0;
@@ -81,14 +80,11 @@ function Subtitles(props) {
         }
       }
     }
-    console.log(completedSub);
     setCompletedSubtitles(completedSub);
 
     setChosenSection(props.traineeCourse?.lastSection);
     //eslint-disable-next-line
   }, [props.traineeCourse?.lastSection, props.course?.subtitles, progress]);
-
-  console.log(chosenSection, chosenSubtitles);
 
   return (
     <div>

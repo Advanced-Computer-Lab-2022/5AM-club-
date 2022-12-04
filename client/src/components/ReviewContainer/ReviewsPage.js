@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import ReviewContainer from "./ReviewContainer";
 function ReviewsPage(props) {
-  console.log(props);
   return (
     <Card style={{ display: "flex", flexDirection: "column" }}>
       <Typography gutterBottom variant="h5" component="div">

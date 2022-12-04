@@ -11,16 +11,12 @@ import Button from "react-bootstrap/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 function EmbeddedReviewPage(props) {
-  console.log(props);
   const navigate = useNavigate();
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(-1);
   const [editable, setEditable] = useState(false);
   const handleSubmit = (event) => {
-    console.log("asdfsaf");
-
     event.preventDefault();
-    console.log(props.myReview);
     if (
       props.myReview !== undefined &&
       Object.keys(props.myReview).length !== 0
@@ -58,15 +54,10 @@ function EmbeddedReviewPage(props) {
             };
             props.setMyReviews(myNewReviews);
           }
-          console.log(props.myReviews);
           setEditable(false);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     } else {
-      console.log(props.course);
-      console.log(props.instructor);
       let url =
         proxy.URL + "/trainee/my-courses/" + props.course._id + "/add-review";
       if (props.instructor)
@@ -78,7 +69,6 @@ function EmbeddedReviewPage(props) {
           props.instructor.id +
           "/add-review";
 
-      console.log({ rating: rating, review: review });
       axios
         .post(
           url,
@@ -102,12 +92,9 @@ function EmbeddedReviewPage(props) {
             };
             props.setMyReviews(myNewReviews);
           }
-          console.log(props.myReviews);
           setEditable(false);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   };
 
@@ -116,7 +103,6 @@ function EmbeddedReviewPage(props) {
       props.myReview !== undefined &&
       Object.keys(props.myReview).length !== 0
     ) {
-      console.log(props.myReview);
       setReview(props.myReview.review);
       setRating(props.myReview.rating);
     }
@@ -249,7 +235,6 @@ function EmbeddedReviewPage(props) {
               value={review}
               onChange={(e) => {
                 setReview(e.target.value);
-                console.log(review);
               }}
             />
             <Button

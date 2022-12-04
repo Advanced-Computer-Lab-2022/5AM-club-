@@ -34,13 +34,12 @@ function TraineeTakeCourse() {
             setTraineeCourse(response.data);
           });
       });
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
 
     setFlag(true);
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
-    console.log(traineeCourse);
     axios
       .put(proxy.URL + "/edit-trainee-course", {
         // TODO : use token instead of id------------------ bta3tna

@@ -30,7 +30,6 @@ function ViewCourses() {
       });
     //eslint-disable-next-line
   }, []);
-  console.log(courses);
   return (
     <>
       <GeneralFiltersContainer

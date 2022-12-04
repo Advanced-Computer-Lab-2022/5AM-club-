@@ -23,7 +23,6 @@ function ViewContract() {
   const navigate = useNavigate();
   const [mainText, setMainText] = useState("Loading Contract...");
   const [contract, setContract] = useState([]);
-  console.log(instructor);
   function acceptContract() {
     //TODO : CHANGE FROM ID TO TOKEN
 
@@ -36,14 +35,12 @@ function ViewContract() {
         }
       )
       .then(() => {
-        console.log("asdfbjln");
         navigate("/instructor");
       });
   }
   useEffect(() => {
     setContract([]);
     axios.get(proxy.URL + "/view-contract", {}).then((response) => {
-      console.log(response.data);
       if (response.data.length === 0)
         setMainText("No contract is available yet");
       else setMainText("");

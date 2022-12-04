@@ -6,7 +6,6 @@ import countries from "../../utils/Countries.json";
 
 function TraineeCourseContainer(props) {
   const navigate = useNavigate();
-  console.log(props.courses);
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
