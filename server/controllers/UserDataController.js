@@ -362,8 +362,9 @@ async function editBiographyInstructor(req, res) {
   }
 }
 async function changePassword(req, res) {
-  const pass = req.headers.password;
-  if (passwordStrength(pass).value !== "Strong") {
+
+  const pass= req.body.password;
+  if(passwordStrength(pass).value !== "Strong" ){
     res.status(400).send(passwordStrength(pass).value);
     return;
   }
@@ -426,6 +427,7 @@ async function getCourseInstructor(req, res) {
 }
 
 async function changePasswordEmail(req, res) {
+  // search for email by type and name
   const email = req.headers.email;
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
@@ -451,8 +453,8 @@ async function changePasswordEmail(req, res) {
       ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
   });
   // TODO: CHANGE ID TO TOKEN DECRYPTION
-  let id = req.headers.id;
-  switch (req.headers.type) {
+  let id = req.user.id;
+  switch (req.user.type) {
     case "trainee":
       await Trainee.findByIdAndUpdate(
         id,
