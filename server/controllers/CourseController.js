@@ -158,7 +158,14 @@ const getCourses = async (req, res) => {
 const findCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
-    const course = await Course.findById(id).populate("userReviews.user");
+    const course = await Course.findById(id)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "userReviews.user",
+        },
+      })
+      .populate("userReviews.user");
     if (req.headers.country) {
       course.price = await convert(
         course.price,

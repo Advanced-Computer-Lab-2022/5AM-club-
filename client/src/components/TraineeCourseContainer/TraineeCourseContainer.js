@@ -48,7 +48,7 @@ function TraineeCourseContainer(props) {
               <button
                 onClick={() => {
                   navigate("view-course-details", {
-                    state: { course: course },
+                    state: { course: course, displayAddReview: true },
                   });
                 }}
               >

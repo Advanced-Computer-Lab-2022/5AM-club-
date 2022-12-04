@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import proxy from "../../utils/proxy";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 function EmbeddedReviewPage(props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(-1);
   const [editable, setEditable] = useState(false);
@@ -108,10 +109,10 @@ function EmbeddedReviewPage(props) {
     }
   }, [props.myReview]);
   return (
-    <Card className="reviewCard">
+    <Card className='reviewCard'>
       <Button
-        variant="outline-success"
-        className="topRight"
+        variant='outline-success'
+        className='topRight'
         onClick={() => {
           if (!props.instructor)
             navigate("view-course-reviews", {
@@ -125,49 +126,49 @@ function EmbeddedReviewPage(props) {
       >
         View all reviews
       </Button>
-      <Typography variant="h6" sx={{ display: "flex", alignItems: "center" }}>
+      <Typography variant='h6' sx={{ display: "flex", alignItems: "center" }}>
         {props.instructor
           ? "Instructor (" + props.instructor.username + ") average Rating: "
           : "Average Course Rating:"}{" "}
-        {(props.course?.courseRating || props.instructor?.instructorRating) && (
-          <Rating
-            name="read-only"
-            defaultValue={
-              props.instructor
-                ? parseFloat(props.instructor.instructorRating) || 0
-                : parseFloat(props.course.courseRating) || 0
-            }
-            size="meduim"
-            sx={{
-              color: "success.main",
-            }}
-            precision={0.1}
-            readOnly
-          />
-        )}
-        (
-        {props.instructor
-          ? props.instructor.instructorRating
-          : props.course.courseRating}
-        )
+        {(props.course?.courseRating || props.instructor?.instructorRating) &&
+          (props.course?.courseRating === -1 ||
+          props.instructor?.instructorRating === -1 ? (
+            "No ratings yet"
+          ) : (
+            <>
+              <Rating
+                name='read-only'
+                defaultValue={
+                  props.instructor
+                    ? parseFloat(props.instructor.instructorRating) || 0
+                    : parseFloat(props.course.courseRating) || 0
+                }
+                size='meduim'
+                sx={{
+                  color: "success.main",
+                }}
+                precision={0.1}
+                readOnly
+              />
+              {props.instructor
+                ? props.instructor.instructorRating
+                : props.course.courseRating}
+            </>
+          ))}
       </Typography>
       {!props.instructor ? (
         <>
-          <Typography variant="h6">Reviews: </Typography>
+          <Typography variant='h6'>Reviews: </Typography>
           {props.course?.userReviews.length <= 2 ? (
             props.course.userReviews.map((userReview, i) => (
-              <ReviewContainer key={i} userReview={userReview} />
+              <div key={i}>
+                <ReviewContainer userReview={userReview} />
+              </div>
             ))
           ) : (
             <>
-              <ReviewContainer
-                key={props.course.userReviews[0]}
-                userReview={props.course.userReviews[0]}
-              />
-              <ReviewContainer
-                key={props.course.userReviews[1]}
-                userReview={props.course.userReviews[1]}
-              />
+              <ReviewContainer userReview={props.course.userReviews[0]} />
+              <ReviewContainer userReview={props.course.userReviews[1]} />
             </>
           )}
         </>
@@ -175,18 +176,14 @@ function EmbeddedReviewPage(props) {
         <>
           {props.instructor?.userReviews.length <= 2 ? (
             props.instructor.userReviews.map((userReview, i) => (
-              <ReviewContainer key={i} userReview={userReview} />
+              <div key={i}>
+                <ReviewContainer userReview={userReview} />
+              </div>
             ))
           ) : (
             <>
-              <ReviewContainer
-                key={props.instructor.userReviews[0]}
-                userReview={props.instructor.userReviews[0]}
-              />
-              <ReviewContainer
-                key={props.instructor.userReviews[1]}
-                userReview={props.instructor.userReviews[1]}
-              />
+              <ReviewContainer userReview={props.instructor.userReviews[0]} />
+              <ReviewContainer userReview={props.instructor.userReviews[1]} />
             </>
           )}{" "}
         </>
@@ -198,26 +195,28 @@ function EmbeddedReviewPage(props) {
             userReview={props.myReview}
             myReview={true}
           />
-          <Button
-            variant="outline-success"
-            className="bottomRight"
-            onClick={() => {
-              setEditable(true);
-            }}
-          >
-            Edit my review
-          </Button>
+          {location.state.displayAddReview && (
+            <Button
+              variant='outline-success'
+              className='bottomRight'
+              onClick={() => {
+                setEditable(true);
+              }}
+            >
+              Edit my review
+            </Button>
+          )}
         </>
       )}
       {editable === true && (
         <MuiCard sx={{ m: 2, p: 2 }}>
           <h4> Your Review</h4>
-          <Box component="form" onSubmit={handleSubmit} autoComplete="off">
+          <Box component='form' onSubmit={handleSubmit} autoComplete='off'>
             <h5>Rating: </h5>
             <Rating
-              name="read-only"
+              name='read-only'
               value={rating}
-              size="meduim"
+              size='meduim'
               sx={{
                 color: "success.main",
               }}
@@ -228,19 +227,19 @@ function EmbeddedReviewPage(props) {
             />
             <h5>Review:</h5>
             <TextField
-              size="small"
+              size='small'
               fullWidth
               multiline
-              id="email"
+              id='email'
               value={review}
               onChange={(e) => {
                 setReview(e.target.value);
               }}
             />
             <Button
-              variant="outline-success"
-              type="submit"
-              className="marginedTop"
+              variant='outline-success'
+              type='submit'
+              className='marginedTop'
               disabled={rating < 0}
             >
               Post
@@ -250,10 +249,11 @@ function EmbeddedReviewPage(props) {
       )}
       {(props.myReview === undefined ||
         Object.keys(props.myReview).length === 0) &&
-        editable === false && (
+        editable === false &&
+        location.state.displayAddReview && (
           <Button
-            variant="outline-success"
-            className="bottomRight"
+            variant='outline-success'
+            className='bottomRight'
             onClick={() => {
               setEditable(true);
             }}
