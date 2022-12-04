@@ -47,8 +47,6 @@ const addCourseReview = async (req, res) => {
 };
 const editCourseReview = async (req, res) => {
   const courseId = req.params.id;
-  console.log(req.headers.id);
-  console.log(req.body);
   const valid = reviewSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send(valid.error);
@@ -68,7 +66,6 @@ const editCourseReview = async (req, res) => {
         },
       }
     );
-    console.log(course);
     res.send("Review edited successfully");
   } else {
     res.status(400).send("Missing ID");
@@ -78,9 +75,7 @@ const editCourseReview = async (req, res) => {
 const addInstructorReview = async (req, res) => {
   const id = req.params.id;
   const valid = reviewSchema.validate(req.body);
-  console.log(req.body);
   if (valid.error) {
-    console.log(valid.error);
     res.status(400).send(valid.error);
     return;
   }
@@ -122,7 +117,6 @@ const editInstructorReview = async (req, res) => {
         },
       }
     );
-    console.log(instructor);
     res.send("Review edited successfully");
   } else {
     res.status(400).send("Missing ID");
@@ -130,7 +124,6 @@ const editInstructorReview = async (req, res) => {
 };
 
 const getTraineeReviews = async (req, res) => {
-  console.log("WTFFFF");
   const id = req.headers.id;
   const courseId = req.params.id;
   const reviews = {};
@@ -148,7 +141,6 @@ const getTraineeReviews = async (req, res) => {
     reviews.instructorReview[i] = instructor.userReviews.find(
       (review) => review.user.toString() === id
     );
-    console.log(reviews.instructorReview[i]);
     !reviews.instructorReview[i] && (reviews.instructorReview[i] = {});
     i++;
   }

@@ -11,12 +11,9 @@ function TraineeViewCourseReviews() {
     axios
       .get(proxy.URL + "/courses/" + location.state.id)
       .then((res) => {
-        console.log(res.data);
         setCourse(res.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
 
     //eslint-disable-next-line
   }, []);

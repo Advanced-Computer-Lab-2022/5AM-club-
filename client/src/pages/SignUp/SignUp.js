@@ -1,38 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import proxy from "../../utils/proxy.json";
-//import { Navigate, useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
-//import "./InstructorCreateCourse.css";
-//import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 import { Box, Container } from "@mui/system";
-//import AddSubtitle from "../../components/AddSubtitle";
-//import { Delete } from "@mui/icons-material";
 import axios from "axios";
 
 function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  //   useEffect(() => {
-  //     console.log(name);
-  //   }, [name]);
-
   const onSubmit = async (obj) => {
     try {
       axios.post(proxy.URL + "/signUp", obj).then((res) => {
-        console.log(res);
         window.localStorage.setItem("token", res.data.accessToken);
-        console.log("token from back", window.localStorage.getItem("token"));
         navigate("../individual-trainee");
-
-        //window.location.href = `/admin`; //to where
       });
-      console.log("Signing up");
-      //return res;
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const navigate = useNavigate();
   return (
@@ -84,7 +67,6 @@ function SignUp() {
                 username,
                 password,
               };
-              console.log(obj);
               onSubmit(obj);
             }}
           >

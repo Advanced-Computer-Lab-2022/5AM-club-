@@ -5,7 +5,6 @@ export default async function convert(value, from, to) {
     const valueInFrom = value / rates[countries[from]];
     return valueInFrom * rates[countries[to]];
   } catch (e) {
-    console.log(rates[countries[from]]);
     return value;
   }
 }
