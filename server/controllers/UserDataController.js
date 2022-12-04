@@ -494,21 +494,22 @@ async function changePasswordEmail(req, res) {
         },
         { new: true }
       );
+
+      await transporter.sendMail({
+        from: "5AMClubACL@gmail.com",
+        to: email,
+        subject: "change password",
+        // TODO: CHANGE ID TO TOKEN DECRYPTION
+        html:
+          "<html><head></head><body><a href=" +
+          proxy.URL +
+          "/change-forgotten-password/" +
+          user._id +
+          ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
+      });
+      res.send("email sent");
+      return;
     }
-    await transporter.sendMail({
-      from: "5AMClubACL@gmail.com",
-      to: email,
-      subject: "change password",
-      // TODO: CHANGE ID TO TOKEN DECRYPTION
-      html:
-        "<html><head></head><body><a href=" +
-        proxy.URL +
-        "/change-forgotten-password/" +
-        user._id +
-        ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
-    });
-    res.send("email sent");
-    return;
   }
 
   res.send("Invalid user data");
