@@ -8,10 +8,10 @@ const Instructor = require("../models/Instructor");
 const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
 const TraineeCourse = require("../models/TraineeCourse");
-
 const { passwordStrength } = require("check-password-strength");
 const nodemailer = require("nodemailer");
 const Contract = require("../models/Contract");
+const proxy = require("../utils/proxy.json");
 const countrySchema = Joi.object({
   country: Joi.string()
     .valid(...Object.keys(countries))
@@ -31,6 +31,20 @@ const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
   biography: Joi.string(),
 });
+
+async function getUserType(req, res) {
+  let User;
+
+  User = await Trainee.findById(req.headers.id);
+  if (User) res.send(User.type);
+  else {
+    User = await Instructor.findById(req.headers.id);
+    if (User) res.send("instructor");
+    else {
+      return res.status(400).send("Invalid ID");
+    }
+  }
+}
 
 async function getTraineeCourse(req, res) {
   res.send(
@@ -362,16 +376,24 @@ async function editBiographyInstructor(req, res) {
   }
 }
 async function changePassword(req, res) {
-
-  const pass= req.body.password;
-  if(passwordStrength(pass).value !== "Strong" ){
+  const pass = req.body.password;
+  if (passwordStrength(pass).value !== "Strong") {
     res.status(400).send(passwordStrength(pass).value);
     return;
   }
   if (req.headers.id) {
     const id = req.headers.id;
     switch (req.headers.type) {
-      case "trainee":
+      case "individual":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            password: req.body.password,
+          },
+          { new: true }
+        );
+        break;
+      case "corporate":
         User = await Trainee.findByIdAndUpdate(
           id,
           {
@@ -429,61 +451,67 @@ async function getCourseInstructor(req, res) {
 async function changePasswordEmail(req, res) {
   // search for email by type and name
   const email = req.headers.email;
-  let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false,
-
+    service: "gmail",
     auth: {
-      user: testAccount.user,
-      pass: testAccount.pass,
+      user: "5AMClubACL@gmail.com",
+      pass: "rxfhkqvgqpdfwmmk",
     },
   });
-  let info = await transporter.sendMail({
-    from: "mahmoud200040@hotmail.com",
-    to: "mahmoud200040@hotmail.com",
-    subject: "change password",
-    // TODO: CHANGE ID TO TOKEN DECRYPTION
-    html:
-      "<html><head></head><body><a href=" +
-      proxy.URL +
-      "/change-password/" +
-      req.headers.id +
-      ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
-  });
+
   // TODO: CHANGE ID TO TOKEN DECRYPTION
-  let id = req.user.id;
-  switch (req.user.type) {
-    case "trainee":
-      await Trainee.findByIdAndUpdate(
-        id,
-        {
-          passwordTimeout: new Date(),
-        },
-        { new: true }
-      );
-      break;
-    case "instructor":
+  let user = await Trainee.findOne({ email: email });
+  if (user) {
+    await Trainee.findByIdAndUpdate(
+      user._id,
+      {
+        passwordTimeout: new Date(),
+      },
+      { new: true }
+    );
+
+    await transporter.sendMail({
+      from: "5AMClubACL@gmail.com",
+      to: email,
+      subject: "change password",
+      // TODO: CHANGE ID TO TOKEN DECRYPTION
+      html:
+        "<html><head></head><body><a href=" +
+        proxy.URL +
+        "/change-forgotten-password/" +
+        user._id +
+        ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
+    });
+    res.send("email sent");
+    return;
+  } else {
+    user = await Instructor.findOne({ email: email });
+    if (user) {
       await Instructor.findByIdAndUpdate(
-        id,
+        user._id,
         {
           passwordTimeout: new Date(),
         },
         { new: true }
       );
-    case "admin":
-      await Admin.findByIdAndUpdate(
-        id,
-        {
-          passwordTimeout: new Date(),
-        },
-        { new: true }
-      );
-      break;
-    default:
-      break;
+    }
+    await transporter.sendMail({
+      from: "5AMClubACL@gmail.com",
+      to: email,
+      subject: "change password",
+      // TODO: CHANGE ID TO TOKEN DECRYPTION
+      html:
+        "<html><head></head><body><a href=" +
+        proxy.URL +
+        "/change-forgotten-password/" +
+        user._id +
+        ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
+    });
+    res.send("email sent");
+    return;
   }
+
+  res.send("Invalid user data");
 }
 
 async function viewContract(req, res) {
@@ -516,4 +544,5 @@ module.exports = {
   changePasswordEmail,
   viewContract,
   acceptContract,
+  getUserType,
 };

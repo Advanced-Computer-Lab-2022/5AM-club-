@@ -11,6 +11,7 @@ router.get("/accept-contract", UserDataController.acceptContract);
 router.get("/get-users", UserDataController.getUsers);
 router.get("/get-trainee-course", UserDataController.getTraineeCourse);
 router.get("/get-course-instructor", UserDataController.getCourseInstructor);
+router.get("/get-user-type", UserDataController.getUserType);
 
 router.post("/add-admin", UserDataController.addAdmin);
 router.post("/add-instructor", UserDataController.addInstructor);

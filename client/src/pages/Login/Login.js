@@ -8,8 +8,20 @@ import axios from "axios";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
-  const onSubmit = async (obj) => {
+  async function handleForgotPassword() {
+    await axios.put(
+      proxy.URL + "/change-password-email",
+      {},
+      {
+        headers: { email: forgotPasswordEmail },
+      }
+    );
+  }
+
+  async function onSubmit(obj) {
     try {
       axios.post(proxy.URL + "/login", obj).then((res) => {
         localStorage.setItem("token", res.data.accessToken);
@@ -22,7 +34,7 @@ function Login() {
         if (res.data.type === "corporate") navigate("../corporate-trainee");
       });
     } catch (err) {}
-  };
+  }
   const navigate = useNavigate();
   return (
     <Container sx={{ display: "grid", placeItems: "center" }}>
@@ -76,6 +88,29 @@ function Login() {
           >
             login
           </Button>
+          <Button
+            onClick={() => {
+              setForgotPassword(true);
+            }}
+          >
+            Forgot your password?
+          </Button>
+          {forgotPassword && (
+            <>
+              <TextField
+                hiddenLabel
+                id="filled-hidden-label-small"
+                placeholder="email"
+                variant="outlined"
+                label="email"
+                value={forgotPasswordEmail}
+                onChange={(e) => {
+                  setForgotPasswordEmail(e.target.value);
+                }}
+              />
+              <Button onClick={handleForgotPassword}>Send Email</Button>
+            </>
+          )}
           <Button
             onClick={() => {
               navigate("/signup");
