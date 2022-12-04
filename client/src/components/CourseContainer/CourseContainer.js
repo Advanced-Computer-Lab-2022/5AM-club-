@@ -11,7 +11,6 @@ import countries from "../../utils/Countries.json";
 import EmbeddedReviewPage from "../../components/ReviewContainer/EmbeddedReviewPage";
 
 function CourseContainer(props) {
-  console.log(props.course);
   const navigate = useNavigate();
   const location = useLocation();
   const [myReviews, setMyReviews] = useState({
@@ -49,15 +48,15 @@ function CourseContainer(props) {
   }, []);
   return (
     <Card
-      border='dark'
-      className='card'
+      border="dark"
+      className="card"
       style={{
         margin: "250px",
         marginTop: "50px",
       }}
     >
       <Card.Body>
-        <Card.Title className='course-title'>{props.course.title}</Card.Title>
+        <Card.Title className="course-title">{props.course.title}</Card.Title>
         <div
           style={{
             display: "flex",
@@ -69,32 +68,32 @@ function CourseContainer(props) {
         >
           <div style={{ display: "inline" }}>
             <iframe
-              className='preview_video'
+              className="preview_video"
               key={props.course.preview_video?.replace("watch?v=", "embed/")}
-              title='course-video'
+              title="course-video"
               src={props.course.preview_video?.replace("watch?v=", "embed/")}
-              frameBorder='0'
+              frameBorder="0"
               allowFullScreen
             ></iframe>
           </div>
           <div>
-            <div className='attribute'>
+            <div className="attribute">
               Created By:{" "}
               {props.course.instructor.map(
                 (instructor) => instructor.username + " "
               )}
             </div>
-            <div className='attribute'>
+            <div className="attribute">
               Total Length: {formatTime(props.course.minutes)}
             </div>
             {localStorage.getItem("type") !== "corporate" &&
               props.owned !== true && (
-                <div className='attribute'>
+                <div className="attribute">
                   Price:{" "}
                   {props.promotion &&
                   new Date(props.promotion.deadline) > new Date() ? (
                     <>
-                      <span className='scratched'>{props.course.price} </span>
+                      <span className="scratched">{props.course.price} </span>
                       <span>
                         {(props.course.price *
                           (100 - props.promotion.percentage)) /
@@ -106,7 +105,7 @@ function CourseContainer(props) {
                               )
                             ])}
                       </span>
-                      <span className='red'>
+                      <span className="red">
                         (-{props.promotion.percentage}% till{" "}
                         {new Date(props.promotion.deadline).toDateString()})
                       </span>
@@ -125,12 +124,12 @@ function CourseContainer(props) {
                 </div>
               )}
             {localStorage.getItem("type") === "individual" && !props.owned && (
-              <Button variant='outline-success'>BUY NOW</Button>
+              <Button variant="outline-success">BUY NOW</Button>
             )}
             {props.owned && location.state.displayAddReview && (
               <>
                 <Button
-                  variant='outline-success'
+                  variant="outline-success"
                   onClick={() => {
                     navigate("take-course", {
                       state: {
@@ -143,7 +142,7 @@ function CourseContainer(props) {
                   Go to course
                 </Button>
 
-                <div className='attribute'>
+                <div className="attribute">
                   Progress: {getProgress(traineeCourse?.progress) * 100}%
                 </div>
               </>
@@ -151,7 +150,7 @@ function CourseContainer(props) {
           </div>
         </div>
         <Card.Text>{props.course.summary}</Card.Text>
-        <div className='attribute'> Content: </div>
+        <div className="attribute"> Content: </div>
         <TableContainer title={"Subtitles"} elements={props.subtitles} />
         <EmbeddedReviewPage
           myReviews={myReviews}
