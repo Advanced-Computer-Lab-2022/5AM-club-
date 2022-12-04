@@ -9,7 +9,7 @@ const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
 const TraineeCourse = require("../models/TraineeCourse");
 
-const {passwordStrength} = require ('check-password-strength');
+const { passwordStrength } = require("check-password-strength");
 const nodemailer = require("nodemailer");
 const Contract = require("../models/Contract");
 const countrySchema = Joi.object({
@@ -371,8 +371,8 @@ async function editBiographyInstructor(req, res) {
   }
 }
 async function changePassword(req, res) {
-  const pass= req.headers.password;
-  if(passwordStrength(pass).value !== "Strong" ){
+  const pass = req.headers.password;
+  if (passwordStrength(pass).value !== "Strong") {
     res.status(400).send(passwordStrength(pass).value);
     return;
   }
@@ -441,22 +441,26 @@ async function changePasswordEmail(req, res) {
   const email = req.headers.email;
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
-    host:
-    "smtp.ethereal.email",
+    host: "smtp.ethereal.email",
     port: 587,
     secure: false,
 
     auth: {
       user: testAccount.user,
       pass: testAccount.pass,
-    }
+    },
   });
   let info = await transporter.sendMail({
     from: "mahmoud200040@hotmail.com",
     to: "mahmoud200040@hotmail.com",
     subject: "change password",
     // TODO: CHANGE ID TO TOKEN DECRYPTION
-    html: "<html><head></head><body><a href="+proxy.URL+"/change-password/"+req.headers.id+" target=\"_blank\" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>",
+    html:
+      "<html><head></head><body><a href=" +
+      proxy.URL +
+      "/change-password/" +
+      req.headers.id +
+      ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
   });
   // TODO: CHANGE ID TO TOKEN DECRYPTION
   let id = req.headers.id;
@@ -478,36 +482,33 @@ async function changePasswordEmail(req, res) {
         },
         { new: true }
       );
-      case "admin":
-         await Admin.findByIdAndUpdate(
-          id,
-          {
-            passwordTimeout: new Date(),
-          },
-          { new: true }
-        );
+    case "admin":
+      await Admin.findByIdAndUpdate(
+        id,
+        {
+          passwordTimeout: new Date(),
+        },
+        { new: true }
+      );
       break;
     default:
       break;
-    }
+  }
   console.log("Message sent: %s", info.messageId);
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
-async function viewContract(req,res) {
-    const contract = await Contract.findOne();
-    res.send(contract.description);
+async function viewContract(req, res) {
+  const contract = await Contract.findOne();
+  res.send(contract.description);
 }
-async function acceptContract(req,res){
+async function acceptContract(req, res) {
   let id = req.headers.id;
-  console.log("hello");
-  await Instructor.findByIdAndUpdate(
-    id,
-    {
-      accepted: true,
-    },
-  );
-res.send("accepted");
+  console.log(req.headers);
+  await Instructor.findByIdAndUpdate(id, {
+    accepted: true,
+  });
+  res.send("accepted");
 }
 module.exports = {
   getCourseInstructor,
@@ -527,5 +528,5 @@ module.exports = {
   changePassword,
   changePasswordEmail,
   viewContract,
-  acceptContract
+  acceptContract,
 };
