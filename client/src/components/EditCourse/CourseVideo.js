@@ -60,7 +60,6 @@ function CourseVideo(props) {
     }
     setEditingURL(false);
   }
-  console.log(validURL);
   return (
     <div>
       {validURL ? (

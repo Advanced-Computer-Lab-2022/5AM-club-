@@ -149,14 +149,16 @@ function Subtitles(props) {
                       marginTop: index2 === 0 ? "0px" : "20px",
                     }}
                     onMouseEnter={() => {
-                      let temp = [...hovering];
+                      let temp = new Array(props.course?.subtitles.length).fill(
+                        false
+                      );
                       temp[sectionPosition[index] + index2] = true;
                       setHovering(temp);
                     }}
                     onMouseLeave={() => {
-                      let temp = [...hovering];
-                      temp[sectionPosition[index] + index2] = false;
-                      setHovering(temp);
+                      setHovering(
+                        new Array(props.course?.subtitles.length).fill(false)
+                      );
                     }}
                     onClick={() => {
                       props.updateTraineeCourse({

@@ -146,11 +146,11 @@ function EmbeddedReviewPage(props) {
         {(props.course?.courseRating || props.instructor?.instructorRating) && (
           <Rating
             name="read-only"
-            defaultValue={parseFloat(
+            defaultValue={
               props.instructor
-                ? props.instructor.instructorRating
-                : props.course.courseRating
-            )}
+                ? parseFloat(props.instructor.instructorRating) || 0
+                : parseFloat(props.course.courseRating) || 0
+            }
             size="meduim"
             sx={{
               color: "success.main",
@@ -238,7 +238,6 @@ function EmbeddedReviewPage(props) {
               precision={0.5}
               onChange={(e) => {
                 setRating(e.target.value);
-                console.log(rating);
               }}
             />
             <h5>Review:</h5>

@@ -16,7 +16,6 @@ function Exercise(props) {
     c3: "",
     c4: "",
   });
-  console.log(props.content);
   const [questionAnswer, setQuestionAnswer] = useState(0);
   const [choiceColors, setChoiceColors] = useState([
     "#383838",
@@ -76,7 +75,6 @@ function Exercise(props) {
         toggleAddingQuestion();
       });
   }
-  console.log(props.content?.questions);
   return (
     <div>
       {props.content?.questions.map((question, idx) => (

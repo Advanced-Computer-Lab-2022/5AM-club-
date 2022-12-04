@@ -15,7 +15,6 @@ function CoursePromotionContainer(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data);
     axios
       .put(
         proxy.URL +

@@ -21,8 +21,8 @@ function TraineeFilterContainer(props) {
         params: {
           min: minRef.current.value,
           max: maxRef.current.value,
-          subject: subjectRef,
-          searchitem: searchRef.current.value,
+          subject: subjectRef.current.value,
+          searchItem: searchRef.current.value,
         },
       })
       .then((response) => {
