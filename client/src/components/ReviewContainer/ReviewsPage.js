@@ -17,8 +17,8 @@ function ReviewsPage(props) {
             name="read-only"
             defaultValue={
               props.type === "course"
-                ? parseFloat(props.item.courseRating)
-                : parseFloat(props.item.instructorRating)
+                ? parseFloat(props.item.courseRating) || 0
+                : parseFloat(props.item.instructorRating) || 0
             }
             size="meduim"
             sx={{

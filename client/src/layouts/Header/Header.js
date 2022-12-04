@@ -19,7 +19,9 @@ function Header() {
     navigate("login");
   }
   function handleLogout() {
-    // TODO: remove token from local storage
+    localStorage.clear();
+    localStorage.setItem("country", "United States");
+    navigate("/");
   }
   function handleProfile() {}
   function handleSearch() {

@@ -42,9 +42,7 @@ function CourseContainer(props) {
               setTraineeCourse(response.data);
             });
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
     //eslint-disable-next-line
   }, []);
@@ -162,14 +160,16 @@ function CourseContainer(props) {
         {myReviews.instructorReview?.map(
           (instructorReview, index) =>
             Object.keys(instructorReview) !== 0 && (
-              <EmbeddedReviewPage
-                myReviews={myReviews}
-                myReview={instructorReview}
-                setMyReviews={setMyReviews}
-                index={index}
-                instructor={props.course.instructor[index]}
-                course={props.course}
-              />
+              <div key={index}>
+                <EmbeddedReviewPage
+                  myReviews={myReviews}
+                  myReview={instructorReview}
+                  setMyReviews={setMyReviews}
+                  index={index}
+                  instructor={props.course.instructor[index]}
+                  course={props.course}
+                />
+              </div>
             )
         )}
       </Card.Body>

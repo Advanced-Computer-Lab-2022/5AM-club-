@@ -40,7 +40,7 @@ function ViewCourses() {
       <div>
         View Courses: <br />
         {courses.map((c) => (
-          <>
+          <div key={c._id}>
             {c.valid && (
               <div className="course-item" key={c.title}>
                 <div>
@@ -70,7 +70,7 @@ function ViewCourses() {
                 </button>
               </div>
             )}
-          </>
+          </div>
         ))}
       </div>
       <p>{mainText} </p>

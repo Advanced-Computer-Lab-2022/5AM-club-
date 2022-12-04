@@ -189,7 +189,6 @@ function EditCourse(props) {
           <div
             className="course-attribute"
             onBlur={(e) => {
-              console.log(e);
               if (e.relatedTarget?.nodeName === "BUTTON") return;
 
               if (

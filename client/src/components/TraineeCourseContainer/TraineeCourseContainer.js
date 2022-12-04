@@ -30,7 +30,7 @@ function TraineeCourseContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <>
+        <div key={course._id}>
           {course.valid && (
             <>
               <div key={course._id}>
@@ -58,7 +58,7 @@ function TraineeCourseContainer(props) {
               </button>
             </>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

@@ -9,7 +9,13 @@ function SelectCountry() {
   function changeCountry(e) {
     if (localStorage.getItem("type")) {
       axios.put(
-        proxy.URL + "/" + localStorage.getItem("type") + "/set-country",
+        proxy.URL +
+          "/" +
+          (localStorage.getItem("type") === "corporate" ||
+          localStorage.getItem("type") === "individual"
+            ? "trainee"
+            : localStorage.getItem("type")) +
+          "/set-country",
         {
           country: e.value,
         },

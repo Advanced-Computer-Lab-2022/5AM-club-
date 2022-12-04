@@ -145,6 +145,15 @@ async function setCountry(req, res) {
           { new: true }
         );
         break;
+      case "corporate":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            country: req.body.country,
+          },
+          { new: true }
+        );
+        break;
       case "admin":
         console.log(req.body.country);
         User = await Admin.findByIdAndUpdate(

@@ -88,6 +88,7 @@ const createCourse = async (req, res) => {
 const getCourses = async (req, res) => {
   let filter = {};
   let searchItem;
+  console.log(req.query.searchItem);
 
   if (req.query.searchItem) {
     const ids = await Instructor.find(
@@ -241,6 +242,12 @@ async function deleteSubtitle(req, res) {
     traineeCourse.answers.splice(sectionIndices[0], sectionIndices.length);
     traineeCourse.notes.splice(sectionIndices[0], sectionIndices.length);
     traineeCourse.grades.splice(sectionIndices[0], sectionIndices.length);
+    if (
+      traineeCourse.lastSection >= sectionIndices[0] &&
+      traineeCourse.lastSection !== 0
+    ) {
+      traineeCourse.lastSection--;
+    }
     await traineeCourse.save();
   }
 
@@ -300,6 +307,7 @@ async function addSection(req, res) {
     traineeCourse.answers.push([]);
     traineeCourse.notes.push({});
     traineeCourse.grades.push(0);
+
     await traineeCourse.save();
   }
 
@@ -346,6 +354,11 @@ async function deleteSection(req, res) {
     traineeCourse.answers.splice(sectionIndex, 1);
     traineeCourse.notes.splice(sectionIndex, 1);
     traineeCourse.grades.splice(sectionIndex, 1);
+    if (
+      sectionIndex <= traineeCourse.lastSection &&
+      traineeCourse.lastSection !== 0
+    )
+      traineeCourse.lastSection--;
     await traineeCourse.save();
   }
 
