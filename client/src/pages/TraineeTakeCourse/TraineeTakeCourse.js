@@ -34,13 +34,12 @@ function TraineeTakeCourse() {
             setTraineeCourse(response.data);
           });
       });
-    // eslint-disable-next-line 
 
     setFlag(true);
+    // eslint-disable-next-line
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
-    console.log(traineeCourse);
     axios
       .put(proxy.URL + "/edit-trainee-course", {
         // TODO : use token instead of id------------------ bta3tna
@@ -63,18 +62,18 @@ function TraineeTakeCourse() {
   }
 
   return (
-    <div className="take-course-wrapper">
-      <div className="content-notes-wrapper">
-        <div className="content">
+    <div className='take-course-wrapper'>
+      <div className='content-notes-wrapper'>
+        <div className='content'>
           <Content
             course={course}
             traineeCourse={traineeCourse}
             updateTraineeCourse={updateTraineeCourse}
           ></Content>
         </div>
-        <div className="notes"></div>
+        <div className='notes'></div>
       </div>
-      <div className="subtitles">
+      <div className='subtitles'>
         <Subtitles
           setFlag={setFlag}
           flag={flag}

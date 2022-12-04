@@ -14,11 +14,8 @@ function Content(props) {
   let subtitleNumber = 0;
   let counter = props.traineeCourse?.lastSection;
   let sectionNumber = -1;
-  console.log(props.course?.subtitles);
   for (let i = 0; i < props.course?.subtitles.length; i++) {
-    console.log(props.course?.subtitles[i].sections.length);
     for (let j = 0; j < props.course?.subtitles[i].sections.length; j++) {
-      console.log();
       counter--;
       sectionNumber -= -1;
 
@@ -32,7 +29,6 @@ function Content(props) {
     }
     sectionNumber = -1;
   }
-  console.log(subtitleNumber, sectionNumber);
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
@@ -51,7 +47,6 @@ function Content(props) {
     props.traineeCourse.answers[props.traineeCourse.lastSection] =
       traineeAnswers;
     props.traineeCourse.grades[props.traineeCourse.lastSection] = grade;
-    console.log(props.traineeCourse);
     props.updateTraineeCourse(props.traineeCourse);
   }
   useUpdateEffect(() => {

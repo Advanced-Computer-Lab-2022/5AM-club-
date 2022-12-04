@@ -6,7 +6,6 @@ import countries from "../../utils/Countries.json";
 
 function TraineeCourseContainer(props) {
   const navigate = useNavigate();
-  console.log(props.courses);
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
@@ -30,7 +29,7 @@ function TraineeCourseContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <>
+        <div key={course._id}>
           {course.valid && (
             <>
               <div key={course._id}>
@@ -49,7 +48,7 @@ function TraineeCourseContainer(props) {
               <button
                 onClick={() => {
                   navigate("view-course-details", {
-                    state: { course: course },
+                    state: { course: course, displayAddReview: true },
                   });
                 }}
               >
@@ -58,7 +57,7 @@ function TraineeCourseContainer(props) {
               </button>
             </>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

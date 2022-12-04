@@ -152,6 +152,7 @@ courseSchema.virtual("minutes").get(function () {
 });
 
 courseSchema.virtual("courseRating").get(function () {
+  if (this.userReviews.length == 0) return -1;
   let rating = 0;
   this.userReviews.forEach((element) => {
     rating += element.rating;

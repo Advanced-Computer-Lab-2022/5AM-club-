@@ -34,7 +34,7 @@ function InstructorCoursesContainer(props) {
     <div>
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
-        <>
+        <div key={course._id}>
           <div key={course._id}>
             <div>
               {course.title +
@@ -80,7 +80,7 @@ function InstructorCoursesContainer(props) {
               set promotion
             </button>
           </div>
-        </>
+        </div>
       ))}
     </div>
   );

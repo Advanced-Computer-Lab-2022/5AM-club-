@@ -1,9 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { memo } from "react";
 
 import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function InstructorProfile() {
-  
   const navigate = useNavigate();
   return (
     <div>
@@ -40,8 +39,9 @@ function InstructorProfile() {
           navigate("my-personal-information");
         }}
       >
-        view my personal information</button>
-        <button
+        view my personal information
+      </button>
+      <button
         onClick={() => {
           navigate("view-contract");
         }}

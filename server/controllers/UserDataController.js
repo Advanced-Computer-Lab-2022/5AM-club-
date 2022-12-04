@@ -9,7 +9,7 @@ const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
 const TraineeCourse = require("../models/TraineeCourse");
 
-const {passwordStrength} = require ('check-password-strength');
+const { passwordStrength } = require("check-password-strength");
 const nodemailer = require("nodemailer");
 const Contract = require("../models/Contract");
 const countrySchema = Joi.object({
@@ -33,8 +33,6 @@ const editPersonalInformationSchema = Joi.object({
 });
 
 async function getTraineeCourse(req, res) {
-  console.log(req.headers, "-------------------------------------");
-
   res.send(
     await TraineeCourse.findOne({
       traineeId: req.headers.traineeid,
@@ -44,7 +42,6 @@ async function getTraineeCourse(req, res) {
 }
 
 async function updateTraineeCourse(req, res) {
-  console.log(req.body);
   const test = await Course.findById(req.body.courseId);
   let noSections = 0;
   for (let subtitle of test.subtitles) {
@@ -82,7 +79,6 @@ async function getUsers(req, res) {
       break;
     case "corporate":
       User = await Trainee.find({ type: "corporate" });
-      console.log(User);
       break;
     case "admin":
       User = await Admin.find();
@@ -134,7 +130,6 @@ async function setCountry(req, res) {
   if (req.headers.id) {
     const id = req.headers.id;
     let User;
-    console.log(req.headers, req.body);
     switch (req.headers.type) {
       case "trainee":
         User = await Trainee.findByIdAndUpdate(
@@ -145,8 +140,16 @@ async function setCountry(req, res) {
           { new: true }
         );
         break;
+      case "corporate":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            country: req.body.country,
+          },
+          { new: true }
+        );
+        break;
       case "admin":
-        console.log(req.body.country);
         User = await Admin.findByIdAndUpdate(
           id,
           {
@@ -230,9 +233,7 @@ async function addTrainee(req, res) {
 }
 
 async function editPersonalInformationInstructor(req, res) {
-  console.log(req.body);
   const valid = editPersonalInformationSchema.validate(req.body);
-  console.log(valid);
   if (valid.error) {
     res.status(400).send("Invalid Email");
     return;
@@ -251,15 +252,12 @@ async function editPersonalInformationInstructor(req, res) {
 
 async function signUp(req, res) {
   const result = addUserSchema.validate(req.body);
-  console.log(result.error);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  //console.log(req.body.username);
   const foundDup = await nameChecker(req.body.username);
   if (foundDup) {
-    console.log("found dupp");
     res.status(401).send("username already used!!");
   } else {
     const newindividualTrainee = new Trainee({
@@ -291,7 +289,6 @@ const login = async (req, res) => {
     username: user.username,
     password: user.password,
   });
-  console.log(admins, instructors, trainees);
   if (!admins.length && !instructors.length && !trainees.length) {
     res.status(401).send("Wrong Username or Password");
   } else {
@@ -306,13 +303,11 @@ const login = async (req, res) => {
       user.country = instructors[0].country;
     }
     if (trainees.length > 0) {
-      console.log(trainees);
       user._id = trainees[0]._id;
       user.country = trainees[0].country;
       user.type = trainees[0].type;
     }
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    //console.log();
     res.json({
       accessToken,
       type: user.type,
@@ -323,9 +318,7 @@ const login = async (req, res) => {
 };
 
 async function editEmailInstructor(req, res) {
-  console.log(req.body);
   const valid = editEmailSchema.validate(req.body);
-  console.log(valid);
   if (valid.error) {
     res.status(400).send("Invalid Email");
     return;
@@ -333,7 +326,6 @@ async function editEmailInstructor(req, res) {
 
   if (req.headers.id) {
     const id = req.headers.id;
-    console.log(req.headers, req.body);
     const User = await Instructor.findByIdAndUpdate(
       id,
       {
@@ -357,7 +349,6 @@ async function editBiographyInstructor(req, res) {
 
   if (req.headers.id) {
     const id = req.headers.id;
-    console.log(req.headers, req.body);
     const User = await Instructor.findByIdAndUpdate(
       id,
       {
@@ -371,6 +362,7 @@ async function editBiographyInstructor(req, res) {
   }
 }
 async function changePassword(req, res) {
+
   const pass= req.body.password;
   if(passwordStrength(pass).value !== "Strong" ){
     res.status(400).send(passwordStrength(pass).value);
@@ -378,8 +370,6 @@ async function changePassword(req, res) {
   }
   if (req.headers.id) {
     const id = req.headers.id;
-    let User;
-    console.log(req.headers, req.body);
     switch (req.headers.type) {
       case "trainee":
         User = await Trainee.findByIdAndUpdate(
@@ -419,7 +409,6 @@ async function editBiographyInstructor(req, res) {
 
   if (req.headers.id) {
     const id = req.headers.id;
-    console.log(req.headers, req.body);
     const User = await Instructor.findByIdAndUpdate(
       id,
       {
@@ -442,22 +431,26 @@ async function changePasswordEmail(req, res) {
   const email = req.headers.email;
   let testAccount = await nodemailer.createTestAccount();
   let transporter = nodemailer.createTransport({
-    host:
-    "smtp.ethereal.email",
+    host: "smtp.ethereal.email",
     port: 587,
     secure: false,
 
     auth: {
       user: testAccount.user,
       pass: testAccount.pass,
-    }
+    },
   });
   let info = await transporter.sendMail({
     from: "mahmoud200040@hotmail.com",
     to: "mahmoud200040@hotmail.com",
     subject: "change password",
     // TODO: CHANGE ID TO TOKEN DECRYPTION
-    html: "<html><head></head><body><a href="+proxy.URL+"/change-password/"+req.headers.id+" target=\"_blank\" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>",
+    html:
+      "<html><head></head><body><a href=" +
+      proxy.URL +
+      "/change-password/" +
+      req.headers.id +
+      ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
   });
   // TODO: CHANGE ID TO TOKEN DECRYPTION
   let id = req.user.id;
@@ -479,36 +472,30 @@ async function changePasswordEmail(req, res) {
         },
         { new: true }
       );
-      case "admin":
-         await Admin.findByIdAndUpdate(
-          id,
-          {
-            passwordTimeout: new Date(),
-          },
-          { new: true }
-        );
+    case "admin":
+      await Admin.findByIdAndUpdate(
+        id,
+        {
+          passwordTimeout: new Date(),
+        },
+        { new: true }
+      );
       break;
     default:
       break;
-    }
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  }
 }
 
-async function viewContract(req,res) {
-    const contract = await Contract.findOne();
-    res.send(contract.description);
+async function viewContract(req, res) {
+  const contract = await Contract.findOne();
+  res.send(contract.description);
 }
-async function acceptContract(req,res){
+async function acceptContract(req, res) {
   let id = req.headers.id;
-  console.log("hello");
-  await Instructor.findByIdAndUpdate(
-    id,
-    {
-      accepted: true,
-    },
-  );
-res.send("accepted");
+  await Instructor.findByIdAndUpdate(id, {
+    accepted: true,
+  });
+  res.send("accepted");
 }
 module.exports = {
   getCourseInstructor,
@@ -528,5 +515,5 @@ module.exports = {
   changePassword,
   changePasswordEmail,
   viewContract,
-  acceptContract
+  acceptContract,
 };

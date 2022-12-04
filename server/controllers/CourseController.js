@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
+const TraineeCourse = require("../models/TraineeCourse");
 const { convert } = require("../utils/CurrencyConverter");
 const setCoursePromotionSchema = Joi.object({
   percentage: Joi.number().min(0).max(100),
@@ -156,9 +157,15 @@ const getCourses = async (req, res) => {
 };
 const findCourseByID = async (req, res) => {
   const id = req.params.id;
-  console.log(req.params, "<======================");
   try {
-    const course = await Course.findById(id).populate("userReviews.user");
+    const course = await Course.findById(id)
+      .populate({
+        path: "instructor",
+        populate: {
+          path: "userReviews.user",
+        },
+      })
+      .populate("userReviews.user");
     if (req.headers.country) {
       course.price = await convert(
         course.price,
@@ -168,7 +175,6 @@ const findCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
-    console.log(err);
     res.status(500).send("Server s Error");
   }
 };
@@ -176,27 +182,6 @@ const findCourseByID = async (req, res) => {
 async function updateCourse(req, res) {
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
-    console.log(valid.error);
-    res.status(400).json("Invalid Course Object");
-    return;
-  }
-  const course = await Course.findByIdAndUpdate(req.params.courseid, req.body, {
-    new: true,
-  });
-  if (req.headers.country) {
-    course.price = await convert(
-      course.price,
-      "United States",
-      req.headers.country
-    );
-  }
-  res.send(course);
-}
-
-async function updateCourse(req, res) {
-  const valid = courseSchema.validate(req.body);
-  if (valid.error) {
-    console.log(valid.error);
     res.status(400).json("Invalid Course Object");
     return;
   }
@@ -244,6 +229,32 @@ async function deleteSubtitle(req, res) {
       new: true,
     }
   );
+  let sectionIndices = [];
+  let k = 0;
+  for (let i = 0; i < course.subtitles.length; i++) {
+    for (let j = 0; j < course.subtitles[i].sections.length; j++) {
+      if (course.subtitles[i]._id == req.params.subtitleid) {
+        sectionIndices.push(k);
+      }
+      k++;
+    }
+  }
+
+  const traineeCourses = await TraineeCourse.find({ course: course._id });
+  for (const traineeCourse of traineeCourses) {
+    traineeCourse.progress.splice(sectionIndices[0], sectionIndices.length);
+    traineeCourse.answers.splice(sectionIndices[0], sectionIndices.length);
+    traineeCourse.notes.splice(sectionIndices[0], sectionIndices.length);
+    traineeCourse.grades.splice(sectionIndices[0], sectionIndices.length);
+    if (
+      traineeCourse.lastSection >= sectionIndices[0] &&
+      traineeCourse.lastSection !== 0
+    ) {
+      traineeCourse.lastSection--;
+    }
+    await traineeCourse.save();
+  }
+
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -270,6 +281,7 @@ async function updateSubtitle(req, res) {
       new: true,
     }
   );
+
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -292,6 +304,17 @@ async function addSection(req, res) {
       subtitle.sections.push(req.body);
   }
   await course.save();
+
+  const traineeCourses = await TraineeCourse.find({ course: course._id });
+  for (const traineeCourse of traineeCourses) {
+    traineeCourse.progress.push(false);
+    traineeCourse.answers.push([]);
+    traineeCourse.notes.push({});
+    traineeCourse.grades.push(0);
+
+    await traineeCourse.save();
+  }
+
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -315,6 +338,34 @@ async function deleteSection(req, res) {
     }
   }
   await course.save();
+
+  let sectionIndex = 0;
+  let k = 0;
+  for (let i = 0; i < course.subtitles.length; i++) {
+    for (let j = 0; j < course.subtitles[i].sections.length; j++) {
+      if (course.subtitles[i]._id == req.params.subtitleid) {
+        if (course.subtitles[i].sections[j]._id == req.params.sectionid) {
+          sectionIndex = k;
+        }
+      }
+      k++;
+    }
+  }
+
+  const traineeCourses = await TraineeCourse.find({ course: course._id });
+  for (const traineeCourse of traineeCourses) {
+    traineeCourse.progress.splice(sectionIndex, 1);
+    traineeCourse.answers.splice(sectionIndex, 1);
+    traineeCourse.notes.splice(sectionIndex, 1);
+    traineeCourse.grades.splice(sectionIndex, 1);
+    if (
+      sectionIndex <= traineeCourse.lastSection &&
+      traineeCourse.lastSection !== 0
+    )
+      traineeCourse.lastSection--;
+    await traineeCourse.save();
+  }
+
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -345,7 +396,30 @@ async function updateSection(req, res) {
       }
     }
   }
+
   await course.save();
+  let sectionIndex = 0;
+  let k = 0;
+  for (let i = 0; i < course.subtitles.length; i++) {
+    for (let j = 0; j < course.subtitles[i].sections.length; j++) {
+      if (course.subtitles[i]._id == req.params.subtitleid) {
+        if (course.subtitles[i].sections[j]._id == req.params.sectionid) {
+          sectionIndex = k;
+        }
+      }
+      k++;
+    }
+  }
+
+  const traineeCourses = await TraineeCourse.find({ course: course._id });
+  for (const traineeCourse of traineeCourses) {
+    traineeCourse.progress[sectionIndex] = false;
+    traineeCourse.answers[sectionIndex] = [];
+    traineeCourse.notes[sectionIndex] = {};
+    traineeCourse.grades[sectionIndex] = 0;
+    await traineeCourse.save();
+  }
+
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -361,7 +435,6 @@ const setCoursePromotion = async (req, res) => {
 
   const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
-    console.log(valid.error);
     res.status(400).send("Invalid Promotion");
     return;
   }

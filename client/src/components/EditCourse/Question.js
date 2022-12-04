@@ -64,7 +64,6 @@ function Question(props) {
     props.content.questions.splice(props.idx, 1);
     props.content.choices.splice(props.idx, 1);
     props.content.answers.splice(props.idx, 1);
-    console.log("bala");
     axios
       .put(
         proxy.URL +
@@ -92,13 +91,9 @@ function Question(props) {
         }
       )
       .then((response) => {
-        console.log("bizo");
-
         props.setCourse(response.data);
       })
-      .catch(() => {
-        console.log("balabizo");
-      });
+      .catch(() => {});
   }
 
   return (

@@ -21,9 +21,7 @@ function Login() {
         if (res.data.type === "individual") navigate("../individual-trainee");
         if (res.data.type === "corporate") navigate("../corporate-trainee");
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
   const navigate = useNavigate();
   return (
@@ -73,7 +71,6 @@ function Login() {
                 username,
                 password,
               };
-              console.log(obj);
               onSubmit(obj);
             }}
           >

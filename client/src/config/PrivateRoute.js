@@ -13,7 +13,7 @@ function PrivateRoute({ type, children }) {
       to={
         localStorage.getItem("type")
           ? localStorage.getItem("type") === "individual" ||
-            localStorage.getItem("type") === "individual"
+            localStorage.getItem("type") === "corporate"
             ? "/" + localStorage.getItem("type") + "-trainee"
             : "/" + localStorage.getItem("type")
           : "/"
