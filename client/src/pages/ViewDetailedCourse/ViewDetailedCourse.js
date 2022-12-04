@@ -7,7 +7,7 @@ import proxy from "../../utils/proxy.json";
 function ViewDetailedCourse() {
   const location = useLocation();
 
-  const [course, setCourse] = useState({});
+  const [course, setCourse] = useState();
   const [subtitles, setSubtitles] = useState([]);
   const [promotion, setPromotion] = useState({});
 
@@ -27,11 +27,14 @@ function ViewDetailedCourse() {
   }, [location.state?.id]);
 
   return (
-    <CourseContainer
-      course={course}
-      subtitles={subtitles}
-      promotion={promotion}
-    />
+    course && (
+      <CourseContainer
+        course={course}
+        subtitles={subtitles}
+        promotion={promotion}
+        owned={course.owners.includes(localStorage.getItem("id"))}
+      />
+    )
   );
 }
 
