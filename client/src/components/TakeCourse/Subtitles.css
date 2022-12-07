@@ -9,7 +9,9 @@
 }
 
 .subtitle-section-text {
-  margin-top: 20px;
+  width: 90%;
+  align-self: center;
+  margin-left: 35px;
   padding: 5px;
   cursor: pointer;
   border: 1px solid #0f0f0f;
