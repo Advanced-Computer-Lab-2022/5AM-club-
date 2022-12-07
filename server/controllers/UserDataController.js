@@ -12,6 +12,7 @@ const { passwordStrength } = require("check-password-strength");
 const nodemailer = require("nodemailer");
 const Contract = require("../models/Contract");
 const proxy = require("../utils/proxy.json");
+const nameChecker = require("../utils/checkNames");
 const countrySchema = Joi.object({
   country: Joi.string()
     .valid(...Object.keys(countries))
