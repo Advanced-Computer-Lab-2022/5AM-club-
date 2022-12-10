@@ -1,6 +1,28 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M5 10H7C9 10 10 9 10 7V5C10 3 9 2 7 2H5C3 2 2 3 2 5V7C2 9 3 10 5 10Z" stroke="#793EF5" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M19 2H17C15 2 14 3 14 5V7C14 9 15 10 17 10H19C21 10 22 9 22 7V5" stroke="#793EF5" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M17 22H19C21 22 22 21 22 19V17C22 15 21 14 19 14H17C15 14 14 15 14 17V19C14 21 15 22 17 22Z" stroke="#793EF5" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5 22H7C9 22 10 21 10 19V17C10 15 9 14 7 14H5C3 14 2 15 2 17V19" stroke="#793EF5" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+ width="236.000000pt" height="236.000000pt" viewBox="0 0 236.000000 236.000000"
+ preserveAspectRatio="xMidYMid meet">
+<metadata>
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+<g transform="translate(0.000000,236.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none">
+<path d="M1124 2024 c-4 -10 -51 -129 -105 -264 -167 -424 -182 -478 -155
+-593 12 -51 170 -487 262 -721 5 -14 39 62 126 280 65 164 118 302 118 307 0
+4 -24 7 -54 7 l-53 0 -63 -165 c-35 -91 -66 -168 -70 -170 -6 -4 -127 319
+-156 420 -21 71 -23 174 -5 230 30 90 154 405 159 401 2 -3 42 -115 87 -248
+l82 -243 52 -3 c29 -2 51 1 51 7 0 12 -259 763 -265 769 -3 3 -8 -4 -11 -14z"/>
+<path d="M190 1432 c0 -23 215 -613 242 -663 42 -80 80 -97 347 -154 118 -25
+215 -44 217 -42 2 2 -166 428 -173 436 -2 3 -18 -10 -37 -28 l-34 -33 49 -121
+c27 -66 47 -122 45 -125 -5 -5 -202 35 -267 54 -43 13 -52 20 -74 64 -29 57
+-167 432 -161 438 3 2 66 -24 141 -57 76 -34 143 -61 149 -61 10 1 76 55 76
+64 0 2 -105 50 -232 106 -128 57 -245 109 -260 117 -16 7 -28 10 -28 5z"/>
+<path d="M1868 1330 c-309 -121 -328 -133 -376 -225 -30 -60 -213 -527 -208
+-532 3 -3 437 97 444 103 2 1 -8 20 -23 42 l-26 40 -111 -29 c-61 -16 -116
+-29 -123 -29 -8 0 9 58 49 163 98 253 103 261 216 305 120 48 235 90 238 87 2
+-2 -24 -70 -57 -152 -34 -81 -61 -153 -61 -158 1 -15 60 -78 67 -71 7 7 223
+549 220 551 -1 1 -113 -42 -249 -95z"/>
+</g>
 </svg>

@@ -1,7 +1,6 @@
 import { useRef, memo } from "react";
 import logo from "../../assets/Header/logo.svg";
-import signup from "../../assets/Header/signup.svg";
-import login from "../../assets/Header/login.svg";
+import logo2 from "../../assets/Header/logo2.svg";
 import logout from "../../assets/Header/logout.svg";
 import profile from "../../assets/Header/profile.svg";
 import search from "../../assets/Header/search.svg";
@@ -61,6 +60,16 @@ function Header() {
         onClick={() => {
           navigate("/");
         }}
+        style={{ cursor: "pointer", marginLeft: "10px" }}
+      ></img>
+      <img
+        src={logo2}
+        alt="Logo"
+        className="logo"
+        onClick={() => {
+          navigate("/");
+        }}
+        style={{ cursor: "pointer" }}
       ></img>
       <div className="searchbar">
         <input
@@ -77,16 +86,44 @@ function Header() {
         ></img>
       </div>
       {!localStorage.getItem("type") && (
-        <div className="signup-login">
-          <img src={signup} alt="signup" onClick={handleSignup}></img>
-          <img src={login} alt="login" onClick={handleLogin}></img>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            padding: "5px",
+            marginRight: "2px",
+            marginLeft: "auto",
+          }}
+        >
+          <button class="button1" role="button" onClick={handleLogin}>
+            Login
+          </button>
+          <button class="button-64" role="button" onClick={handleSignup}>
+            <span class="text">Sign Up</span>
+          </button>
         </div>
       )}
 
       {localStorage.getItem("type") && (
         <div className="logout-profile">
-          <img src={logout} alt="logout" onClick={handleLogout}></img>
-          <img src={profile} alt="profile" onClick={handleProfile}></img>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              padding: "5px",
+              marginRight: "2px",
+              marginLeft: "auto",
+            }}
+          >
+            <button class="button1" role="button" onClick={handleLogout}>
+              Logout
+            </button>
+            <button class="button1" role="button" onClick={handleProfile}>
+              <span class="text">Profile</span>
+            </button>
+          </div>
         </div>
       )}
     </div>
