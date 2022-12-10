@@ -8,6 +8,10 @@ import axios from "axios";
 function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [gender, setGender] = useState("");
 
   const onSubmit = async (obj) => {
     try {
@@ -40,7 +44,7 @@ function SignUp() {
             hiddenLabel
             id="filled-hidden-label-small"
             variant="outlined"
-            label="user name"
+            label="username"
             value={username}
             onChange={(e) => {
               setUsername(e.target.value);
@@ -48,6 +52,37 @@ function SignUp() {
           />
           <TextField
             hiddenLabel
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <TextField
+            hiddenLabel
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="first name"
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+            }}
+          />
+          <TextField
+            hiddenLabel
+            id="filled-hidden-label-small"
+            variant="outlined"
+            label="last name"
+            value={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+            }}
+          />
+          <TextField
+            hiddenLabel
+            password
             id="filled-hidden-label-small"
             placeholder="password"
             variant="outlined"

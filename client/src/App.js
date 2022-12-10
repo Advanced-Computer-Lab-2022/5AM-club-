@@ -24,6 +24,7 @@ import InstructorPersonalInformation from "./pages/InstructorPersonalInformation
 import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCourse";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import TraineeTakeCourse from "./pages/TraineeTakeCourse/TraineeTakeCourse";
 import ViewContract from "./pages/ViewContract/ViewContract";
 import Error from "./pages/Error/Error";
