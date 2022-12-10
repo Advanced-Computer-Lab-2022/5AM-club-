@@ -5,7 +5,10 @@ const cors = require("cors");
 const app = express();
 const port = process.env.port || 8888;
 const path = require("path");
-
+const Instructor = require("./models/Instructor");
+const Trainee = require("./models/Trainee");
+const Admin = require("./models/Admin");
+const Contract = require("./models/Contract");
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
 connect();
@@ -34,17 +37,7 @@ app.get("*", function (req, res) {
 app.listen(port);
 /*
 
-635ad854b2ad88bd8358a5af
-
-
-new Instructor({
-  username: "ali12",
-  password: "ali",
-  email: "ali",
-  country: "ali",
-  money_owed: 0,
-}).save();
-*/
+635ad854b2ad88bd8358a5af*/
 
 /*new Course({
   title: "Node.js API Masterclass With MongoDB & Express",

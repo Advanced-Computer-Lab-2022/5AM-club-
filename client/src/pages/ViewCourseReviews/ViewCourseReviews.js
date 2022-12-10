@@ -9,7 +9,7 @@ function ViewCourseReviews() {
   const location = useLocation();
   useEffect(() => {
     axios
-      .get(proxy.URL + "/courses/" + location.state.id)
+      .get(proxy.URL + "/courses/" + location.state.course._id)
       .then((res) => {
         setCourse(res.data);
       })

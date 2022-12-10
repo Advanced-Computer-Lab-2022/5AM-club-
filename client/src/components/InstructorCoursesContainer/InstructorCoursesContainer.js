@@ -50,7 +50,7 @@ function InstructorCoursesContainer(props) {
                 course.courseRating}
             </div>
             <button
-              key="Edit Course"
+              key='Edit Course'
               onClick={() => {
                 editCourse(course._id);
               }}
@@ -58,7 +58,7 @@ function InstructorCoursesContainer(props) {
               Edit Course
             </button>
             <button
-              key="reviews"
+              key='reviews'
               onClick={() => {
                 navigate("view-course-reviews", {
                   state: { course: course },
@@ -69,7 +69,7 @@ function InstructorCoursesContainer(props) {
               reviews
             </button>
             <button
-              key="set promotion"
+              key='set promotion'
               onClick={() => {
                 navigate("set-course-promotion", {
                   state: { course: course },
