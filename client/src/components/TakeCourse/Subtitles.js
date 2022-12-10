@@ -111,14 +111,14 @@ function Subtitles(props) {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <div className="subtitle-header">
+              <div className="subtitle-header-take">
                 {completedSubtitles[index] && (
                   <CheckIcon fontSize="large" style={{ marginBottom: "12px" }}>
                     {" "}
                   </CheckIcon>
                 )}
 
-                <p className="subtitle-header">{subtitle.title}</p>
+                <p className="subtitle-header-take">{subtitle.title}</p>
               </div>
             </AccordionSummary>
             <AccordionDetails>

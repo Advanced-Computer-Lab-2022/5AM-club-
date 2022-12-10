@@ -21,11 +21,18 @@ textarea {
 }
 .subtitle-header {
   display: flex;
+  width: 100%;
   flex-direction: row;
   align-items: center;
+  flex-wrap: wrap;
+  flex-basis: 1;
+  flex-grow: 2;
 }
 
 .add-section-button {
+  margin: 15px;
+  margin-top: 25px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -33,8 +40,9 @@ textarea {
   justify-content: center;
   border-radius: 20px;
   height: 80px;
-  background-color: rgb(255, 255, 255);
+  background-color: #96cea8;
   color: rgb(0, 0, 0);
+  border: 1px solid #484848;
 }
 .add-section-button > img {
   height: 40px;
@@ -42,11 +50,12 @@ textarea {
   margin: 10px;
 }
 .add-section-button:hover {
-  background-color: rgb(141, 141, 141);
+  background-color: rgb(150, 255, 168);
 }
 .sections-text {
   font-size: 2rem;
 }
 .title-text {
-  font-size: 2.5rem;
+  font-size: 2.3rem;
+  font-weight: 650;
 }

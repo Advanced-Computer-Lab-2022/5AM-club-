@@ -52,14 +52,16 @@ function Video(props) {
         })
         .catch((e) => {
           setValidURL(false);
+          alert("Invalid Youtube Link!");
         });
     } else {
       setValidURL(false);
+      alert("Invalid Youtube Link!");
     }
     setEditingURL(false);
   }
   return (
-    <div>
+    <div style={{ display: "flex", alignItems: "center" }}>
       {validURL ? (
         <iframe
           title="course-video"
@@ -71,13 +73,10 @@ function Video(props) {
               ? videoURL.replace("watch?v=", "embed/")
               : props.content?.link.replace("watch?v=", "embed/")
           }
-          frameBorder="0"
           allowFullScreen
         ></iframe>
       ) : (
-        <p style={{ color: "red" }}>
-          The link you entered is not a valid youtube link.
-        </p>
+        <></>
       )}
       {editingURL ? (
         <>
@@ -102,6 +101,7 @@ function Video(props) {
           src={edit}
           alt="edit"
           onClick={toggleEditingURL}
+          style={{ cursor: "pointer", margin: "10px" }}
         ></img>
       )}
     </div>
