@@ -5,8 +5,8 @@ textarea {
 }
 .card {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
   overflow: hidden;
+  min-width: 400px;
 }
 .card-body {
   display: flex;
@@ -132,6 +132,7 @@ textarea {
   border-radius: 20px;
   padding: 25px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
 }
 
 .add-subtitle-button {

@@ -19,19 +19,20 @@ router.post("/add-instructor", UserDataController.addInstructor);
 router.post("/add-corporate-trainee", UserDataController.addTrainee);
 router.post("/signUp", UserDataController.signUp);
 router.post("/login", UserDataController.login);
+router.get("/logout", UserDataController.logout);
 
 router.put("/set-country", UserDataController.setCountry);
 router.put(
-    "/edit-personal-info",
-    UserDataController.editPersonalInformationInstructor
+  "/edit-personal-info",
+  UserDataController.editPersonalInformationInstructor
 );
 router.put("/set-country", UserDataController.setCountry);
 router.put("/edit-trainee-course", UserDataController.updateTraineeCourse);
 router.put("/change-password-email", UserDataController.changePasswordEmail);
 router.put(
-    "/change-password",
-    authenticateToken,
-    UserDataController.changePassword
+  "/change-password",
+  authenticateToken,
+  UserDataController.changePassword
 );
 //router.get("/decode-token", UserDataController.decodeToken);
 

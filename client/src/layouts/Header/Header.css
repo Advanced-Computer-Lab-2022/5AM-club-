@@ -2,7 +2,6 @@
   position: relative;
   display: flex;
   flex-direction: row;
-  overflow-x: hidden;
   background-color: rgb(150, 206, 168);
   height: 60px;
 }
@@ -23,14 +22,12 @@
 }
 .searchbar {
   display: flex;
+  margin-top: 15px;
   flex-direction: row;
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  margin-right: 10vw;
+  margin-left: 10vw;
   height: 36px;
   width: 40vw;
-  transform: translate(-50%, -50%);
-  transform: translate3d(-50%, -50%, 0);
 }
 .search-input {
   height: 30px;

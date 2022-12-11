@@ -3,6 +3,7 @@ const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const TraineeCourse = require("../models/TraineeCourse");
 const { convert } = require("../utils/CurrencyConverter");
+const objectID = require("objectid");
 const setCoursePromotionSchema = Joi.object({
   percentage: Joi.number().min(0).max(100),
   deadline: Joi.date().greater(Date.now()),
@@ -17,7 +18,7 @@ const courseSchema = Joi.object({
   preview_video: Joi.string().required(),
   summary: Joi.string().required(),
   instructor: Joi.array().items(Joi.string()).required(),
-  userReviews: Joi.array().items(Joi.string()).required(),
+  userReviews: Joi.array().items(Joi.object()).required(),
   owners: Joi.array().items(Joi.string()).required(),
   subtitles: Joi.array().items(Joi.object()).required(),
 }).unknown();
@@ -56,7 +57,7 @@ const createCourse = async (req, res) => {
 
   const instructors = await Instructor.find({ username: { $in: instructor } });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
-  instructorIds.push(req.headers.id);
+  instructorIds.push(req.user.id);
 
   const createdCourse = await Course.create({
     title,
@@ -119,10 +120,10 @@ const getCourses = async (req, res) => {
     }
   }
   filter = {
-    ...(req.headers.id &&
+    ...(req.user?.id &&
       (req.headers.type === "instructor"
-        ? { instructor: req.headers.id }
-        : { owners: req.headers.id })),
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
     ...(req.query.subject && {
       subject: req.query.subject,
     }),
@@ -152,7 +153,6 @@ const getCourses = async (req, res) => {
       );
     }
   }
-
   res.json(courses);
 };
 const findCourseByID = async (req, res) => {
@@ -180,8 +180,22 @@ const findCourseByID = async (req, res) => {
 };
 
 async function updateCourse(req, res) {
+  console.log("asbdknasmld", req.body);
+  if (typeof req.body.instructor[0] === "object") {
+    for (let i = 0; i < req.body.instructor.length; i++) {
+      req.body.instructor[i] = req.body.instructor[i]._id;
+    }
+  }
+  for (let i = 0; i < req.body.userReviews.length; i++) {
+    if (typeof req.body.userReviews[i].user === "object") {
+      req.body.userReviews[i].user = req.body.userReviews[i].user._id;
+    }
+  }
+  console.log("balabizo", req.body.userReviews);
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
+    console.log(req.body);
+    console.log(valid.error);
     res.status(400).json("Invalid Course Object");
     return;
   }

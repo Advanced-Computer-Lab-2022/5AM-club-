@@ -8,8 +8,8 @@ const reviewSchema = Joi.object({
 });
 
 const getMyReviews = async (req, res) => {
-  if (req.headers.id) {
-    const id = req.headers.id;
+  if (req.user.id) {
+    const id = req.user.id;
     const instructor = await Instructor.findById(id).populate(
       "userReviews.user"
     );
@@ -24,13 +24,13 @@ const addCourseReview = async (req, res) => {
     res.status(400).send(valid.error);
     return;
   }
-  if (req.headers.id) {
-    const course = await Course.findByIdAndUpdate(
+  if (req.user.id) {
+    await Course.findByIdAndUpdate(
       id,
       {
         $push: {
           userReviews: {
-            user: req.headers.id,
+            user: req.user.id,
             review: req.body.review,
             rating: req.body.rating,
           },
@@ -53,11 +53,11 @@ const editCourseReview = async (req, res) => {
     return;
   }
 
-  if (req.headers.id) {
-    const course = await Course.updateOne(
+  if (req.user.id) {
+    await Course.updateOne(
       {
         _id: courseId,
-        userReviews: { $elemMatch: { user: req.headers.id } },
+        userReviews: { $elemMatch: { user: req.user.id } },
       },
       {
         $set: {
@@ -79,13 +79,13 @@ const addInstructorReview = async (req, res) => {
     res.status(400).send(valid.error);
     return;
   }
-  if (req.headers.id) {
-    const instructor = await Instructor.findByIdAndUpdate(
+  if (req.user.id) {
+    await Instructor.findByIdAndUpdate(
       id,
       {
         $push: {
           userReviews: {
-            user: req.headers.id,
+            user: req.user.id,
             review: req.body.review,
             rating: req.body.rating,
           },
@@ -107,9 +107,9 @@ const editInstructorReview = async (req, res) => {
     res.status(400).send(valid.error);
     return;
   }
-  if (req.headers.id) {
-    const instructor = await Instructor.updateOne(
-      { _id: id, userReviews: { $elemMatch: { user: req.headers.id } } },
+  if (req.user.id) {
+    await Instructor.updateOne(
+      { _id: id, userReviews: { $elemMatch: { user: req.user.id } } },
       {
         $set: {
           "userReviews.$.review": req.body.review,
@@ -124,7 +124,7 @@ const editInstructorReview = async (req, res) => {
 };
 
 const getTraineeReviews = async (req, res) => {
-  const id = req.headers.id;
+  const id = req.user.id;
   const courseId = req.params.id;
   const reviews = {};
   const course = await Course.findById(courseId).select({
