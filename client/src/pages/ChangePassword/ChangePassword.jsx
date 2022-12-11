@@ -1,32 +1,49 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState, memo } from "react";
-import { TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+//import { Navigate, useNavigate } from "react-router-dom";
+import {
+    TextField,
+    FormControl,
+    InputLabel,
+    FilledInput,
+    InputAdornment,
+    OutlinedInput,
+    Button,
+} from "@mui/material";
+//import "./InstructorCreateCourse.css";
+//import PageWrapper from "../../layouts/PageWrapper/PageWrapper";
 import { Box, Container } from "@mui/system";
+//import AddSubtitle from "../../components/AddSubtitle";
+//import { Delete } from "@mui/icons-material";
 import app from "../../utils/axiosConfig.js";
+import updateToken from "../../utils/updateToken";
 
-function ChangeForgottenPassword() {
+function ChangePassword() {
     const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
 
-    const navigate = useNavigate();
-
-    const location = useLocation();
-
-    const userId = location.pathname.substring(
-        location.pathname.lastIndexOf("/") + 1
-    );
+    //   useEffect(() => {
+    //     console.log(name);
+    //   }, [name]);
 
     const onSubmit = async (obj) => {
-        app.get("/get-user-type", { headers: { id: userId } }).then(
-            (response) => {
-                app.put("/change-password", obj, {
-                    headers: { type: response.data, id: userId },
-                }).then(() => {
-                    navigate("/login");
+        if (password === repeatPassword) {
+            // console.log(`Bearer ${token}`);
+            try {
+                app.put(`/change-password`, obj, {
+                    withCredentials: true,
+                }).then((res) => {
+                    updateToken(res);
+                    console.log(res);
                 });
+                // console.log("changed password");
+            } catch (err) {
+                console.log(err);
             }
-        );
+        } else console.log("passwords don't match");
     };
 
+    const navigate = useNavigate();
     return (
         <Container sx={{ display: "grid", placeItems: "center" }}>
             <form style={{ width: "max(22rem,50%)" }}>
@@ -56,6 +73,16 @@ function ChangeForgottenPassword() {
                             setPassword(e.target.value);
                         }}
                     />
+                    <TextField
+                        hiddenLabel
+                        id="filled-hidden-label-small"
+                        variant="outlined"
+                        label="repeat password"
+                        value={repeatPassword}
+                        onChange={(e) => {
+                            setRepeatPassword(e.target.value);
+                        }}
+                    />
 
                     <Button
                         type="submit"
@@ -65,14 +92,15 @@ function ChangeForgottenPassword() {
                             const obj = {
                                 password,
                             };
+                            console.log(obj);
                             onSubmit(obj);
                         }}
                     >
-                        Submit{" "}
+                        Change Password
                     </Button>
                 </Box>
             </form>
         </Container>
     );
 }
-export default memo(ChangeForgottenPassword);
+export default ChangePassword;

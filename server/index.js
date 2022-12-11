@@ -2,6 +2,7 @@ const express = require("express");
 const connect = require("./config/database");
 const userDataRouter = require("./routes/api/UserData");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const app = express();
 const port = process.env.port || 8888;
 const path = require("path");
@@ -11,27 +12,45 @@ const Admin = require("./models/Admin");
 const Contract = require("./models/Contract");
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
-connect();
+const authenticateToken = require("./middleware/authentication");
 
+connect();
+app.use(cookieParser());
 app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+
+app.use(
+    cors({
+        optionsSuccessStatus: 200,
+        credentials: true,
+        origin: "http://localhost:3000",
+    })
+);
+app.use((req, res, next) => {
+    console.log("intooo");
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    next();
+});
 app.use("/api/", courseRouter);
-app.use("/api/instructor", courseRouter);
-app.use("/api/admin", courseRouter);
-app.use("/api/trainee", courseRouter);
-app.use("/api/instructor", userDataRouter);
-app.use("/api/trainee", userDataRouter);
-app.use("/api/admin", userDataRouter);
+app.use("/api/instructor", authenticateToken, courseRouter);
+app.use("/api/admin", authenticateToken, courseRouter);
+app.use("/api/trainee", authenticateToken, courseRouter);
+app.use("/api/instructor", authenticateToken, userDataRouter);
+app.use("/api/trainee", authenticateToken, userDataRouter);
+app.use("/api/admin", authenticateToken, userDataRouter);
 app.use("/api/", userDataRouter);
-app.use("/api/instructor", reviewRouter);
-app.use("/api/trainee", reviewRouter);
+app.use("/api/instructor", authenticateToken, reviewRouter);
+app.use("/api/trainee", authenticateToken, reviewRouter);
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
+    res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+    });
 });
 
 app.listen(port);
