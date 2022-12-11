@@ -3,8 +3,8 @@ import countries from "./Countries.json";
 export default async function convert(value, from, to) {
   try {
     const valueInFrom = value / rates[countries[from]];
-    return valueInFrom * rates[countries[to]];
+    return Math.floor(valueInFrom * rates[countries[to]] + 0.5) - 0.01;
   } catch (e) {
-    return value;
+    return Math.floor(value);
   }
 }

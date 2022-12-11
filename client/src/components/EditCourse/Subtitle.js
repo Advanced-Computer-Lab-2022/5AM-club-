@@ -132,6 +132,7 @@ function Subtitle(props) {
                     setSectionMinutes("");
                     setType("exercise");
                     setExercise("quiz");
+<<<<<<< HEAD
                 })
                 .catch(() => {
                     alert("Invalid Youtube Link!");
@@ -493,6 +494,81 @@ function Subtitle(props) {
             )}
         </div>
     );
+=======
+                  }}
+                >
+                  <FormControlLabel
+                    value="exercise"
+                    control={<Radio />}
+                    label="Exercise"
+                  />
+                  <FormControlLabel
+                    value="video"
+                    control={<Radio />}
+                    label="Video"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+          </div>
+          <p>Enter section title:</p>
+          <input
+            type="text"
+            ref={sectionTitleRef}
+            onChange={(e) => {
+              setSectionTitle(e.target.value);
+            }}
+          ></input>
+
+          <p>Enter section description:</p>
+          <TextareaAutosize
+            ref={sectionDescriptionRef}
+            onChange={(e) => {
+              setSectionDescription(e.target.value);
+            }}
+          ></TextareaAutosize>
+          {type === "video" && (
+            <>
+              <p>Enter Video URL:</p>
+              <input
+                ref={videoRef}
+                type="text"
+                onChange={(e) => {
+                  setVideo(e.target.value);
+                }}
+              ></input>
+            </>
+          )}
+          {type === "exercise" && (
+            <>
+              <p>Enter section minutes:</p>
+              <input
+                type="number"
+                ref={sectionMinutesRef}
+                onChange={(e) => {
+                  setSectionMinutes(e.target.value);
+                }}
+              ></input>
+            </>
+          )}
+          {type &&
+          sectionDescription &&
+          sectionMinutes > 0 &&
+          sectionTitle &&
+          ((video && type === "video") || (exercise && type === "exercise")) ? (
+            <button onClick={addSection} className="btn btn-success">
+              Done
+            </button>
+          ) : (
+            <button disabled className="btn btn-success">
+              Done
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+>>>>>>> cef6f65 (Small edit to videos)
 }
 
 export default memo(Subtitle);
