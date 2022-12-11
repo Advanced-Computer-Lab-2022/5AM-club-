@@ -1,4 +1,4 @@
-import app from "../../utils/axiosConfig.js";
+import app from "../../utils/AxiosConfig.js";
 import { memo, useEffect, useRef, useState } from "react";
 import Subtitle from "./Subtitle";
 import TextareaAutosize from "react-textarea-autosize";
@@ -22,7 +22,9 @@ function EditCourse(props) {
   const [subtitleDescription, setSubtitleDescription] = useState("");
   const [editingDescripton, setEditingDescription] = useState(false);
   const [description, setDescription] = useState(props.course?.summary);
-  const [price, setPrice] = useState(props.course?.price);
+  const [price, setPrice] = useState(
+    Math.floor(props.course?.price + 0.5) - 0.01
+  );
   const [editingPrice, setEditingPrice] = useState(false);
   const [addingSubject, setAddingSubject] = useState(false);
   const [subject, setSubject] = useState("");
@@ -33,7 +35,7 @@ function EditCourse(props) {
 
   useEffect(() => {
     setDescription(props.course?.summary);
-    setPrice(props.course?.price);
+    setPrice(Math.floor(props.course?.price + 0.5) - 0.01);
   }, [props.course]);
 
   function addSubtitle() {
@@ -77,7 +79,6 @@ function EditCourse(props) {
       localStorage.getItem("country"),
       "United States"
     );
-
     app
       .put(
         "/instructor/my-courses/edit-course/" + props.course._id,
@@ -111,6 +112,7 @@ function EditCourse(props) {
       style={{
         margin: "250px",
         marginTop: "50px",
+        marginBottom: "50px",
       }}
     >
       <Card.Body>

@@ -1,4 +1,4 @@
-import app from "../../utils/axiosConfig.js";
+import app from "../../utils/AxiosConfig.js";
 import { useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
@@ -13,10 +13,9 @@ function InstructorCoursesContainer(props) {
   useEffect(() => {
     props.setCourses([]);
     props.setMainText("");
-    axios
-      .get(proxy.URL + "/instructor/my-courses", {
+    app
+      .get("/instructor/my-courses", {
         headers: {
-          id: localStorage.getItem("id"),
           country: localStorage.getItem("country"),
           type: "instructor",
         },

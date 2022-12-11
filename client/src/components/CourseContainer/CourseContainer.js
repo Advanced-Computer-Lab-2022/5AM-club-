@@ -1,7 +1,6 @@
 import { useEffect, useState, memo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import proxy from "../../utils/proxy";
-import app from "../../utils/axiosConfig.js";
+import app from "../../utils/AxiosConfig.js";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import TableContainer from "./TableContainer";
@@ -21,16 +20,12 @@ function CourseContainer(props) {
 
   useEffect(() => {
     app
-      .get("/trainee/my-courses/" + props.course.id + "/get-my-reviews", {
-        headers: { id: localStorage.getItem("id") },
-      })
+      .get("/trainee/my-courses/" + props.course.id + "/get-my-reviews")
       .then((res) => {
         setMyReviews(res.data);
         app
           .get("/get-trainee-course", {
-            // TODO : use token instead of id
             headers: {
-              traineeId: localStorage.getItem("id"),
               courseId: props.course.id,
             },
           })
@@ -50,6 +45,7 @@ function CourseContainer(props) {
         style={{
           margin: "250px",
           marginTop: "50px",
+          marginBottom: "50px",
         }}
       >
         <Card.Body>
@@ -136,7 +132,6 @@ function CourseContainer(props) {
                       navigate("take-course", {
                         state: {
                           courseId: props.course._id,
-                          traineeId: localStorage.getItem("id"),
                         },
                       });
                     }}
