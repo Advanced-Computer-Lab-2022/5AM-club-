@@ -273,8 +273,9 @@ async function signUp(req, res) {
     }
     const foundDup = await nameChecker(req.body.username);
     if (foundDup) {
-        res.status(401).send("username already used!!");
+        return res.status(401).send("username already used!!");
     } else {
+        console.log("foundDup=", foundDup);
         const newindividualTrainee = new Trainee({
             ...req.body,
             courses: [],
@@ -287,7 +288,7 @@ async function signUp(req, res) {
                 login(req, res);
                 //res.send("Trainee added successfully!");
             })
-            .catch((err) => res.status(400).send("Username already used"));
+            .catch((err) => res.status(400).send("Please, enter valid data"));
     }
 }
 
@@ -508,10 +509,10 @@ const login = async (req, res) => {
         }
 
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "30m",
+            expiresIn: "1m",
         });
         const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: "15d",
+            expiresIn: "2m",
         });
         //console.log(refreshToken);
 

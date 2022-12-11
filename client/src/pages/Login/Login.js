@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import proxy from "../../utils/proxy.json";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import axios from "axios";
+import app from "../../utils/axiosConfig.js";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -12,8 +11,8 @@ function Login() {
     const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
     async function handleForgotPassword() {
-        await axios.put(
-            proxy.URL + "/change-password-email",
+        await app.put(
+            "/change-password-email",
             {},
             {
                 headers: { email: forgotPasswordEmail },
@@ -23,7 +22,8 @@ function Login() {
 
     async function onSubmit(obj) {
         try {
-            axios.post(`${proxy.URL}/login`, obj).then((res) => {
+            app.post(`/login`, obj).then((res) => {
+                console.log(res);
                 localStorage.setItem("type", res.data.type);
                 localStorage.setItem("country", res.data.country);
 

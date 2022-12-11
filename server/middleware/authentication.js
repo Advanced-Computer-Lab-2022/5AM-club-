@@ -48,7 +48,7 @@ const authenticateToken = (req, res, next) => {
             const now = Math.floor(new Date().getTime() / 1000);
             console.log(now);
             const newAccessToken = jwt.sign(
-                { ...data, exp: now + 60 * 60 * 30 },
+                { ...data, exp: now + 60 * 1 },
                 process.env.ACCESS_TOKEN_SECRET
             );
 

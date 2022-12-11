@@ -12,16 +12,15 @@ function Header() {
     const searchRef = useRef();
 
     function handleSignup() {
-        // TODO: set token in redux store
-        // TODO: save token in local storage
+        navigate("/signup");
     }
     function handleLogin() {
-        // TODO: set token in redux store
-        // TODO: save token in local storage
+        navigate("/login");
     }
     function handleLogout() {
-        // TODO: remove token from redux store
-        // TODO: remove token from local storage
+        localStorage.clear();
+        localStorage.setItem("country", "United States");
+        navigate("/");
     }
     function handleProfile() {}
     function handleSearch() {
@@ -86,10 +85,27 @@ function Header() {
                     className="search"
                 ></img>
             </div>
-            {!token && (
-                <div className="signup-login">
-                    <img src={signup} alt="signup" onClick={handleSignup}></img>
-                    <img src={login} alt="login" onClick={handleLogin}></img>
+            {!localStorage.getItem("type") && (
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        padding: "5px",
+                        marginRight: "2px",
+                        marginLeft: "auto",
+                    }}
+                >
+                    <button class="button1" role="button" onClick={handleLogin}>
+                        Login
+                    </button>
+                    <button
+                        class="button-64"
+                        role="button"
+                        onClick={handleSignup}
+                    >
+                        <span class="text">Sign Up</span>
+                    </button>
                 </div>
             )}
 

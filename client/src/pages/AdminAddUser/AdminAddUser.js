@@ -2,8 +2,7 @@ import Button from "react-bootstrap/Button";
 import "./AdminAddUser.css";
 import { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import proxy from "../../utils/proxy.json";
+import app from "../../utils/axiosConfig.js";
 import updateToken from "../../utils/updateToken";
 
 function AdminAddUser() {
@@ -15,11 +14,10 @@ function AdminAddUser() {
     const addUser = (event) => {
         event.preventDefault();
         if (type) {
-            axios
-                .post(proxy.URL + "/admin/add-" + type, {
-                    username: userName,
-                    password: password,
-                })
+            app.post("/admin/add-" + type, {
+                username: userName,
+                password: password,
+            })
                 .then((response) => {
                     updateToken(response);
                     alert(response.data);

@@ -11,8 +11,7 @@ import {
 import "./InstructorCreateCourse.css";
 import { Box, Container } from "@mui/system";
 import { Delete } from "@mui/icons-material";
-import axios from "axios";
-import proxy from "../../utils/proxy.json";
+import app from "../../utils/axiosConfig.js";
 function InstructorCreateCourse() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -26,21 +25,19 @@ function InstructorCreateCourse() {
 
     const onSubmit = async (obj) => {
         try {
-            axios
-                .post(
-                    proxy.URL + "/instructor/create-course",
-                    { ...obj },
-                    {
-                        headers: {
-                            id: localStorage.getItem("id"),
-                        },
-                    }
-                )
-                .then((response) => {
-                    navigate("/instructor/my-courses/edit-course", {
-                        state: { id: response.data._id },
-                    });
+            app.post(
+                "/instructor/create-course",
+                { ...obj },
+                {
+                    headers: {
+                        id: localStorage.getItem("id"),
+                    },
+                }
+            ).then((response) => {
+                navigate("/instructor/my-courses/edit-course", {
+                    state: { id: response.data._id },
                 });
+            });
         } catch (error) {}
     };
 

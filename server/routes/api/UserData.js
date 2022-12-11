@@ -33,6 +33,6 @@ router.put(
     authenticateToken,
     UserDataController.changePassword
 );
-router.get("/decode-token", UserDataController.decodeToken);
+//router.get("/decode-token", UserDataController.decodeToken);
 
 module.exports = router;

@@ -15,7 +15,7 @@ import {
 import { Box, Container } from "@mui/system";
 //import AddSubtitle from "../../components/AddSubtitle";
 //import { Delete } from "@mui/icons-material";
-import axios from "axios";
+import app from "../../utils/axiosConfig.js";
 import updateToken from "../../utils/updateToken";
 
 function ChangePassword() {
@@ -28,21 +28,14 @@ function ChangePassword() {
 
     const onSubmit = async (obj) => {
         if (password === repeatPassword) {
-            const token = JSON.parse(
-                window.localStorage.getItem("user")
-            ).accessToken;
-            console.log(`Bearer ${token}`);
+            // console.log(`Bearer ${token}`);
             try {
-                axios
-                    .put("http://localhost:4000/change-password", obj, {
-                        headers: {
-                            authorization: `Bearer ${token}`,
-                        },
-                    })
-                    .then((res) => {
-                        updateToken(res);
-                        console.log(res);
-                    });
+                app.put(`/change-password`, obj, {
+                    withCredentials: true,
+                }).then((res) => {
+                    updateToken(res);
+                    console.log(res);
+                });
                 // console.log("changed password");
             } catch (err) {
                 console.log(err);
