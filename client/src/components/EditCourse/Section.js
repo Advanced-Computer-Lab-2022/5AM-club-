@@ -1,5 +1,5 @@
 import { memo, useRef, useState } from "react";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import TextareaAutosize from "react-textarea-autosize";
 import "./Section.css";
 import edit from "../../assets/EditCourse/edit.png";

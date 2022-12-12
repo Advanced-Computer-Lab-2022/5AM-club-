@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import "./ViewDetailedCourse.css";
 import { useEffect, useState, memo } from "react";
 import { useLocation } from "react-router-dom";

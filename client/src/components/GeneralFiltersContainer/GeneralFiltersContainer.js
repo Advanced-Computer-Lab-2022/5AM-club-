@@ -2,7 +2,7 @@ import { useRef, memo } from "react";
 import { useLocation } from "react-router-dom";
 import useOnChange from "@utilityjs/use-on-change";
 
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 function GeneralFiltersContainer(props) {
   const ratingRef = useRef();
   const subjectRef = useRef();

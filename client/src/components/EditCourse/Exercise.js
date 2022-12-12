@@ -3,7 +3,7 @@ import Question from "./Question";
 import plus from "../../assets/EditCourse/plusblack.png";
 import cancel from "../../assets/EditCourse/cancelblack.png";
 import "./Exercise.css";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import { hasEmptyString } from "../../utils/Helpers";
 
 function Exercise(props) {

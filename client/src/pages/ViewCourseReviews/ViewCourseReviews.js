@@ -1,5 +1,5 @@
 import { useEffect, useState, memo } from "react";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import ReviewsPage from "../../components/ReviewContainer/ReviewsPage";
 import "./ViewCourseReviews.css";
 import { useLocation } from "react-router-dom";

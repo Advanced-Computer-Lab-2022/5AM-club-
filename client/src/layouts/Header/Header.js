@@ -4,7 +4,7 @@ import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
-import app from "../../utils/AxiosConfig";
+import app from "../../utils/AxiosConfigs";
 function Header() {
   const navigate = useNavigate();
 

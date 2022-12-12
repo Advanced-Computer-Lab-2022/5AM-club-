@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import { memo, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Subtitles from "../../components/TakeCourse/Subtitles";

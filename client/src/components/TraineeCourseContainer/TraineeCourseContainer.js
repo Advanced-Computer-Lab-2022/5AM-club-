@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import { useEffect, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";

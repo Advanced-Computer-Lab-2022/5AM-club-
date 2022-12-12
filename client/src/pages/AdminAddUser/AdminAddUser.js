@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import "./AdminAddUser.css";
 import { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 
 function AdminAddUser() {
   const [userName, setUserName] = useState("");

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 
 function Login() {
   const [username, setUsername] = useState("");

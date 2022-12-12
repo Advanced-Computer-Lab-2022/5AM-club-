@@ -1,5 +1,5 @@
 import { useRef, memo } from "react";
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 
 function InstructorFiltersContainer(props) {
   const searchRef = useRef();

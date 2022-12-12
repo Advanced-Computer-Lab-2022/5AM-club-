@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfig.js";
+import app from "../../utils/AxiosConfigs.js";
 import { memo, useEffect, useRef, useState } from "react";
 import Subtitle from "./Subtitle";
 import TextareaAutosize from "react-textarea-autosize";
