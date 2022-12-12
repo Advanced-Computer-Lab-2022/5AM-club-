@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import edit from "../../assets/EditCourse/edit.png";
 import trash from "../../assets/EditCourse/delete.png";
 import "./Exercise.css";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import "./Question.css";
 import { hasEmptyString } from "../../utils/Helpers";
 

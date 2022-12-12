@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import "./ViewCourses.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, memo } from "react";

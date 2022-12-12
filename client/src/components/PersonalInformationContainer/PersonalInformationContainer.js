@@ -1,5 +1,5 @@
 import { useState, memo } from "react";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";

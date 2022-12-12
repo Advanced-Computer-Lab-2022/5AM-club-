@@ -11,7 +11,7 @@ import {
 import "./InstructorCreateCourse.css";
 import { Box, Container } from "@mui/system";
 import { Delete } from "@mui/icons-material";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 function InstructorCreateCourse() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import { memo } from "react";
 import DropDown from "react-dropdown";
 import "react-dropdown/style.css";

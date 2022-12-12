@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, memo } from "react";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 
 function ChangeForgottenPassword() {
   const [password, setPassword] = useState("");

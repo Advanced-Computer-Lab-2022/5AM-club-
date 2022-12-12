@@ -1,7 +1,7 @@
 import { memo, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import Section from "./Section";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import "./Subtitle.css";
 import axios from "axios";
 import {

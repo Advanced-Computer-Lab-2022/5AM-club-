@@ -1,4 +1,4 @@
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import { useState, useEffect, memo } from "react";
 import ReviewsPage from "../../components/ReviewContainer/ReviewsPage";
 import "./InstructorReviews.css";

@@ -1,6 +1,6 @@
 import { useEffect, useState, memo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 import Card from "react-bootstrap/Card";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";

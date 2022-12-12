@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
 
-import app from "../../utils/AxiosConfigs.js";
+import app from "../../utils/AxiosConfig.js";
 
 function ChangePassword() {
   const [password, setPassword] = useState("");
