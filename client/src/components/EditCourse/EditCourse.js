@@ -22,6 +22,8 @@ function EditCourse(props) {
   const [subtitleDescription, setSubtitleDescription] = useState("");
   const [editingDescripton, setEditingDescription] = useState(false);
   const [description, setDescription] = useState(props.course?.summary);
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [title, setTitle] = useState(props.course?.title);
   const [price, setPrice] = useState(
     Math.floor(props.course?.price + 0.5) - 0.01
   );
@@ -29,6 +31,7 @@ function EditCourse(props) {
   const [addingSubject, setAddingSubject] = useState(false);
   const [subject, setSubject] = useState("");
 
+  const titleRef = useRef();
   const subtitleTitleRef = useRef();
   const subtitleDescriptionRef = useRef();
   const subjectRef = useRef();
@@ -36,7 +39,15 @@ function EditCourse(props) {
   useEffect(() => {
     setDescription(props.course?.summary);
     setPrice(Math.floor(props.course?.price + 0.5) - 0.01);
+    setTitle(props.course?.title);
   }, [props.course]);
+
+  useEffect(() => {
+    if (titleRef && titleRef.current) {
+      titleRef.current.innerText = title;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingTitle]);
 
   function addSubtitle() {
     app
@@ -84,6 +95,7 @@ function EditCourse(props) {
         "/instructor/my-courses/edit-course/" + props.course._id,
         {
           ...props.course,
+          title: title,
           summary: description,
           price: newPrice,
           subject: newSub ? newSub : props.course.subject,
@@ -98,11 +110,15 @@ function EditCourse(props) {
         props.setCourse(response.data);
         setEditingDescription(false);
         setEditingPrice(false);
+        setEditingTitle(false);
         setAddingSubject(false);
       });
   }
   function toggleEditingDescription() {
     setEditingDescription(!editingDescripton);
+  }
+  function toggleEditingTitle() {
+    setEditingTitle(!editingTitle);
   }
 
   return (
@@ -117,8 +133,52 @@ function EditCourse(props) {
     >
       <Card.Body>
         <div className="header-wrapper">
-          <div>
-            <p className="course-title-text"> {props.course?.title}</p>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {!editingTitle ? (
+              <>
+                <div>
+                  <p className="course-title-text"> {props.course?.title}</p>
+                </div>
+                <img
+                  src={edit}
+                  alt="edit"
+                  onClick={toggleEditingTitle}
+                  style={{ margin: "10px", width: "40px", height: "40px" }}
+                ></img>
+              </>
+            ) : (
+              <>
+                <p>
+                  {" "}
+                  <div
+                    ref={titleRef}
+                    className="course-attribute-input"
+                    value={title}
+                    onInput={(e) => {
+                      console.log(e.target.innerText);
+                      setTitle(e.target.innerText);
+                    }}
+                    style={{
+                      fontSize: "60px",
+                      width: "auto",
+                      display: "inline-block",
+                    }}
+                    contentEditable
+                    role="textbox"
+                  ></div>
+                </p>
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    editCourse();
+                  }}
+                  style={{ margin: "10px" }}
+                  disabled={title === ""}
+                >
+                  Done
+                </button>
+              </>
+            )}
           </div>
           <div className="properties-wrapper">
             {props.course?.subject.map((subject, idx) => (
@@ -317,6 +377,11 @@ function EditCourse(props) {
             </div>
             <div className="course-attribute">
               <p>{"Views : " + props.course?.views}</p>
+            </div>
+            <div className="course-attribute">
+              <p>
+                {"Number of Enrolled Students : " + props.course?.owners.length}
+              </p>
             </div>
           </div>
         </div>
