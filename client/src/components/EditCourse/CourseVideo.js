@@ -61,50 +61,54 @@ function CourseVideo(props) {
     setEditingURL(false);
   }
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      {validURL ? (
-        <iframe
-          title="course-video"
-          className="course-video"
-          width="420"
-          height="315"
-          src={
-            videoURL
-              ? videoURL.replace("watch?v=", "embed/")
-              : props.url?.replace("watch?v=", "embed/")
-          }
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <></>
-      )}
-      {editingURL ? (
-        <>
-          <input
-            style={{ borderRadius: "10px", margin: "10px" }}
-            ref={videoRef}
-            defaultValue={videoURL ? videoURL : props.url}
-            type=""
-          ></input>
-          <button
-            className="btn btn-success"
-            onClick={() => {
-              handleURLChange(videoRef.current.value);
-              setVideoURL(videoRef.current.value);
-            }}
-          >
-            Done
-          </button>
-        </>
-      ) : (
-        <img
-          className="edit-button"
-          src={edit}
-          alt="edit"
-          onClick={toggleEditingURL}
-          style={{ margin: "10px" }}
-        ></img>
-      )}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      {" "}
+      <p>Preview Video:</p>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {validURL ? (
+          <iframe
+            title="course-video"
+            className="course-video"
+            width="420"
+            height="315"
+            src={
+              videoURL
+                ? videoURL.replace("watch?v=", "embed/")
+                : props.url?.replace("watch?v=", "embed/")
+            }
+            allowFullScreen
+          ></iframe>
+        ) : (
+          <></>
+        )}
+        {editingURL ? (
+          <>
+            <input
+              style={{ borderRadius: "10px", margin: "10px" }}
+              ref={videoRef}
+              defaultValue={videoURL ? videoURL : props.url}
+              type=""
+            ></input>
+            <button
+              className="btn btn-success"
+              onClick={() => {
+                handleURLChange(videoRef.current.value);
+                setVideoURL(videoRef.current.value);
+              }}
+            >
+              Done
+            </button>
+          </>
+        ) : (
+          <img
+            className="edit-button"
+            src={edit}
+            alt="edit"
+            onClick={toggleEditingURL}
+            style={{ margin: "10px" }}
+          ></img>
+        )}
+      </div>{" "}
     </div>
   );
 }
