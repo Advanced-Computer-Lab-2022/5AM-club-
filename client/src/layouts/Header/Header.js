@@ -117,20 +117,22 @@ function Header() {
         }}
         style={{ cursor: "pointer" }}
       ></img>
-      <div className="searchbar">
-        <input
-          ref={searchRef}
-          type={"text"}
-          className="search-input"
-          onKeyUp={handleEnter}
-        ></input>
-        <img
-          src={search}
-          alt="search"
-          onClick={handleSearch}
-          className="search"
-        ></img>
-      </div>
+      {localStorage.getItem("type") !== "admin" && (
+        <div className="searchbar">
+          <input
+            ref={searchRef}
+            type={"text"}
+            className="search-input"
+            onKeyUp={handleEnter}
+          ></input>
+          <img
+            src={search}
+            alt="search"
+            onClick={handleSearch}
+            className="search"
+          ></img>
+        </div>
+      )}
       <SelectCountry
         id={"countries"}
         ref={myRef}

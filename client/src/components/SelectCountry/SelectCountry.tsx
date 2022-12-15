@@ -86,6 +86,7 @@ export const SelectCountry = React.forwardRef<
               aria-labelledby="listbox-label"
               aria-activedescendant="listbox-option-3"
               style={{
+                zIndex: "9999",
                 overflowY: "scroll",
                 maxHeight: "300px",
                 width: "400px",
@@ -120,6 +121,7 @@ export const SelectCountry = React.forwardRef<
                 className={
                   "max-h-64 scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-600 scrollbar-thumb-rounded scrollbar-thin overflow-y-scroll"
                 }
+                style={{ backgroundColor: "white" }}
               >
                 {COUNTRIES.filter((country) =>
                   country.title.toLowerCase().startsWith(query.toLowerCase())
@@ -148,7 +150,12 @@ export const SelectCountry = React.forwardRef<
                         }}
                       >
                         <div
-                          className="green-hover"
+                          className={
+                            "green-hover" +
+                            (props.selectedValue.value === value.value
+                              ? " selected"
+                              : "")
+                          }
                           style={{
                             display: "flex",
                             alignItems: "center",
@@ -161,7 +168,7 @@ export const SelectCountry = React.forwardRef<
                             style={{ height: "40px", borderRadius: "7px" }}
                           />
 
-                          <span className="font-normal truncate">
+                          <span className="font-normal truncate country-text">
                             {value.title}
                           </span>
                           {value.value === props.selectedValue.value ? (

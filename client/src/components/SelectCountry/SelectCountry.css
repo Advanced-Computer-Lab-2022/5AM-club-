@@ -20,5 +20,17 @@
   padding: 10px;
 }
 .green-hover:hover {
+  border-radius: 20px;
   background-color: rgb(150, 206, 168);
+}
+.selected {
+  border-radius: 20px;
+
+  background-color: rgb(150, 206, 168);
+}
+.country-text {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #484848;
+  margin-left: 5px;
 }
