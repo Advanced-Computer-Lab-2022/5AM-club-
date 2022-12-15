@@ -7,26 +7,35 @@ import TableContainer from "./TableContainer";
 import "./CourseContainer.css";
 import { formatTime, getProgress } from "../../utils/Helpers";
 import countries from "../../utils/Countries.json";
-import EmbeddedReviewPage from "../../components/ReviewContainer/EmbeddedReviewPage";
+import EmbeddedReviewPage from "./EmbeddedReviewPage";
 
 function CourseContainer(props) {
+  console.log(props.course);
   const navigate = useNavigate();
   const location = useLocation();
   const [myReviews, setMyReviews] = useState({
     courseReview: {},
     instructorReview: [],
   });
-  const [traineeCourse, setTraineeCourse] = useState();
+  const [traineeCourse, setTraineeCourse] = useState(props.course);
+  console.log(traineeCourse);
 
   useEffect(() => {
+    app.get("/trainee/populated-courses/" + props.course.id).then((res) => {
+      setTraineeCourse(res.data);
+    });
+  }, [myReviews]);
+
+  useEffect(() => {
+    setTraineeCourse(props.course);
     app
-      .get("/trainee/my-courses/" + props.course.id + "/get-my-reviews")
+      .get("/trainee/my-courses/" + traineeCourse.id + "/get-my-reviews")
       .then((res) => {
         setMyReviews(res.data);
         app
           .get("/get-trainee-course", {
             headers: {
-              courseId: props.course.id,
+              courseId: traineeCourse.id,
             },
           })
           .then((response) => {
@@ -38,18 +47,19 @@ function CourseContainer(props) {
     //eslint-disable-next-line
   }, []);
   return (
-    <div>
+    traineeCourse && (
       <Card
-        border={undefined}
-        className="card"
+        className='card course-details-border-success'
         style={{
           margin: "250px",
           marginTop: "50px",
           marginBottom: "50px",
         }}
       >
-        <Card.Body>
-          <Card.Title className="course-title">{props.course.title}</Card.Title>
+        <Card.Body className='course-details-card-body'>
+          <Card.Title className='course-title'>
+            {traineeCourse.title}
+          </Card.Title>
           <div
             style={{
               display: "flex",
@@ -61,38 +71,58 @@ function CourseContainer(props) {
           >
             <div style={{ display: "inline" }}>
               <iframe
-                className="preview_video"
-                key={props.course.preview_video?.replace("watch?v=", "embed/")}
-                title="course-video"
-                src={props.course.preview_video?.replace("watch?v=", "embed/")}
-                frameBorder="0"
+                className='preview_video'
+                key={traineeCourse.preview_video?.replace("watch?v=", "embed/")}
+                title='course-video'
+                src={traineeCourse.preview_video?.replace("watch?v=", "embed/")}
+                frameBorder='0'
                 allowFullScreen
               ></iframe>
             </div>
             <div>
-              <div className="attribute">
+              <div className='attribute'>
                 Created By:{" "}
-                {props.course.instructor.map(
+                {traineeCourse.instructor.map(
                   (instructor) => instructor.username + " "
                 )}
               </div>
-              <div className="attribute">
-                Total Length: {formatTime(props.course.minutes)}
+              <div className='attribute'>
+                Total Length: {formatTime(traineeCourse.minutes)}
               </div>
               {localStorage.getItem("type") !== "corporate" &&
                 props.owned !== true && (
-                  <div className="attribute">
+                  <div className='attribute'>
                     Price:{" "}
                     {props.promotion &&
-                    new Date(props.promotion.deadline) > new Date() ? (
-                      <>
-                        <span className="scratched">
-                          {Math.floor(props.course.price + 0.5) - 0.01}
-                        </span>
-                        <span>
-                          {(Math.floor(props.course.price + 0.5) *
-                            (100 - props.promotion.percentage)) /
-                            100 -
+                      (new Date(props.promotion.endDate) > new Date() &&
+                      new Date(props.promotion.startDate) < new Date() ? (
+                        <>
+                          <span className='scratched'>
+                            {Math.floor(traineeCourse.price + 0.5) - 0.01}{" "}
+                          </span>
+                          <span>
+                            {Math.floor(
+                              (traineeCourse.price *
+                                (100 - props.promotion.percentage)) /
+                                100 +
+                                0.5
+                            ) -
+                              0.01 +
+                              (" " +
+                                countries[
+                                  Object.keys(countries).find(
+                                    (e) => e === localStorage.getItem("country")
+                                  )
+                                ])}
+                          </span>
+                          <span className='red'>
+                            (-{props.promotion.percentage}% till{" "}
+                            {new Date(props.promotion.endDate).toDateString()})
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          {Math.floor(traineeCourse.price + 0.5) -
                             0.01 +
                             (" " +
                               countries[
@@ -100,38 +130,22 @@ function CourseContainer(props) {
                                   (e) => e === localStorage.getItem("country")
                                 )
                               ])}
-                        </span>
-                        <span className="red">
-                          (-{props.promotion.percentage}% till{" "}
-                          {new Date(props.promotion.deadline).toDateString()})
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        {Math.floor(props.course.price + 0.5) -
-                          0.01 +
-                          (" " +
-                            countries[
-                              Object.keys(countries).find(
-                                (e) => e === localStorage.getItem("country")
-                              )
-                            ])}
-                      </>
-                    )}
+                        </>
+                      ))}
                   </div>
                 )}
               {localStorage.getItem("type") === "individual" &&
                 !props.owned && (
-                  <Button variant="outline-success">BUY NOW</Button>
+                  <Button variant='outline-success'>BUY NOW</Button>
                 )}
               {props.owned && location.state.displayAddReview && (
                 <>
                   <Button
-                    variant="outline-success"
+                    variant='outline-success'
                     onClick={() => {
                       navigate("take-course", {
                         state: {
-                          courseId: props.course._id,
+                          courseId: traineeCourse._id,
                         },
                       });
                     }}
@@ -139,21 +153,21 @@ function CourseContainer(props) {
                     Go to course
                   </Button>
 
-                  <div className="attribute">
+                  <div className='attribute'>
                     Progress: {getProgress(traineeCourse?.progress) * 100}%
                   </div>
                 </>
               )}
             </div>
           </div>
-          <Card.Text>{props.course.summary}</Card.Text>
-          <div className="attribute"> Content: </div>
+          <Card.Text>{traineeCourse.summary}</Card.Text>
+          <div className='attribute'> Content: </div>
           <TableContainer title={"Subtitles"} elements={props.subtitles} />
           <EmbeddedReviewPage
             myReviews={myReviews}
             myReview={myReviews.courseReview}
             setMyReviews={setMyReviews}
-            course={props.course}
+            course={traineeCourse}
           />
           {myReviews.instructorReview?.map(
             (instructorReview, index) =>
@@ -164,15 +178,15 @@ function CourseContainer(props) {
                     myReview={instructorReview}
                     setMyReviews={setMyReviews}
                     index={index}
-                    instructor={props.course.instructor[index]}
-                    course={props.course}
+                    instructor={traineeCourse.instructor[index]}
+                    course={traineeCourse}
                   />
                 </div>
               )
           )}
         </Card.Body>
       </Card>
-    </div>
+    )
   );
 }
 

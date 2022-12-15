@@ -4,12 +4,11 @@ import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 
 function TraineeCourseContainer(props) {
+  console.log(props.courses);
   const navigate = useNavigate();
   useEffect(() => {
-    props.setCourses([]);
-    props.setMainText("");
     app
-      .get("/Trainee/my-courses", {
+      .get("/Trainee/my-populated-courses", {
         headers: {
           country: localStorage.getItem("country"),
           type: localStorage.getItem("type"),

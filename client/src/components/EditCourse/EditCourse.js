@@ -107,22 +107,21 @@ function EditCourse(props) {
 
   return (
     <Card
-      border="success"
-      className="card"
+      className='edit-course-card edit-course-border-success'
       style={{
         margin: "250px",
         marginTop: "50px",
         marginBottom: "50px",
       }}
     >
-      <Card.Body>
-        <div className="header-wrapper">
+      <Card.Body className='edit-course-card-body'>
+        <div className='header-wrapper'>
           <div>
-            <p className="course-title-text"> {props.course?.title}</p>
+            <p className='course-title-text'> {props.course?.title}</p>
           </div>
-          <div className="properties-wrapper">
+          <div className='properties-wrapper'>
             {props.course?.subject.map((subject, idx) => (
-              <div className="course-attribute" key={subject + idx}>
+              <div className='course-attribute' key={subject + idx}>
                 <p>{subject}</p>
                 <ClearIcon
                   onClick={() => {
@@ -139,7 +138,7 @@ function EditCourse(props) {
               </div>
             ))}
             <div
-              className="course-attribute"
+              className='course-attribute'
               style={{
                 cursor: !addingSubject ? "pointer" : null,
               }}
@@ -180,14 +179,14 @@ function EditCourse(props) {
                 <>
                   <input
                     style={{ color: "#484848" }}
-                    className="course-attribute-input"
+                    className='course-attribute-input'
                     ref={subjectRef}
                     onChange={(e) => {
                       setSubject(e.target.value);
                     }}
                   ></input>
                   <button
-                    className="btn btn-success"
+                    className='btn btn-success'
                     style={{
                       borderRadius: "9px",
                       marginRight: "6px",
@@ -204,7 +203,7 @@ function EditCourse(props) {
               )}
             </div>
             <div
-              className="course-attribute"
+              className='course-attribute'
               onBlur={(e) => {
                 if (e.relatedTarget?.nodeName === "BUTTON") return;
 
@@ -241,7 +240,7 @@ function EditCourse(props) {
 
                   <img
                     src={edit}
-                    alt="edit"
+                    alt='edit'
                     onClick={toggleEditingPrice}
                     style={{ margin: "10px" }}
                   ></img>
@@ -257,17 +256,17 @@ function EditCourse(props) {
                   }}
                 >
                   <div>
-                    <p className="price-text">Price : </p>
+                    <p className='price-text'>Price : </p>
                   </div>
                   <div>
                     <input
-                      className="course-attribute-input"
+                      className='course-attribute-input'
                       value={price || ""}
-                      type="number"
+                      type='number'
                       onChange={(e) => setPrice(e.target.value)}
                     />
                     <button
-                      className="btn btn-success"
+                      className='btn btn-success'
                       style={{
                         borderRadius: "9px",
                         margin: "6px 6px",
@@ -283,7 +282,7 @@ function EditCourse(props) {
                 </div>
               )}
             </div>
-            <div className="course-attribute">
+            <div className='course-attribute'>
               <p>
                 {"Total length : " +
                   (props.course?.minutes
@@ -291,38 +290,39 @@ function EditCourse(props) {
                     : "You don't have any course sections yet.")}
               </p>
             </div>
-            <div className="rating">
+            <div className='rating'>
               {" "}
               <p>Rating :</p>
-              <div className="rating-box">
+              <div className='rating-box'>
                 <Box
                   sx={{
                     "& > legend": { mt: 2 },
                   }}
                 >
                   <Rating
-                    name="read-only"
+                    name='read-only'
                     value={props.course?.rating || 0}
                     readOnly
+                    sx={{ color: "success.main" }}
                     emptyIcon={
                       <StarBorderIcon
                         style={{ color: "#484848" }}
-                        fontSize="inherit"
-                        className="empty-star"
+                        fontSize='inherit'
+                        className='empty-star'
                       />
                     }
                   />
                 </Box>
               </div>
             </div>
-            <div className="course-attribute">
+            <div className='course-attribute'>
               <p>{"Views : " + props.course?.views}</p>
             </div>
           </div>
         </div>
 
         <div
-          className="editable-container"
+          className='editable-container'
           style={{ display: "flex", gap: "30px", overflow: "hidden" }}
         >
           <CourseVideo
@@ -348,13 +348,13 @@ function EditCourse(props) {
                 onChange={(e) => {
                   setDescription(e.target.value);
                 }}
-                className="description-textarea"
+                className='description-textarea'
                 defaultValue={props.course?.summary}
                 readOnly={!editingDescripton}
               ></TextareaAutosize>
               {editingDescripton ? (
                 <button
-                  className="btn btn-success"
+                  className='btn btn-success'
                   onClick={() => {
                     toggleEditingDescription();
                     editCourse();
@@ -365,9 +365,9 @@ function EditCourse(props) {
                 </button>
               ) : (
                 <img
-                  className="edit-button"
+                  className='edit-button'
                   src={edit}
-                  alt="edit"
+                  alt='edit'
                   onClick={toggleEditingDescription}
                   style={{ margin: "10px" }}
                 ></img>
@@ -382,12 +382,12 @@ function EditCourse(props) {
             backgroundColor: "#484848",
           }}
         ></hr>
-        <p className="subtitles-text">Subtitles:</p>
+        <p className='subtitles-text'>Subtitles:</p>
         {props.course
           ? props.course.subtitles.map((subtitle) => (
               <div
                 key={subtitle._id}
-                className="editable-container subtitle-container"
+                className='editable-container subtitle-container'
               >
                 <Subtitle
                   subtitle={subtitle}
@@ -397,15 +397,15 @@ function EditCourse(props) {
               </div>
             ))
           : null}
-        <div onClick={toggleAddingSubtitle} className="add-subtitle-button">
-          <img src={addingSubtitle ? cancel : plus} alt="plus"></img>
+        <div onClick={toggleAddingSubtitle} className='add-subtitle-button'>
+          <img src={addingSubtitle ? cancel : plus} alt='plus'></img>
           {addingSubtitle ? "Cancel" : "Add Subtitle"}
         </div>
         {addingSubtitle && (
           <>
             <p>Enter Subtitle title:</p>{" "}
             <input
-              type="text"
+              type='text'
               ref={subtitleTitleRef}
               onChange={(e) => {
                 setSubtitleTitle(e.target.value);
@@ -419,18 +419,18 @@ function EditCourse(props) {
               }}
             ></TextareaAutosize>
             {subtitleTitle && subtitleDescription ? (
-              <div className="done-button-wrapper">
+              <div className='done-button-wrapper'>
                 <button
-                  type="button"
-                  className="btn btn-success"
+                  type='button'
+                  className='btn btn-success'
                   onClick={addSubtitle}
                 >
                   Done
                 </button>
               </div>
             ) : (
-              <div className="done-button-wrapper">
-                <button type="button" className="btn btn-success" disabled>
+              <div className='done-button-wrapper'>
+                <button type='button' className='btn btn-success' disabled>
                   Done
                 </button>
               </div>

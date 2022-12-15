@@ -150,6 +150,50 @@ const getTraineeReviews = async (req, res) => {
   res.send(reviews);
 };
 
+const deleteCourseReview = async (req, res) => {
+  const id = req.params.id;
+  if (req.user.id) {
+    await Course.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          userReviews: {
+            user: req.user.id,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.send("Review deleted successfully");
+  } else {
+    res.status(400).send("Missing ID");
+  }
+};
+
+const deleteInstructorReview = async (req, res) => {
+  const id = req.params.id;
+  if (req.user.id) {
+    await Instructor.findByIdAndUpdate(
+      id,
+      {
+        $pull: {
+          userReviews: {
+            user: req.user.id,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    res.send("Review deleted successfully");
+  } else {
+    res.status(400).send("Missing ID");
+  }
+};
+
 module.exports = {
   getMyReviews,
   addInstructorReview,
@@ -157,4 +201,6 @@ module.exports = {
   addCourseReview,
   editCourseReview,
   getTraineeReviews,
+  deleteCourseReview,
+  deleteInstructorReview,
 };

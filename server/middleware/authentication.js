@@ -1,15 +1,12 @@
 const jwt = require("jsonwebtoken");
 const { login } = require("../controllers/UserDataController");
 const authenticateToken = (req, res, next) => {
-  console.log("from auth token b4 if");
   if (req.cookies?.jwt && req.cookies?.accessToken) {
-    console.log("from auth token in if");
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.jwt;
     let validAccess = false,
       validRefresh = false;
     let data;
-    console.log("from auth token b4 verfy");
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
       if (err) {
         // Wrong or expired access token
@@ -17,8 +14,6 @@ const authenticateToken = (req, res, next) => {
       } else {
         validAccess = true;
         data = decoded;
-        console.log(typeof data);
-        console.log(data);
       }
     });
     jwt.verify(
