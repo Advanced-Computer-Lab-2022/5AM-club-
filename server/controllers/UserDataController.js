@@ -13,7 +13,6 @@ const Contract = require("../models/Contract");
 const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
-let refreshTokens = [];
 
 const countrySchema = Joi.object({
   country: Joi.string()
@@ -52,7 +51,7 @@ async function getUserType(req, res) {
 async function getTraineeCourse(req, res) {
   res.send(
     await TraineeCourse.findOne({
-      traineeId: req.headers.traineeid,
+      traineeId: req.user.id,
       courseId: req.headers.courseid,
     })
   );
@@ -68,10 +67,10 @@ async function updateTraineeCourse(req, res) {
     res.status(409).send();
     return;
   }
-
+  console.log(req.user);
   const traineeCourses = await TraineeCourse.findOneAndUpdate(
     {
-      traineeId: ObjectId(req.body.traineeId),
+      traineeId: ObjectId(req.user.id),
       courseId: ObjectId(req.body.courseId),
     },
     {
@@ -85,6 +84,7 @@ async function updateTraineeCourse(req, res) {
       new: true,
     }
   );
+  console.log(traineeCourses, "<<<<<<<<<<<<< traineeCourses");
   res.send(traineeCourses);
 }
 

@@ -41,16 +41,13 @@ export const SelectCountry = React.forwardRef<
     <div
       ref={ref}
       style={{
-        marginBottom: "10px",
-        marginLeft: "auto",
-        marginRight: "10px",
-        marginTop: "2px",
+        marginRight: "5px",
       }}
     >
       <div className=" relative">
         <button
           type="button"
-          className="bg-transparent relative w-full border-transparent rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className="bg-transparent relative w-full border-transparent rounded-md pl-3 pr-10 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           aria-haspopup="listbox"
           aria-expanded="true"
           aria-labelledby="listbox-label"

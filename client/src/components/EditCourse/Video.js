@@ -42,7 +42,7 @@ function Video(props) {
               );
               app
                 .put(
-                  "/my-courses/edit-course/" +
+                  "/instructor/my-courses/edit-course/" +
                     props.courseid +
                     "/" +
                     props.subtitleid +

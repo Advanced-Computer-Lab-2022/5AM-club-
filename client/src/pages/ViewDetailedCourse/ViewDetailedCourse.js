@@ -12,11 +12,19 @@ function ViewDetailedCourse() {
 
   useEffect(() => {
     app
-      .get("/populated-courses/" + location.state.id, {
-        headers: {
-          country: localStorage.getItem("country"),
-        },
-      })
+      .get(
+        (localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/populated-courses/"
+            : "/" + localStorage.getItem("type") + "/populated-courses/"
+          : "/populated-courses/") + location.state.id,
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
+        }
+      )
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);

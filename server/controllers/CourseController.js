@@ -121,10 +121,6 @@ const getCourseFilter = async (req) => {
     }
   }
   filter = {
-    ...(req.user?.id &&
-      (req.headers.type === "instructor"
-        ? { instructor: req.user.id }
-        : { owners: req.user.id })),
     ...(req.query.subject && {
       subject: req.query.subject,
     }),
@@ -153,7 +149,7 @@ const changePrice = async (req, courses) => {
   }
 };
 const getPopulatedCourses = async (req, res) => {
-  console.log("getPopulatedCourses");
+  console.log("getPopulatedCourses", req);
   const filter = await getCourseFilter(req);
   console.log("filter  ", filter);
   let courses = await Course.find(filter)
@@ -168,11 +164,53 @@ const getPopulatedCourses = async (req, res) => {
   console.log("courses  ", courses);
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
-
   res.json(courses);
 };
+
+const getMyPopulatedCourses = async (req, res) => {
+  console.log(
+    "lmaolmaolmao<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+  );
+  console.log("getPopulatedCourses", req);
+  let filter = await getCourseFilter(req);
+  console.log("filter  ", filter);
+  filter = {
+    ...filter,
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  let courses = await Course.find(filter)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "userReviews.user",
+      },
+    })
+    .populate("userReviews.user")
+    .populate("owners");
+  console.log("courses  ", courses);
+  await changePrice(req, courses);
+  console.log("courseschangedPrice  ", courses);
+  res.json(courses);
+};
+
 const getCourses = async (req, res) => {
   const filter = await getCourseFilter(req);
+  let courses = await Course.find(filter);
+  await changePrice(req, courses);
+  res.json(courses);
+};
+const getMyCourses = async (req, res) => {
+  let filter = await getCourseFilter(req);
+  filter = {
+    ...filter,
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
   let courses = await Course.find(filter);
   await changePrice(req, courses);
   res.json(courses);
@@ -514,7 +552,9 @@ module.exports = {
   deleteSection,
   updateSection,
   getCourses,
+  getMyCourses,
   getPopulatedCourses,
+  getMyPopulatedCourses,
   createCourse,
   findCourseByID,
   findPopulatedCourseByID,

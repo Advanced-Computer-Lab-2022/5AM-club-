@@ -8,7 +8,14 @@ function ViewCourseReviews() {
   const location = useLocation();
   useEffect(() => {
     app
-      .get("/populated-courses/" + location.state.course._id)
+      .get(
+        (localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/populated-courses/"
+            : "/" + localStorage.getItem("type") + "/populated-courses/"
+          : "/populated-courses/") + location.state.course._id
+      )
       .then((res) => {
         setCourse(res.data);
       })
@@ -16,6 +23,6 @@ function ViewCourseReviews() {
 
     //eslint-disable-next-line
   }, []);
-  return course && <ReviewsPage item={course} type='course' />;
+  return course && <ReviewsPage item={course} type="course" />;
 }
 export default memo(ViewCourseReviews);

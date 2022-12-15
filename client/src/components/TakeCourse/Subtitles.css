@@ -14,6 +14,7 @@
   margin-left: 35px;
   padding: 5px;
   cursor: pointer;
+  border-radius: 10px;
   border: 1px solid #0f0f0f;
   background-color: rgb(255, 255, 255);
   display: flex;

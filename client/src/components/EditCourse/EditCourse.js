@@ -388,7 +388,12 @@ function EditCourse(props) {
 
         <div
           className="editable-container"
-          style={{ display: "flex", gap: "30px", overflow: "hidden" }}
+          style={{
+            display: "flex",
+            gap: "30px",
+            overflow: "hidden",
+            justifyContent: "space-evenly",
+          }}
         >
           <CourseVideo
             course={props.course}

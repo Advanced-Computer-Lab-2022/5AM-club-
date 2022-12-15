@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const CourseController = require("../../controllers/CourseController");
 
-router.get("/my-courses", CourseController.getCourses);
+router.get("/my-courses", CourseController.getMyCourses);
 router.get("/courses", CourseController.getCourses);
-router.get("/my-populated-courses", CourseController.getPopulatedCourses);
+router.get("/my-populated-courses", CourseController.getMyPopulatedCourses);
 router.get("/populated-courses", CourseController.getPopulatedCourses);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);

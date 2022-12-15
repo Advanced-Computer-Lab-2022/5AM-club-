@@ -17,96 +17,182 @@ function CourseContainer(props) {
     courseReview: {},
     instructorReview: [],
   });
-  const [traineeCourse, setTraineeCourse] = useState(props.course);
-  console.log(traineeCourse);
+  const [course, setCourse] = useState(props.course);
+  const [traineeCourse, setTraineeCourse] = useState();
+  console.log(course);
 
   useEffect(() => {
-    app.get("/trainee/populated-courses/" + props.course.id).then((res) => {
-      setTraineeCourse(res.data);
-    });
+    app
+      .get(
+        (localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/populated-courses/"
+            : "/" + localStorage.getItem("type") + "/populated-courses/"
+          : "/populated-courses/") + props.course.id
+      )
+      .then((res) => {
+        setCourse(res.data);
+      });
   }, [myReviews]);
 
   useEffect(() => {
-    setTraineeCourse(props.course);
-    app
-      .get("/trainee/my-courses/" + traineeCourse.id + "/get-my-reviews")
-      .then((res) => {
-        setMyReviews(res.data);
-        app
-          .get("/get-trainee-course", {
-            headers: {
-              courseId: traineeCourse.id,
-            },
-          })
-          .then((response) => {
-            setTraineeCourse(response.data);
-          });
-      })
-      .catch((err) => {});
-
+    setCourse(props.course);
+    if (
+      localStorage.getItem("type") === "corporate" ||
+      localStorage.getItem("type") === "individual"
+    ) {
+      app
+        .get("/trainee/my-courses/" + course.id + "/get-my-reviews")
+        .then((res) => {
+          setMyReviews(res.data);
+          app
+            .get("/trainee/get-trainee-course", {
+              headers: {
+                courseId: course.id,
+              },
+            })
+            .then((response) => {
+              setTraineeCourse(response.data);
+            });
+        });
+    }
     //eslint-disable-next-line
   }, []);
   return (
-    traineeCourse && (
+    course && (
       <Card
-        className='card course-details-border-success'
+        className="card course-details-border-success"
         style={{
           margin: "250px",
           marginTop: "50px",
           marginBottom: "50px",
+          minWidth: "550px",
         }}
       >
-        <Card.Body className='course-details-card-body'>
-          <Card.Title className='course-title'>
-            {traineeCourse.title}
-          </Card.Title>
+        <Card.Body
+          className="course-details-card-body"
+          style={{ minWidth: "400px" }}
+        >
+          <div>
+            <p className="course-title-text"> {props.course?.title}</p>
+          </div>
+          <div
+            className="properties-wrapper"
+            style={{ alignItems: "center", fontSize: "20px", color: "black" }}
+          >
+            Subjects:
+            {props.course?.subject.map((subject, idx) => (
+              <div className="course-attribute" key={subject + idx}>
+                <p>{subject}</p>
+              </div>
+            ))}
+          </div>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
               gap: "20px",
               overflow: "hidden",
-              width: "90%",
             }}
           >
-            <div style={{ display: "inline" }}>
-              <iframe
-                className='preview_video'
-                key={traineeCourse.preview_video?.replace("watch?v=", "embed/")}
-                title='course-video'
-                src={traineeCourse.preview_video?.replace("watch?v=", "embed/")}
-                frameBorder='0'
-                allowFullScreen
-              ></iframe>
-            </div>
-            <div>
-              <div className='attribute'>
-                Created By:{" "}
-                {traineeCourse.instructor.map(
-                  (instructor) => instructor.username + " "
-                )}
-              </div>
-              <div className='attribute'>
-                Total Length: {formatTime(traineeCourse.minutes)}
-              </div>
-              {localStorage.getItem("type") !== "corporate" &&
-                props.owned !== true && (
-                  <div className='attribute'>
-                    Price:{" "}
-                    {props.promotion &&
-                      (new Date(props.promotion.endDate) > new Date() &&
-                      new Date(props.promotion.startDate) < new Date() ? (
-                        <>
-                          <span className='scratched'>
-                            {Math.floor(traineeCourse.price + 0.5) - 0.01}{" "}
-                          </span>
-                          <span>
-                            {Math.floor(
-                              (traineeCourse.price *
-                                (100 - props.promotion.percentage)) /
-                                100 +
-                                0.5
-                            ) -
+            <iframe
+              className="preview_video"
+              key={course.preview_video?.replace("watch?v=", "embed/")}
+              title="course-video"
+              src={course.preview_video?.replace("watch?v=", "embed/")}
+              allowFullScreen
+              style={{ flexShrink: "0" }}
+            ></iframe>
+            <div style={{ flexGrow: "1" }}>
+              <div
+                className="editable-container"
+                style={{
+                  minWidth: "245px",
+                  overflow: "hidden",
+                  flexGrow: "1",
+                }}
+              >
+                <div
+                  className="attribute"
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    width: "100%",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    wordBreak: "break-word",
+                    flexDirection: "column",
+                  }}
+                >
+                  Created By:{" "}
+                  {course.instructor.map(
+                    (instructor) => instructor.username + " "
+                  )}
+                </div>
+                <div
+                  className="attribute"
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    width: "100%",
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    wordBreak: "break-word",
+                    flexDirection: "column",
+                  }}
+                >
+                  Total Length: {formatTime(course.minutes)}
+                </div>
+                {localStorage.getItem("type") !== "corporate" &&
+                  props.owned !== true && (
+                    <div
+                      className="attribute"
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        width: "100%",
+                        wordWrap: "break-word",
+                        overflowWrap: "break-word",
+                        wordBreak: "break-word",
+                        flexDirection: "column",
+                      }}
+                    >
+                      Price:{" "}
+                      {props.promotion &&
+                        (new Date(props.promotion.endDate) > new Date() &&
+                        new Date(props.promotion.startDate) < new Date() ? (
+                          <>
+                            <div>
+                              <span className="scratched">
+                                {Math.floor(course.price + 0.5) - 0.01}{" "}
+                              </span>
+                              <span>
+                                {Math.floor(
+                                  (course.price *
+                                    (100 - props.promotion.percentage)) /
+                                    100 +
+                                    0.5
+                                ) -
+                                  0.01 +
+                                  (" " +
+                                    countries[
+                                      Object.keys(countries).find(
+                                        (e) =>
+                                          e === localStorage.getItem("country")
+                                      )
+                                    ])}
+                              </span>
+                            </div>
+                            <span className="red">
+                              (-{props.promotion.percentage}% till{" "}
+                              {new Date(props.promotion.endDate).toDateString()}
+                              )
+                            </span>
+                          </>
+                        ) : (
+                          <div>
+                            {Math.floor(course.price + 0.5) -
                               0.01 +
                               (" " +
                                 countries[
@@ -114,60 +200,56 @@ function CourseContainer(props) {
                                     (e) => e === localStorage.getItem("country")
                                   )
                                 ])}
-                          </span>
-                          <span className='red'>
-                            (-{props.promotion.percentage}% till{" "}
-                            {new Date(props.promotion.endDate).toDateString()})
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          {Math.floor(traineeCourse.price + 0.5) -
-                            0.01 +
-                            (" " +
-                              countries[
-                                Object.keys(countries).find(
-                                  (e) => e === localStorage.getItem("country")
-                                )
-                              ])}
-                        </>
-                      ))}
-                  </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                {localStorage.getItem("type") === "individual" &&
+                  !props.owned && (
+                    <Button variant="outline-success">BUY NOW</Button>
+                  )}
+                {props.owned && location.state.displayAddReview && (
+                  <>
+                    <div className="attribute">
+                      Progress: {getProgress(traineeCourse?.progress) * 100}%
+                    </div>
+                    <div
+                      style={{
+                        display: "inline-block",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Button
+                        variant="outline-success"
+                        onClick={() => {
+                          navigate("take-course", {
+                            state: {
+                              courseId: course._id,
+                            },
+                          });
+                        }}
+                        style={{
+                          width: "150px",
+                          height: "50px",
+                        }}
+                      >
+                        Go to course
+                      </Button>
+                    </div>
+                  </>
                 )}
-              {localStorage.getItem("type") === "individual" &&
-                !props.owned && (
-                  <Button variant='outline-success'>BUY NOW</Button>
-                )}
-              {props.owned && location.state.displayAddReview && (
-                <>
-                  <Button
-                    variant='outline-success'
-                    onClick={() => {
-                      navigate("take-course", {
-                        state: {
-                          courseId: traineeCourse._id,
-                        },
-                      });
-                    }}
-                  >
-                    Go to course
-                  </Button>
-
-                  <div className='attribute'>
-                    Progress: {getProgress(traineeCourse?.progress) * 100}%
-                  </div>
-                </>
-              )}
-            </div>
+              </div>
+            </div>{" "}
           </div>
-          <Card.Text>{traineeCourse.summary}</Card.Text>
-          <div className='attribute'> Content: </div>
+          <Card.Text>{course.summary}</Card.Text>
+          <div className="attribute"> Content: </div>
           <TableContainer title={"Subtitles"} elements={props.subtitles} />
           <EmbeddedReviewPage
             myReviews={myReviews}
             myReview={myReviews.courseReview}
             setMyReviews={setMyReviews}
-            course={traineeCourse}
+            course={course}
           />
           {myReviews.instructorReview?.map(
             (instructorReview, index) =>
@@ -178,8 +260,8 @@ function CourseContainer(props) {
                     myReview={instructorReview}
                     setMyReviews={setMyReviews}
                     index={index}
-                    instructor={traineeCourse.instructor[index]}
-                    course={traineeCourse}
+                    instructor={course.instructor[index]}
+                    course={course}
                   />
                 </div>
               )

@@ -30,7 +30,7 @@ function Question(props) {
     }
     app
       .put(
-        "/my-courses/edit-course/" +
+        "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/" +
           props.subtitleid +
@@ -64,7 +64,7 @@ function Question(props) {
     props.content.answers.splice(props.idx, 1);
     app
       .put(
-        "/my-courses/edit-course/" +
+        "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/" +
           props.subtitleid +

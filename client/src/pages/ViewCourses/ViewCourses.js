@@ -14,12 +14,20 @@ function ViewCourses() {
   useEffect(() => {
     setCourses([]);
     app
-      .get("/populated-courses", {
-        headers: {
-          country: localStorage.getItem("country"),
-        },
-        params: { searchItem: location.state?.searchItem },
-      })
+      .get(
+        localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/populated-courses"
+            : "/" + localStorage.getItem("type") + "/populated-courses"
+          : "/populated-courses",
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
+          params: { searchItem: location.state?.searchItem },
+        }
+      )
       .then((response) => {
         if (response.data.length === 0)
           setMainText("No courses are available yet");
@@ -28,6 +36,14 @@ function ViewCourses() {
         setCourses(response.data);
       });
     //eslint-disable-next-line
+    console.log(
+      localStorage.getItem("type")
+        ? localStorage.getItem("type") === "corporate" ||
+          localStorage.getItem("type") === "individual"
+          ? "/trainee/populated-courses"
+          : "/" + localStorage.getItem("type") + "/populated-courses"
+        : "/populated-courses"
+    );
   }, []);
   return (
     <>
@@ -40,7 +56,7 @@ function ViewCourses() {
         {courses.map((c) => (
           <div key={c._id}>
             {c.valid && (
-              <div className='course-item' key={c.title}>
+              <div className="course-item" key={c.title}>
                 <div>
                   {c.title +
                     (localStorage.getItem("type") !== "corporate"

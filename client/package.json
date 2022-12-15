@@ -33,6 +33,7 @@
     "react-dom": "^18.2.0",
     "react-dropdown": "^1.11.0",
     "react-error-boundary": "^3.1.4",
+    "react-multiple-choice": "^2.0.2",
     "react-radio-buttons": "^1.2.2",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.2",

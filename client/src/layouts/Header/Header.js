@@ -133,25 +133,27 @@ function Header() {
           ></img>
         </div>
       )}
-      <SelectCountry
-        id={"countries"}
-        ref={myRef}
-        open={isOpen}
-        onToggle={() => setIsOpen(!isOpen)}
-        onChange={(val) => {
-          setCountry(val);
-        }}
-        selectedValue={COUNTRIES.find((option) => option.value === country)}
-      />
+
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          marginLeft: "auto",
           gap: "5px",
           padding: "5px",
           marginRight: "2px",
         }}
       >
+        <SelectCountry
+          id={"countries"}
+          ref={myRef}
+          open={isOpen}
+          onToggle={() => setIsOpen(!isOpen)}
+          onChange={(val) => {
+            setCountry(val);
+          }}
+          selectedValue={COUNTRIES.find((option) => option.value === country)}
+        />
         <button
           className="button1"
           onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
