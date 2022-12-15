@@ -14,6 +14,7 @@ textarea {
   gap: 5px;
   padding-left: 50px;
   padding-right: 50px;
+  padding-bottom: 50px;
   overflow: hidden;
 }
 .edit-course-card input {
@@ -21,8 +22,12 @@ textarea {
 }
 
 .edit-course-border-success {
+  border: none !important;
+  box-shadow: 0 0 0 13px #96cea8;
   border-radius: 10px;
+  border-width: 10px;
   color: #96cea8;
+  border-color: #96cea8 !important;
 }
 .course-title-text {
   -webkit-text-stroke: 2px #484848;

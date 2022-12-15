@@ -42,7 +42,7 @@ function Exercise(props) {
     props.content.answers.push(questionAnswer);
     app
       .put(
-        "/my-courses/edit-course/" +
+        "/instructor/my-courses/edit-course/" +
           props.courseid +
           "/" +
           props.subtitleid +

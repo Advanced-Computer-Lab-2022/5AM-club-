@@ -20,7 +20,8 @@ app.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.clear();
       localStorage.setItem("country", "United States");
-      window.location.href = "http://localhost:3000";
+      if (window.location.href !== "http://localhost:3000/login")
+        window.location.href = "http://localhost:3000";
     }
     return Promise.reject(error);
   }

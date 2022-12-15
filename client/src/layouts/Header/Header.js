@@ -1,11 +1,57 @@
-import { useRef, memo } from "react";
+import { useRef, useState, memo, useEffect } from "react";
 import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
+import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
+import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
+
 function Header() {
+  const myRef = useRef();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [country, setCountry] = useState(
+    COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
+      .value
+  );
+
+  useEffect(() => {
+    setCountry(
+      COUNTRIES.find(
+        (option) => option.title === localStorage.getItem("country")
+      ).value
+    );
+  }, [localStorage.getItem("country")]);
+
+  useEffect(() => {
+    const selectedCountry = COUNTRIES.find(
+      (option) => option.value === country
+    ).title;
+    console.log(selectedCountry);
+    if (localStorage.getItem("type")) {
+      app.put(
+        "/" +
+          (localStorage.getItem("type") === "corporate" ||
+          localStorage.getItem("type") === "individual"
+            ? "trainee"
+            : localStorage.getItem("type")) +
+          "/set-country",
+        {
+          country: selectedCountry,
+        },
+        {
+          headers: {
+            type: localStorage.getItem("type"),
+          },
+        }
+      );
+    }
+    localStorage.setItem("country", selectedCountry);
+    navigate(0);
+  }, [country]);
+
   const navigate = useNavigate();
 
   const searchRef = useRef();
@@ -71,30 +117,43 @@ function Header() {
         }}
         style={{ cursor: "pointer" }}
       ></img>
-      <div className="searchbar">
-        <input
-          ref={searchRef}
-          type={"text"}
-          className="search-input"
-          onKeyUp={handleEnter}
-        ></input>
-        <img
-          src={search}
-          alt="search"
-          onClick={handleSearch}
-          className="search"
-        ></img>
-      </div>
+      {localStorage.getItem("type") !== "admin" && (
+        <div className="searchbar">
+          <input
+            ref={searchRef}
+            type={"text"}
+            className="search-input"
+            onKeyUp={handleEnter}
+          ></input>
+          <img
+            src={search}
+            alt="search"
+            onClick={handleSearch}
+            className="search"
+          ></img>
+        </div>
+      )}
+
       <div
         style={{
           display: "flex",
           alignItems: "center",
+          marginLeft: "auto",
           gap: "5px",
           padding: "5px",
           marginRight: "2px",
-          marginLeft: "auto",
         }}
       >
+        <SelectCountry
+          id={"countries"}
+          ref={myRef}
+          open={isOpen}
+          onToggle={() => setIsOpen(!isOpen)}
+          onChange={(val) => {
+            setCountry(val);
+          }}
+          selectedValue={COUNTRIES.find((option) => option.value === country)}
+        />
         <button
           className="button1"
           onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}

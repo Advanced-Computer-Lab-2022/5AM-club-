@@ -13,7 +13,7 @@ function TraineeTakeCourse() {
   const [flag, setFlag] = useState(false);
   useEffect(() => {
     app
-      .get("/courses/" + location.state?.courseId, {
+      .get("/trainee/courses/" + location.state?.courseId, {
         headers: {
           country: localStorage.getItem("country"),
         },
@@ -22,7 +22,7 @@ function TraineeTakeCourse() {
         setCourse(response.data);
 
         app
-          .get("/get-trainee-course", {
+          .get("/trainee/get-trainee-course", {
             headers: {
               courseId: location.state?.courseId,
             },
@@ -37,8 +37,9 @@ function TraineeTakeCourse() {
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
+    console.log(traineeCourse);
     app
-      .put("/edit-trainee-course", {
+      .put("/trainee/edit-trainee-course", {
         lastSection: traineeCourse.lastSection,
 
         courseId: location.state?.courseId,
@@ -48,6 +49,7 @@ function TraineeTakeCourse() {
         notes: traineeCourse.notes,
       })
       .then((response) => {
+        console.log(response.data);
         setTraineeCourse(response.data);
       })
       .catch((error) => {

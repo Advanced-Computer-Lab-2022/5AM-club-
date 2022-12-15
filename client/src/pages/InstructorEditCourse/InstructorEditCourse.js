@@ -9,7 +9,7 @@ function InstructorEditCourse() {
 
   useEffect(() => {
     app
-      .get("/courses/" + location.state?.id, {
+      .get("/instructor/courses/" + location.state?.id, {
         headers: {
           country: localStorage.getItem("country"),
         },
@@ -18,7 +18,7 @@ function InstructorEditCourse() {
         console.log(response.data);
         setCourse(response.data);
         app
-          .get("/get-course-instructor", {
+          .get("/instructor/get-course-instructor", {
             params: { courseid: response.data._id },
           })
           .then((response) => {

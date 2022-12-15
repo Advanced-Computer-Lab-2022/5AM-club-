@@ -157,6 +157,7 @@ function Subtitles(props) {
                       );
                     }}
                     onClick={() => {
+                      console.log(props.traineeCourse);
                       props.updateTraineeCourse({
                         ...props.traineeCourse,
                         progress: section.content.video

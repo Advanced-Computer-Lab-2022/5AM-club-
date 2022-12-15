@@ -21,13 +21,13 @@ function ViewContract() {
   const [mainText, setMainText] = useState("Loading Contract...");
   const [contract, setContract] = useState([]);
   function acceptContract() {
-    app.get("/accept-contract").then(() => {
+    app.get("/instructor/accept-contract").then(() => {
       navigate("/instructor");
     });
   }
   useEffect(() => {
     setContract([]);
-    app.get("/view-contract", {}).then((response) => {
+    app.get("/instructor/view-contract", {}).then((response) => {
       if (response.data.length === 0)
         setMainText("No contract is available yet");
       else setMainText("");

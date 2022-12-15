@@ -17,22 +17,30 @@ function GeneralFiltersContainer(props) {
     props.setCourses([]);
     props.setMainText("");
     app
-      .get("/trainee/courses", {
-        params: {
-          min: minRef.current.value,
-          max: maxRef.current.value,
-          subject: subjectRef.current.value,
-          rating: ratingRef.current.value,
-          searchItem:
-            location.state?.searchItem !== null
-              ? location.state?.searchItem
-              : null,
-        },
-        headers: {
-          authorization: localStorage.getItem("token"),
-          country: localStorage.getItem("country"),
-        },
-      })
+      .get(
+        localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/courses"
+            : "/" + localStorage.getItem("type") + "//courses"
+          : "/courses",
+        {
+          params: {
+            min: minRef.current.value,
+            max: maxRef.current.value,
+            subject: subjectRef.current.value,
+            rating: ratingRef.current.value,
+            searchItem:
+              location.state?.searchItem !== null
+                ? location.state?.searchItem
+                : null,
+          },
+          headers: {
+            authorization: localStorage.getItem("token"),
+            country: localStorage.getItem("country"),
+          },
+        }
+      )
       .then((response) => {
         if (response.data.length === 0)
           props.setMainText("No courses matched your filters");

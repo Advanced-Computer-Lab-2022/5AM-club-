@@ -11,7 +11,7 @@ function TraineeFilterContainer(props) {
     props.setCourses([]);
     props.setMainText("");
     app
-      .get("/Trainee/my-courses/", {
+      .get("/trainee/my-courses/", {
         headers: {
           country: localStorage.getItem("country"),
           type: localStorage.getItem("type"),

@@ -1,0 +1,36 @@
+.search-input-country {
+  margin-top: 10px;
+  border-radius: 20px;
+  margin-left: 27px;
+  padding: 5px;
+}
+.search-input-country:hover {
+  outline: 4px solid #484848;
+}
+.scroll-hidden::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+.scroll-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  padding-inline-start: 0px;
+}
+.green-hover {
+  padding: 10px;
+}
+.green-hover:hover {
+  border-radius: 20px;
+  background-color: rgb(150, 206, 168);
+}
+.selected {
+  border-radius: 20px;
+
+  background-color: rgb(150, 206, 168);
+}
+.country-text {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #484848;
+  margin-left: 5px;
+}

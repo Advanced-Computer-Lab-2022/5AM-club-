@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { memo } from "react";
 
-import SelectCountry from "../../components/SelectCountry/SelectCountry";
 function InstructorProfile() {
   const navigate = useNavigate();
   return (
@@ -48,7 +47,6 @@ function InstructorProfile() {
       >
         View Contract
       </button>
-      <SelectCountry></SelectCountry>
     </div>
   );
 }

@@ -8,7 +8,7 @@ function TraineeCourseContainer(props) {
   const navigate = useNavigate();
   useEffect(() => {
     app
-      .get("/Trainee/my-populated-courses", {
+      .get("/trainee/my-populated-courses", {
         headers: {
           country: localStorage.getItem("country"),
           type: localStorage.getItem("type"),
