@@ -12,7 +12,7 @@ function ViewDetailedCourse() {
 
   useEffect(() => {
     app
-      .get("/courses/" + location.state.id, {
+      .get("/populated-courses/" + location.state.id, {
         headers: {
           country: localStorage.getItem("country"),
         },
@@ -31,7 +31,9 @@ function ViewDetailedCourse() {
         course={course}
         subtitles={subtitles}
         promotion={promotion}
-        owned={course.owners.includes(localStorage.getItem("id"))}
+        owned={course.owners.some(
+          (owner) => owner.username === localStorage.getItem("username")
+        )}
       />
     )
   );

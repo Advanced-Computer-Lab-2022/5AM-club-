@@ -1,8 +1,4 @@
-.card {
-  margin-left: 2rem;
-  margin-right: 2rem;
-  margin-top: 2rem;
-}
+
 .attribute {
   font-size: large;
   margin-top: 1rem;
@@ -16,8 +12,7 @@
   color: red;
 }
 .reviewCard {
-  margin-left: 2rem;
-  margin-right: 2rem;
+
   margin-top: 2rem;
   padding: 2rem;
 }
@@ -37,4 +32,25 @@
 .preview_video {
   width: 40vw;
   height: 50vh;
+}
+.card{
+  box-shadow:rgba(0, 0, 0, 0.35) 0px 5px 15px;;
+}
+
+
+
+.course-details-border-success {
+  border: none !important;
+  box-shadow: 0 0 0 13px #96cea8;
+  border-radius: 10px;
+  border-width: 10px;
+  border-color: #96cea8 !important;
+}
+
+.course-details-card-body{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 50px;
+  overflow: hidden;
 }

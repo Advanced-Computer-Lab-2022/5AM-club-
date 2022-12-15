@@ -5,8 +5,9 @@ const TraineeCourse = require("../models/TraineeCourse");
 const { convert } = require("../utils/CurrencyConverter");
 const objectID = require("objectid");
 const setCoursePromotionSchema = Joi.object({
-  percentage: Joi.number().min(0).max(100),
-  deadline: Joi.date().greater(Date.now()),
+  percentage: Joi.number().min(0).max(100).required(),
+  startDate: Joi.date().greater(Date.now()).required(),
+  endDate: Joi.date().greater(Joi.ref("startDate")).required(),
 });
 
 const courseSchema = Joi.object({
@@ -86,7 +87,7 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getCourses = async (req, res) => {
+const getCourseFilter = async (req) => {
   let filter = {};
   let searchItem;
 
@@ -136,14 +137,11 @@ const getCourses = async (req, res) => {
     ...(searchItem && searchItem),
     ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
-  let courses = await Course.find(filter)
-    .populate({
-      path: "instructor",
-      populate: {
-        path: "userReviews.user",
-      },
-    })
-    .populate("userReviews.user");
+
+  return filter;
+};
+
+const changePrice = async (req, courses) => {
   if (req.headers.country) {
     for (let course of courses) {
       course.price = await convert(
@@ -153,9 +151,34 @@ const getCourses = async (req, res) => {
       );
     }
   }
+};
+const getPopulatedCourses = async (req, res) => {
+  console.log("getPopulatedCourses");
+  const filter = await getCourseFilter(req);
+  console.log("filter  ", filter);
+  let courses = await Course.find(filter)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "userReviews.user",
+      },
+    })
+    .populate("userReviews.user")
+    .populate("owners");
+  console.log("courses  ", courses);
+  await changePrice(req, courses);
+  console.log("courseschangedPrice  ", courses);
+
   res.json(courses);
 };
-const findCourseByID = async (req, res) => {
+const getCourses = async (req, res) => {
+  const filter = await getCourseFilter(req);
+  let courses = await Course.find(filter);
+  await changePrice(req, courses);
+  res.json(courses);
+};
+
+const findPopulatedCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
     const course = await Course.findById(id)
@@ -166,6 +189,22 @@ const findCourseByID = async (req, res) => {
         },
       })
       .populate("userReviews.user");
+    if (req.headers.country) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
+    res.send(course);
+  } catch (err) {
+    res.status(500).send("Server s Error");
+  }
+};
+const findCourseByID = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const course = await Course.findById(id);
     if (req.headers.country) {
       course.price = await convert(
         course.price,
@@ -191,7 +230,6 @@ async function updateCourse(req, res) {
       req.body.userReviews[i].user = req.body.userReviews[i].user._id;
     }
   }
-  console.log("balabizo", req.body.userReviews);
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
     console.log(req.body);
@@ -452,12 +490,14 @@ const setCoursePromotion = async (req, res) => {
     res.status(400).send("Invalid Promotion");
     return;
   }
+
   const course = await Course.findByIdAndUpdate(
     id,
     {
       promotion: {
         percentage: req.body.percentage,
-        deadline: req.body.deadline,
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
       },
     },
     { new: true }
@@ -474,7 +514,9 @@ module.exports = {
   deleteSection,
   updateSection,
   getCourses,
+  getPopulatedCourses,
   createCourse,
   findCourseByID,
+  findPopulatedCourseByID,
   setCoursePromotion,
 };

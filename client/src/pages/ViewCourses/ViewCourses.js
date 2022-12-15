@@ -14,7 +14,7 @@ function ViewCourses() {
   useEffect(() => {
     setCourses([]);
     app
-      .get("/courses", {
+      .get("/populated-courses", {
         headers: {
           country: localStorage.getItem("country"),
         },
@@ -40,7 +40,7 @@ function ViewCourses() {
         {courses.map((c) => (
           <div key={c._id}>
             {c.valid && (
-              <div className="course-item" key={c.title}>
+              <div className='course-item' key={c.title}>
                 <div>
                   {c.title +
                     (localStorage.getItem("type") !== "corporate"

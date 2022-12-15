@@ -4,8 +4,11 @@ const CourseController = require("../../controllers/CourseController");
 
 router.get("/my-courses", CourseController.getCourses);
 router.get("/courses", CourseController.getCourses);
+router.get("/my-populated-courses", CourseController.getPopulatedCourses);
+router.get("/populated-courses", CourseController.getPopulatedCourses);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
+router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
 
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
 router.put(

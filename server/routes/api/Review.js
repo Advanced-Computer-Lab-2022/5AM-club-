@@ -16,5 +16,13 @@ router.put(
   ReviewController.editInstructorReview
 );
 router.put("/my-courses/:id/edit-review", ReviewController.editCourseReview);
+router.delete(
+  "/my-courses/:id/delete-review",
+  ReviewController.deleteCourseReview
+);
+router.delete(
+  "/my-courses/:id/instructors/:id/delete-review",
+  ReviewController.deleteInstructorReview
+);
 
 module.exports = router;

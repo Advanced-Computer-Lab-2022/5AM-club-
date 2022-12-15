@@ -112,10 +112,13 @@ async function getUsers(req, res) {
 
 async function getUser(req, res) {
   if (req.user.id) {
-    const id = req.user.id;
+    console.log("started");
+    let id = req.user.id;
+    console.log(req.headers);
+    if (req.headers.id) id = req.headers.id;
+    console.log(id);
     let User;
-
-    switch (req.header.type) {
+    switch (req.headers.type) {
       case "corporate":
         User = await Trainee.findById(id);
         break;
@@ -132,6 +135,7 @@ async function getUser(req, res) {
         res.status(400).send("Invalid UserType");
         break;
     }
+    res.send(User);
   }
 }
 
@@ -517,7 +521,11 @@ const login = async (req, res) => {
     //refreshTokens.push(refreshToken);
 
     // console.log(res.cookie);
-    res.json({ type: user.type, country: user.country });
+    res.json({
+      type: user.type,
+      country: user.country,
+      username: user.username,
+    });
   }
 };
 

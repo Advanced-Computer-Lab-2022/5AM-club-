@@ -22,7 +22,7 @@ app.interceptors.response.use(
       localStorage.setItem("country", "United States");
       window.location.href = "http://localhost:3000";
     }
-    return error;
+    return Promise.reject(error);
   }
 );
 

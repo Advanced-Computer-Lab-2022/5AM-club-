@@ -80,7 +80,8 @@ const courseSchema = new mongoose.Schema(
     preview_video: { type: String, required: true },
     promotion: {
       percentage: { type: Number },
-      deadline: { type: Date },
+      startDate: { type: Date },
+      endDate: { type: Date },
     },
     summary: {
       type: String,

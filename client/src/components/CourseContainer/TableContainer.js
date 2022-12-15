@@ -7,9 +7,11 @@ import "./TableContainer.css";
 function TableContainer(props) {
   return (
     <Card>
-      <Card.Header>{props.title}</Card.Header>
+      <Card.Header style={{ backgroundColor: "#96CEA8", color: "#303030" }}>
+        {props.title}
+      </Card.Header>
       <Card.Body>
-        <ListGroup variant="flush">
+        <ListGroup variant='flush'>
           {props.elements.map((element, index) => (
             <ListItem
               element={element}
