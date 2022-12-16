@@ -33,6 +33,16 @@ router.put(
   authenticateToken,
   UserDataController.changePassword
 );
+router.put(
+    "/change-creditcard-details",
+    authenticateToken,
+    UserDataController.changeCreditCardDetails
+);
+router.get(
+    "/wallet-money",
+    authenticateToken,
+    UserDataController.getWalletMoney
+);
 //router.get("/decode-token", UserDataController.decodeToken);
 
 module.exports = router;

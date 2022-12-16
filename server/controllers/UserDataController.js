@@ -12,6 +12,8 @@ const nodemailer = require("nodemailer");
 const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
+const bcrypt = require("bcryptjs");
+let refreshTokens = [];
 
 const countrySchema = Joi.object({
   country:
@@ -192,13 +194,16 @@ async function setCountry(req, res) {
     }
   }
 }
+
 async function addAdmin(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  const newAdmin = new Admin(req.body);
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newAdmin = new Admin(req.body);
 
   await newAdmin
     .save()
@@ -209,43 +214,46 @@ async function addAdmin(req, res) {
 }
 
 async function addInstructor(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  const newInstructor = new Instructor({
-    ...req.body,
-    email: "",
-    country: "United States",
-    biography: "",
-  });
-  await newInstructor
-    .save()
-    .then((response) => {
-      res.send("Instructor added successfully!");
-    })
-    .catch((err) => res.status(400).send("Username already used"));
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newInstructor = new Instructor({
+        ...req.body,
+        email: "",
+        country: "United States",
+        biography: "",
+    });
+    await newInstructor
+        .save()
+        .then((response) => {
+            res.send("Instructor added successfully!");
+        })
+        .catch((err) => res.status(400).send("Username already used"));
 }
 
 async function addTrainee(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-
-  const newCorporateTrainee = new Trainee({
-    ...req.body,
-    courses: [],
-    type: "corporate",
-  });
-  await newCorporateTrainee
-    .save()
-    .then((response) => {
-      res.send("Trainee added successfully!");
-    })
-    .catch((err) => res.status(400).send("Username already used"));
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newCorporateTrainee = new Trainee({
+        ...req.body,
+        courses: [],
+        type: "corporate",
+    });
+    await newCorporateTrainee
+        .save()
+        .then((response) => {
+            res.send("Trainee added successfully!");
+        })
+        .catch((err) => res.status(400).send("Username already used"));
 }
 
 async function editPersonalInformationInstructor(req, res) {
@@ -267,30 +275,33 @@ async function editPersonalInformationInstructor(req, res) {
 }
 
 async function signUp(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  const foundDup = await nameChecker(req.body.username);
-  if (foundDup) {
-    return res.status(401).send("username already used!!");
-  } else {
-    console.log("foundDup=", foundDup);
-    const newindividualTrainee = new Trainee({
-      ...req.body,
-      courses: [],
-      type: "individual",
-    });
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    const foundDup = await nameChecker(req.body.username);
+    if (foundDup) {
+        return res.status(401).send("username already used!!");
+    } else {
+        console.log("foundDup=", foundDup);
+        const unhashed = req.body.password;
+        req.body.password = bcrypt.hashSync(unhashed, 8);
+        const newindividualTrainee = new Trainee({
+            ...req.body,
+            courses: [],
+            type: "individual",
+        });
 
-    await newindividualTrainee
-      .save()
-      .then((response) => {
-        login(req, res);
-        //res.send("Trainee added successfully!");
-      })
-      .catch((err) => res.status(400).send("Please, enter valid data"));
-  }
+        await newindividualTrainee
+            .save()
+            .then((response) => {
+                req.body.password = unhashed;
+                login(req, res);
+                //res.send("Trainee added successfully!");
+            })
+            .catch((err) => res.status(400).send("Please, enter valid data"));
+    }
 }
 
 async function editEmailInstructor(req, res) {
@@ -338,49 +349,90 @@ async function editBiographyInstructor(req, res) {
   }
 }
 async function changePassword(req, res) {
-  const pass = req.body.password;
-  if (passwordStrength(pass).value !== "Strong") {
-    res.status(400).send(passwordStrength(pass).value);
-    return;
-  }
-  if (req.user.id) {
-    const id = req.user.id;
-    switch (req.user.type) {
-      case "individual":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            password: req.body.password,
-          },
-          { new: true }
-        );
-        break;
-      case "corporate":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            password: req.body.password,
-          },
-          { new: true }
-        );
-        break;
-      case "instructor":
-        User = await Instructor.findByIdAndUpdate(
-          id,
-          {
-            password: req.body.password,
-          },
-          { new: true }
-        );
-        break;
-      default:
-        res.status(400).send("Invalid UserType");
-        break;
+    const pass = req.body.password;
+    if (passwordStrength(pass).value !== "Strong") {
+        res.status(400).send(passwordStrength(pass).value);
+        return;
+    }
+
+    var hashedPassword = bcrypt.hashSync(pass, 8);
+    if (req.user.id) {
+        const id = req.user.id;
+        let User;
+        switch (req.user.type) {
+            case "individual":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            case "corporate":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            case "instructor":
+                User = await Instructor.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            default:
+                res.status(400).send("Invalid UserType");
+                break;
+        }
+        res.send("Password changed successfully");
+    } else {
+        res.status(400).send("Missing Id");
     }
     res.send("Password changed successfully");
-  } else {
-    res.status(400).send("Missing Id");
-  }
+  } 
+
+async function changeCreditCardDetails(req, res) {
+    const { cardNumber, cardHolderName, expiryDateYear, expiryDateMonth } =
+        req.body;
+    if (req.user.id) {
+        const id = req.user.id;
+
+        const User = await Trainee.findByIdAndUpdate(
+            id,
+            {
+                creditCardDetails: {
+                    cardNumber,
+                    cardHolderName,
+                    expiryDateYear,
+                    expiryDateMonth,
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).send("CreditCardDetails Updated successfully");
+    } else {
+        res.status(400).send("Missing Id");
+    }
+}
+
+async function getWalletMoney(req, res) {
+    if (req.user.id) {
+        const id = req.user.id;
+
+        const User = await Trainee.findById(id);
+
+        res.status(200).json(User.WalletMoney);
+    } else {
+        res.status(400).send("Missing Id");
+    }
 }
 
 async function getCourseInstructor(req, res) {
@@ -473,27 +525,60 @@ const decodeToken = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const user = { username: req.body.username };
-  const admins = await Admin.findOne({
-    username: user.username,
-    password: req.body.password,
-  });
-  const instructors = await Instructor.findOne({
-    username: user.username,
-    password: req.body.password,
-  });
-  const trainees = await Trainee.findOne({
-    username: user.username,
-    password: req.body.password,
-  });
-  //console.log(admins, instructors, trainees);
-  if (!admins && !instructors && !trainees) {
-    res.status(401).send("Wrong Username or Password");
-  } else {
-    if (admins) {
-      user.type = "admin";
-      user.id = admins._id;
-      user.country = admins.country;
+    const user = { username: req.body.username };
+    //var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
+    //console.log(hash);
+
+    const admins = await Admin.findOne({
+        username: user.username,
+    });
+    const instructors = await Instructor.findOne({
+        username: user.username,
+    });
+    const trainees = await Trainee.findOne({
+        username: user.username,
+    });
+    //console.log(admins, instructors, trainees);
+    if (!admins && !instructors && !trainees) {
+        res.status(401).send("Wrong Username ");
+    } else {
+        if (admins) {
+            if (!bcrypt.compareSync(req.body.password, admins.password))
+                return res.status(401).send("Wrong Password");
+            user.type = "admin";
+            user.id = admins._id;
+            user.country = admins.country;
+        }
+        if (instructors) {
+            if (!bcrypt.compareSync(req.body.password, instructors.password))
+                return res.status(401).send("Wrong Password");
+            user.type = "instructor";
+            user.id = instructors._id;
+            user.country = instructors.country;
+        }
+        if (trainees) {
+            if (!bcrypt.compareSync(req.body.password, trainees.password))
+                return res.status(401).send("Wrong Password");
+            user.type = trainees.type;
+            user.id = trainees._id;
+            user.country = trainees.country;
+        }
+
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: "1m",
+        });
+        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: "2m",
+        });
+        //console.log(refreshToken);
+
+        res.cookie("jwt", `${refreshToken}`);
+        res.cookie("accessToken", `${accessToken}`);
+
+        //refreshTokens.push(refreshToken);
+
+        // console.log(res.cookie);
+        res.json({ type: user.type });
     }
     if (instructors) {
       user.type = "instructor";
@@ -526,7 +611,7 @@ const login = async (req, res) => {
       username: user.username,
     });
   }
-};
+
 
 const logout = async (req, res) => {
   console.log("logging out!!");
@@ -535,24 +620,25 @@ const logout = async (req, res) => {
 };
 
 module.exports = {
-  getCourseInstructor,
-  setCountry,
-  getUser,
-  getUsers,
-  addAdmin,
-  addInstructor,
-  addTrainee,
-  editPersonalInformationInstructor,
-  signUp,
-  login,
-  logout,
-  editBiographyInstructor,
-  editEmailInstructor,
-  getTraineeCourse,
-  updateTraineeCourse,
-  changePassword,
-  changePasswordEmail,
-  viewContract,
-  acceptContract,
-  getUserType,
+    getCourseInstructor,
+    setCountry,
+    getUser,
+    getUsers,
+    addAdmin,
+    addInstructor,
+    addTrainee,
+    editPersonalInformationInstructor,
+    signUp,
+    login,
+    editBiographyInstructor,
+    editEmailInstructor,
+    getTraineeCourse,
+    updateTraineeCourse,
+    changePassword,
+    changeCreditCardDetails,
+    getWalletMoney,
+    changePasswordEmail,
+    viewContract,
+    acceptContract,
+    getUserType,
 };
