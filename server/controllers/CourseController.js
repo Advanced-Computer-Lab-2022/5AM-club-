@@ -543,7 +543,17 @@ const setCoursePromotion = async (req, res) => {
   res.send("done");
 };
 
+async function deleteCourse(req, res) {
+  const course = await Course.findByIdAndDelete(req.params.id);
+  if (!course) {
+    res.status(404).send("Course not found");
+    return;
+  }
+  res.send(course);
+}
+
 module.exports = {
+  deleteCourse,
   updateCourse,
   addSubtitle,
   deleteSubtitle,

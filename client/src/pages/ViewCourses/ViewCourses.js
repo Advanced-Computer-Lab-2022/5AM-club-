@@ -55,7 +55,7 @@ function ViewCourses() {
         View Courses: <br />
         {courses.map((c) => (
           <div key={c._id}>
-            {c.valid && (
+            {!c.closed && c.published && (
               <div className="course-item" key={c.title}>
                 <div>
                   {c.title +

@@ -9,8 +9,8 @@ router.get("/populated-courses", CourseController.getPopulatedCourses);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
-
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
+
 router.put(
   "/my-courses/:id/set-promotion",
   CourseController.setCoursePromotion
@@ -41,5 +41,10 @@ router.put(
 );
 
 router.post("/create-course", CourseController.createCourse);
+
+router.delete(
+  "/my-courses/edit-course/:id/delete-course",
+  CourseController.deleteCourse
+);
 
 module.exports = router;
