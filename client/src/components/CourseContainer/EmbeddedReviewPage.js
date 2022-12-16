@@ -102,10 +102,10 @@ function EmbeddedReviewPage(props) {
     }
   }, [props.myReview]);
   return (
-    <Card className="reviewCard">
+    <Card className='reviewCard'>
       <div style={{ display: "flex" }}>
         <Typography
-          variant="h6"
+          variant='h6'
           sx={{
             display: "flex",
             flexGrow: "1",
@@ -121,7 +121,7 @@ function EmbeddedReviewPage(props) {
           {props.instructor && "Instructor (" + props.instructor.username + ")"}
 
           {(props.course?.courseRating || props.instructor?.instructorRating) &&
-            (props.course?.courseRating === -1 ||
+            ((!props.instructor && props.course?.courseRating === -1) ||
             props.instructor?.instructorRating === -1 ? (
               <p>
                 {"Average" +
@@ -134,13 +134,13 @@ function EmbeddedReviewPage(props) {
                   ? "Average rating:"
                   : "Average Course Rating:"}
                 <Rating
-                  name="read-only"
+                  name='read-only'
                   value={parseFloat(
                     props.instructor
                       ? props.instructor.instructorRating || 0
                       : props.course.courseRating || 0
                   )}
-                  size="meduim"
+                  size='meduim'
                   sx={{
                     color: "success.main",
                   }}
@@ -161,7 +161,7 @@ function EmbeddedReviewPage(props) {
             flexShrink: "0",
             fontSize: "25px",
           }}
-          variant="outline-success"
+          variant='outline-success'
           onClick={() => {
             if (!props.instructor)
               navigate("view-course-reviews", {
@@ -176,7 +176,7 @@ function EmbeddedReviewPage(props) {
           View all reviews
         </Button>
       </div>
-      <Typography variant="h6">Reviews: </Typography>
+      <Typography variant='h6'>Reviews: </Typography>
       {!props.instructor ? (
         <>
           {props.course?.userReviews.length <= 2 ? (
@@ -221,8 +221,8 @@ function EmbeddedReviewPage(props) {
           />
           {location.state.displayAddReview && (
             <Button
-              variant="outline-success"
-              className="bottomRight"
+              variant='outline-success'
+              className='bottomRight'
               onClick={() => {
                 setEditable(true);
               }}
@@ -235,12 +235,12 @@ function EmbeddedReviewPage(props) {
       {editable === true && (
         <MuiCard sx={{ m: 2, p: 2 }}>
           <h4> Your Review</h4>
-          <Box component="form" onSubmit={handleSubmit} autoComplete="off">
+          <Box component='form' onSubmit={handleSubmit} autoComplete='off'>
             <h5>Rating: </h5>
             <Rating
-              name="read-only"
+              name='read-only'
               value={parseFloat(rating)}
-              size="meduim"
+              size='meduim'
               sx={{
                 color: "success.main",
               }}
@@ -251,19 +251,19 @@ function EmbeddedReviewPage(props) {
             />
             <h5>Review:</h5>
             <TextField
-              size="small"
+              size='small'
               fullWidth
               multiline
-              id="email"
+              id='email'
               value={review}
               onChange={(e) => {
                 setReview(e.target.value);
               }}
             />
             <Button
-              variant="outline-success"
-              type="submit"
-              className="marginedTop"
+              variant='outline-success'
+              type='submit'
+              className='marginedTop'
               disabled={rating < 0}
             >
               Post
@@ -278,8 +278,8 @@ function EmbeddedReviewPage(props) {
           <>
             {" "}
             <Button
-              variant="outline-success"
-              className="bottomRight"
+              variant='outline-success'
+              className='bottomRight'
               onClick={() => {
                 setEditable(true);
               }}
