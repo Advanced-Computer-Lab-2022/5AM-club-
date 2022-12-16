@@ -78,7 +78,7 @@ function ReviewContainer(props) {
                 ? "You"
                 : props.userReview.user.username)}
           </Typography>
-          {props.myReview === true && (
+          {props.myReview === true && location.state.displayAddReview && (
             <IconButton
               aria-label='delete'
               size='large'
