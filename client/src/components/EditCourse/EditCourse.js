@@ -278,21 +278,24 @@ function EditCourse(props) {
                 <button
                   className="btn btn-outline-success"
                   onClick={publishCourse}
+                  disabled={!props.course?.valid}
                 >
                   Publish Course
                 </button>
               ) : (
                 <>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    Published
-                    <CheckIcon></CheckIcon>
-                  </div>
+                  {!props.course?.closed && (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      Published
+                      <CheckIcon></CheckIcon>
+                    </div>
+                  )}
                 </>
               )}
             </div>

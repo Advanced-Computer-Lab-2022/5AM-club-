@@ -41,14 +41,16 @@ function TraineeFilterContainer(props) {
       <p>Filter by subject:</p>
       <input ref={subjectRef} type={"text"}></input>
 
-      <div>
-        <p>Filter by price:</p>
-        <input ref={minRef} type={"number"}></input>
-        <p> to </p>
-        <input ref={maxRef} type={"number"}></input>
+      {localStorage.getItem("type") !== "corporate" && (
+        <div>
+          <p>Filter by price:</p>
+          <input ref={minRef} type={"number"}></input>
+          <p> to </p>
+          <input ref={maxRef} type={"number"}></input>
 
-        <button onClick={handleFilter}>Go</button>
-      </div>
+          <button onClick={handleFilter}>Go</button>
+        </div>
+      )}
     </div>
   );
 }

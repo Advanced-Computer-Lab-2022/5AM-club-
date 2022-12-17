@@ -1,18 +1,19 @@
 import app from "../../utils/AxiosConfig.js";
 import "./ViewCourses.css";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
-import GeneralFiltersContainer from "../../components/GeneralFiltersContainer/GeneralFiltersContainer";
-import countries from "../../utils/Countries.json";
-import { formatTime } from "../../utils/Helpers";
+import GeneralFiltersContainer from "../../components/ViewCourses/GeneralFiltersContainer";
+import SortContainer from "../../components/ViewCourses/SortContainer";
+import CoursesContainer from "../../components/ViewCourses/CoursesContainer";
+
 function ViewCourses() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [mainText, setMainText] = useState("Loading Courses...");
   const [courses, setCourses] = useState([]);
+  const [sort, setSort] = useState("Most Popular");
+  const [filter, setFilter] = useState({});
+  const [noCourses, setNoCourses] = useState(false);
 
   useEffect(() => {
     setCourses([]);
+    console.log("filter", filter);
     app
       .get(
         localStorage.getItem("type")
@@ -25,72 +26,102 @@ function ViewCourses() {
           headers: {
             country: localStorage.getItem("country"),
           },
-          params: { searchItem: location.state?.searchItem },
+          params: { ...filter },
         }
       )
       .then((response) => {
-        if (response.data.length === 0)
-          setMainText("No courses are available yet");
-        else setMainText("");
-
-        setCourses(response.data);
+        switch (sort) {
+          case "Most Popular":
+            response.data.sort(function (a, b) {
+              return b.owners.length - a.owners.length;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Least Popular":
+            response.data.sort(function (a, b) {
+              return a.owners.length - b.owners.length;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Price High to Low":
+            response.data.sort(function (a, b) {
+              return b.price - a.price;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Price Low to High":
+            response.data.sort(function (a, b) {
+              return a.price - b.price;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Rating High to Low":
+            response.data.sort(function (a, b) {
+              return b.rating - a.rating;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Rating Low to High":
+            response.data.sort(function (a, b) {
+              return a.rating - b.rating;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Most Viewed":
+            response.data.sort(function (a, b) {
+              return b.views - a.views;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Least Viewed":
+            response.data.sort(function (a, b) {
+              return a.views - b.views;
+            });
+            setCourses([...response.data]);
+            break;
+          case "Newest":
+            response.data.sort(function (a, b) {
+              return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+            setCourses([...response.data]);
+            break;
+          case "Oldest":
+            response.data.sort(function (a, b) {
+              return new Date(a.createdAt) - new Date(b.createdAt);
+            });
+            setCourses([...response.data]);
+            break;
+          default:
+            break;
+        }
+        if (response.data.length === 0) setNoCourses(true);
+        else setNoCourses(false);
       });
     //eslint-disable-next-line
-    console.log(
-      localStorage.getItem("type")
-        ? localStorage.getItem("type") === "corporate" ||
-          localStorage.getItem("type") === "individual"
-          ? "/trainee/populated-courses"
-          : "/" + localStorage.getItem("type") + "/populated-courses"
-        : "/populated-courses"
-    );
-  }, []);
+  }, [sort, filter]);
+
   return (
-    <>
+    <div className="view-courses-wrapper">
       <GeneralFiltersContainer
-        setCourses={setCourses}
-        setMainText={setMainText}
+        setFilter={setFilter}
+        setNoCourses={setNoCourses}
       ></GeneralFiltersContainer>
-      <div>
-        View Courses: <br />
-        {courses.map((c) => (
-          <div key={c._id}>
-            {!c.closed && c.published && (
-              <div className="course-item" key={c.title}>
-                <div>
-                  {c.title +
-                    (localStorage.getItem("type") !== "corporate"
-                      ? " price: " +
-                        (Math.floor(c.price + 0.5) - 0.01) +
-                        " " +
-                        countries[
-                          Object.keys(countries).find(
-                            (e) => e === localStorage.getItem("country")
-                          )
-                        ] +
-                        " Total Length: " +
-                        formatTime(c.minutes) +
-                        " "
-                      : "") +
-                    " rating: " +
-                    c.rating}
-                </div>
-                <button
-                  onClick={() => {
-                    navigate("view-course", {
-                      state: { id: c._id },
-                    });
-                  }}
-                >
-                  Show details
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+      <div className="main-content">
+        <SortContainer
+          courses={courses}
+          setCourses={setCourses}
+          setSort={setSort}
+          sort={sort}
+        ></SortContainer>
+        <hr
+          style={{ height: "3px", backgroundColor: "black", border: "none" }}
+        ></hr>
+        <CoursesContainer
+          courses={courses}
+          noCourses={noCourses}
+        ></CoursesContainer>
       </div>
-      <p>{mainText} </p>
-    </>
+    </div>
   );
 }
 

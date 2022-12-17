@@ -111,7 +111,11 @@ function Question(props) {
                       src={edit}
                       alt="edit"
                       onClick={toggleEditingTitle}
-                      style={{ width: "50px", height: "50px" }}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        cursor: "pointer",
+                      }}
                     ></img>
                   </>
                 )}
