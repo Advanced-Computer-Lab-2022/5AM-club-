@@ -118,8 +118,29 @@ const courseSchema = new mongoose.Schema(
     published: { type: Boolean, required: true, default: false },
     closed: { type: Boolean, required: true, default: false },
   },
-  { toJSON: { virtuals: true } }
+  { toJSON: { virtuals: true }, timestamps: true }
 );
+
+courseSchema.virtual("valid").get(function () {
+  flag = true;
+  if (this.subtitles.length == 0) flag = false;
+  for (subtitle of this.subtitles) {
+    if (subtitle.sections.length == 0) {
+      flag = false;
+      break;
+    }
+    for (section of subtitle.sections) {
+      if (
+        section.content.exercise &&
+        section.content.exercise.questions.length == 0
+      ) {
+        flag = false;
+        break;
+      }
+    }
+  }
+  return flag;
+});
 
 courseSchema.virtual("minutes").get(function () {
   let result = 0;
@@ -148,7 +169,4 @@ const Course = mongoose.model("Courses", courseSchema);
 module.exports = {
   Course,
   reviewSchema,
-  // Subtitle,
-  // Section,
-  // Exercise,
 };

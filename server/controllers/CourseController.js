@@ -131,7 +131,7 @@ const getCourseFilter = async (req) => {
       },
     }),
     ...(searchItem && searchItem),
-    ...(req.query.rating && { rating: parseInt(req.query.rating) }),
+    ...(req.query.rating && { rating: { $gte: req.query.rating } }),
   };
 
   return filter;
@@ -198,6 +198,8 @@ const getMyPopulatedCourses = async (req, res) => {
 
 const getCourses = async (req, res) => {
   const filter = await getCourseFilter(req);
+  filter.closed = false;
+  filter.published = true;
   let courses = await Course.find(filter);
   await changePrice(req, courses);
   res.json(courses);
@@ -236,7 +238,7 @@ const findPopulatedCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
-    res.status(500).send("Server s Error");
+    res.status(500).send("Server ssssssss Error");
   }
 };
 const findCourseByID = async (req, res) => {
@@ -252,7 +254,7 @@ const findCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
-    res.status(500).send("Server s Error");
+    res.status(500).send("Server sssssss Error");
   }
 };
 
@@ -552,7 +554,37 @@ async function deleteCourse(req, res) {
   res.send(course);
 }
 
+async function incrementCourseViews(req, res) {
+  const course = await Course.findById(req.params.id);
+  if (!course) {
+    res.status(404).send("Course not found");
+    return;
+  }
+  course.views++;
+  await course.save();
+  res.send(course);
+}
+
+async function getCourseMaxMin(req, res) {
+  const courses = await Course.find();
+  let max = 0;
+  let min = Infinity;
+  await changePrice(req, courses);
+  for (let course of courses) {
+    if (course.price > max) {
+      max = course.price;
+    }
+  }
+  for (let course of courses) {
+    if (course.price < min) {
+      min = course.price;
+    }
+  }
+  res.send({ max: max, min: min === Infinity ? 0 : min });
+}
+
 module.exports = {
+  getCourseMaxMin,
   deleteCourse,
   updateCourse,
   addSubtitle,
@@ -569,4 +601,5 @@ module.exports = {
   findCourseByID,
   findPopulatedCourseByID,
   setCoursePromotion,
+  incrementCourseViews,
 };
