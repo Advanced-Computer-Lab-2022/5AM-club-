@@ -9,9 +9,10 @@ const path = require("path");
 const Instructor = require("./models/Instructor");
 const Trainee = require("./models/Trainee");
 const Admin = require("./models/Admin");
-const Contract = require("./models/Contract");
+const Document = require("./models/Document");
 const courseRouter = require("./routes/api/Course");
 const reviewRouter = require("./routes/api/Review");
+const websiteRouter = require("./routes/api/Website");
 const authenticateToken = require("./middleware/authentication");
 
 connect();
@@ -20,20 +21,20 @@ app.use(express.json({ extended: false }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use(
-    cors({
-        optionsSuccessStatus: 200,
-        credentials: true,
-        origin: "http://localhost:3000",
-    })
+  cors({
+    optionsSuccessStatus: 200,
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
 );
 app.use((req, res, next) => {
-    console.log("intooo");
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
+  console.log("intooo");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
 });
 app.use("/api/", courseRouter);
 app.use("/api/instructor", authenticateToken, courseRouter);
@@ -45,15 +46,19 @@ app.use("/api/admin", authenticateToken, userDataRouter);
 app.use("/api/", userDataRouter);
 app.use("/api/instructor", authenticateToken, reviewRouter);
 app.use("/api/trainee", authenticateToken, reviewRouter);
+app.use("/api/", websiteRouter);
+app.use("api/instructor", authenticateToken, websiteRouter);
+app.use("api/trainee", authenticateToken, websiteRouter);
 app.get("*", function (req, res) {
-    res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
-        if (err) {
-            res.status(500).send(err);
-        }
-    });
+  res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
 });
 
 app.listen(port);
+
 /*
 
 635ad854b2ad88bd8358a5af*/

@@ -161,8 +161,10 @@ const getPopulatedCourses = async (req, res) => {
         path: "userReviews.user",
       },
     })
-    .populate("userReviews.user")
-    .populate("owners");
+    .populate({
+      path: "owners",
+    })
+    .populate("userReviews.user");
   console.log("courses  ", courses);
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
@@ -170,9 +172,6 @@ const getPopulatedCourses = async (req, res) => {
 };
 
 const getMyPopulatedCourses = async (req, res) => {
-  console.log(
-    "lmaolmaolmao<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
-  );
   console.log("getPopulatedCourses", req);
   let filter = await getCourseFilter(req);
   console.log("filter  ", filter);
@@ -190,8 +189,10 @@ const getMyPopulatedCourses = async (req, res) => {
         path: "userReviews.user",
       },
     })
-    .populate("userReviews.user")
-    .populate("owners");
+    .populate({
+      path: "owners",
+    })
+    .populate("userReviews.user");
   console.log("courses  ", courses);
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
@@ -229,6 +230,9 @@ const findPopulatedCourseByID = async (req, res) => {
         populate: {
           path: "userReviews.user",
         },
+      })
+      .populate({
+        path: "owners",
       })
       .populate("userReviews.user");
     if (req.headers.country) {

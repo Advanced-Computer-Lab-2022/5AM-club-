@@ -7,7 +7,6 @@ router.get("/get-user", UserDataController.getUser);
 router.get("/get-users", UserDataController.getUsers);
 router.get("/get-trainee-course", UserDataController.getTraineeCourse);
 router.get("/get-course-instructor", UserDataController.getCourseInstructor);
-router.get("/view-contract", UserDataController.viewContract);
 router.get("/accept-contract", UserDataController.acceptContract);
 router.get("/get-users", UserDataController.getUsers);
 router.get("/get-trainee-course", UserDataController.getTraineeCourse);

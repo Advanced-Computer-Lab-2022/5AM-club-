@@ -9,7 +9,6 @@ const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
 const TraineeCourse = require("../models/TraineeCourse");
 const nodemailer = require("nodemailer");
-const Contract = require("../models/Contract");
 const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
