@@ -65,7 +65,7 @@ function GeneralFiltersContainer(props) {
       min: price[0],
       max: price[1],
       subject: subjectRef.current.value ? subjectRef.current.value : null,
-      rating: rating,
+      courseRating: rating,
       searchItem:
         location.state?.searchItem !== null &&
         location.state?.searchItem !== undefined

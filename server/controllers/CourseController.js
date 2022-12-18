@@ -131,8 +131,10 @@ const getCourseFilter = async (req) => {
       },
     }),
     ...(searchItem && searchItem),
-    ...(req.query.rating && { rating: { $gte: req.query.rating } }),
+    ...(req.query.rating && { courserating: { $gte: req.query.rating } }),
   };
+  console.log(req.query, "req.query");
+  console.log("filter", filter);
 
   return filter;
 };

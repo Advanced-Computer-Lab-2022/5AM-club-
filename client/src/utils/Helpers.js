@@ -81,7 +81,16 @@ const convertISO8601ToMs = (duration) => {
   return totalseconds;
 };
 
+const getSectionCount = (subtitles) => {
+  let count = 0;
+  for (let subtitle of subtitles) {
+    count += subtitle.sections.length;
+  }
+  return count;
+};
+
 module.exports = {
+  getSectionCount,
   replaceAt,
   hasEmptyString,
   displayValues,

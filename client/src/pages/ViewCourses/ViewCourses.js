@@ -57,13 +57,13 @@ function ViewCourses() {
             break;
           case "Rating High to Low":
             response.data.sort(function (a, b) {
-              return b.rating - a.rating;
+              return b.courseRating - a.courseRating;
             });
             setCourses([...response.data]);
             break;
           case "Rating Low to High":
             response.data.sort(function (a, b) {
-              return a.rating - b.rating;
+              return a.courseRating - b.courseRating;
             });
             setCourses([...response.data]);
             break;
@@ -114,7 +114,12 @@ function ViewCourses() {
           sort={sort}
         ></SortContainer>
         <hr
-          style={{ height: "3px", backgroundColor: "black", border: "none" }}
+          style={{
+            minHeight: "3px",
+            backgroundColor: "black",
+            border: "none",
+            flexShrink: "0",
+          }}
         ></hr>
         <CoursesContainer
           courses={courses}

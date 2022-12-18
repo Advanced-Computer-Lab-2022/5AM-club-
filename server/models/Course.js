@@ -73,7 +73,6 @@ subtitleSchema.virtual("minutes").get(function () {
 const courseSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    rating: { type: Number, required: true },
     price: { type: Number, required: true },
     subject: { type: [String], required: true },
     views: { type: Number, required: true },
