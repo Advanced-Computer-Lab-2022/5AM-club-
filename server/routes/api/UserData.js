@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const UserDataController = require("../../controllers/UserDataController");
 const authenticateToken = require("../../middleware/authentication");
+const pay = require("../../controllers/PaymentController");
 
 router.get("/get-user", UserDataController.getUser);
 router.get("/get-users", UserDataController.getUsers);
@@ -22,16 +23,16 @@ router.get("/logout", UserDataController.logout);
 
 router.put("/set-country", UserDataController.setCountry);
 router.put(
-  "/edit-personal-info",
-  UserDataController.editPersonalInformationInstructor
+    "/edit-personal-info",
+    UserDataController.editPersonalInformationInstructor
 );
 router.put("/set-country", UserDataController.setCountry);
 router.put("/edit-trainee-course", UserDataController.updateTraineeCourse);
 router.put("/change-password-email", UserDataController.changePasswordEmail);
 router.put(
-  "/change-password",
-  authenticateToken,
-  UserDataController.changePassword
+    "/change-password",
+    authenticateToken,
+    UserDataController.changePassword
 );
 router.put(
     "/change-creditcard-details",
@@ -43,6 +44,8 @@ router.get(
     authenticateToken,
     UserDataController.getWalletMoney
 );
+
+router.post("/pay", authenticateToken, pay);
 //router.get("/decode-token", UserDataController.decodeToken);
 
 module.exports = router;

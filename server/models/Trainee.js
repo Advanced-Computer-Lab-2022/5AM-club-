@@ -23,7 +23,8 @@ const traineeSchema = new mongoose.Schema({
     },
     email: { type: String },
     country: { type: String },
-    WalletMoney: { type: Number, default: 0 },
+    walletMoney: { type: Number, default: 0 },
+    stripeId: String,
     creditCardDetails: {
         cardNumber: String,
         cardHolderName: String,

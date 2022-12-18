@@ -15,6 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Modal from "react-bootstrap/Modal";
 import useModalData from "./useModalData.js";
 import app from "../../utils/AxiosConfig.js";
+import PasswordBox from "../../components/PasswordBox/PasswordBox";
 
 function SignUp() {
     const [username, setUsername] = useState("");
@@ -125,18 +126,7 @@ function SignUp() {
                                 setLastName(e.target.value);
                             }}
                         />
-                        <TextField
-                            hiddenLabel
-                            type="password"
-                            id="filled-hidden-label-small"
-                            placeholder="password"
-                            variant="outlined"
-                            label="password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                        />
+                        <PasswordBox setPassword={setPassword}></PasswordBox>
                         <TextField
                             hiddenLabel
                             type="password"
