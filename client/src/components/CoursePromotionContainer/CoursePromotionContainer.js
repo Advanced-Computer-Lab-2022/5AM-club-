@@ -75,9 +75,6 @@ function CoursePromotionContainer(props) {
     "& .css-bkrceb-MuiButtonBase-root-MuiPickersDay-root.Mui-selected": {
       backgroundColor: "#96CEA8",
     },
-    "& .css-3eghsz-PrivatePickersYear-button.Mui-selected": {
-      backgroundColor: "#96CEA8",
-    },
     "& .css-bkrceb-MuiButtonBase-root-MuiPickersDay-root:hover": {
       backgroundColor: "#999999",
     },

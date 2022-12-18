@@ -15,8 +15,13 @@ function InstructorEditCourse() {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        location.state = {
+          ...location.state,
+          closed: response.data.closed,
+          published: response.data.published,
+        };
         setCourse(response.data);
+
         app
           .get("/instructor/get-course-instructor", {
             params: { courseid: response.data._id },

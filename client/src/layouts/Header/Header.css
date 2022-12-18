@@ -107,7 +107,7 @@
   box-sizing: border-box;
   text-decoration: none;
   font-family: "Roboto", sans-serif;
-
+  border-width: 2px !important;
   font-weight: 300;
   color: #ffffff;
   text-align: center;

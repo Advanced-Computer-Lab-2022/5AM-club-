@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import countries from "../../utils/Countries.json";
 
 function TraineeCourseContainer(props) {
-  console.log(props.courses);
   const navigate = useNavigate();
   useEffect(() => {
     app
@@ -27,33 +26,29 @@ function TraineeCourseContainer(props) {
       <div>{props.mainText}</div>
       {props.courses.map((course) => (
         <div key={course._id}>
-          {course.valid && (
-            <>
-              <div key={course._id}>
-                {course.title +
-                  " price: " +
-                  (Math.floor(course.price + 0.5) - 0.01) +
-                  " " +
-                  countries[
-                    Object.keys(countries).find(
-                      (e) => e === localStorage.getItem("country")
-                    )
-                  ] +
-                  " rating: " +
-                  course.courseRating}
-              </div>
-              <button
-                onClick={() => {
-                  navigate("view-course-details", {
-                    state: { course: course, displayAddReview: true },
-                  });
-                }}
-              >
-                {" "}
-                Show Details
-              </button>
-            </>
-          )}
+          <div key={course._id}>
+            {course.title +
+              " price: " +
+              (Math.floor(course.price + 0.5) - 0.01) +
+              " " +
+              countries[
+                Object.keys(countries).find(
+                  (e) => e === localStorage.getItem("country")
+                )
+              ] +
+              " rating: " +
+              course.courseRating}
+          </div>
+          <button
+            onClick={() => {
+              navigate("view-course-details", {
+                state: { course: course, displayAddReview: true },
+              });
+            }}
+          >
+            {" "}
+            Show Details
+          </button>
         </div>
       ))}
     </div>

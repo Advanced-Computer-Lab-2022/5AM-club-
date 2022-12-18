@@ -165,8 +165,9 @@ function CourseContainer(props) {
                     >
                       Price:{" "}
                       {props.promotion &&
-                        (new Date(props.promotion.endDate) > new Date() &&
-                        new Date(props.promotion.startDate) < new Date() ? (
+                      new Date(props.promotion.endDate) > new Date() &&
+                      new Date(props.promotion.startDate) < new Date() ? (
+                       
                           <>
                             <div>
                               <span className='scratched'>
@@ -197,16 +198,43 @@ function CourseContainer(props) {
                           </>
                         ) : (
                           <div>
-                            {Math.floor(course.price + 0.5) -
-                              0.01 +
-                              (" " +
-                                countries[
-                                  Object.keys(countries).find(
-                                    (e) => e === localStorage.getItem("country")
-                                  )
-                                ])}
+                            <span className="scratched">
+                              {Math.floor(course.price + 0.5) - 0.01}{" "}
+                            </span>
+                            <span>
+                              {Math.floor(
+                                (course.price *
+                                  (100 - props.promotion.percentage)) /
+                                  100 +
+                                  0.5
+                              ) -
+                                0.01 +
+                                (" " +
+                                  countries[
+                                    Object.keys(countries).find(
+                                      (e) =>
+                                        e === localStorage.getItem("country")
+                                    )
+                                  ])}
+                            </span>
                           </div>
-                        ))}
+                          <span className="red">
+                            (-{props.promotion.percentage}% till{" "}
+                            {new Date(props.promotion.endDate).toDateString()})
+                          </span>
+                        </>
+                      ) : (
+                        <div>
+                          {Math.floor(course.price + 0.5) -
+                            0.01 +
+                            (" " +
+                              countries[
+                                Object.keys(countries).find(
+                                  (e) => e === localStorage.getItem("country")
+                                )
+                              ])}
+                        </div>
+                      )}
                     </div>
                   )}
                 <div
@@ -273,8 +301,18 @@ function CourseContainer(props) {
               </div>
             </div>{" "}
           </div>
-          <Card.Text>{course.summary}</Card.Text>
-          <div className='attribute'> Content: </div>
+
+          <Card.Text className="editable-container">
+            <div style={{ fontWeight: "700", fontSize: "30px" }}>
+              Description :{" "}
+            </div>
+            {course.summary}
+          </Card.Text>
+          <div className="attribute" style={{ fontSize: "30px" }}>
+            {" "}
+            Content:{" "}
+          </div>
+
           <TableContainer title={"Subtitles"} elements={props.subtitles} />
           <EmbeddedReviewPage
             myReviews={myReviews}

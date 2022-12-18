@@ -4,10 +4,13 @@ import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 function CourseVideo(props) {
   const [validURL, setValidURL] = useState(true);
   const [editingURL, setEditingURL] = useState(false);
   const [videoURL, setVideoURL] = useState(props.url);
+
+  const location = useLocation();
 
   const videoRef = useRef();
 
@@ -81,32 +84,36 @@ function CourseVideo(props) {
         ) : (
           <></>
         )}
-        {editingURL ? (
+        {!props.course?.published && (
           <>
-            <input
-              style={{ borderRadius: "10px", margin: "10px" }}
-              ref={videoRef}
-              defaultValue={videoURL ? videoURL : props.url}
-              type=""
-            ></input>
-            <button
-              className="btn btn-success"
-              onClick={() => {
-                handleURLChange(videoRef.current.value);
-                setVideoURL(videoRef.current.value);
-              }}
-            >
-              Done
-            </button>
+            {editingURL ? (
+              <>
+                <input
+                  style={{ borderRadius: "10px", margin: "10px" }}
+                  ref={videoRef}
+                  defaultValue={videoURL ? videoURL : props.url}
+                  type=""
+                ></input>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => {
+                    handleURLChange(videoRef.current.value);
+                    setVideoURL(videoRef.current.value);
+                  }}
+                >
+                  Done
+                </button>
+              </>
+            ) : (
+              <img
+                className="edit-button"
+                src={edit}
+                alt="edit"
+                onClick={toggleEditingURL}
+                style={{ margin: "10px" }}
+              ></img>
+            )}
           </>
-        ) : (
-          <img
-            className="edit-button"
-            src={edit}
-            alt="edit"
-            onClick={toggleEditingURL}
-            style={{ margin: "10px" }}
-          ></img>
         )}
       </div>{" "}
     </div>

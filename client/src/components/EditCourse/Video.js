@@ -4,11 +4,14 @@ import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
 import axios from "axios";
 import { convertISO8601ToMs } from "../../utils/Helpers";
+import { useLocation } from "react-router-dom";
 
 function Video(props) {
   const [validURL, setValidURL] = useState(true);
   const [editingURL, setEditingURL] = useState(false);
   const [videoURL, setVideoURL] = useState(props.content?.link);
+
+  const location = useLocation();
 
   const videoRef = useRef();
 
@@ -104,7 +107,7 @@ function Video(props) {
             type=""
           ></input>
           <button
-            className="btn btn-success"
+            className="btn btn-outline-success"
             onClick={() => {
               handleURLChange(videoRef.current.value);
               setVideoURL(videoRef.current.value);
@@ -114,13 +117,19 @@ function Video(props) {
           </button>
         </>
       ) : (
-        <img
-          className="edit-button"
-          src={edit}
-          alt="edit"
-          onClick={toggleEditingURL}
-          style={{ cursor: "pointer", margin: "10px" }}
-        ></img>
+        <>
+          {!props.course?.published && (
+            <>
+              <img
+                className="edit-button"
+                src={edit}
+                alt="edit"
+                onClick={toggleEditingURL}
+                style={{ cursor: "pointer", margin: "10px" }}
+              ></img>
+            </>
+          )}
+        </>
       )}
     </div>
   );

@@ -6,11 +6,16 @@ router.get("/my-courses", CourseController.getMyCourses);
 router.get("/courses", CourseController.getCourses);
 router.get("/my-populated-courses", CourseController.getMyPopulatedCourses);
 router.get("/populated-courses", CourseController.getPopulatedCourses);
+router.get("/courses/course-max-min", CourseController.getCourseMaxMin);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
 
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
+router.put(
+  "/courses/increment-views/:id",
+  CourseController.incrementCourseViews
+);
 router.put(
   "/my-courses/:id/set-promotion",
   CourseController.setCoursePromotion
@@ -41,5 +46,10 @@ router.put(
 );
 
 router.post("/create-course", CourseController.createCourse);
+
+router.delete(
+  "/my-courses/edit-course/:id/delete-course",
+  CourseController.deleteCourse
+);
 
 module.exports = router;

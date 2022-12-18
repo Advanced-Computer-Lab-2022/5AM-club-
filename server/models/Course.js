@@ -73,7 +73,6 @@ subtitleSchema.virtual("minutes").get(function () {
 const courseSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    rating: { type: Number, required: true },
     price: { type: Number, required: true },
     subject: { type: [String], required: true },
     views: { type: Number, required: true },
@@ -115,8 +114,10 @@ const courseSchema = new mongoose.Schema(
       ],
     },
     subtitles: { type: [subtitleSchema], required: true },
+    published: { type: Boolean, required: true, default: false },
+    closed: { type: Boolean, required: true, default: false },
   },
-  { toJSON: { virtuals: true } }
+  { toJSON: { virtuals: true }, timestamps: true }
 );
 
 courseSchema.virtual("valid").get(function () {
@@ -167,7 +168,4 @@ const Course = mongoose.model("Courses", courseSchema);
 module.exports = {
   Course,
   reviewSchema,
-  // Subtitle,
-  // Section,
-  // Exercise,
 };
