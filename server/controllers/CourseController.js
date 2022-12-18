@@ -123,7 +123,7 @@ const getCourseFilter = async (req) => {
   }
   filter = {
     ...(req.query.subject && {
-      subject: req.query.subject,
+      subject: { $in: req.query.subject },
     }),
     ...((standardMax || standardMin || standardMax === 0) && {
       price: {
@@ -611,7 +611,24 @@ async function getCourseMaxMin(req, res) {
   res.send({ max: max, min: min === Infinity ? 0 : min });
 }
 
+async function getCourseSubjects(req, res) {
+  const courses = await Course.find();
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    }
+  }
+  res.send(subjects.sort());
+}
+
 module.exports = {
+  getCourseSubjects,
   getCourseMaxMin,
   deleteCourse,
   updateCourse,

@@ -118,10 +118,11 @@ function Header() {
         style={{ cursor: "pointer" }}
       ></img>
       {localStorage.getItem("type") !== "admin" && (
-        <div className="searchbar">
+        <div className="searchbar" tabIndex={-1}>
           <input
             ref={searchRef}
             type={"text"}
+            placeholder={"Search for courses"}
             className="search-input"
             onKeyUp={handleEnter}
           ></input>
@@ -142,6 +143,8 @@ function Header() {
           gap: "5px",
           padding: "5px",
           marginRight: "2px",
+          flexShrink: 1,
+          overflow: "hidden",
         }}
       >
         <SelectCountry

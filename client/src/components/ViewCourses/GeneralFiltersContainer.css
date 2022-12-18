@@ -2,8 +2,10 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  padding-top: 13px;
   gap: 10px;
   height: fit-content;
+  min-width: 240px;
   border: none !important;
   box-shadow: 0 0 0 13px #96cea8;
   border-radius: 10px;
@@ -41,4 +43,16 @@
 .rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus,
 .rs-input-group:focus-within {
   outline: 3px solid rgba(150, 206, 168, 0.25) !important;
+}
+.css-b62m3t-container {
+  z-index: 9999;
+}
+.css-1xc3v61-indicatorContainer {
+  cursor: pointer;
+}
+.css-15lsz6c-indicatorContainer {
+  cursor: pointer;
+}
+.css-1p3m7a8-multiValue {
+  background-color: #96cea8 !important;
 }

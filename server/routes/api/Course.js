@@ -7,6 +7,7 @@ router.get("/courses", CourseController.getCourses);
 router.get("/my-populated-courses", CourseController.getMyPopulatedCourses);
 router.get("/populated-courses", CourseController.getPopulatedCourses);
 router.get("/courses/course-max-min", CourseController.getCourseMaxMin);
+router.get("/courses/course-subjects", CourseController.getCourseSubjects);
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);

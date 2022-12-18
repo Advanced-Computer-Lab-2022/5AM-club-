@@ -1,6 +1,7 @@
 import { memo } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import "./SortContainer.css";
 
 function SortContainer(props) {
   return (
@@ -9,8 +10,7 @@ function SortContainer(props) {
         key={1}
         id={`dropdown-button-drop-end}`}
         drop={"end"}
-        menuVariant="dark"
-        variant="outline-secondary"
+        variant="outline-success"
         title={`Sort by: ` + props.sort}
       >
         <Dropdown.Item

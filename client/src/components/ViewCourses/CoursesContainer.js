@@ -1,7 +1,7 @@
 import { memo } from "react";
-import CourseCard from "./CourseCard";
 import { Spinner } from "loading-animations-react";
 import noCourses from "../../assets/ViewCourses/noCourses.svg";
+import Pagination from "../../layouts/Pagination/Pagination";
 
 function CoursesContainer(props) {
   return (
@@ -56,20 +56,7 @@ function CoursesContainer(props) {
         </div>
       ) : (
         <>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              gap: "65px",
-            }}
-          >
-            {props.courses.map((c) => (
-              <div key={c._id}>
-                <CourseCard course={c}></CourseCard>
-              </div>
-            ))}
-          </div>
+          <Pagination items={props.courses} itemsPerPage={12} />
         </>
       )}
     </>

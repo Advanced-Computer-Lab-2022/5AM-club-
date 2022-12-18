@@ -89,7 +89,16 @@ const getSectionCount = (subtitles) => {
   return count;
 };
 
+const getSubjectValues = (subjects) => {
+  let subjectValues = [];
+  for (let subject of subjects) {
+    subjectValues.push(subject.value);
+  }
+  return subjectValues;
+};
+
 module.exports = {
+  getSubjectValues,
   getSectionCount,
   replaceAt,
   hasEmptyString,

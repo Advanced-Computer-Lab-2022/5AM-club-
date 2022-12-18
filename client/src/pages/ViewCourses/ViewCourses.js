@@ -51,7 +51,7 @@ function ViewCourses() {
                 );
               if (a.promotion)
                 return (
-                  a.price - (a.promotion.percentage / 100) * a.price - b.price
+                  b.price - a.price + (a.promotion.percentage / 100) * a.price
                 );
               return b.price - a.price;
             });
