@@ -102,6 +102,7 @@ const getCourseFilter = async (req) => {
         { subject: { $regex: req.query.searchItem, $options: "i" } },
         { instructor: { $in: ids } },
         { title: { $regex: req.query.searchItem, $options: "i" } },
+        { summary: { $regex: req.query.searchItem, $options: "i" } },
       ],
     };
   }
@@ -131,7 +132,6 @@ const getCourseFilter = async (req) => {
       },
     }),
     ...(searchItem && searchItem),
-    ...(req.query.rating && { courserating: { $gte: req.query.rating } }),
   };
   console.log(req.query, "req.query");
   console.log("filter", filter);
@@ -153,6 +153,7 @@ const changePrice = async (req, courses) => {
 const getPopulatedCourses = async (req, res) => {
   console.log("getPopulatedCourses", req);
   const filter = await getCourseFilter(req);
+
   console.log("filter  ", filter);
   let courses = await Course.find(filter)
     .populate({
@@ -166,6 +167,12 @@ const getPopulatedCourses = async (req, res) => {
     })
     .populate("userReviews.user");
   console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
+
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
   res.json(courses);
@@ -194,6 +201,11 @@ const getMyPopulatedCourses = async (req, res) => {
     })
     .populate("userReviews.user");
   console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
   res.json(courses);
@@ -204,6 +216,11 @@ const getCourses = async (req, res) => {
   filter.closed = false;
   filter.published = true;
   let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   res.json(courses);
 };
@@ -217,6 +234,11 @@ const getMyCourses = async (req, res) => {
         : { owners: req.user.id })),
   };
   let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   res.json(courses);
 };

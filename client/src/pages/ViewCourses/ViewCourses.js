@@ -45,12 +45,28 @@ function ViewCourses() {
             break;
           case "Price High to Low":
             response.data.sort(function (a, b) {
+              if (b.promotion)
+                return (
+                  b.price - (b.promotion.percentage / 100) * b.price - a.price
+                );
+              if (a.promotion)
+                return (
+                  a.price - (a.promotion.percentage / 100) * a.price - b.price
+                );
               return b.price - a.price;
             });
             setCourses([...response.data]);
             break;
           case "Price Low to High":
             response.data.sort(function (a, b) {
+              if (b.promotion)
+                return (
+                  a.price - b.price + (b.promotion.percentage / 100) * b.price
+                );
+              if (a.promotion)
+                return (
+                  a.price - (a.promotion.percentage / 100) * a.price - b.price
+                );
               return a.price - b.price;
             });
             setCourses([...response.data]);

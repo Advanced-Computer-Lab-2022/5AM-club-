@@ -61,11 +61,11 @@ function CoursesContainer(props) {
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
-              gap: "50px",
+              gap: "65px",
             }}
           >
             {props.courses.map((c) => (
-              <div key={c._id} style={{ flexGrow: "1" }}>
+              <div key={c._id}>
                 <CourseCard course={c}></CourseCard>
               </div>
             ))}

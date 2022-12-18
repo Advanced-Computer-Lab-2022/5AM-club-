@@ -11,8 +11,9 @@ function GeneralFiltersContainer(props) {
   const subjectRef = useRef();
 
   const [price, setPrice] = useState([null, null]);
-  const [min, setMin] = useState(null);
-  const [max, setMax] = useState(null);
+  const [min, setMin] = useState();
+  const [max, setMax] = useState();
+  const [rating, setRating] = useState();
 
   useEffect(() => {
     app
@@ -40,8 +41,6 @@ function GeneralFiltersContainer(props) {
       });
   }, []);
 
-  let rating = null;
-
   const location = useLocation();
 
   useEffect(() => {
@@ -50,7 +49,7 @@ function GeneralFiltersContainer(props) {
 
   function handleFilter() {
     props.setNoCourses(false);
-    console.log({
+    props.setFilter({
       min: price[0],
       max: price[1],
       subject: subjectRef.current.value ? subjectRef.current.value : null,
@@ -61,11 +60,18 @@ function GeneralFiltersContainer(props) {
           ? location.state?.searchItem
           : null,
     });
+  }
+
+  function handleClear() {
+    props.setNoCourses(false);
+    subjectRef.current.value = "";
+    setRating();
+    setPrice([min, max]);
     props.setFilter({
-      min: price[0],
-      max: price[1],
-      subject: subjectRef.current.value ? subjectRef.current.value : null,
-      courseRating: rating,
+      min: min,
+      max: max,
+      subject: null,
+      courseRating: null,
       searchItem:
         location.state?.searchItem !== null &&
         location.state?.searchItem !== undefined
@@ -73,8 +79,6 @@ function GeneralFiltersContainer(props) {
           : null,
     });
   }
-
-  function handleClear() {}
 
   return (
     <div className="general-filters-wrapper">
@@ -140,8 +144,9 @@ function GeneralFiltersContainer(props) {
           color: "success.main",
         }}
         precision={0.5}
+        value={rating || 0}
         onChange={(e) => {
-          rating = e.target.value;
+          setRating(e.target.value);
         }}
       />
       <div style={{ display: "flex", gap: "10px" }}>
