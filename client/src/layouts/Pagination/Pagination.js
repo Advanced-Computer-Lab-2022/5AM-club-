@@ -1,11 +1,10 @@
 import React, { memo, useState } from "react";
 import ReactPaginate from "react-paginate";
 import CourseCard from "../../components/ViewCourses/CourseCard";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import MyCourseCard from "../../components/ViewMyCourses/MyCourseCard";
 import "./Pagination.css";
 
-export default memo(function Pagination({ itemsPerPage, items }) {
+export default memo(function Pagination({ itemsPerPage, items, my }) {
   const [currentPage, setCurrentPage] = useState(0);
 
   function handlePageClick({ selected: selectedPage }) {
@@ -20,12 +19,16 @@ export default memo(function Pagination({ itemsPerPage, items }) {
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        gap: "65px",
+        gap: my ? "43px" : "65px",
       }}
     >
       {items.slice(offset, offset + itemsPerPage).map((c) => (
         <div key={c._id}>
-          <CourseCard course={c}></CourseCard>
+          {my ? (
+            <MyCourseCard course={c}></MyCourseCard>
+          ) : (
+            <CourseCard course={c}></CourseCard>
+          )}
         </div>
       ))}
     </div>

@@ -28,52 +28,68 @@ function Card(props) {
           <p className="text-muted" style={{ marginTop: "5px" }}>
             {"Taught by : " + props.course.instructor[0].username}
           </p>
-          <div
-            className="d-flex justify-content-between mb-3 text-dark mb-0"
-            style={{ fontWeight: "700", fontSize: "25px" }}
-          >
-            {props.course.promotion &&
-            new Date(props.course.promotion.endDate) > new Date() &&
-            new Date(props.course.promotion.startDate) < new Date() ? (
-              <>
-                <div>
-                  <span className="scratched">
-                    {Math.floor(props.course.price + 0.5) - 0.01}{" "}
+          {localStorage.getItem("type") !== "corporate" && (
+            <div
+              className="d-flex justify-content-between mb-3 text-dark mb-0"
+              style={{ fontWeight: "700", fontSize: "25px" }}
+            >
+              {props.course.promotion &&
+              new Date(props.course.promotion.endDate) > new Date() &&
+              new Date(props.course.promotion.startDate) < new Date() ? (
+                <>
+                  <div>
+                    <span className="scratched">
+                      {Math.floor(props.course.price + 0.5) - 0.01}{" "}
+                    </span>
+                    <span>
+                      {Math.floor(
+                        (props.course.price *
+                          (100 - props.course.promotion.percentage)) /
+                          100 +
+                          0.5
+                      ) -
+                        0.01 +
+                        (" " +
+                          (" " +
+                            (countries[
+                              Object.keys(countries).find(
+                                (e) => e === localStorage.getItem("country")
+                              )
+                            ]
+                              ? countries[
+                                  Object.keys(countries).find(
+                                    (e) => e === localStorage.getItem("country")
+                                  )
+                                ]
+                              : "USD")))}
+                    </span>
+                  </div>
+                  <span className="red">
+                    (-{props.course.promotion.percentage}% till{" "}
+                    {new Date(props.course.promotion.endDate).toDateString()})
                   </span>
-                  <span>
-                    {Math.floor(
-                      (props.course.price *
-                        (100 - props.course.promotion.percentage)) /
-                        100 +
-                        0.5
-                    ) -
-                      0.01 +
+                </>
+              ) : (
+                <div>
+                  {Math.floor(props.course.price + 0.5) -
+                    0.01 +
+                    (" " +
                       (" " +
-                        countries[
+                        (countries[
                           Object.keys(countries).find(
                             (e) => e === localStorage.getItem("country")
                           )
-                        ])}
-                  </span>
+                        ]
+                          ? countries[
+                              Object.keys(countries).find(
+                                (e) => e === localStorage.getItem("country")
+                              )
+                            ]
+                          : "USD")))}
                 </div>
-                <span className="red">
-                  (-{props.course.promotion.percentage}% till{" "}
-                  {new Date(props.course.promotion.endDate).toDateString()})
-                </span>
-              </>
-            ) : (
-              <div>
-                {Math.floor(props.course.price + 0.5) -
-                  0.01 +
-                  (" " +
-                    countries[
-                      Object.keys(countries).find(
-                        (e) => e === localStorage.getItem("country")
-                      )
-                    ])}
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="d-flex flex-column justify-content-between mb-2">

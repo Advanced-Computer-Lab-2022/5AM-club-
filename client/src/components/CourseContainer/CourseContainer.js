@@ -34,6 +34,7 @@ function CourseContainer(props) {
       .then((res) => {
         setCourse(res.data);
       });
+    //eslint-disable-next-line
   }, [myReviews]);
 
   useEffect(() => {
@@ -176,12 +177,20 @@ function CourseContainer(props) {
                               ) -
                                 0.01 +
                                 (" " +
-                                  countries[
+                                  (countries[
                                     Object.keys(countries).find(
                                       (e) =>
                                         e === localStorage.getItem("country")
                                     )
-                                  ])}
+                                  ]
+                                    ? countries[
+                                        Object.keys(countries).find(
+                                          (e) =>
+                                            e ===
+                                            localStorage.getItem("country")
+                                        )
+                                      ]
+                                    : "USD"))}
                             </span>
                           </div>
                           <span className="red">
@@ -194,11 +203,18 @@ function CourseContainer(props) {
                           {Math.floor(course.price + 0.5) -
                             0.01 +
                             (" " +
-                              countries[
+                              (countries[
                                 Object.keys(countries).find(
                                   (e) => e === localStorage.getItem("country")
                                 )
-                              ])}
+                              ]
+                                ? countries[
+                                    Object.keys(countries).find(
+                                      (e) =>
+                                        e === localStorage.getItem("country")
+                                    )
+                                  ]
+                                : "USD"))}
                         </div>
                       )}
                     </div>

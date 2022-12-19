@@ -12,7 +12,6 @@ const setCoursePromotionSchema = Joi.object({
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
-  rating: Joi.number().required().min(0).max(5),
   price: Joi.number().required().min(0),
   subject: Joi.array().items(Joi.string()).required(),
   views: Joi.number().required().min(0),
@@ -153,7 +152,8 @@ const changePrice = async (req, courses) => {
 const getPopulatedCourses = async (req, res) => {
   console.log("getPopulatedCourses", req);
   const filter = await getCourseFilter(req);
-
+  filter.closed = false;
+  filter.published = true;
   console.log("filter  ", filter);
   let courses = await Course.find(filter)
     .populate({
@@ -179,9 +179,7 @@ const getPopulatedCourses = async (req, res) => {
 };
 
 const getMyPopulatedCourses = async (req, res) => {
-  console.log("getPopulatedCourses", req);
   let filter = await getCourseFilter(req);
-  console.log("filter  ", filter);
   filter = {
     ...filter,
     ...(req.user?.id &&
@@ -189,6 +187,7 @@ const getMyPopulatedCourses = async (req, res) => {
         ? { instructor: req.user.id }
         : { owners: req.user.id })),
   };
+  console.log("filter bala ", filter);
   let courses = await Course.find(filter)
     .populate({
       path: "instructor",

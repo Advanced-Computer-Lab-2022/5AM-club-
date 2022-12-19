@@ -1,19 +1,27 @@
 import app from "../../utils/AxiosConfig.js";
 import "./ViewCourses.css";
 import { useEffect, useState, memo } from "react";
+import { useLocation } from "react-router-dom";
 import GeneralFiltersContainer from "../../components/ViewCourses/GeneralFiltersContainer";
 import SortContainer from "../../components/ViewCourses/SortContainer";
 import CoursesContainer from "../../components/ViewCourses/CoursesContainer";
 
 function ViewCourses() {
+  const location = useLocation();
+
   const [courses, setCourses] = useState([]);
   const [sort, setSort] = useState("Most Popular");
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({
+    searchItem:
+      location.state?.searchItem !== null &&
+      location.state?.searchItem !== undefined
+        ? location.state?.searchItem
+        : null,
+  });
   const [noCourses, setNoCourses] = useState(false);
 
   useEffect(() => {
     setCourses([]);
-    console.log("filter", filter);
     app
       .get(
         localStorage.getItem("type")
@@ -30,6 +38,9 @@ function ViewCourses() {
         }
       )
       .then((response) => {
+        console.log("filterlmao", filter);
+
+        console.log(response.data, "<<<<<<<<<<");
         switch (sort) {
           case "Most Popular":
             response.data.sort(function (a, b) {

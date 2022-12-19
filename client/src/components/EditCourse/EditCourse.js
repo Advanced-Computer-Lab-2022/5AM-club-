@@ -420,11 +420,18 @@ function EditCourse(props) {
                     {"Price : " +
                       (Math.floor(props.course?.price + 0.5) - 0.01) +
                       " " +
-                      countries[
-                        Object.keys(countries).find(
-                          (e) => e === localStorage.getItem("country")
-                        )
-                      ]}
+                      (" " +
+                        (countries[
+                          Object.keys(countries).find(
+                            (e) => e === localStorage.getItem("country")
+                          )
+                        ]
+                          ? countries[
+                              Object.keys(countries).find(
+                                (e) => e === localStorage.getItem("country")
+                              )
+                            ]
+                          : "USD"))}
                   </p>
                   {!props.course?.published && (
                     <>

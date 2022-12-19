@@ -1,4 +1,5 @@
 const formatTime = (minutes) => {
+  if (minutes === 0) return "0m";
   const hours = Math.floor(minutes / 60);
   minutes = minutes % 60;
   let time = "";

@@ -4,8 +4,7 @@ import PrivateRoute from "./config/PrivateRoute";
 import { memo, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Instructor from "./pages/InstructorMyCourses/InstructorMyCourses";
-import TraineeMyCourses from "./pages/TraineeMyCourses/TraineeMyCourses";
+import ViewMyCourses from "./pages/ViewMyCourses/ViewMyCourses";
 import MainPage from "./pages/MainPage/MainPage";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import InstructorCreateCourse from "./pages/InstructorCreateCourse/InstructorCreateCourse";
@@ -199,7 +198,7 @@ function App() {
                   path="/individual-trainee/my-courses"
                   element={
                     <PrivateRoute type={"individual"}>
-                      <TraineeMyCourses />
+                      <ViewMyCourses />
                     </PrivateRoute>
                   }
                 ></Route>
@@ -288,7 +287,7 @@ function App() {
                   path="/corporate-trainee/my-courses"
                   element={
                     <PrivateRoute type={"corporate"}>
-                      <TraineeMyCourses />
+                      <ViewMyCourses />
                     </PrivateRoute>
                   }
                 ></Route>
@@ -369,7 +368,7 @@ function App() {
                   path="/instructor/my-courses"
                   element={
                     <PrivateRoute type={"instructor"}>
-                      <Instructor />
+                      <ViewMyCourses />
                     </PrivateRoute>
                   }
                 ></Route>
