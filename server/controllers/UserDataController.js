@@ -27,6 +27,13 @@ const addUserSchema = Joi.object({
     password: Joi.string().required().messages({
         "string.empty": `"Password" cannot be an empty field`,
     }),
+    email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+    }),
+    gender: Joi.string(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
 });
 
 const editPersonalInformationSchema = Joi.object({

@@ -2,7 +2,7 @@ import { useState } from "react";
 //import { Navigate, useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
-
+import PasswordBox from "../../components/PasswordBox/PasswordBox.js";
 import app from "../../utils/AxiosConfig.js";
 
 function ChangePassword() {
@@ -47,29 +47,8 @@ function ChangePassword() {
                         },
                     }}
                 >
-                    <TextField
-                        hiddenLabel
-                        id="filled-hidden-label-small"
-                        type="password"
-                        placeholder="password"
-                        variant="outlined"
-                        label="password"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
-                    />
-                    <TextField
-                        hiddenLabel
-                        id="filled-hidden-label-small"
-                        type="password"
-                        variant="outlined"
-                        label="repeat password"
-                        value={repeatPassword}
-                        onChange={(e) => {
-                            setRepeatPassword(e.target.value);
-                        }}
-                    />
+                    <PasswordBox setPassword={setPassword}></PasswordBox>
+                    <PasswordBox setPassword={setRepeatPassword}></PasswordBox>
 
                     <Button
                         type="submit"

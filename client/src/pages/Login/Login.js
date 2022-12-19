@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import app from "../../utils/AxiosConfig.js";
-
+import PasswordBox from "../../components/PasswordBox/PasswordBox.js";
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -64,17 +64,7 @@ function Login() {
                             setUsername(e.target.value);
                         }}
                     />
-                    <TextField
-                        hiddenLabel
-                        id="filled-hidden-label-small"
-                        placeholder="password"
-                        variant="outlined"
-                        label="password"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
-                    />
+                    <PasswordBox setPassword={setPassword}></PasswordBox>
 
                     <Button
                         type="submit"
