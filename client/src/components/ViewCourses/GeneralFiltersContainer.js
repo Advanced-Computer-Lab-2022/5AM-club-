@@ -1,4 +1,4 @@
-import { useRef, memo, useState, useEffect } from "react";
+import { memo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./GeneralFiltersContainer.css";
 import "./styles.less";
@@ -6,13 +6,17 @@ import "./styles.css";
 import Rating from "@mui/material/Rating";
 import { RangeSlider, InputGroup, InputNumber } from "rsuite";
 import app from "../../utils/AxiosConfig.js";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { getSubjectValues } from "../../utils/Helpers.js";
 
 function GeneralFiltersContainer(props) {
-  const subjectRef = useRef();
-
+  const [subjects, setSubjects] = useState([]);
+  const [selectedSubjects, setSelectedSubjects] = useState([]);
   const [price, setPrice] = useState([null, null]);
   const [min, setMin] = useState(null);
   const [max, setMax] = useState(null);
+  const [rating, setRating] = useState(null);
 
   useEffect(() => {
     app
@@ -30,17 +34,33 @@ function GeneralFiltersContainer(props) {
         }
       )
       .then((response) => {
-        console.log(response);
         setPrice([
           Math.floor(response.data.min - 1),
           Math.floor(response.data.max + 1),
         ]);
         setMin(Math.floor(response.data.min - 1));
         setMax(Math.floor(response.data.max + 1));
+        app
+          .get(
+            localStorage.getItem("type")
+              ? localStorage.getItem("type") === "corporate" ||
+                localStorage.getItem("type") === "individual"
+                ? "/trainee/courses/course-subjects"
+                : "/" +
+                  localStorage.getItem("type") +
+                  "/courses/course-subjects"
+              : "/courses/course-subjects",
+            {
+              headers: {
+                country: localStorage.getItem("country"),
+              },
+            }
+          )
+          .then((response) => {
+            setSubjects(response.data);
+          });
       });
   }, []);
-
-  let rating = null;
 
   const location = useLocation();
 
@@ -50,22 +70,11 @@ function GeneralFiltersContainer(props) {
 
   function handleFilter() {
     props.setNoCourses(false);
-    console.log({
-      min: price[0],
-      max: price[1],
-      subject: subjectRef.current.value ? subjectRef.current.value : null,
-      rating: rating,
-      searchItem:
-        location.state?.searchItem !== null &&
-        location.state?.searchItem !== undefined
-          ? location.state?.searchItem
-          : null,
-    });
     props.setFilter({
       min: price[0],
       max: price[1],
-      subject: subjectRef.current.value ? subjectRef.current.value : null,
-      courseRating: rating,
+      subject: getSubjectValues(selectedSubjects),
+      rating: rating,
       searchItem:
         location.state?.searchItem !== null &&
         location.state?.searchItem !== undefined
@@ -74,12 +83,48 @@ function GeneralFiltersContainer(props) {
     });
   }
 
-  function handleClear() {}
+  function handleClear() {
+    props.setNoCourses(false);
+    setSelectedSubjects([]);
+    setRating(null);
+    setPrice([min, max]);
+    props.setFilter({
+      min: min,
+      max: max,
+      subject: null,
+      rating: null,
+      searchItem:
+        location.state?.searchItem !== null &&
+        location.state?.searchItem !== undefined
+          ? location.state?.searchItem
+          : null,
+    });
+  }
+  const animatedComponents = makeAnimated();
 
   return (
     <div className="general-filters-wrapper">
       <p>Filter by subject:</p>
-      <input ref={subjectRef} type={"text"}></input>
+
+      <Select
+        theme={(theme) => ({
+          ...theme,
+          colors: {
+            ...theme.colors,
+            primary25: "#A6D6B5",
+            primary: "#96cea8",
+          },
+        })}
+        value={selectedSubjects}
+        onChange={(e) => {
+          setSelectedSubjects(e);
+        }}
+        styles={{ zIndex: 9999, position: "relative" }}
+        closeMenuOnSelect={false}
+        components={animatedComponents}
+        isMulti
+        options={subjects}
+      />
 
       {localStorage.getItem("type") !== "corporate" && (
         <div
@@ -92,6 +137,19 @@ function GeneralFiltersContainer(props) {
           }}
         >
           {" "}
+          <div>
+            <div
+              style={{
+                height: "4px",
+                backgroundColor: "#484848",
+                position: "absolute",
+                width: "240px",
+                left: "200px",
+                right: "0",
+                marginTop: "5px",
+              }}
+            ></div>
+          </div>
           <div>Filter by Price:</div>
           <RangeSlider
             min={min || 0}
@@ -103,8 +161,9 @@ function GeneralFiltersContainer(props) {
               setPrice(value);
             }}
           />
-          <InputGroup>
+          <InputGroup styles={{ zIndex: -1, position: "relative" }}>
             <InputNumber
+              styles={{ zIndex: -1, position: "relative" }}
               min={min || 0}
               max={max || 0}
               value={price[0] || 0}
@@ -118,6 +177,7 @@ function GeneralFiltersContainer(props) {
             />
             <InputGroup.Addon>to</InputGroup.Addon>
             <InputNumber
+              styles={{ zIndex: -1, position: "relative" }}
               min={min || 0}
               max={max || 0}
               value={price[1] || 0}
@@ -132,7 +192,20 @@ function GeneralFiltersContainer(props) {
           </InputGroup>
         </div>
       )}
-      <p>Filter by rating:</p>
+      <div>
+        <div
+          style={{
+            height: "4px",
+            backgroundColor: "#484848",
+            position: "absolute",
+            width: "240px",
+            left: "200px",
+            right: "0",
+            marginTop: "5px",
+          }}
+        ></div>
+      </div>
+      <p style={{ marginTop: "7px" }}>Filter by rating:</p>
       <Rating
         name="read-only"
         size="medium"
@@ -140,11 +213,25 @@ function GeneralFiltersContainer(props) {
           color: "success.main",
         }}
         precision={0.5}
+        value={rating || 0}
         onChange={(e) => {
-          rating = e.target.value;
+          setRating(e.target.value);
         }}
       />
-      <div style={{ display: "flex", gap: "10px" }}>
+      <div>
+        <div
+          style={{
+            height: "4px",
+            backgroundColor: "#484848",
+            position: "absolute",
+            width: "240px",
+            left: "200px",
+            right: "0",
+            marginTop: "5px",
+          }}
+        ></div>
+      </div>
+      <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
         {" "}
         <button
           onClick={handleClear}

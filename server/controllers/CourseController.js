@@ -12,7 +12,6 @@ const setCoursePromotionSchema = Joi.object({
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
-  rating: Joi.number().required().min(0).max(5),
   price: Joi.number().required().min(0),
   subject: Joi.array().items(Joi.string()).required(),
   views: Joi.number().required().min(0),
@@ -102,6 +101,7 @@ const getCourseFilter = async (req) => {
         { subject: { $regex: req.query.searchItem, $options: "i" } },
         { instructor: { $in: ids } },
         { title: { $regex: req.query.searchItem, $options: "i" } },
+        { summary: { $regex: req.query.searchItem, $options: "i" } },
       ],
     };
   }
@@ -122,7 +122,7 @@ const getCourseFilter = async (req) => {
   }
   filter = {
     ...(req.query.subject && {
-      subject: req.query.subject,
+      subject: { $in: req.query.subject },
     }),
     ...((standardMax || standardMin || standardMax === 0) && {
       price: {
@@ -131,7 +131,6 @@ const getCourseFilter = async (req) => {
       },
     }),
     ...(searchItem && searchItem),
-    ...(req.query.rating && { courserating: { $gte: req.query.rating } }),
   };
   console.log(req.query, "req.query");
   console.log("filter", filter);
@@ -153,6 +152,8 @@ const changePrice = async (req, courses) => {
 const getPopulatedCourses = async (req, res) => {
   console.log("getPopulatedCourses", req);
   const filter = await getCourseFilter(req);
+  filter.closed = false;
+  filter.published = true;
   console.log("filter  ", filter);
   let courses = await Course.find(filter)
     .populate({
@@ -166,15 +167,19 @@ const getPopulatedCourses = async (req, res) => {
     })
     .populate("userReviews.user");
   console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
+
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
   res.json(courses);
 };
 
 const getMyPopulatedCourses = async (req, res) => {
-  console.log("getPopulatedCourses", req);
   let filter = await getCourseFilter(req);
-  console.log("filter  ", filter);
   filter = {
     ...filter,
     ...(req.user?.id &&
@@ -182,6 +187,7 @@ const getMyPopulatedCourses = async (req, res) => {
         ? { instructor: req.user.id }
         : { owners: req.user.id })),
   };
+  console.log("filter bala ", filter);
   let courses = await Course.find(filter)
     .populate({
       path: "instructor",
@@ -194,6 +200,11 @@ const getMyPopulatedCourses = async (req, res) => {
     })
     .populate("userReviews.user");
   console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   console.log("courseschangedPrice  ", courses);
   res.json(courses);
@@ -204,6 +215,11 @@ const getCourses = async (req, res) => {
   filter.closed = false;
   filter.published = true;
   let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   res.json(courses);
 };
@@ -217,6 +233,11 @@ const getMyCourses = async (req, res) => {
         : { owners: req.user.id })),
   };
   let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
   await changePrice(req, courses);
   res.json(courses);
 };
@@ -589,7 +610,24 @@ async function getCourseMaxMin(req, res) {
   res.send({ max: max, min: min === Infinity ? 0 : min });
 }
 
+async function getCourseSubjects(req, res) {
+  const courses = await Course.find();
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    }
+  }
+  res.send(subjects.sort());
+}
+
 module.exports = {
+  getCourseSubjects,
   getCourseMaxMin,
   deleteCourse,
   updateCourse,

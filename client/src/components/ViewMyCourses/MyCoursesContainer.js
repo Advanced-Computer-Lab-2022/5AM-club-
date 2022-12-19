@@ -3,7 +3,7 @@ import { Spinner } from "loading-animations-react";
 import noCourses from "../../assets/ViewCourses/noCourses.svg";
 import Pagination from "../../layouts/Pagination/Pagination";
 
-function CoursesContainer(props) {
+function MyCoursesContainer(props) {
   return (
     <>
       {props.noCourses ? (
@@ -28,8 +28,7 @@ function CoursesContainer(props) {
             <p
               style={{ fontSize: "25px", fontWeight: "700", marginTop: "50px" }}
             >
-              No courses matched your filters. Try broadening you filters to
-              find more courses.
+              You have no courses yet.
             </p>
           </div>
         </>
@@ -56,10 +55,10 @@ function CoursesContainer(props) {
         </div>
       ) : (
         <>
-          <Pagination items={props.courses} itemsPerPage={12} />
+          <Pagination items={props.courses} itemsPerPage={12} my={true} />
         </>
       )}
     </>
   );
 }
-export default memo(CoursesContainer);
+export default memo(MyCoursesContainer);

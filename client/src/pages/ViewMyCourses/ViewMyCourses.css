@@ -1,0 +1,16 @@
+.view-courses-wrapper {
+  display: flex;
+  gap: 60px;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}

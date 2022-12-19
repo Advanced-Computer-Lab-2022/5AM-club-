@@ -1,4 +1,5 @@
 const formatTime = (minutes) => {
+  if (minutes === 0) return "0m";
   const hours = Math.floor(minutes / 60);
   minutes = minutes % 60;
   let time = "";
@@ -89,7 +90,16 @@ const getSectionCount = (subtitles) => {
   return count;
 };
 
+const getSubjectValues = (subjects) => {
+  let subjectValues = [];
+  for (let subject of subjects) {
+    subjectValues.push(subject.value);
+  }
+  return subjectValues;
+};
+
 module.exports = {
+  getSubjectValues,
   getSectionCount,
   replaceAt,
   hasEmptyString,

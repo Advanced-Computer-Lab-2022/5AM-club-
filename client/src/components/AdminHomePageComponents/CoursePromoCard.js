@@ -5,9 +5,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import request from "../../assets/AdminHomePage/request.png";
-import "./CourseRequestsCard.css";
+import "./CoursePromoCard.css";
 
-function CourseRequestsCard() {
+function CoursePromoCard() {
   return (
     <Card sx={{ maxWidth: 345, height: "500px" }}>
       <CardActionArea>
@@ -19,10 +19,10 @@ function CourseRequestsCard() {
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            Course Requests
+            Course Promos
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            There are n requests from corporate trainees to access courses
+            You can apply promotions for specific courses or all courses.
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -30,4 +30,4 @@ function CourseRequestsCard() {
   );
 }
 
-export default memo(CourseRequestsCard);
+export default memo(CoursePromoCard);

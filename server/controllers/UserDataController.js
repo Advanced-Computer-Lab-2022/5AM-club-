@@ -14,8 +14,8 @@ const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
 
 const countrySchema = Joi.object({
-  country: Joi.string()
-    .valid(...Object.keys(countries))
+  country:
+    Joi.string()
     .required(),
 });
 
