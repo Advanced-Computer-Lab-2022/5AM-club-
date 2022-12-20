@@ -7,10 +7,22 @@ import { formatTime, getSectionCount } from "../../utils/Helpers";
 import "./CourseCard.css";
 import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
 import Rating from "@mui/material/Rating";
+import CornerRibbon from "react-corner-ribbon";
 
 function Card(props) {
   return (
     <MDBCard className="course-card" style={{ width: "300px" }}>
+      {props.course.promotion &&
+        new Date(props.course.promotion.endDate) > new Date() &&
+        new Date(props.course.promotion.startDate) < new Date() && (
+          <CornerRibbon
+            position="top-right"
+            fontColor="white"
+            backgroundColor="#96cea8"
+          >
+            PROMO
+          </CornerRibbon>
+        )}
       <div className="d-flex justify-content-between p-3">
         <h5 className="mb-0" style={{ fontSize: "30px" }}>
           {props.course.title}

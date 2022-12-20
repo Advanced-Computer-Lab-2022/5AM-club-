@@ -81,6 +81,8 @@ const courseSchema = new mongoose.Schema(
       percentage: { type: Number },
       startDate: { type: Date },
       endDate: { type: Date },
+      type: { type: String },
+      default: {},
     },
     summary: {
       type: String,

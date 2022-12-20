@@ -22,6 +22,10 @@ router.put(
   CourseController.setCoursePromotion
 );
 router.put(
+  "/set-multiple-promotions",
+  CourseController.setMultipleCoursesPromotion
+);
+router.put(
   "/my-courses/edit-course/:courseid/add-subtitle",
   CourseController.addSubtitle
 );

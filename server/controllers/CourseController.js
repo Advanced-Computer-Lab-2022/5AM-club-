@@ -8,7 +8,8 @@ const setCoursePromotionSchema = Joi.object({
   percentage: Joi.number().min(0).max(100).required(),
   startDate: Joi.date().greater(Date.now()).required(),
   endDate: Joi.date().greater(Joi.ref("startDate")).required(),
-});
+  type: Joi.string().valid("instructor", "admin").required(),
+}).unknown();
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
@@ -122,7 +123,7 @@ const getCourseFilter = async (req) => {
   }
   filter = {
     ...(req.query.subject && {
-      subject: { $in: req.query.subject },
+      subject: { $all: req.query.subject },
     }),
     ...((standardMax || standardMin || standardMax === 0) && {
       price: {
@@ -558,17 +559,45 @@ const setCoursePromotion = async (req, res) => {
     return;
   }
 
-  const course = await Course.findByIdAndUpdate(
-    id,
-    {
-      promotion: {
-        percentage: req.body.percentage,
-        startDate: req.body.startDate,
-        endDate: req.body.endDate,
-      },
-    },
-    { new: true }
-  );
+  const course = await Course.findById(id);
+  if (
+    course.promotion.type !== "admin" ||
+    (course.promotion.type === "admin" && course.promotion.endDate < new Date())
+  ) {
+    course.promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "instructor",
+    };
+    await course.save();
+    res.send(course);
+  } else {
+    res.status(407).send("Course already has a promotion set by an admin");
+  }
+};
+
+const setMultipleCoursesPromotion = async (req, res) => {
+  const id = req.params.id;
+
+  console.log(req.body, "<-------------------------------------");
+  const valid = setCoursePromotionSchema.validate(req.body);
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+  console.log(req.body.courses, "<-------------------------------------");
+  const course = await Course.find({ title: { $in: req.body.courses } });
+  for (let i = 0; i < course.length; i++) {
+    course[i].promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "admin",
+    };
+    console.log(course[i]);
+    await course[i].save();
+  }
   res.send("done");
 };
 
@@ -623,10 +652,21 @@ async function getCourseSubjects(req, res) {
         subjects.push({ label: course.subject[i], value: course.subject[i] });
     }
   }
-  res.send(subjects.sort());
+  // sort array by object value
+  subjects.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(subjects);
 }
 
 module.exports = {
+  setMultipleCoursesPromotion,
   getCourseSubjects,
   getCourseMaxMin,
   deleteCourse,
