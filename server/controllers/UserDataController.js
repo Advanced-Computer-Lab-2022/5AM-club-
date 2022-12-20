@@ -14,9 +14,7 @@ const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
 
 const countrySchema = Joi.object({
-  country:
-    Joi.string()
-    .required(),
+  country: Joi.string().required(),
 });
 
 const addUserSchema = Joi.object({
@@ -198,7 +196,27 @@ async function addAdmin(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  const newAdmin = new Admin(req.body);
+  let userExists = false;
+  const trainees = await Trainee.find();
+  const instructors = await Instructor.find();
+  for (let trainee of trainees) {
+    if (trainee.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  for (let instructor of instructors) {
+    if (instructor.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  if (userExists) {
+    res.status(400).send("username already used ");
+    return;
+  }
+
+  const newAdmin = new Admin({ ...req.body, country: "United States" });
 
   await newAdmin
     .save()
@@ -214,11 +232,32 @@ async function addInstructor(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
+  let userExists = false;
+  const trainees = await Trainee.find();
+  const admins = await Admin.find();
+  for (let trainee of trainees) {
+    if (trainee.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  for (let admin of admins) {
+    if (admin.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  if (userExists) {
+    res.status(400).send("username already used ");
+    return;
+  }
+
   const newInstructor = new Instructor({
     ...req.body,
     email: "",
     country: "United States",
     biography: "",
+    accepted: false,
   });
   await newInstructor
     .save()
@@ -229,6 +268,26 @@ async function addInstructor(req, res) {
 }
 
 async function addTrainee(req, res) {
+  let userExists = false;
+  const admins = await Admin.find();
+  const instructors = await Instructor.find();
+  for (let admin of admins) {
+    if (admin.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  for (let instructor of instructors) {
+    if (instructor.username === req.body.username) {
+      userExists = true;
+      break;
+    }
+  }
+  if (userExists) {
+    res.status(400).send("username already used ");
+    return;
+  }
+
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
@@ -238,6 +297,8 @@ async function addTrainee(req, res) {
   const newCorporateTrainee = new Trainee({
     ...req.body,
     courses: [],
+    email: "",
+    country: "United States",
     type: "corporate",
   });
   await newCorporateTrainee
