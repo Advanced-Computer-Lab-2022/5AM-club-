@@ -25,12 +25,6 @@ const traineeSchema = new mongoose.Schema({
     country: { type: String },
     walletMoney: { type: Number, default: 0 },
     stripeId: String,
-    creditCardDetails: {
-        cardNumber: String,
-        cardHolderName: String,
-        expiryDateYear: { type: Number, max: 99 },
-        expiryDateMonth: { type: Number, max: 12 },
-    },
     courses: {
         type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
         required: true,

@@ -3,19 +3,17 @@ const router = express.Router();
 const CourseController = require("../../controllers/CourseController");
 
 router.get("/my-courses", CourseController.getMyCourses);
+router.get("/my-courses/:added", CourseController.getMyCourses);
 router.get("/courses", CourseController.getCourses);
 router.get("/my-populated-courses", CourseController.getMyPopulatedCourses);
 router.get("/populated-courses", CourseController.getPopulatedCourses);
 router.get("/courses/course-max-min", CourseController.getCourseMaxMin);
-<<<<<<< HEAD
 router.get("/courses/course-subjects", CourseController.getCourseSubjects);
-=======
 router.put(
     "/courses/increment-views/:id",
     CourseController.incrementCourseViews
 );
 
->>>>>>> f84a665 (bugs fixing)
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
@@ -51,6 +49,7 @@ router.put(
 );
 
 router.post("/create-course", CourseController.createCourse);
+
 
 router.delete(
     "/my-courses/edit-course/:id/delete-course",

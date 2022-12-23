@@ -16,7 +16,7 @@ const traineeCourseSchema = new mongoose.Schema(
         notes: { type: [Object], required: true },
         lastSection: { type: Number, required: true },
         grades: { type: [Number], required: true },
-        purchasingCost: { type: [Number], required: true },
+        purchasingCost: { type: Number, required: true },
     },
     { timestamps: true }
 );

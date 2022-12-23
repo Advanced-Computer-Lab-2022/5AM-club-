@@ -34,11 +34,7 @@ router.put(
     authenticateToken,
     UserDataController.changePassword
 );
-router.put(
-    "/change-creditcard-details",
-    authenticateToken,
-    UserDataController.changeCreditCardDetails
-);
+
 router.get(
     "/wallet-money",
     authenticateToken,
@@ -47,5 +43,7 @@ router.get(
 
 router.post("/pay", authenticateToken, pay);
 //router.get("/decode-token", UserDataController.decodeToken);
+
+router.post("/add-course-to-individual", UserDataController.addBoughtCourse);
 
 module.exports = router;

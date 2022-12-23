@@ -11,20 +11,7 @@ const setCoursePromotionSchema = Joi.object({
 });
 
 const courseSchema = Joi.object({
-<<<<<<< HEAD
-  title: Joi.string().required(),
-  price: Joi.number().required().min(0),
-  subject: Joi.array().items(Joi.string()).required(),
-  views: Joi.number().required().min(0),
-  preview_video: Joi.string().required(),
-  summary: Joi.string().required(),
-  instructor: Joi.array().items(Joi.string()).required(),
-  userReviews: Joi.array().items(Joi.object()).required(),
-  owners: Joi.array().items(Joi.string()).required(),
-  subtitles: Joi.array().items(Joi.object()).required(),
-=======
     title: Joi.string().required(),
-    rating: Joi.number().required().min(0).max(5),
     price: Joi.number().required().min(0),
     subject: Joi.array().items(Joi.string()).required(),
     views: Joi.number().required().min(0),
@@ -34,7 +21,6 @@ const courseSchema = Joi.object({
     userReviews: Joi.array().items(Joi.object()).required(),
     owners: Joi.array().items(Joi.string()).required(),
     subtitles: Joi.array().items(Joi.object()).required(),
->>>>>>> f84a665 (bugs fixing)
 }).unknown();
 const sectionSchema = Joi.object({
     title: Joi.string().required(),
@@ -112,51 +98,12 @@ const getCourseFilter = async (req) => {
             "id"
         );
 
-<<<<<<< HEAD
-    searchItem = {
-      $or: [
-        { subject: { $regex: req.query.searchItem, $options: "i" } },
-        { instructor: { $in: ids } },
-        { title: { $regex: req.query.searchItem, $options: "i" } },
-        { summary: { $regex: req.query.searchItem, $options: "i" } },
-      ],
-    };
-  }
-  let standardMin;
-  let standardMax;
-  if (req.query.min || req.query.max) {
-    standardMin = parseInt(req.query.min);
-    standardMax = parseInt(req.query.max);
-    if (req.headers.country) {
-      const country = req.headers.country;
-      if (country) {
-        if (req.query.min)
-          standardMin = await convert(req.query.min, country, "United States");
-        if (req.query.max)
-          standardMax = await convert(req.query.max, country, "United States");
-      }
-    }
-  }
-  filter = {
-    ...(req.query.subject && {
-      subject: { $in: req.query.subject },
-    }),
-    ...((standardMax || standardMin || standardMax === 0) && {
-      price: {
-        ...((standardMax || standardMax === 0) && { $lte: standardMax }),
-        ...(standardMin && { $gte: standardMin }),
-      },
-    }),
-    ...(searchItem && searchItem),
-  };
-  console.log(req.query, "req.query");
-  console.log("filter", filter);
-=======
         searchItem = {
             $or: [
                 { subject: { $regex: req.query.searchItem, $options: "i" } },
                 { instructor: { $in: ids } },
                 { title: { $regex: req.query.searchItem, $options: "i" } },
+                { summary: { $regex: req.query.searchItem, $options: "i" } },
             ],
         };
     }
@@ -185,7 +132,7 @@ const getCourseFilter = async (req) => {
     }
     filter = {
         ...(req.query.subject && {
-            subject: req.query.subject,
+            subject: { $in: req.query.subject },
         }),
         ...((standardMax || standardMin || standardMax === 0) && {
             price: {
@@ -196,11 +143,9 @@ const getCourseFilter = async (req) => {
             },
         }),
         ...(searchItem && searchItem),
-        ...(req.query.rating && { courserating: { $gte: req.query.rating } }),
     };
     console.log(req.query, "req.query");
     console.log("filter", filter);
->>>>>>> f84a665 (bugs fixing)
 
     return filter;
 };
@@ -217,82 +162,10 @@ const changePrice = async (req, courses) => {
     }
 };
 const getPopulatedCourses = async (req, res) => {
-<<<<<<< HEAD
-  console.log("getPopulatedCourses", req);
-  const filter = await getCourseFilter(req);
-  filter.closed = false;
-  filter.published = true;
-  console.log("filter  ", filter);
-  let courses = await Course.find(filter)
-    .populate({
-      path: "instructor",
-      populate: {
-        path: "userReviews.user",
-      },
-    })
-    .populate({
-      path: "owners",
-    })
-    .populate("userReviews.user");
-  console.log("courses  ", courses);
-  if (req.query.rating) {
-    courses = courses.filter((course) => {
-      return course.courseRating >= req.query.rating;
-    });
-  }
-
-  await changePrice(req, courses);
-  console.log("courseschangedPrice  ", courses);
-  res.json(courses);
-};
-
-const getMyPopulatedCourses = async (req, res) => {
-  let filter = await getCourseFilter(req);
-  filter = {
-    ...filter,
-    ...(req.user?.id &&
-      (req.headers.type === "instructor"
-        ? { instructor: req.user.id }
-        : { owners: req.user.id })),
-  };
-  console.log("filter bala ", filter);
-  let courses = await Course.find(filter)
-    .populate({
-      path: "instructor",
-      populate: {
-        path: "userReviews.user",
-      },
-    })
-    .populate({
-      path: "owners",
-    })
-    .populate("userReviews.user");
-  console.log("courses  ", courses);
-  if (req.query.rating) {
-    courses = courses.filter((course) => {
-      return course.courseRating >= req.query.rating;
-    });
-  }
-  await changePrice(req, courses);
-  console.log("courseschangedPrice  ", courses);
-  res.json(courses);
-};
-
-const getCourses = async (req, res) => {
-  const filter = await getCourseFilter(req);
-  filter.closed = false;
-  filter.published = true;
-  let courses = await Course.find(filter);
-  if (req.query.rating) {
-    courses = courses.filter((course) => {
-      return course.courseRating >= req.query.rating;
-    });
-  }
-  await changePrice(req, courses);
-  res.json(courses);
-=======
     console.log("getPopulatedCourses", req);
     const filter = await getCourseFilter(req);
+    filter.closed = false;
+    filter.published = true;
     console.log("filter  ", filter);
     let courses = await Course.find(filter)
         .populate({
@@ -306,15 +179,19 @@ const getCourses = async (req, res) => {
         })
         .populate("userReviews.user");
     console.log("courses  ", courses);
+    if (req.query.rating) {
+        courses = courses.filter((course) => {
+            return course.courseRating >= req.query.rating;
+        });
+    }
+
     await changePrice(req, courses);
     console.log("courseschangedPrice  ", courses);
     res.json(courses);
 };
 
 const getMyPopulatedCourses = async (req, res) => {
-    console.log("getPopulatedCourses", req);
     let filter = await getCourseFilter(req);
-    console.log("filter  ", filter);
     filter = {
         ...filter,
         ...(req.user?.id &&
@@ -322,6 +199,7 @@ const getMyPopulatedCourses = async (req, res) => {
                 ? { instructor: req.user.id }
                 : { owners: req.user.id })),
     };
+    console.log("filter bala ", filter);
     let courses = await Course.find(filter)
         .populate({
             path: "instructor",
@@ -334,6 +212,11 @@ const getMyPopulatedCourses = async (req, res) => {
         })
         .populate("userReviews.user");
     console.log("courses  ", courses);
+    if (req.query.rating) {
+        courses = courses.filter((course) => {
+            return course.courseRating >= req.query.rating;
+        });
+    }
     await changePrice(req, courses);
     console.log("courseschangedPrice  ", courses);
     res.json(courses);
@@ -344,42 +227,32 @@ const getCourses = async (req, res) => {
     filter.closed = false;
     filter.published = true;
     let courses = await Course.find(filter);
+    if (req.query.rating) {
+        courses = courses.filter((course) => {
+            return course.courseRating >= req.query.rating;
+        });
+    }
     await changePrice(req, courses);
     res.json(courses);
->>>>>>> f84a665 (bugs fixing)
 };
 
 const getMyCourses = async (req, res) => {
-<<<<<<< HEAD
-  let filter = await getCourseFilter(req);
-  filter = {
-    ...filter,
-    ...(req.user?.id &&
-      (req.headers.type === "instructor"
-        ? { instructor: req.user.id }
-        : { owners: req.user.id })),
-  };
-  let courses = await Course.find(filter);
-  if (req.query.rating) {
-    courses = courses.filter((course) => {
-      return course.courseRating >= req.query.rating;
-    });
-  }
-  await changePrice(req, courses);
-  res.json(courses);
-=======
     let filter = await getCourseFilter(req);
     filter = {
         ...filter,
         ...(req.user?.id &&
-            (req.user.type === "instructor"
+            (req.headers.type === "instructor"
                 ? { instructor: req.user.id }
                 : { owners: req.user.id })),
     };
     let courses = await Course.find(filter);
+    if (req.query.rating) {
+        courses = courses.filter((course) => {
+            return course.courseRating >= req.query.rating;
+        });
+    }
     await changePrice(req, courses);
     res.json(courses);
->>>>>>> f84a665 (bugs fixing)
 };
 
 const findPopulatedCourseByID = async (req, res) => {
@@ -759,43 +632,29 @@ async function getCourseMaxMin(req, res) {
 }
 
 async function getCourseSubjects(req, res) {
-  const courses = await Course.find();
-  if (!courses) {
-    res.send([]);
-    return;
-  }
-  let subjects = [];
-  for (let course of courses) {
-    for (let i = 0; i < course.subject.length; i++) {
-      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
-        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    const courses = await Course.find();
+    if (!courses) {
+        res.send([]);
+        return;
     }
-  }
-  res.send(subjects.sort());
+    let subjects = [];
+    for (let course of courses) {
+        for (let i = 0; i < course.subject.length; i++) {
+            if (
+                subjects.filter((s) => s?.value === course.subject[i])
+                    ?.length === 0
+            )
+                subjects.push({
+                    label: course.subject[i],
+                    value: course.subject[i],
+                });
+        }
+    }
+    res.send(subjects.sort());
 }
 
 module.exports = {
-<<<<<<< HEAD
-  getCourseSubjects,
-  getCourseMaxMin,
-  deleteCourse,
-  updateCourse,
-  addSubtitle,
-  deleteSubtitle,
-  updateSubtitle,
-  addSection,
-  deleteSection,
-  updateSection,
-  getCourses,
-  getMyCourses,
-  getPopulatedCourses,
-  getMyPopulatedCourses,
-  createCourse,
-  findCourseByID,
-  findPopulatedCourseByID,
-  setCoursePromotion,
-  incrementCourseViews,
-=======
+    getCourseSubjects,
     getCourseMaxMin,
     deleteCourse,
     updateCourse,
@@ -814,5 +673,4 @@ module.exports = {
     findPopulatedCourseByID,
     setCoursePromotion,
     incrementCourseViews,
->>>>>>> f84a665 (bugs fixing)
 };

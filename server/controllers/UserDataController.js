@@ -160,7 +160,7 @@ async function setCountry(req, res) {
         const id = req.user.id;
         let User;
         switch (req.headers.type) {
-            case "trainee":
+            case "individual":
                 User = await Trainee.findByIdAndUpdate(
                     id,
                     {
@@ -418,31 +418,6 @@ async function changePassword(req, res) {
     res.send("Password changed successfully");
 }
 
-async function changeCreditCardDetails(req, res) {
-    const { cardNumber, cardHolderName, expiryDateYear, expiryDateMonth } =
-        req.body;
-    if (req.user.id) {
-        const id = req.user.id;
-
-        const User = await Trainee.findByIdAndUpdate(
-            id,
-            {
-                creditCardDetails: {
-                    cardNumber,
-                    cardHolderName,
-                    expiryDateYear,
-                    expiryDateMonth,
-                },
-            },
-            { new: true }
-        );
-
-        res.status(200).send("CreditCardDetails Updated successfully");
-    } else {
-        res.status(400).send("Missing Id");
-    }
-}
-
 async function getWalletMoney(req, res) {
     if (req.user.id) {
         const id = req.user.id;
@@ -585,10 +560,10 @@ const login = async (req, res) => {
         }
 
         const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: "1m",
+            expiresIn: "10m",
         });
         const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: "2m",
+            expiresIn: "20m",
         });
         //console.log(refreshToken);
 
@@ -598,7 +573,11 @@ const login = async (req, res) => {
         //refreshTokens.push(refreshToken);
 
         // console.log(res.cookie);
-        res.json({ type: user.type });
+        res.json({
+            type: user.type,
+            username: user.username,
+            country: user.country,
+        });
     }
 
     //refreshTokens.push(refreshToken);
@@ -608,6 +587,93 @@ const logout = async (req, res) => {
     console.log("logging out!!");
     res.clearCookie("accessToken");
     res.clearCookie("jwt");
+};
+
+const addBoughtCourse = async (req, res) => {
+    await jwt.verify(
+        req.body.token,
+        process.env.BUY_COURSE_SECRET,
+        async (err, decoded) => {
+            if (err) {
+                // Wrong or expired refresh token
+                return res.status(401).json({ message: "Wrong course token" });
+            } else {
+                //logic here
+                console.log("token in back", decoded);
+                const { courseId, traineeId, paidFromWallet } = decoded;
+                const traineeAfterAdd = await Trainee.findOneAndUpdate(
+                    { _id: traineeId },
+                    {
+                        $push: { courses: courseId },
+                        $inc: { walletMoney: -1 * paidFromWallet },
+                    }
+                )
+                    .then(() => console.log("trainee has the course"))
+                    .catch((err) => console.log(err));
+                let courseAfterAdd, sectionsNum;
+                await Course.findOneAndUpdate(
+                    { _id: courseId },
+                    { $push: { owners: traineeId } }
+                )
+                    .then((result) => {
+                        courseAfterAdd = result;
+                        console.log("course has new owner", courseAfterAdd);
+                        sectionsNum = courseAfterAdd.subtitles.reduce(
+                            (Acc, curSubtitle) =>
+                                Acc + curSubtitle.sections.length,
+                            0
+                        );
+                    })
+                    .catch((err) => console.log(err));
+                //console.log(courseAfterAdd);
+                //change array lengthssss and price value
+
+                const newTraineeCourse = await TraineeCourse.create({
+                    courseId,
+                    traineeId,
+                    progress: Array(sectionsNum).fill(false),
+                    answers: Array(sectionsNum).fill(Array(4).fill(-1)),
+                    notes: Array(sectionsNum).fill(null),
+                    lastSection: 0,
+                    grades: Array(sectionsNum).fill(0),
+                    purchasingCost: courseAfterAdd.price,
+                })
+                    .then(() => console.log("new traineeCourse doc created"))
+                    .catch((err) => console.log(err));
+
+                //dont forget instructors
+                const moneyPerInst =
+                    courseAfterAdd.price / courseAfterAdd.instructor.length;
+                for (let instId of courseAfterAdd.instructor) {
+                    const tmpInst = await Instructor.findById(instId);
+                    const now = new Date();
+                    if (
+                        tmpInst.money_owed.slice(-1)[0]?.year ==
+                            now.getFullYear() &&
+                        tmpInst.money_owed.slice(-1)[0]?.month ==
+                            now.getMonth() + 1
+                    ) {
+                        tmpInst.money_owed.at(-1).amount += moneyPerInst;
+                        await Instructor.findByIdAndUpdate(instId, {
+                            $set: { money_owed: tmpInst.money_owed },
+                        });
+                    } else {
+                        await Instructor.findByIdAndUpdate(instId, {
+                            $push: {
+                                money_owed: {
+                                    year: now.getFullYear(),
+                                    month: now.getMonth() + 1,
+                                    amount: moneyPerInst,
+                                },
+                            },
+                        });
+                    }
+
+                    res.json({ message: "boaught succ" });
+                }
+            }
+        }
+    );
 };
 
 module.exports = {
@@ -622,12 +688,12 @@ module.exports = {
     signUp,
     login,
     logout,
+    addBoughtCourse,
     editBiographyInstructor,
     editEmailInstructor,
     getTraineeCourse,
     updateTraineeCourse,
     changePassword,
-    changeCreditCardDetails,
     getWalletMoney,
     changePasswordEmail,
     viewContract,
