@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import app from "../../utils/AxiosConfig.js";
+<<<<<<< HEAD
 function useInstructorCompleteProfile(Done) {
+=======
+function useInstructorCompleteProfile() {
+  console.log("useCompleteProfile");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+>>>>>>> 78a3be8 (complete profile modals done)
   const [email, setEmail] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedContract, setAcceptedContract] = useState(false);
@@ -8,7 +15,10 @@ function useInstructorCompleteProfile(Done) {
   const [showContract, setShowContract] = useState(false);
   const [tos, setTos] = useState("");
   const [contract, setContract] = useState("");
+<<<<<<< HEAD
   // eslint-disable-next-line
+=======
+>>>>>>> 78a3be8 (complete profile modals done)
   const [match, setMatch] = useState(true);
 
   useEffect(() => {
@@ -20,6 +30,7 @@ function useInstructorCompleteProfile(Done) {
     });
   }, []);
   const updateProfile = async (obj) => {
+<<<<<<< HEAD
     app
       .put("/instructor/update-profile", obj)
       .then((res) => {
@@ -39,6 +50,24 @@ function useInstructorCompleteProfile(Done) {
   };
 
   return {
+=======
+    try {
+      app.put("/instructor/update-profile", obj).then((res) => {});
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const checkMatching = () => {
+    setMatch(password === repeatPassword);
+  };
+
+  return {
+    password,
+    setPassword,
+    repeatPassword,
+    setRepeatPassword,
+>>>>>>> 78a3be8 (complete profile modals done)
     email,
     setEmail,
     acceptedTerms,
@@ -53,6 +82,10 @@ function useInstructorCompleteProfile(Done) {
     showContract,
     setShowContract,
     match,
+<<<<<<< HEAD
+=======
+    checkMatching,
+>>>>>>> 78a3be8 (complete profile modals done)
   };
 }
 export default useInstructorCompleteProfile;

@@ -22,12 +22,18 @@ function Login() {
       }
     );
   }
-
+  const navigate = useNavigate();
   async function onSubmit(obj) {
+<<<<<<< HEAD
     app
       .post(`/login`, obj)
       .then((res) => {
         console.log(res);
+=======
+    try {
+      app.post(`/login`, obj).then((res) => {
+        console.log(res.data);
+>>>>>>> 78a3be8 (complete profile modals done)
         localStorage.setItem("type", res.data.type);
         localStorage.setItem("country", res.data.country);
         localStorage.setItem("username", res.data.username);
@@ -41,7 +47,7 @@ function Login() {
         alert(err.response.data);
       });
   }
-  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -75,6 +81,7 @@ function Login() {
               gap: "15px",
               alignItems: "center",
               width: "100%",
+<<<<<<< HEAD
               "& > *": {
                 width: "100%",
               },
@@ -153,6 +160,80 @@ function Login() {
         </form>
       </Container>
     </div>
+=======
+            },
+          }}
+        >
+          <TextField
+            hiddenLabel
+            id='filled-hidden-label-small'
+            variant='outlined'
+            label='user name'
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+          />
+          <TextField
+            hiddenLabel
+            id='filled-hidden-label-small'
+            placeholder='password'
+            variant='outlined'
+            label='password'
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          />
+
+          <Button
+            type='submit'
+            variant='contained'
+            onClick={(e) => {
+              e.preventDefault();
+              const obj = {
+                username,
+                password,
+              };
+              onSubmit(obj);
+            }}
+          >
+            login
+          </Button>
+          <Button
+            onClick={() => {
+              setForgotPassword(true);
+            }}
+          >
+            Forgot your password?
+          </Button>
+          {forgotPassword && (
+            <>
+              <TextField
+                hiddenLabel
+                id='filled-hidden-label-small'
+                placeholder='email'
+                variant='outlined'
+                label='email'
+                value={forgotPasswordEmail}
+                onChange={(e) => {
+                  setForgotPasswordEmail(e.target.value);
+                }}
+              />
+              <Button onClick={handleForgotPassword}>Send Email</Button>
+            </>
+          )}
+          <Button
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Don't have an Account?
+          </Button>
+        </Box>
+      </form>
+    </Container>
+>>>>>>> 78a3be8 (complete profile modals done)
   );
 }
 export default Login;

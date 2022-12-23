@@ -35,6 +35,7 @@ router.put(
     authenticateToken,
     UserDataController.changePassword
 );
+<<<<<<< HEAD
 
 router.get(
     "/wallet-money",
@@ -44,6 +45,8 @@ router.get(
 
 router.post("/pay", authenticateToken, pay);
 
+=======
+>>>>>>> 78a3be8 (complete profile modals done)
 router.put("/update-profile", UserDataController.updateProfile);
 //router.get("/decode-token", UserDataController.decodeToken);
 
