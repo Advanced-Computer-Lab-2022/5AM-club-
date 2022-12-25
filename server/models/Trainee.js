@@ -1,6 +1,8 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 
 const traineeSchema = new mongoose.Schema({
+
   username: {
     type: String,
     required: true,
@@ -32,6 +34,8 @@ const traineeSchema = new mongoose.Schema({
     expiryDateYear: { type: Number, max: 9999 },
     expiryDateMonth: { type: Number, max: 12 },
   },
+  walletMoney: { type: Number, default: 0 },
+  stripeId: String,
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
     required: true,

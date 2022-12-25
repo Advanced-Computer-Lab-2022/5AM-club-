@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { reviewSchema } = require("./Course.js");
 
 const instructorSchema = new mongoose.Schema({
+
   username: {
     type: String,
     required: true,
@@ -30,24 +31,28 @@ const instructorSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+   money_owed: {
+        type: [{ year: Number, month: Number, amount: Number }],
+        default: [],
+    },
 
   passwordTimeout: { type: Date, default: Date.now() },
 
-  accepted: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+    accepted: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 });
 
 instructorSchema.virtual("instructorRating").get(function () {
-  if (this.userReviews.length == 0) return -1;
-  let rating = 0;
-  this.userReviews.forEach((element) => {
-    rating += element.rating;
-  });
-  rating = (rating / this.userReviews.length).toPrecision(2);
-  return rating;
+    if (this.userReviews.length == 0) return -1;
+    let rating = 0;
+    this.userReviews.forEach((element) => {
+        rating += element.rating;
+    });
+    rating = (rating / this.userReviews.length).toPrecision(2);
+    return rating;
 });
 instructorSchema.set("toJSON", { getters: true, virtuals: true });
 const Instructor = mongoose.model("Instructor", instructorSchema);
