@@ -55,6 +55,9 @@ function SignUp() {
             "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
           );
           return;
+        } else if (err.response.status === 406) {
+          alert("Invalid email address.");
+          return;
         }
       });
   };

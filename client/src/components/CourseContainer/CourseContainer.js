@@ -104,7 +104,7 @@ function CourseContainer(props) {
               title="course-video"
               src={course.preview_video?.replace("watch?v=", "embed/")}
               allowFullScreen
-              style={{ flexShrink: "0" }}
+              style={{ flexShrink: "0", borderRadius: "10px" }}
             ></iframe>
             <div style={{ flexGrow: "1" }}>
               <div

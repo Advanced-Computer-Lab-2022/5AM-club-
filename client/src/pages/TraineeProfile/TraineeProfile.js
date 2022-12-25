@@ -118,8 +118,8 @@ function TraineeProfile() {
                     </MDBCardText>
                     <MDBCardText className="font-italic mb-1">
                       {"Wallet : " +
-                        (user.wallet !== 0
-                          ? Math.floor(user.wallet + 0.5) - 0.01
+                        (user.walletMoney !== 0
+                          ? Math.floor(user.walletMoney + 0.5) - 0.01
                           : 0) +
                         " " +
                         (" " +

@@ -3,11 +3,10 @@ import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
 import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
-import useCo from "./useModalData";
 import Modal from "react-bootstrap/Modal";
 import useModalData from "./useModalData";
 import CorporateCompleteProfile from "./CorporateCompleteProfile";
@@ -31,6 +30,7 @@ function Header() {
         (option) => option.title === localStorage.getItem("country")
       ).value
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem("country")]);
 
   useEffect(() => {
@@ -58,6 +58,7 @@ function Header() {
     }
     localStorage.setItem("country", selectedCountry);
     if (!show) navigate(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [country]);
 
   const navigate = useNavigate();
@@ -189,20 +190,60 @@ function Header() {
             setCountry(val);
           }}
           selectedValue={COUNTRIES.find((option) => option.value === country)}
-        />
+        />{" "}
+        {localStorage.getItem("type") !== "admin" &&
+          localStorage.getItem("type") && (
+            <button
+              className="button1"
+              onClick={() => {
+                navigate(
+                  "/" +
+                    (localStorage.getItem("type") === "individual" ||
+                    localStorage.getItem("type") === "corporate"
+                      ? localStorage.getItem("type") + "-trainee"
+                      : localStorage.getItem("type")) +
+                    "/my-courses"
+                );
+              }}
+            >
+              My Courses
+            </button>
+          )}
         <button
           className="button1"
           onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
         >
           {!localStorage.getItem("type") ? "Login" : "Logout"}
         </button>
-        <button
-          className="button1"
-          onClick={!localStorage.getItem("type") ? handleSignup : handleProfile}
-        >
-          {!localStorage.getItem("type") ? "Signup" : "Profile"}
-        </button>
+        {localStorage.getItem("type") !== "admin" && (
+          <button
+            className="button1"
+            onClick={
+              !localStorage.getItem("type") ? handleSignup : handleProfile
+            }
+          >
+            {!localStorage.getItem("type") ? "Signup" : "Profile"}
+          </button>
+        )}
       </div>
+      <Modal size="lg" centered show={show}>
+        <div className="tos-wrapper">
+          <div className="tos-border-success">
+            <Modal.Header>
+              <Modal.Title>Complete your profile</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="tos">
+              {done ? (
+                <UpdatedSuccessfully onClickHide={onClickHide} />
+              ) : localStorage.getItem("type") === "corporate" ? (
+                <CorporateCompleteProfile Done={Done} />
+              ) : (
+                <InstructorCompleteProfile Done={Done} />
+              )}
+            </Modal.Body>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

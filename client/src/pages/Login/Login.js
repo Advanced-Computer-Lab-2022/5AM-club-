@@ -3,6 +3,8 @@ import { useState } from "react";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import app from "../../utils/AxiosConfig.js";
+import logo from "../../assets/Header/logo.svg";
+import logo2 from "../../assets/Header/logo2.svg";
 import PasswordBox from "../../components/PasswordBox/PasswordBox.js";
 function Login() {
   const [username, setUsername] = useState("");
@@ -21,8 +23,9 @@ function Login() {
   }
 
   async function onSubmit(obj) {
-    try {
-      app.post(`/login`, obj).then((res) => {
+    app
+      .post(`/login`, obj)
+      .then((res) => {
         console.log(res);
         localStorage.setItem("type", res.data.type);
         localStorage.setItem("country", res.data.country);
@@ -32,85 +35,113 @@ function Login() {
         if (res.data.type === "instructor") navigate("../instructor");
         if (res.data.type === "individual") navigate("../individual-trainee");
         if (res.data.type === "corporate") navigate("../corporate-trainee");
+      })
+      .catch((err) => {
+        alert(err.response.data);
       });
-    } catch (err) {}
   }
   const navigate = useNavigate();
   return (
-    <Container sx={{ display: "grid", placeItems: "center" }}>
-      <form style={{ width: "max(22rem,50%)" }}>
-        <Box
-          sx={{
-            marginTop: "15px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            alignItems: "center",
-            width: "100%",
-            "& > *": {
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        marginBottom: "100px",
+        height: "100%",
+      }}
+    >
+      <div style={{ marginRight: "50px" }}>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "300px", height: "200px" }}
+        ></img>
+        <img
+          src={logo2}
+          alt="Logo"
+          style={{ width: "250px", height: "150px" }}
+        ></img>
+      </div>
+      <Container sx={{ display: "grid", placeItems: "center" }}>
+        <form style={{ width: "max(22rem,50%)" }}>
+          <Box
+            sx={{
+              marginTop: "15px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+              alignItems: "center",
               width: "100%",
-            },
-          }}
-        >
-          <TextField
-            hiddenLabel
-            id="filled-hidden-label-small"
-            variant="outlined"
-            label="user name"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
+              "& > *": {
+                width: "100%",
+              },
             }}
-          />
-          <PasswordBox setPassword={setPassword}></PasswordBox>
+          >
+            <TextField
+              hiddenLabel
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+            <PasswordBox setPassword={setPassword}></PasswordBox>
 
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={(e) => {
-              e.preventDefault();
-              const obj = {
-                username,
-                password,
-              };
-              onSubmit(obj);
-            }}
-          >
-            login
-          </Button>
-          <Button
-            onClick={() => {
-              setForgotPassword(true);
-            }}
-          >
-            Forgot your password?
-          </Button>
-          {forgotPassword && (
-            <>
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                placeholder="email"
-                variant="outlined"
-                label="email"
-                value={forgotPasswordEmail}
-                onChange={(e) => {
-                  setForgotPasswordEmail(e.target.value);
-                }}
-              />
-              <Button onClick={handleForgotPassword}>Send Email</Button>
-            </>
-          )}
-          <Button
-            onClick={() => {
-              navigate("/signup");
-            }}
-          >
-            Don't have an Account?
-          </Button>
-        </Box>
-      </form>
-    </Container>
+            <Button
+              type="submit"
+              style={{ backgroundColor: "#96cea8", color: "white" }}
+              variant="contained"
+              onClick={(e) => {
+                e.preventDefault();
+                const obj = {
+                  username,
+                  password,
+                };
+                onSubmit(obj);
+              }}
+            >
+              login
+            </Button>
+            <Button
+              style={{ color: "#96cea8" }}
+              onClick={() => {
+                setForgotPassword(true);
+              }}
+            >
+              Forgot your password?
+            </Button>
+            {forgotPassword && (
+              <>
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  placeholder="email"
+                  variant="outlined"
+                  label="email"
+                  value={forgotPasswordEmail}
+                  onChange={(e) => {
+                    setForgotPasswordEmail(e.target.value);
+                  }}
+                />
+                <Button onClick={handleForgotPassword}>Send Email</Button>
+              </>
+            )}
+            <Button
+              style={{ color: "#96cea8" }}
+              onClick={() => {
+                navigate("/signup");
+              }}
+            >
+              Don't have an Account?
+            </Button>
+          </Box>
+        </form>
+      </Container>
+    </div>
   );
 }
 export default Login;

@@ -4,14 +4,11 @@ import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
 import axios from "axios";
 import { convertISO8601ToMs } from "../../utils/Helpers";
-import { useLocation } from "react-router-dom";
 
 function Video(props) {
   const [validURL, setValidURL] = useState(true);
   const [editingURL, setEditingURL] = useState(false);
   const [videoURL, setVideoURL] = useState(props.content?.link);
-
-  const location = useLocation();
 
   const videoRef = useRef();
 
@@ -95,6 +92,7 @@ function Video(props) {
               : props.content?.link.replace("watch?v=", "embed/")
           }
           allowFullScreen
+          style={{ borderRadius: "10px" }}
         ></iframe>
       ) : (
         <></>
