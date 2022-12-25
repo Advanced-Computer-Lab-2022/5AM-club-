@@ -3,14 +3,21 @@ import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
 import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
+import useCo from "./useModalData";
+import Modal from "react-bootstrap/Modal";
+import useModalData from "./useModalData";
+import CorporateCompleteProfile from "./CorporateCompleteProfile";
+import InstructorCompleteProfile from "./InstructorCompleteProfile";
+import UpdatedSuccessfully from "./UpdatedSuccessfully";
 
 function Header() {
+  const { show, onClickShow, onClickHide, done, Done } = useModalData();
+  console.log(show);
   const myRef = useRef();
-
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
@@ -49,7 +56,7 @@ function Header() {
       );
     }
     localStorage.setItem("country", selectedCountry);
-    navigate(0);
+    if (!show) navigate(0);
   }, [country]);
 
   const navigate = useNavigate();
@@ -98,6 +105,7 @@ function Header() {
     }
   }
   return (
+
     <div className="header-container">
       <img
         src={logo}
@@ -147,30 +155,52 @@ function Header() {
           overflow: "hidden",
         }}
       >
-        <SelectCountry
-          id={"countries"}
-          ref={myRef}
-          open={isOpen}
-          onToggle={() => setIsOpen(!isOpen)}
-          onChange={(val) => {
-            setCountry(val);
-          }}
-          selectedValue={COUNTRIES.find((option) => option.value === country)}
-        />
-        <button
-          className="button1"
-          onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
-        >
-          {!localStorage.getItem("type") ? "Login" : "Logout"}
-        </button>
-        <button
-          className="button1"
-          onClick={!localStorage.getItem("type") ? handleSignup : handleProfile}
-        >
-          {!localStorage.getItem("type") ? "Signup" : "Profile"}
-        </button>
+        
+          <SelectCountry
+            id={"countries"}
+            ref={myRef}
+            open={isOpen}
+            onToggle={() => setIsOpen(!isOpen)}
+            onChange={(val) => {
+              setCountry(val);
+            }}
+            selectedValue={COUNTRIES.find((option) => option.value === country)}
+          />
+          <button
+            className='button1'
+            onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
+          >
+            {!localStorage.getItem("type") ? "Login" : "Logout"}
+          </button>
+          <button
+            className='button1'
+            onClick={
+              !localStorage.getItem("type") ? handleSignup : handleProfile
+            }
+          >
+            {!localStorage.getItem("type") ? "Signup" : "Profile"}
+          </button>
+        </div>
       </div>
-    </div>
+      <Modal size='lg' centered show={show}>
+        <div className='tos-wrapper'>
+          <div className='tos-border-success'>
+            <Modal.Header>
+              <Modal.Title>Complete your profile</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className='tos'>
+              {done ? (
+                <UpdatedSuccessfully onClickHide={onClickHide} />
+              ) : localStorage.getItem("type") === "corporate" ? (
+                <CorporateCompleteProfile Done={Done} />
+              ) : (
+                <InstructorCompleteProfile Done={Done} />
+              )}
+            </Modal.Body>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
 export default memo(Header);

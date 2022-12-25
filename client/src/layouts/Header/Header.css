@@ -135,3 +135,28 @@
     margin: 0.4em auto;
   }
 }
+
+.tos::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
+.tos{
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  padding-inline-start: 0px;
+  overflow-y:scroll;
+  padding:20px;
+  height: 70vh;
+}
+
+.tos-wrapper {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.tos-border-success {
+  border: none !important;
+  box-shadow: 0 0 0 13px #96cea8;
+  border-radius: 10px;
+  border-width: 10px;
+  border-color: #96cea8 !important;
+}

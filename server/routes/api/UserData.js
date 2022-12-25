@@ -12,6 +12,7 @@ router.get("/get-users", UserDataController.getUsers);
 router.get("/get-trainee-course", UserDataController.getTraineeCourse);
 router.get("/get-course-instructor", UserDataController.getCourseInstructor);
 router.get("/get-user-type", UserDataController.getUserType);
+router.get("/complete-profile", UserDataController.checkCompleteProfile);
 
 router.post("/add-admin", UserDataController.addAdmin);
 router.post("/add-instructor", UserDataController.addInstructor);
@@ -33,6 +34,7 @@ router.put(
   authenticateToken,
   UserDataController.changePassword
 );
+router.put("/update-profile", UserDataController.updateProfile);
 //router.get("/decode-token", UserDataController.decodeToken);
 
 module.exports = router;
