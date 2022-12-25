@@ -121,6 +121,7 @@
   font-family: "Roboto", sans-serif;
   border-width: 2px !important;
   font-weight: 300;
+  font-size: 18px;
   color: #ffffff;
   text-align: center;
   transition: all 0.2s;
@@ -128,6 +129,7 @@
 .button1:hover {
   color: #000000;
   background-color: #ffffff;
+  margin-bottom: 15px;
 }
 @media all and (max-width: 30em) {
   .button1 {

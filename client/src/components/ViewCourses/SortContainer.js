@@ -5,7 +5,7 @@ import "./SortContainer.css";
 
 function SortContainer(props) {
   return (
-    <div>
+    <div style={{ color: "black" }}>
       <DropdownButton
         key={1}
         id={`dropdown-button-drop-end}`}
@@ -47,24 +47,28 @@ function SortContainer(props) {
           Oldest
         </Dropdown.Item>
         <Dropdown.Divider color="white"></Dropdown.Divider>
-        <Dropdown.Item
-          eventKey="5"
-          onClick={() => {
-            props.setSort("Price High to Low");
-          }}
-        >
-          {" "}
-          Price High to Low
-        </Dropdown.Item>
-        <Dropdown.Item
-          eventKey="6"
-          onClick={() => {
-            props.setSort("Price Low to High");
-          }}
-        >
-          Price Low to High
-        </Dropdown.Item>{" "}
-        <Dropdown.Divider color="white"></Dropdown.Divider>
+        {localStorage.getItem("type") !== "corporate" && (
+          <>
+            <Dropdown.Item
+              eventKey="5"
+              onClick={() => {
+                props.setSort("Price High to Low");
+              }}
+            >
+              {" "}
+              Price High to Low
+            </Dropdown.Item>
+            <Dropdown.Item
+              eventKey="6"
+              onClick={() => {
+                props.setSort("Price Low to High");
+              }}
+            >
+              Price Low to High
+            </Dropdown.Item>{" "}
+            <Dropdown.Divider color="white"></Dropdown.Divider>
+          </>
+        )}
         <Dropdown.Item
           eventKey="7"
           onClick={() => {

@@ -2,12 +2,15 @@ import { useState } from "react";
 //import { Navigate, useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
-
+import { InputAdornment } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import app from "../../utils/AxiosConfig.js";
 
-function ChangePassword() {
+function ChangePassword(props) {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   //   useEffect(() => {
   //     console.log(name);
@@ -22,13 +25,20 @@ function ChangePassword() {
             withCredentials: true,
           })
           .then((res) => {
+            alert("Password changed successfully");
+            props.setShow(false);
             console.log(res);
+          })
+          .catch((err) => {
+            alert(
+              "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
+            );
           });
         // console.log("changed password");
       } catch (err) {
         console.log(err);
       }
-    } else console.log("passwords don't match");
+    } else alert("Passwords don't match");
   };
 
   return (
@@ -50,21 +60,51 @@ function ChangePassword() {
           }}
         >
           <TextField
-            hiddenLabel
+            type={showPassword ? "text" : "password"}
             id="filled-hidden-label-small"
-            placeholder="password"
             variant="outlined"
-            label="password"
+            label="Password"
+            autoComplete="no"
+            InputProps={{
+              autoComplete: showPassword ? "off" : "new-password",
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setShowPassword(!showPassword);
+                  }}
+                >
+                  <VisibilityIcon />
+                </InputAdornment>
+              ),
+            }}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
           />
+
           <TextField
-            hiddenLabel
+            type={showRepeatPassword ? "text" : "password"}
             id="filled-hidden-label-small"
             variant="outlined"
-            label="repeat password"
+            label="Repeat Password"
+            autoComplete="no"
+            InputProps={{
+              autoComplete: showRepeatPassword ? "off" : "new-password",
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setShowRepeatPassword(!showRepeatPassword);
+                  }}
+                >
+                  <VisibilityIcon />
+                </InputAdornment>
+              ),
+            }}
             value={repeatPassword}
             onChange={(e) => {
               setRepeatPassword(e.target.value);
@@ -74,6 +114,7 @@ function ChangePassword() {
           <Button
             type="submit"
             variant="contained"
+            style={{ backgroundColor: "#96cea8", color: "white" }}
             onClick={(e) => {
               e.preventDefault();
               const obj = {

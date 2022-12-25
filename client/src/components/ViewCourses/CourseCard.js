@@ -10,9 +10,11 @@ import Rating from "@mui/material/Rating";
 import CornerRibbon from "react-corner-ribbon";
 
 function Card(props) {
+  console.log(props.course.promotion);
   return (
     <MDBCard className="course-card" style={{ width: "300px" }}>
       {props.course.promotion &&
+        localStorage.getItem("type") !== "corporate" &&
         new Date(props.course.promotion.endDate) > new Date() &&
         new Date(props.course.promotion.startDate) < new Date() && (
           <CornerRibbon
@@ -23,17 +25,28 @@ function Card(props) {
             PROMO
           </CornerRibbon>
         )}
-      <div className="d-flex justify-content-between p-3">
-        <h5 className="mb-0" style={{ fontSize: "30px" }}>
+      <div
+        className="d-flex justify-content-between p-3"
+        style={{
+          flexWrap: "wrap",
+          width: "100%",
+          wordWrap: "break-word",
+          overflowWrap: "break-word",
+          wordBreak: "break-word",
+        }}
+      >
+        <h5 className="mb-0" style={{ fontSize: "45px", lineHeight: "1" }}>
           {props.course.title}
         </h5>
       </div>
       <MDBCardBody>
-        {props.course.subject.map((subject, idx) => (
-          <div className="course-card-subject" key={subject + idx}>
-            {subject}
-          </div>
-        ))}
+        <div style={{ display: "flex", columnGap: "10px", flexWrap: "wrap" }}>
+          {props.course.subject.map((subject, idx) => (
+            <div className="course-card-subject" key={subject + idx}>
+              {subject}
+            </div>
+          ))}
+        </div>
         <div className="course-description-fade">{props.course.summary}</div>
         <div className="d-flex flex-column justify-content-between">
           {" "}
@@ -54,13 +67,14 @@ function Card(props) {
                       {Math.floor(props.course.price + 0.5) - 0.01}{" "}
                     </span>
                     <span>
-                      {Math.floor(
-                        (props.course.price *
-                          (100 - props.course.promotion.percentage)) /
-                          100 +
-                          0.5
-                      ) -
-                        0.01 +
+                      {(props.course.price !== 0
+                        ? Math.floor(
+                            (props.course.price *
+                              (100 - props.course.promotion.percentage)) /
+                              100 +
+                              0.5
+                          ) - 0.01
+                        : 0) +
                         (" " +
                           (" " +
                             (countries[
@@ -83,8 +97,9 @@ function Card(props) {
                 </>
               ) : (
                 <div>
-                  {Math.floor(props.course.price + 0.5) -
-                    0.01 +
+                  {(props.course.price !== 0
+                    ? Math.floor(props.course.price + 0.5) - 0.01
+                    : 0) +
                     (" " +
                       (" " +
                         (countries[

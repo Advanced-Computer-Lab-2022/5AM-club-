@@ -23,7 +23,6 @@ function Login() {
   async function onSubmit(obj) {
     try {
       app.post(`/login`, obj).then((res) => {
-        console.log(res);
         localStorage.setItem("type", res.data.type);
         localStorage.setItem("country", res.data.country);
         localStorage.setItem("username", res.data.username);

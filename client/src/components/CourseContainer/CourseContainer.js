@@ -29,7 +29,8 @@ function CourseContainer(props) {
             localStorage.getItem("type") === "individual"
             ? "/trainee/populated-courses/"
             : "/" + localStorage.getItem("type") + "/populated-courses/"
-          : "/populated-courses/") + props.course.id
+          : "/populated-courses/") + props.course.id,
+        { headers: { country: localStorage.getItem("country") } }
       )
       .then((res) => {
         setCourse(res.data);
@@ -169,13 +170,14 @@ function CourseContainer(props) {
                               {Math.floor(course.price + 0.5) - 0.01}{" "}
                             </span>
                             <span>
-                              {Math.floor(
-                                (course.price *
-                                  (100 - props.promotion.percentage)) /
-                                  100 +
-                                  0.5
-                              ) -
-                                0.01 +
+                              {(course.price !== 0
+                                ? Math.floor(
+                                    (course.price *
+                                      (100 - props.promotion.percentage)) /
+                                      100 +
+                                      0.5
+                                  ) - 0.01
+                                : 0) +
                                 (" " +
                                   (countries[
                                     Object.keys(countries).find(
@@ -200,8 +202,9 @@ function CourseContainer(props) {
                         </>
                       ) : (
                         <div>
-                          {Math.floor(course.price + 0.5) -
-                            0.01 +
+                          {(course.price !== 0
+                            ? Math.floor(course.price + 0.5) - 0.01
+                            : 0) +
                             (" " +
                               (countries[
                                 Object.keys(countries).find(
@@ -258,7 +261,10 @@ function CourseContainer(props) {
             </div>{" "}
           </div>
 
-          <Card.Text className="editable-container">
+          <Card.Text
+            className="editable-container"
+            style={{ marginLeft: "0px" }}
+          >
             <div style={{ fontWeight: "700", fontSize: "30px" }}>
               Description :{" "}
             </div>

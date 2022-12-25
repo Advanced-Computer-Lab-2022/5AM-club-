@@ -115,6 +115,7 @@ function GeneralFiltersContainer(props) {
             primary: "#96cea8",
           },
         })}
+        sx
         value={selectedSubjects}
         onChange={(e) => {
           setSelectedSubjects(e);
@@ -141,7 +142,7 @@ function GeneralFiltersContainer(props) {
             <div
               style={{
                 height: "4px",
-                backgroundColor: "#484848",
+                backgroundColor: "#CCCCCC",
                 position: "absolute",
                 width: "240px",
                 left: "200px",
@@ -196,7 +197,7 @@ function GeneralFiltersContainer(props) {
         <div
           style={{
             height: "4px",
-            backgroundColor: "#484848",
+            backgroundColor: "#CCCCCC",
             position: "absolute",
             width: "240px",
             left: "200px",
@@ -222,7 +223,7 @@ function GeneralFiltersContainer(props) {
         <div
           style={{
             height: "4px",
-            backgroundColor: "#484848",
+            backgroundColor: "#CCCCCC",
             position: "absolute",
             width: "240px",
             left: "200px",
@@ -231,21 +232,29 @@ function GeneralFiltersContainer(props) {
           }}
         ></div>
       </div>
-      <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "7px",
+          justifyContent: "space-evenly",
+          marginTop: "15px",
+          padding: "0px",
+        }}
+      >
         {" "}
         <button
           onClick={handleClear}
           className="btn btn-outline-danger"
-          style={{ fontSize: "13px" }}
+          style={{ fontSize: "20px" }}
         >
-          Clear Filters
+          Clear
         </button>
         <button
           onClick={handleFilter}
           className="btn btn-outline-success"
-          style={{ fontSize: "13px" }}
+          style={{ fontSize: "20px" }}
         >
-          Apply Filters
+          Apply
         </button>
       </div>
     </div>

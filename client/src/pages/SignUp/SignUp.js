@@ -15,10 +15,15 @@ import Checkbox from "@mui/material/Checkbox";
 import Modal from "react-bootstrap/Modal";
 import useModalData from "./useModalData.js";
 import app from "../../utils/AxiosConfig.js";
+import { InputAdornment } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,14 +32,31 @@ function SignUp() {
   const { show, onClickShow, onClickHide, content } = useModalData();
 
   const onSubmit = async (obj) => {
-    try {
-      app.post("/signUp", obj).then((res) => {
-        window.localStorage.setItem("token", res.data.accessToken);
-        navigate("../individual-trainee");
-      });
-    } catch (err) {
-      console.log(err);
+    if (password !== repeatPassword) {
+      alert("Passwords do not match");
+      return;
     }
+
+    app
+      .post("/signUp", obj)
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Account created successfully. Proceed to login.");
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 405) {
+          alert("Username already exists.");
+          return;
+        } else if (err.response.status === 402) {
+          alert(
+            "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
+          );
+          return;
+        }
+      });
   };
   const navigate = useNavigate();
   return (
@@ -44,18 +66,19 @@ function SignUp() {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        marginBottom: "100px",
         height: "100%",
       }}
     >
       <div style={{ marginRight: "50px" }}>
         <img
           src={logo}
-          alt='Logo'
+          alt="Logo"
           style={{ width: "300px", height: "200px" }}
         ></img>
         <img
           src={logo2}
-          alt='Logo'
+          alt="Logo"
           style={{ width: "250px", height: "150px" }}
         ></img>
       </div>
@@ -86,9 +109,9 @@ function SignUp() {
           >
             <TextField
               hiddenLabel
-              id='filled-hidden-label-small'
-              variant='outlined'
-              label='username'
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Username"
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -96,9 +119,9 @@ function SignUp() {
             />
             <TextField
               hiddenLabel
-              id='filled-hidden-label-small'
-              variant='outlined'
-              label='email'
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -106,9 +129,9 @@ function SignUp() {
             />
             <TextField
               hiddenLabel
-              id='filled-hidden-label-small'
-              variant='outlined'
-              label='first name'
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="First Name"
               value={firstName}
               onChange={(e) => {
                 setFirstName(e.target.value);
@@ -116,28 +139,69 @@ function SignUp() {
             />
             <TextField
               hiddenLabel
-              id='filled-hidden-label-small'
-              variant='outlined'
-              label='last name'
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Last Name"
               value={lastName}
               onChange={(e) => {
                 setLastName(e.target.value);
               }}
             />
+
             <TextField
-              hiddenLabel
-              password='true'
-              id='filled-hidden-label-small'
-              placeholder='password'
-              variant='outlined'
-              label='password'
+              type={showPassword ? "text" : "password"}
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Password"
+              autoComplete="no"
+              InputProps={{
+                autoComplete: showPassword ? "off" : "new-password",
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </InputAdornment>
+                ),
+              }}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
             />
+
+            <TextField
+              type={showRepeatPassword ? "text" : "password"}
+              id="filled-hidden-label-small"
+              variant="outlined"
+              label="Repeat Password"
+              autoComplete="no"
+              InputProps={{
+                autoComplete: showRepeatPassword ? "off" : "new-password",
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowRepeatPassword(!showRepeatPassword);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </InputAdornment>
+                ),
+              }}
+              value={repeatPassword}
+              onChange={(e) => {
+                setRepeatPassword(e.target.value);
+              }}
+            />
+
             <FormControl>
-              <FormLabel color='success'>Gender</FormLabel>
+              <FormLabel color="success">Gender</FormLabel>
               <RadioGroup
                 row
                 value={gender}
@@ -145,20 +209,16 @@ function SignUp() {
                   setGender(e.target.value);
                 }}
               >
+                {" "}
                 <FormControlLabel
-                  value='female'
-                  control={<Radio color='success' />}
-                  label='Female'
+                  value="male"
+                  control={<Radio color="success" />}
+                  label="Male"
                 />
                 <FormControlLabel
-                  value='male'
-                  control={<Radio color='success' />}
-                  label='Male'
-                />
-                <FormControlLabel
-                  value='other'
-                  control={<Radio color='success' />}
-                  label='Other'
+                  value="female"
+                  control={<Radio color="success" />}
+                  label="Female"
                 />
               </RadioGroup>
             </FormControl>
@@ -170,24 +230,23 @@ function SignUp() {
               }}
             >
               <Checkbox
-                color='success'
+                color="success"
                 onChange={(e) => {
                   setAcceptedTerms(e.target.checked);
                 }}
               />
               <span>I accept the</span>
               <button
-                type='button'
-                class='btn btn-link'
+                type="button"
+                className="btn btn-link"
                 onClick={onClickShow}
-                style={{ right: "20px", position: "relative", right: "10px" }}
+                style={{ position: "relative", right: "10px" }}
               >
                 Terms Of Service
               </button>
             </div>
             <Button
-              type='submit'
-              variant='outline-success'
+              variant="outline-success"
               disabled={
                 !acceptedTerms ||
                 gender === "" ||
@@ -217,20 +276,20 @@ function SignUp() {
       </Container>
 
       <Modal
-        size='lg'
+        size="lg"
         centered
         show={show}
         onHide={onClickHide}
-        aria-labelledby='example-modal-sizes-title-lg'
+        aria-labelledby="example-modal-sizes-title-lg"
       >
-        <div className='tos-wrapper'>
-          <div className='tos-border-success'>
+        <div className="tos-wrapper">
+          <div className="tos-border-success">
             <Modal.Header closeButton>
-              <Modal.Title id='example-modal-sizes-title-lg'>
+              <Modal.Title id="example-modal-sizes-title-lg">
                 Terms Of Service
               </Modal.Title>
             </Modal.Header>
-            <Modal.Body className='tos'>{content}</Modal.Body>
+            <Modal.Body className="tos">{content}</Modal.Body>
           </div>
         </div>
       </Modal>

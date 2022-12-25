@@ -24,7 +24,7 @@ const addUserSchema = Joi.object({
   password: Joi.string().required().messages({
     "string.empty": `"Password" cannot be an empty field`,
   }),
-});
+}).unknown();
 
 const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -87,6 +87,7 @@ async function updateTraineeCourse(req, res) {
 
 async function getUsers(req, res) {
   let User;
+
   switch (req.headers.type) {
     case "individual":
       User = await Trainee.find({ type: "individual" });
@@ -143,12 +144,15 @@ async function setCountry(req, res) {
     res.status(400).send("Invalid Country");
     return;
   }
-
+  console.log(
+    req.headers,
+    "<--------------------------------------------------"
+  );
   if (req.user.id) {
     const id = req.user.id;
     let User;
     switch (req.headers.type) {
-      case "trainee":
+      case "individual":
         User = await Trainee.findByIdAndUpdate(
           id,
           {
@@ -333,25 +337,30 @@ async function signUp(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  const foundDup = await nameChecker(req.body.username);
-  if (foundDup) {
-    return res.status(401).send("username already used!!");
-  } else {
-    console.log("foundDup=", foundDup);
-    const newindividualTrainee = new Trainee({
-      ...req.body,
-      courses: [],
-      type: "individual",
-    });
 
-    await newindividualTrainee
-      .save()
-      .then((response) => {
-        login(req, res);
-        //res.send("Trainee added successfully!");
-      })
-      .catch((err) => res.status(400).send("Please, enter valid data"));
+  const foundDup = await nameChecker(req.body.username);
+
+  if (foundDup) {
+    res.status(405).send("username already used!");
+    return;
   }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
+    return;
+  }
+  const newindividualTrainee = new Trainee({
+    ...req.body,
+    courses: [],
+    country: "United States",
+    type: "individual",
+  });
+  await newindividualTrainee
+    .save()
+    .then((response) => {
+      login(req, res);
+      //res.send("Trainee added successfully!");
+    })
+    .catch((err) => res.status(400).send("Please, enter valid data"));
 }
 
 async function editEmailInstructor(req, res) {

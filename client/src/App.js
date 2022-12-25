@@ -2,6 +2,7 @@ import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import PrivateRoute from "./config/PrivateRoute";
 import { memo, useState } from "react";
+import GuestHomePage from "./pages/GuestHomePage/GuestHomePage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ViewMyCourses from "./pages/ViewMyCourses/ViewMyCourses";
@@ -15,7 +16,6 @@ import Header from "./layouts/Header/Header";
 import Footer from "./layouts/Footer/Footer";
 import TraineeProfile from "./pages/TraineeProfile/TraineeProfile";
 import AdminPage from "./pages/AdminPage/AdminPage";
-import AdminAddUser from "./pages/AdminAddUser/AdminAddUser";
 import ViewCourseReviews from "./pages/ViewCourseReviews/ViewCourseReviews";
 import SetCoursePromotion from "./pages/SetCoursePromotion/SetCoursePromotion";
 import InstructorReviews from "./pages/InstructorReviews/InstructorReviews";
@@ -23,11 +23,12 @@ import InstructorPersonalInformation from "./pages/InstructorPersonalInformation
 import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCourse";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
-import ChangePassword from "./pages/ChangePassword/ChangePassword";
 import TraineeTakeCourse from "./pages/TraineeTakeCourse/TraineeTakeCourse";
 import ViewContract from "./pages/ViewContract/ViewContract";
 import Error from "./pages/Error/Error";
 import ChangeForgottenPassword from "./pages/ChangeForgottenPassword/ChangeForgottenPassword.js";
+import { Train } from "@mui/icons-material";
+import TraineeHomePage from "./pages/TraineeHomePage/TraineeHomePage";
 
 function App() {
   const [error, setError] = useState(false);
@@ -55,7 +56,16 @@ function App() {
             >
               <Routes>
                 <Route path="/error" element={<Error />}></Route>
+
                 {/* Guest */}
+                <Route
+                  path="/"
+                  element={
+                    <PrivateRoute type={"guest"}>
+                      <GuestHomePage />
+                    </PrivateRoute>
+                  }
+                ></Route>
                 <Route
                   path="/change-forgotten-password/:id"
                   element={
@@ -129,14 +139,7 @@ function App() {
                     </PrivateRoute>
                   }
                 ></Route>
-                <Route
-                  path="/admin/add-user"
-                  element={
-                    <PrivateRoute type={"admin"}>
-                      <AdminAddUser />
-                    </PrivateRoute>
-                  }
-                ></Route>
+
                 <Route
                   path="/admin/courses"
                   element={
@@ -171,10 +174,10 @@ function App() {
                 ></Route>
                 {/* Individual */}
                 <Route
-                  path="/individual-trainee/change-password"
+                  path="/individual-trainee"
                   element={
                     <PrivateRoute type={"individual"}>
-                      <ChangePassword />
+                      <TraineeHomePage />
                     </PrivateRoute>
                   }
                 ></Route>
@@ -186,6 +189,7 @@ function App() {
                     </PrivateRoute>
                   }
                 ></Route>
+
                 <Route
                   path="/individual-trainee/courses/view-course/view-instructor-reviews"
                   element={
@@ -243,7 +247,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path="/individual-trainee"
+                  path="/individual-trainee/my-profile"
                   element={
                     <PrivateRoute type={"individual"}>
                       <TraineeProfile />
@@ -260,18 +264,10 @@ function App() {
                 ></Route>
                 {/* Corporate */}
                 <Route
-                  path="/corporate-trainee/change-password"
+                  path="/corporate-trainee"
                   element={
                     <PrivateRoute type={"corporate"}>
-                      <ChangePassword />
-                    </PrivateRoute>
-                  }
-                ></Route>
-                <Route
-                  path="/corporate-trainee/my-courses/view-course-details/view-instructor-reviews"
-                  element={
-                    <PrivateRoute type={"corporate"}>
-                      <InstructorReviews />
+                      <TraineeHomePage />
                     </PrivateRoute>
                   }
                 ></Route>
@@ -340,7 +336,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path="/corporate-trainee"
+                  path="/corporate-trainee/my-profile"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <TraineeProfile />
@@ -348,14 +344,7 @@ function App() {
                   }
                 ></Route>
                 {/* Instructor */}
-                <Route
-                  path="/instructor/change-password"
-                  element={
-                    <PrivateRoute type={"instructor"}>
-                      <ChangePassword />
-                    </PrivateRoute>
-                  }
-                ></Route>
+
                 <Route
                   path="/instructor/my-personal-information"
                   element={
@@ -455,13 +444,15 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path="/instructor"
+                  path="/instructor/my-profile"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorProfile />
                     </PrivateRoute>
                   }
                 ></Route>
+                {/* Error */}
+                <Route path="/*" element={<Error />}></Route>
               </Routes>
             </ErrorBoundary>
           </div>

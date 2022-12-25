@@ -98,7 +98,38 @@ const getSubjectValues = (subjects) => {
   return subjectValues;
 };
 
+const getCourseTitles = (courses) => {
+  let courseTitles = [];
+  for (let course of courses) {
+    courseTitles.push(course.title ? course.title : course.value);
+  }
+  console.log(courseTitles);
+  return courseTitles;
+};
+
+const getCourseNames = (courses) => {
+  console.log(courses);
+  if (courses.length === 0 || !courses) return [];
+  let courseNames = [];
+  for (let course of courses) {
+    courseNames.push({ label: course.title, value: course.title });
+  }
+  //sort array by label
+  courseNames.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  return courseNames;
+};
+
 module.exports = {
+  getCourseTitles,
+  getCourseNames,
   getSubjectValues,
   getSectionCount,
   replaceAt,

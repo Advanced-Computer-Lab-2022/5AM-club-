@@ -11,6 +11,7 @@ import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
 function Header() {
   const myRef = useRef();
 
+  const [hovering, setHovering] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
@@ -68,7 +69,16 @@ function Header() {
     app.get("/logout");
     navigate("/");
   }
-  function handleProfile() {}
+  function handleProfile() {
+    navigate(
+      (localStorage.getItem("type") === "individual" ||
+      localStorage.getItem("type") === "corporate"
+        ? localStorage.getItem("type") + "-trainee"
+        : localStorage.getItem("type")
+        ? localStorage.getItem("type")
+        : "") + "/my-profile"
+    );
+  }
   function handleSearch() {
     navigate(
       (localStorage.getItem("type") === "individual" ||
@@ -99,24 +109,40 @@ function Header() {
   }
   return (
     <div className="header-container">
-      <img
-        src={logo}
-        alt="Logo"
-        className="logo"
-        onClick={() => {
-          navigate("/");
+      <div
+        style={{
+          display: "flex",
+          width: "170px",
+          WebkitFilter: hovering ? "invert(100%)" : null,
+          filter: hovering ? "invert(100%)" : null,
+          transition: "all 0.2s",
         }}
-        style={{ cursor: "pointer", marginLeft: "10px" }}
-      ></img>
-      <img
-        src={logo2}
-        alt="Logo"
-        className="logo"
-        onClick={() => {
-          navigate("/");
+        onMouseEnter={() => {
+          setHovering(true);
         }}
-        style={{ cursor: "pointer" }}
-      ></img>
+        onMouseLeave={() => {
+          setHovering(false);
+        }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          className="logo"
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{ cursor: "pointer", marginLeft: "10px" }}
+        ></img>
+        <img
+          src={logo2}
+          alt="Logo"
+          className="logo"
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{ cursor: "pointer" }}
+        ></img>
+      </div>
       {localStorage.getItem("type") !== "admin" && (
         <div className="searchbar" tabIndex={-1}>
           <input
@@ -156,19 +182,41 @@ function Header() {
             setCountry(val);
           }}
           selectedValue={COUNTRIES.find((option) => option.value === country)}
-        />
+        />{" "}
+        {localStorage.getItem("type") !== "admin" &&
+          localStorage.getItem("type") && (
+            <button
+              className="button1"
+              onClick={() => {
+                navigate(
+                  "/" +
+                    (localStorage.getItem("type") === "individual" ||
+                    localStorage.getItem("type") === "corporate"
+                      ? localStorage.getItem("type") + "-trainee"
+                      : localStorage.getItem("type")) +
+                    "/my-courses"
+                );
+              }}
+            >
+              My Courses
+            </button>
+          )}
         <button
           className="button1"
           onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
         >
           {!localStorage.getItem("type") ? "Login" : "Logout"}
         </button>
-        <button
-          className="button1"
-          onClick={!localStorage.getItem("type") ? handleSignup : handleProfile}
-        >
-          {!localStorage.getItem("type") ? "Signup" : "Profile"}
-        </button>
+        {localStorage.getItem("type") !== "admin" && (
+          <button
+            className="button1"
+            onClick={
+              !localStorage.getItem("type") ? handleSignup : handleProfile
+            }
+          >
+            {!localStorage.getItem("type") ? "Signup" : "Profile"}
+          </button>
+        )}
       </div>
     </div>
   );
