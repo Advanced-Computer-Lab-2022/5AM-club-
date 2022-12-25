@@ -1,9 +1,10 @@
 .header-container {
-  position: relative;
   display: flex;
   flex-direction: row;
   background-color: rgb(150, 206, 168);
   height: 60px;
+  overflow: "hidden";
+  min-width: 800px;
 }
 .logo {
   cursor: pointer;
@@ -22,17 +23,28 @@
 }
 .searchbar {
   display: flex;
-  margin-top: 15px;
   flex-direction: row;
-  margin-right: 10vw;
-  margin-left: 10vw;
-  height: 36px;
-  width: 40vw;
+  align-items: center;
+  width: 15vw;
+  margin-left: 20px;
+  transition: all 0.5s;
+  flex-shrink: 1;
 }
+.searchbar:focus {
+  flex-grow: 1;
+  transition: all 0.5s;
+}
+.searchbar:focus-within {
+  flex-grow: 1;
+  transition: all 0.5s;
+}
+
 .search-input {
-  height: 30px;
+  padding: 10px;
+  height: 40px;
   width: 60vw;
   border-radius: 20px;
+  font-size: x-large;
 }
 .search-input:hover {
   outline: 4px solid #484848;
@@ -107,7 +119,7 @@
   box-sizing: border-box;
   text-decoration: none;
   font-family: "Roboto", sans-serif;
-
+  border-width: 2px !important;
   font-weight: 300;
   color: #ffffff;
   text-align: center;

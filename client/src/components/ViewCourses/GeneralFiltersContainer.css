@@ -1,0 +1,58 @@
+.general-filters-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 13px;
+  gap: 10px;
+  height: fit-content;
+  min-width: 240px;
+  border: none !important;
+  box-shadow: 0 0 0 13px #96cea8;
+  border-radius: 10px;
+  border-width: 10px;
+  border-color: #96cea8 !important;
+}
+.general-filters-wrapper p,
+.general-filters-wrapper > div {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.general-filters-wrapper input {
+  border-radius: 20px;
+}
+.rs-slider-progress-bar {
+  background-color: #96cea8 !important;
+}
+
+.rs-slider-handle::before {
+  border-color: #96cea8 !important;
+}
+
+.rs-slider-handle:hover::before,
+.rs-slider-handle:focus::before {
+  -webkit-box-shadow: 0 0 0 8px rgb(48, 48, 48, 0.25) !important;
+  -webkit-box-shadow: 0 0 0 8px rgb(48, 48, 48, 0.25) !important;
+  box-shadow: 0 0 0 8px rgb(48, 48, 48, 0.25) !important;
+  box-shadow: 0 0 0 8px rgb(48, 48, 48, 0.25) !important;
+}
+.rs-input-group:not(.rs-input-group-disabled):hover,
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus,
+.rs-input-group:focus-within {
+  border-color: #96cea8 !important;
+}
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus,
+.rs-input-group:focus-within {
+  outline: 3px solid rgba(150, 206, 168, 0.25) !important;
+}
+.css-b62m3t-container {
+  z-index: 9999;
+}
+.css-1xc3v61-indicatorContainer {
+  cursor: pointer;
+}
+.css-15lsz6c-indicatorContainer {
+  cursor: pointer;
+}
+.css-1p3m7a8-multiValue {
+  background-color: #96cea8 !important;
+}

@@ -4,8 +4,8 @@ function Error() {
     <div id="notfound">
       <div className="notfound">
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div className="notfound-404" style={{ height: "auto" }}>
-            <h1>
+          <div className="notfound-404">
+            <h1 style={{ lineHeight: "null !important" }}>
               <span>4</span>
               <span>0</span>
               <span>4</span>

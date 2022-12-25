@@ -22,14 +22,16 @@ const instructorSchema = new mongoose.Schema({
   biography: { type: String },
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
+    required: true,
     default: [],
   },
   userReviews: {
     type: [reviewSchema],
     required: true,
+    default: [],
   },
 
-  passwordTimeout: { type: Date },
+  passwordTimeout: { type: Date, default: Date.now() },
 
   accepted: {
     type: Boolean,

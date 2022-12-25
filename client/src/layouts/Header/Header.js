@@ -105,54 +105,57 @@ function Header() {
     }
   }
   return (
-    <>
-      {" "}
-      <div className='header-container'>
-        <img
-          src={logo}
-          alt='Logo'
-          className='logo'
-          onClick={() => {
-            navigate("/");
-          }}
-          style={{ cursor: "pointer", marginLeft: "10px" }}
-        ></img>
-        <img
-          src={logo2}
-          alt='Logo'
-          className='logo'
-          onClick={() => {
-            navigate("/");
-          }}
-          style={{ cursor: "pointer" }}
-        ></img>
-        {localStorage.getItem("type") !== "admin" && (
-          <div className='searchbar'>
-            <input
-              ref={searchRef}
-              type={"text"}
-              className='search-input'
-              onKeyUp={handleEnter}
-            ></input>
-            <img
-              src={search}
-              alt='search'
-              onClick={handleSearch}
-              className='search'
-            ></img>
-          </div>
-        )}
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginLeft: "auto",
-            gap: "5px",
-            padding: "5px",
-            marginRight: "2px",
-          }}
-        >
+    <div className="header-container">
+      <img
+        src={logo}
+        alt="Logo"
+        className="logo"
+        onClick={() => {
+          navigate("/");
+        }}
+        style={{ cursor: "pointer", marginLeft: "10px" }}
+      ></img>
+      <img
+        src={logo2}
+        alt="Logo"
+        className="logo"
+        onClick={() => {
+          navigate("/");
+        }}
+        style={{ cursor: "pointer" }}
+      ></img>
+      {localStorage.getItem("type") !== "admin" && (
+        <div className="searchbar" tabIndex={-1}>
+          <input
+            ref={searchRef}
+            type={"text"}
+            placeholder={"Search for courses"}
+            className="search-input"
+            onKeyUp={handleEnter}
+          ></input>
+          <img
+            src={search}
+            alt="search"
+            onClick={handleSearch}
+            className="search"
+          ></img>
+        </div>
+      )}
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginLeft: "auto",
+          gap: "5px",
+          padding: "5px",
+          marginRight: "2px",
+          flexShrink: 1,
+          overflow: "hidden",
+        }}
+      >
+        
           <SelectCountry
             id={"countries"}
             ref={myRef}

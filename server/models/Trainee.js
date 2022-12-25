@@ -12,12 +12,15 @@ const traineeSchema = new mongoose.Schema({
   },
   type: { type: String, required: true },
   firstName: {
+    default: "",
     type: String,
   },
   lastName: {
+    default: "",
     type: String,
   },
   gender: {
+    default: "",
     type: String,
   },
   email: { type: String },
@@ -32,8 +35,9 @@ const traineeSchema = new mongoose.Schema({
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
     required: true,
+    default: [],
   },
-  passwordTimeout:{ type: Date,}
+  passwordTimeout: { type: Date, default: Date.now() },
 });
 
 const Trainee = mongoose.model("Trainees", traineeSchema);

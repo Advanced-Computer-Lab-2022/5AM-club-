@@ -16,6 +16,7 @@ import cancel from "../../assets/EditCourse/cancelblack.png";
 import edit from "../../assets/EditCourse/edit.png";
 import trash from "../../assets/EditCourse/delete.png";
 import { formatTime, convertISO8601ToMs } from "../../utils/Helpers";
+import { useLocation } from "react-router-dom";
 
 function Subtitle(props) {
   const [title, setTitle] = useState(props.subtitle.title);
@@ -31,6 +32,8 @@ function Subtitle(props) {
   const [video, setVideo] = useState();
   const [exercise, setExercise] = useState("quiz");
   const [expandSections, setExpandSections] = useState(false);
+
+  const location = useLocation();
 
   const sectionTitleRef = useRef();
   const sectionDescriptionRef = useRef();
@@ -162,6 +165,7 @@ function Subtitle(props) {
                 "&part=contentDetails&key=AIzaSyDA-c7NayerkKbh5S_74nibw_yp2r4OnAA"
             )
             .then((response) => {
+              console.log(response);
               app
                 .put(
                   "/instructor/my-courses/edit-course/" +
@@ -215,6 +219,7 @@ function Subtitle(props) {
         <div
           style={{
             display: "flex",
+            flexDirection: "row",
             width: "100%",
             flexWrap: "wrap",
             wordBreak: "break-all",
@@ -228,7 +233,7 @@ function Subtitle(props) {
                 flexGrow: "1",
               }}
             >
-              <p
+              <div
                 className="title-text"
                 style={{
                   display: "flex",
@@ -236,20 +241,24 @@ function Subtitle(props) {
                 }}
               >
                 {props.subtitle.title}
-              </p>
-              <img
-                src={edit}
-                alt="edit"
-                onClick={toggleEditing2}
-                style={{
-                  display: "flex",
+                {!props.course?.published && (
+                  <>
+                    <img
+                      src={edit}
+                      alt="edit"
+                      onClick={toggleEditing2}
+                      style={{
+                        display: "flex",
 
-                  margin: "10px",
-                  width: "50px",
-                  cursor: "pointer",
-                  alignSelf: "flex-start",
-                }}
-              ></img>
+                        margin: "10px",
+                        width: "50px",
+                        cursor: "pointer",
+                        alignSelf: "flex-start",
+                      }}
+                    ></img>
+                  </>
+                )}
+              </div>
             </div>
           ) : (
             <>
@@ -269,7 +278,7 @@ function Subtitle(props) {
                   defaultValue={props.subtitle.title}
                 ></input>
                 <button
-                  class="btn btn-success"
+                  class="btn btn-outline-success"
                   onClick={() => {
                     finishEdit();
                     toggleEditing2();
@@ -282,24 +291,31 @@ function Subtitle(props) {
               </div>
             </>
           )}
-          <img
-            src={trash}
-            alt="trash"
-            onClick={deleteSubtitle}
-            style={{
-              width: "50px",
-              height: "50px",
-              alignSelf: "flex-end",
-              marginBottom: "15px",
-              cursor: "pointer",
-            }}
-          ></img>
+          {!props.course?.published && (
+            <>
+              <img
+                src={trash}
+                alt="trash"
+                onClick={deleteSubtitle}
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  alignSelf: "flex-end",
+                  marginBottom: "15px",
+                  cursor: "pointer",
+                }}
+              ></img>
+            </>
+          )}
         </div>
       </div>
 
       <div>
         <div>
-          <button className="btn btn-secondary" onClick={toggleDescription}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={toggleDescription}
+          >
             {showDescription ? "Hide Description" : "Show Description"}
           </button>
           {showDescription && (
@@ -318,16 +334,20 @@ function Subtitle(props) {
                       className="description-wrapper"
                       readOnly={true}
                     ></TextareaAutosize>
-                    <img
-                      src={edit}
-                      alt="edit"
-                      onClick={toggleEditing}
-                      style={{
-                        margin: "10px",
-                        width: "50px",
-                        cursor: "pointer",
-                      }}
-                    ></img>
+                    {!props.course?.published && (
+                      <>
+                        <img
+                          src={edit}
+                          alt="edit"
+                          onClick={toggleEditing}
+                          style={{
+                            margin: "10px",
+                            width: "50px",
+                            cursor: "pointer",
+                          }}
+                        ></img>
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
@@ -347,7 +367,7 @@ function Subtitle(props) {
                       defaultValue={props.subtitle.description}
                     ></TextareaAutosize>
                     <button
-                      class="btn btn-success"
+                      class="btn btn-outline-success"
                       onClick={() => {
                         finishEdit();
                         toggleEditing();
@@ -372,7 +392,10 @@ function Subtitle(props) {
           </p>
         </div>
         <div>
-          <button className="btn btn-secondary" onClick={toggleExpandSections}>
+          <button
+            className="btn btn-outline-secondary"
+            onClick={toggleExpandSections}
+          >
             {expandSections ? "Hide Sections" : "Show Sections"}
           </button>
         </div>
@@ -388,6 +411,7 @@ function Subtitle(props) {
             {props.subtitle.sections.map((section) => (
               <div key={section._id} className="editable-container">
                 <Section
+                  course={props.course}
                   section={section}
                   courseid={props.courseid}
                   subtitleid={props.subtitle._id}
@@ -398,16 +422,25 @@ function Subtitle(props) {
           </div>
         )}
       </div>
-      <div onClick={toggleAddingSection} className="add-section-button">
-        <img src={addingSection ? cancel : plus} alt="plus"></img>
-        {addingSection ? "Cancel" : "Add Section"}
-      </div>
-      {addingSection && (
+      {!props.course?.published && (
         <>
+          <div onClick={toggleAddingSection} className="add-section-button">
+            <img src={addingSection ? cancel : plus} alt="plus"></img>
+            {addingSection ? "Cancel" : "Add Section"}
+          </div>
+        </>
+      )}
+      {addingSection && (
+        <div className="add-section">
           <div>
             <div style={{ display: "inline-block" }}>
               <FormControl>
-                <FormLabel id="controlled-radio-buttons-group">Type</FormLabel>
+                <FormLabel
+                  id="controlled-radio-buttons-group"
+                  style={{ color: "#000000", fontSize: "20px" }}
+                >
+                  Type
+                </FormLabel>
                 <RadioGroup
                   row
                   aria-labelledby="controlled-radio-buttons-group"
@@ -417,18 +450,17 @@ function Subtitle(props) {
                     setType(e.target.value);
                     setVideo();
                     setSectionMinutes();
-
                     setExercise("quiz");
                   }}
                 >
                   <FormControlLabel
                     value="exercise"
-                    control={<Radio />}
+                    control={<Radio color="#00AA00" />}
                     label="Exercise"
                   />
                   <FormControlLabel
                     value="video"
-                    control={<Radio />}
+                    control={<Radio color="#00AA00" />}
                     label="Video"
                   />
                 </RadioGroup>
@@ -475,20 +507,22 @@ function Subtitle(props) {
               ></input>
             </>
           )}
-          {type &&
-          sectionDescription &&
-          sectionTitle &&
-          ((video && type === "video") ||
-            (exercise && type === "exercise" && sectionMinutes > 0)) ? (
-            <button onClick={addSection} className="btn btn-success">
-              Done
-            </button>
-          ) : (
-            <button disabled className="btn btn-success">
-              Done
-            </button>
-          )}
-        </>
+          <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+            {type &&
+            sectionDescription &&
+            sectionTitle &&
+            ((video && type === "video") ||
+              (exercise && type === "exercise" && sectionMinutes > 0)) ? (
+              <button onClick={addSection} className="btn btn-outline-success">
+                Done
+              </button>
+            ) : (
+              <button disabled className="btn btn-outline-success">
+                Done
+              </button>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
