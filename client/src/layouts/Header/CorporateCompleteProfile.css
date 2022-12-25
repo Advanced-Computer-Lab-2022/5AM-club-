@@ -1,0 +1,14 @@
+.corpotrateCompleteContainer{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+    flex-direction: column;
+    overflow-y: scroll;
+  display: flex;
+       
+   
+}
+.corpotrateCompleteContainer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* make scrollbar transparent */
+}

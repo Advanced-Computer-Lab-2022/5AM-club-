@@ -5,10 +5,12 @@ const TraineeCourse = require("../models/TraineeCourse");
 const { convert } = require("../utils/CurrencyConverter");
 const objectID = require("objectid");
 const setCoursePromotionSchema = Joi.object({
-    percentage: Joi.number().min(0).max(100).required(),
-    startDate: Joi.date().greater(Date.now()).required(),
-    endDate: Joi.date().greater(Joi.ref("startDate")).required(),
-});
+
+  percentage: Joi.number().min(0).max(100).required(),
+  startDate: Joi.date().greater(Date.now()).required(),
+  endDate: Joi.date().greater(Joi.ref("startDate")).required(),
+  type: Joi.string().valid("instructor", "admin").required(),
+}).unknown();
 
 const courseSchema = Joi.object({
     title: Joi.string().required(),
@@ -144,10 +146,39 @@ const getCourseFilter = async (req) => {
         }),
         ...(searchItem && searchItem),
     };
-    console.log(req.query, "req.query");
-    console.log("filter", filter);
 
-    return filter;
+  }
+  let standardMin;
+  let standardMax;
+  if (req.query.min || req.query.max) {
+    standardMin = parseInt(req.query.min);
+    standardMax = parseInt(req.query.max);
+    if (req.headers.country) {
+      const country = req.headers.country;
+      if (country) {
+        if (req.query.min)
+          standardMin = await convert(req.query.min, country, "United States");
+        if (req.query.max)
+          standardMax = await convert(req.query.max, country, "United States");
+      }
+    }
+  }
+  filter = {
+    ...(req.query.subject && {
+      subject: { $all: req.query.subject },
+    }),
+    ...((standardMax || standardMin || standardMax === 0) && {
+      price: {
+        ...((standardMax || standardMax === 0) && { $lte: standardMax }),
+        ...(standardMin && { $gte: standardMin }),
+      },
+    }),
+    ...(searchItem && searchItem),
+  };
+  console.log(req.query, "req.query");
+  console.log("filter", filter);
+
+  return filter;
 };
 
 const changePrice = async (req, courses) => {
@@ -571,26 +602,55 @@ async function updateSection(req, res) {
 }
 
 const setCoursePromotion = async (req, res) => {
-    const id = req.params.id;
 
-    const valid = setCoursePromotionSchema.validate(req.body);
-    if (valid.error) {
-        res.status(400).send("Invalid Promotion");
-        return;
-    }
+  const id = req.params.id;
 
-    const course = await Course.findByIdAndUpdate(
-        id,
-        {
-            promotion: {
-                percentage: req.body.percentage,
-                startDate: req.body.startDate,
-                endDate: req.body.endDate,
-            },
-        },
-        { new: true }
-    );
-    res.send("done");
+  const valid = setCoursePromotionSchema.validate(req.body);
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+
+  const course = await Course.findById(id);
+  if (
+    course.promotion.type !== "admin" ||
+    (course.promotion.type === "admin" && course.promotion.endDate < new Date())
+  ) {
+    course.promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "instructor",
+    };
+    await course.save();
+    res.send(course);
+  } else {
+    res.status(407).send("Course already has a promotion set by an admin");
+  }
+};
+
+const setMultipleCoursesPromotion = async (req, res) => {
+  const id = req.params.id;
+
+  console.log(req.body, "<-------------------------------------");
+  const valid = setCoursePromotionSchema.validate(req.body);
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+  console.log(req.body.courses, "<-------------------------------------");
+  const course = await Course.find({ title: { $in: req.body.courses } });
+  for (let i = 0; i < course.length; i++) {
+    course[i].promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "admin",
+    };
+    console.log(course[i]);
+    await course[i].save();
+  }
+  res.send("done");
 };
 
 async function deleteCourse(req, res) {
@@ -632,45 +692,51 @@ async function getCourseMaxMin(req, res) {
 }
 
 async function getCourseSubjects(req, res) {
-    const courses = await Course.find();
-    if (!courses) {
-        res.send([]);
-        return;
+
+  const courses = await Course.find();
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
     }
-    let subjects = [];
-    for (let course of courses) {
-        for (let i = 0; i < course.subject.length; i++) {
-            if (
-                subjects.filter((s) => s?.value === course.subject[i])
-                    ?.length === 0
-            )
-                subjects.push({
-                    label: course.subject[i],
-                    value: course.subject[i],
-                });
-        }
+  }
+  // sort array by object value
+  subjects.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
     }
-    res.send(subjects.sort());
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(subjects);
 }
 
 module.exports = {
-    getCourseSubjects,
-    getCourseMaxMin,
-    deleteCourse,
-    updateCourse,
-    addSubtitle,
-    deleteSubtitle,
-    updateSubtitle,
-    addSection,
-    deleteSection,
-    updateSection,
-    getCourses,
-    getMyCourses,
-    getPopulatedCourses,
-    getMyPopulatedCourses,
-    createCourse,
-    findCourseByID,
-    findPopulatedCourseByID,
-    setCoursePromotion,
-    incrementCourseViews,
+  setMultipleCoursesPromotion,
+  getCourseSubjects,
+  getCourseMaxMin,
+  deleteCourse,
+  updateCourse,
+  addSubtitle,
+  deleteSubtitle,
+  updateSubtitle,
+  addSection,
+  deleteSection,
+  updateSection,
+  getCourses,
+  getMyCourses,
+  getPopulatedCourses,
+  getMyPopulatedCourses,
+  createCourse,
+  findCourseByID,
+  findPopulatedCourseByID,
+  setCoursePromotion,
+  incrementCourseViews,
 };

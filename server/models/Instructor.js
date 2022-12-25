@@ -3,37 +3,40 @@ const mongoose = require("mongoose");
 const { reviewSchema } = require("./Course.js");
 
 const instructorSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    email: { type: String },
-    country: { type: String },
 
-    money_owed: {
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  email: { type: String },
+  country: { type: String },
+  money_owed: { type: Number, default: 0 },
+  rating: {
+    type: Number,
+    default: 0,
+  },
+  biography: { type: String },
+  courses: {
+    type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
+    required: true,
+    default: [],
+  },
+  userReviews: {
+    type: [reviewSchema],
+    required: true,
+    default: [],
+  },
+   money_owed: {
         type: [{ year: Number, month: Number, amount: Number }],
         default: [],
     },
-    rating: {
-        type: Number,
-        default: 0,
-    },
-    biography: { type: String },
-    courses: {
-        type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
-        default: [],
-    },
-    userReviews: {
-        type: [reviewSchema],
-        required: true,
-    },
 
-    passwordTimeout: { type: Date },
+  passwordTimeout: { type: Date, default: Date.now() },
 
     accepted: {
         type: Boolean,

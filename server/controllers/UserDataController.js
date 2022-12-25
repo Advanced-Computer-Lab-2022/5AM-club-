@@ -17,7 +17,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 let refreshTokens = [];
 
 const countrySchema = Joi.object({
-    country: Joi.string().required(),
+
+  country: Joi.string().required(),
 });
 
 const addUserSchema = Joi.object({
@@ -262,6 +263,7 @@ async function addTrainee(req, res) {
             res.send("Trainee added successfully!");
         })
         .catch((err) => res.status(400).send("Username already used"));
+
 }
 
 async function editPersonalInformationInstructor(req, res) {
@@ -524,6 +526,7 @@ const login = async (req, res) => {
     //var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
     //console.log(hash);
 
+
     const admins = await Admin.findOne({
         username: user.username,
     });
@@ -581,6 +584,52 @@ const login = async (req, res) => {
     }
 
     //refreshTokens.push(refreshToken);
+
+};
+
+const updateProfile = async (req, res) => {
+  const id = req.user.id;
+  const type = req.user.type;
+  let user;
+  switch (type) {
+    case "corporate":
+      user = await Trainee.findByIdAndUpdate(
+        id,
+
+        req.body,
+
+        { new: true }
+      );
+      console.log("corporate");
+      break;
+    case "instructor":
+      user = await Instructor.findByIdAndUpdate(
+        id,
+
+        req.body,
+
+        { new: true }
+      );
+      break;
+    default:
+      res.status(400).send("Invalid UserType");
+      return;
+  }
+
+  req.user.email = user.email;
+  const accessToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET);
+  const refreshToken = jwt.sign(req.user, process.env.REFRESH_TOKEN_SECRET);
+  //console.log(refreshToken);
+
+  res.cookie("jwt", `${refreshToken}`);
+  res.cookie("accessToken", `${accessToken}`);
+  res.send(user);
+};
+
+const checkCompleteProfile = async (req, res) => {
+  if (!req.user) res.json("true");
+  else if (!req.user.email) res.json("false");
+  else res.json("true");
 };
 
 const logout = async (req, res) => {
@@ -677,26 +726,29 @@ const addBoughtCourse = async (req, res) => {
 };
 
 module.exports = {
-    getCourseInstructor,
-    setCountry,
-    getUser,
-    getUsers,
-    addAdmin,
-    addInstructor,
-    addTrainee,
-    editPersonalInformationInstructor,
-    signUp,
-    login,
-    logout,
-    addBoughtCourse,
-    editBiographyInstructor,
-    editEmailInstructor,
-    getTraineeCourse,
-    updateTraineeCourse,
-    changePassword,
-    getWalletMoney,
-    changePasswordEmail,
-    viewContract,
-    acceptContract,
-    getUserType,
+
+  getCourseInstructor,
+  setCountry,
+  getUser,
+  getUsers,
+  addAdmin,
+  addInstructor,
+  addTrainee,
+  editPersonalInformationInstructor,
+  signUp,
+  login,
+  logout,
+  addBoughtCourse,
+  getWalletMoney,
+  editBiographyInstructor,
+  editEmailInstructor,
+  getTraineeCourse,
+  updateTraineeCourse,
+  changePassword,
+  changePasswordEmail,
+  viewContract,
+  acceptContract,
+  getUserType,
+  updateProfile,
+  checkCompleteProfile,
 };

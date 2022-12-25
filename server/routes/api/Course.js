@@ -29,7 +29,15 @@ router.put(
 );
 router.put(
     "/my-courses/edit-course/:courseid/:subtitleid/add-section",
-    CourseController.addSection
+    CourseController.addSection);
+    
+router.put(
+"/set-multiple-promotions",
+  CourseController.setMultipleCoursesPromotion
+);
+router.put(
+  "/my-courses/edit-course/:courseid/add-subtitle",
+  CourseController.addSubtitle
 );
 router.put(
     "/my-courses/edit-course/:courseid/edit-subtitle/:subtitleid",
