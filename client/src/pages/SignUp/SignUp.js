@@ -225,6 +225,7 @@ function SignUp() {
             <div
               style={{
                 display: "flex",
+                justifyContent: "center",
                 alignItems: "center",
                 marginRight: "25px",
               }}
@@ -296,4 +297,4 @@ function SignUp() {
     </div>
   );
 }
-export default SignUp;
+export default memo(SignUp);

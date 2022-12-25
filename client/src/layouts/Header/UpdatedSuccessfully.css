@@ -1,0 +1,25 @@
+.updated-successfully{
+    display: grid;
+    gap: 40px;
+}
+.updated-successfully-text{
+    font-weight: 600;
+    color: #000;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    grid-area: "header";
+    
+}
+.updated-successfully-image{
+    grid-area:"main";
+    text-align: center;
+}
+.updated-successfully-button{
+    grid-area: "footer";
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+}

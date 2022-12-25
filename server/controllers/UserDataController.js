@@ -12,6 +12,9 @@ const nodemailer = require("nodemailer");
 const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
+const bcrypt = require("bcryptjs");
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+let refreshTokens = [];
 
 const countrySchema = Joi.object({
   country: Joi.string().required(),
@@ -24,7 +27,14 @@ const addUserSchema = Joi.object({
   password: Joi.string().required().messages({
     "string.empty": `"Password" cannot be an empty field`,
   }),
-}).unknown();
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
+  gender: Joi.string(),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+});
 
 const editPersonalInformationSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -87,7 +97,6 @@ async function updateTraineeCourse(req, res) {
 
 async function getUsers(req, res) {
   let User;
-
   switch (req.headers.type) {
     case "individual":
       User = await Trainee.find({ type: "individual" });
@@ -144,10 +153,7 @@ async function setCountry(req, res) {
     res.status(400).send("Invalid Country");
     return;
   }
-  console.log(
-    req.headers,
-    "<--------------------------------------------------"
-  );
+
   if (req.user.id) {
     const id = req.user.id;
     let User;
@@ -194,33 +200,16 @@ async function setCountry(req, res) {
     }
   }
 }
+
 async function addAdmin(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  let userExists = false;
-  const trainees = await Trainee.find();
-  const instructors = await Instructor.find();
-  for (let trainee of trainees) {
-    if (trainee.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  for (let instructor of instructors) {
-    if (instructor.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  if (userExists) {
-    res.status(400).send("username already used ");
-    return;
-  }
-
-  const newAdmin = new Admin({ ...req.body, country: "United States" });
+  const unhashed = req.body.password;
+  req.body.password = bcrypt.hashSync(unhashed, 8);
+  const newAdmin = new Admin(req.body);
 
   await newAdmin
     .save()
@@ -236,32 +225,13 @@ async function addInstructor(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-  let userExists = false;
-  const trainees = await Trainee.find();
-  const admins = await Admin.find();
-  for (let trainee of trainees) {
-    if (trainee.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  for (let admin of admins) {
-    if (admin.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  if (userExists) {
-    res.status(400).send("username already used ");
-    return;
-  }
-
+  const unhashed = req.body.password;
+  req.body.password = bcrypt.hashSync(unhashed, 8);
   const newInstructor = new Instructor({
     ...req.body,
     email: "",
     country: "United States",
     biography: "",
-    accepted: false,
   });
   await newInstructor
     .save()
@@ -272,37 +242,16 @@ async function addInstructor(req, res) {
 }
 
 async function addTrainee(req, res) {
-  let userExists = false;
-  const admins = await Admin.find();
-  const instructors = await Instructor.find();
-  for (let admin of admins) {
-    if (admin.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  for (let instructor of instructors) {
-    if (instructor.username === req.body.username) {
-      userExists = true;
-      break;
-    }
-  }
-  if (userExists) {
-    res.status(400).send("username already used ");
-    return;
-  }
-
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
-
+  const unhashed = req.body.password;
+  req.body.password = bcrypt.hashSync(unhashed, 8);
   const newCorporateTrainee = new Trainee({
     ...req.body,
     courses: [],
-    email: "",
-    country: "United States",
     type: "corporate",
   });
   await newCorporateTrainee
@@ -413,14 +362,17 @@ async function changePassword(req, res) {
     res.status(400).send(passwordStrength(pass).value);
     return;
   }
+
+  var hashedPassword = bcrypt.hashSync(pass, 8);
   if (req.user.id) {
     const id = req.user.id;
+    let User;
     switch (req.user.type) {
       case "individual":
         User = await Trainee.findByIdAndUpdate(
           id,
           {
-            password: req.body.password,
+            password: hashedPassword,
           },
           { new: true }
         );
@@ -429,7 +381,7 @@ async function changePassword(req, res) {
         User = await Trainee.findByIdAndUpdate(
           id,
           {
-            password: req.body.password,
+            password: hashedPassword,
           },
           { new: true }
         );
@@ -438,7 +390,7 @@ async function changePassword(req, res) {
         User = await Instructor.findByIdAndUpdate(
           id,
           {
-            password: req.body.password,
+            password: hashedPassword,
           },
           { new: true }
         );
@@ -448,6 +400,19 @@ async function changePassword(req, res) {
         break;
     }
     res.send("Password changed successfully");
+  } else {
+    res.status(400).send("Missing Id");
+  }
+  res.send("Password changed successfully");
+}
+
+async function getWalletMoney(req, res) {
+  if (req.user.id) {
+    const id = req.user.id;
+
+    const User = await Trainee.findById(id);
+
+    res.status(200).json(User.WalletMoney);
   } else {
     res.status(400).send("Missing Id");
   }
@@ -544,43 +509,49 @@ const decodeToken = async (req, res) => {
 
 const login = async (req, res) => {
   const user = { username: req.body.username };
+  //var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
+  //console.log(hash);
+
   const admins = await Admin.findOne({
     username: user.username,
-    password: req.body.password,
   });
   const instructors = await Instructor.findOne({
     username: user.username,
-    password: req.body.password,
   });
   const trainees = await Trainee.findOne({
     username: user.username,
-    password: req.body.password,
   });
   //console.log(admins, instructors, trainees);
   if (!admins && !instructors && !trainees) {
-    res.status(401).send("Wrong Username or Password");
+    res.status(401).send("Wrong Username ");
   } else {
     if (admins) {
+      if (!bcrypt.compareSync(req.body.password, admins.password))
+        return res.status(401).send("Wrong Password");
       user.type = "admin";
       user.id = admins._id;
       user.country = admins.country;
     }
     if (instructors) {
+      if (!bcrypt.compareSync(req.body.password, instructors.password))
+        return res.status(401).send("Wrong Password");
       user.type = "instructor";
       user.id = instructors._id;
       user.country = instructors.country;
     }
     if (trainees) {
+      if (!bcrypt.compareSync(req.body.password, trainees.password))
+        return res.status(401).send("Wrong Password");
       user.type = trainees.type;
       user.id = trainees._id;
       user.country = trainees.country;
     }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "120m",
+      expiresIn: "10m",
     });
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "20m",
     });
     //console.log(refreshToken);
 
@@ -592,16 +563,147 @@ const login = async (req, res) => {
     // console.log(res.cookie);
     res.json({
       type: user.type,
-      country: user.country,
       username: user.username,
+      country: user.country,
     });
   }
+
+  //refreshTokens.push(refreshToken);
+};
+
+const updateProfile = async (req, res) => {
+  const id = req.user.id;
+  const type = req.user.type;
+  let user;
+  switch (type) {
+    case "corporate":
+      user = await Trainee.findByIdAndUpdate(
+        id,
+
+        req.body,
+
+        { new: true }
+      );
+      console.log("corporate");
+      break;
+    case "instructor":
+      user = await Instructor.findByIdAndUpdate(
+        id,
+
+        req.body,
+
+        { new: true }
+      );
+      break;
+    default:
+      res.status(400).send("Invalid UserType");
+      return;
+  }
+
+  req.user.email = user.email;
+  const accessToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET);
+  const refreshToken = jwt.sign(req.user, process.env.REFRESH_TOKEN_SECRET);
+  //console.log(refreshToken);
+
+  res.cookie("jwt", `${refreshToken}`);
+  res.cookie("accessToken", `${accessToken}`);
+  res.send(user);
+};
+
+const checkCompleteProfile = async (req, res) => {
+  if (!req.user) res.json("true");
+  else if (!req.user.email) res.json("false");
+  else res.json("true");
 };
 
 const logout = async (req, res) => {
   console.log("logging out!!");
   res.clearCookie("accessToken");
   res.clearCookie("jwt");
+};
+
+const addBoughtCourse = async (req, res) => {
+  await jwt.verify(
+    req.body.token,
+    process.env.BUY_COURSE_SECRET,
+    async (err, decoded) => {
+      if (err) {
+        // Wrong or expired refresh token
+        return res.status(401).json({ message: "Wrong course token" });
+      } else {
+        //logic here
+        console.log("token in back", decoded);
+        const { courseId, traineeId, paidFromWallet } = decoded;
+        const traineeAfterAdd = await Trainee.findOneAndUpdate(
+          { _id: traineeId },
+          {
+            $push: { courses: courseId },
+            $inc: { walletMoney: -1 * paidFromWallet },
+          }
+        )
+          .then(() => console.log("trainee has the course"))
+          .catch((err) => console.log(err));
+        let courseAfterAdd, sectionsNum;
+        await Course.findOneAndUpdate(
+          { _id: courseId },
+          { $push: { owners: traineeId } }
+        )
+          .then((result) => {
+            courseAfterAdd = result;
+            console.log("course has new owner", courseAfterAdd);
+            sectionsNum = courseAfterAdd.subtitles.reduce(
+              (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
+              0
+            );
+          })
+          .catch((err) => console.log(err));
+        //console.log(courseAfterAdd);
+        //change array lengthssss and price value
+
+        const newTraineeCourse = await TraineeCourse.create({
+          courseId,
+          traineeId,
+          progress: Array(sectionsNum).fill(false),
+          answers: Array(sectionsNum).fill(Array(4).fill(-1)),
+          notes: Array(sectionsNum).fill(null),
+          lastSection: 0,
+          grades: Array(sectionsNum).fill(0),
+          purchasingCost: courseAfterAdd.price,
+        })
+          .then(() => console.log("new traineeCourse doc created"))
+          .catch((err) => console.log(err));
+
+        //dont forget instructors
+        const moneyPerInst =
+          courseAfterAdd.price / courseAfterAdd.instructor.length;
+        for (let instId of courseAfterAdd.instructor) {
+          const tmpInst = await Instructor.findById(instId);
+          const now = new Date();
+          if (
+            tmpInst.money_owed.slice(-1)[0]?.year == now.getFullYear() &&
+            tmpInst.money_owed.slice(-1)[0]?.month == now.getMonth() + 1
+          ) {
+            tmpInst.money_owed.at(-1).amount += moneyPerInst;
+            await Instructor.findByIdAndUpdate(instId, {
+              $set: { money_owed: tmpInst.money_owed },
+            });
+          } else {
+            await Instructor.findByIdAndUpdate(instId, {
+              $push: {
+                money_owed: {
+                  year: now.getFullYear(),
+                  month: now.getMonth() + 1,
+                  amount: moneyPerInst,
+                },
+              },
+            });
+          }
+
+          res.json({ message: "boaught succ" });
+        }
+      }
+    }
+  );
 };
 
 module.exports = {
@@ -616,6 +718,8 @@ module.exports = {
   signUp,
   login,
   logout,
+  addBoughtCourse,
+  getWalletMoney,
   editBiographyInstructor,
   editEmailInstructor,
   getTraineeCourse,
@@ -625,4 +729,6 @@ module.exports = {
   viewContract,
   acceptContract,
   getUserType,
+  updateProfile,
+  checkCompleteProfile,
 };

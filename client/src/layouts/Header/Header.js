@@ -3,15 +3,22 @@ import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
 import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
+import useCo from "./useModalData";
+import Modal from "react-bootstrap/Modal";
+import useModalData from "./useModalData";
+import CorporateCompleteProfile from "./CorporateCompleteProfile";
+import InstructorCompleteProfile from "./InstructorCompleteProfile";
+import UpdatedSuccessfully from "./UpdatedSuccessfully";
 
 function Header() {
+  const { show, onClickShow, onClickHide, done, Done } = useModalData();
+  console.log(show);
   const myRef = useRef();
 
-  const [hovering, setHovering] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
@@ -50,7 +57,7 @@ function Header() {
       );
     }
     localStorage.setItem("country", selectedCountry);
-    navigate(0);
+    if (!show) navigate(0);
   }, [country]);
 
   const navigate = useNavigate();
@@ -182,41 +189,19 @@ function Header() {
             setCountry(val);
           }}
           selectedValue={COUNTRIES.find((option) => option.value === country)}
-        />{" "}
-        {localStorage.getItem("type") !== "admin" &&
-          localStorage.getItem("type") && (
-            <button
-              className="button1"
-              onClick={() => {
-                navigate(
-                  "/" +
-                    (localStorage.getItem("type") === "individual" ||
-                    localStorage.getItem("type") === "corporate"
-                      ? localStorage.getItem("type") + "-trainee"
-                      : localStorage.getItem("type")) +
-                    "/my-courses"
-                );
-              }}
-            >
-              My Courses
-            </button>
-          )}
+        />
         <button
           className="button1"
           onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
         >
           {!localStorage.getItem("type") ? "Login" : "Logout"}
         </button>
-        {localStorage.getItem("type") !== "admin" && (
-          <button
-            className="button1"
-            onClick={
-              !localStorage.getItem("type") ? handleSignup : handleProfile
-            }
-          >
-            {!localStorage.getItem("type") ? "Signup" : "Profile"}
-          </button>
-        )}
+        <button
+          className="button1"
+          onClick={!localStorage.getItem("type") ? handleSignup : handleProfile}
+        >
+          {!localStorage.getItem("type") ? "Signup" : "Profile"}
+        </button>
       </div>
     </div>
   );
