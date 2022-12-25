@@ -1,3 +1,9 @@
+.select-country-wrapper {
+  transition: all 0.2s;
+}
+.select-country-wrapper:hover {
+  margin-bottom: 15px;
+}
 .search-input-country {
   margin-top: 10px;
   border-radius: 20px;
@@ -7,6 +13,7 @@
 .search-input-country:hover {
   outline: 4px solid #484848;
 }
+
 .scroll-hidden::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* make scrollbar transparent */

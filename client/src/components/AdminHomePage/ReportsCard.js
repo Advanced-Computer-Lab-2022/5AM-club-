@@ -4,30 +4,36 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
-import request from "../../assets/AdminHomePage/request.png";
-import "./CoursePromoCard.css";
+import report from "../../assets/AdminHomePage/report.png";
+import "./ReportsCard.css";
+import { useNavigate } from "react-router-dom";
 
-function CoursePromoCard() {
+function AddReportsCard() {
+  const navigate = useNavigate();
+
   return (
-    <Card sx={{ maxWidth: 345, height: "500px" }}>
+    <Card
+      sx={{ maxWidth: 345, height: "400px" }}
+      className="card-hover-green"
+      onClick={() => {}}
+    >
       <CardActionArea>
         <CardMedia
           component="img"
-          height="200"
-          image={request}
+          height="250"
+          image={report}
           alt="course request"
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            Course Promos
+            User Reports
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            You can apply promotions for specific courses or all courses.
+            View and change user report statuses.
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
   );
 }
-
-export default memo(CoursePromoCard);
+export default memo(AddReportsCard);

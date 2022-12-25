@@ -4,25 +4,25 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
-import request from "../../assets/AdminHomePage/request.png";
-import "./CourseRequestsCard.css";
+import Refund from "../../assets/AdminHomePage/refund.png";
+import "./CourseRefundCard.css";
 
-function CourseRequestsCard() {
+function CourseRefundCard() {
   return (
-    <Card sx={{ maxWidth: 345, height: "500px" }}>
+    <Card sx={{ maxWidth: 345, height: "400px" }} className="card-hover-green">
       <CardActionArea>
         <CardMedia
           component="img"
-          height="200"
-          image={request}
+          height="250"
+          image={Refund}
           alt="course request"
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            Course Requests
+            Refund Requests
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            There are n requests from corporate trainees to access courses
+            View successful course refund requests.
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -30,4 +30,4 @@ function CourseRequestsCard() {
   );
 }
 
-export default memo(CourseRequestsCard);
+export default memo(CourseRefundCard);

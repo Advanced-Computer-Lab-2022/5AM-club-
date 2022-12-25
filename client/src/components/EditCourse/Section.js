@@ -157,7 +157,7 @@ function Section(props) {
                   defaultValue={props.section?.title}
                 ></input>
                 <button
-                  class="btn btn-outline-success"
+                  className="btn btn-outline-success"
                   onClick={() => {
                     finishEdit();
                     toggleEditing2();
@@ -246,7 +246,7 @@ function Section(props) {
                       defaultValue={props.section?.description}
                     ></TextareaAutosize>
                     <button
-                      class="btn btn-outline-success"
+                      className="btn btn-outline-success"
                       onClick={(e) => {
                         finishEdit();
                         toggleEditing();

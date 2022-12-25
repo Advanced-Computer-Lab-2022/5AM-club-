@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import app from "../../utils/AxiosConfig";
+import { useLocation } from "react-router-dom";
 import arrow from "../../assets/ViewCourses/arrow.svg";
 import { formatTime, getSectionCount } from "../../utils/Helpers";
 import "./MyCourseCard.css";
@@ -82,13 +82,19 @@ function MyCourseCard(props) {
 
   function handleClick() {
     if (localStorage.getItem("type") === "instructor")
-      navigate("edit-course", {
+      navigate("/instructor/my-courses/edit-course", {
         state: { id: props.course._id },
       });
-    else
-      navigate("view-course-details", {
-        state: { course: props.course, displayAddReview: true },
-      });
+    else {
+      navigate(
+        "/" +
+          localStorage.getItem("type") +
+          "-trainee/my-courses/view-course-details",
+        {
+          state: { course: props.course, displayAddReview: true },
+        }
+      );
+    }
   }
 
   return (

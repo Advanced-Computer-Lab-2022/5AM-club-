@@ -91,13 +91,15 @@ function CoursePromotionContainer(props) {
           percentage: percentage,
           startDate: startDate,
           endDate: endDate,
+          type: "instructor",
         })
         .then((res) => {
           console.log(res);
           alert("Course promotion has been set successfully!");
         })
         .catch((err) => {
-          alert("Dates are not valid!");
+          if (err.response.status === 407) alert(err.response.data);
+          else alert("Dates are not valid!");
         });
     }
   };
@@ -119,7 +121,11 @@ function CoursePromotionContainer(props) {
           InputProps={{ inputProps: { min: 1, max: 100 } }}
           id="percentage"
           value={percentage}
-          onChange={(e) => setPercentage(e.target.value)}
+          onChange={(e) => {
+            if (e.target.value < 1) setPercentage(1);
+            else if (e.target.value > 100) setPercentage(100);
+            else setPercentage(e.target.value);
+          }}
         />
         <Typography variant="h6" sx={{ m: 1 }}>
           Start date

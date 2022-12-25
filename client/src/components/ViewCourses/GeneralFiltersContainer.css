@@ -6,6 +6,8 @@
   gap: 10px;
   height: fit-content;
   min-width: 240px;
+  max-width: 240px;
+
   border: none !important;
   box-shadow: 0 0 0 13px #96cea8;
   border-radius: 10px;
@@ -55,4 +57,13 @@
 }
 .css-1p3m7a8-multiValue {
   background-color: #96cea8 !important;
+}
+
+.css-1p3m7a8-multiValue {
+  border-radius: 10px !important;
+}
+
+.css-12a83d4-MultiValueRemove {
+  border-top-right-radius: 10px !important;
+  border-bottom-right-radius: 10px !important;
 }

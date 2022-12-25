@@ -418,7 +418,9 @@ function EditCourse(props) {
                 <>
                   <p>
                     {"Price : " +
-                      (Math.floor(props.course?.price + 0.5) - 0.01) +
+                      (props.course?.price !== 0
+                        ? Math.floor(props.course?.price + 0.5) - 0.01
+                        : 0) +
                       " " +
                       (" " +
                         (countries[

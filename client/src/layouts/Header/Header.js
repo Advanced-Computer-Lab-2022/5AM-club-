@@ -18,6 +18,7 @@ function Header() {
   const { show, onClickShow, onClickHide, done, Done } = useModalData();
   console.log(show);
   const myRef = useRef();
+
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
@@ -75,7 +76,16 @@ function Header() {
     app.get("/logout");
     navigate("/");
   }
-  function handleProfile() {}
+  function handleProfile() {
+    navigate(
+      (localStorage.getItem("type") === "individual" ||
+      localStorage.getItem("type") === "corporate"
+        ? localStorage.getItem("type") + "-trainee"
+        : localStorage.getItem("type")
+        ? localStorage.getItem("type")
+        : "") + "/my-profile"
+    );
+  }
   function handleSearch() {
     navigate(
       (localStorage.getItem("type") === "individual" ||
@@ -105,26 +115,41 @@ function Header() {
     }
   }
   return (
-
     <div className="header-container">
-      <img
-        src={logo}
-        alt="Logo"
-        className="logo"
-        onClick={() => {
-          navigate("/");
+      <div
+        style={{
+          display: "flex",
+          width: "170px",
+          WebkitFilter: hovering ? "invert(100%)" : null,
+          filter: hovering ? "invert(100%)" : null,
+          transition: "all 0.2s",
         }}
-        style={{ cursor: "pointer", marginLeft: "10px" }}
-      ></img>
-      <img
-        src={logo2}
-        alt="Logo"
-        className="logo"
-        onClick={() => {
-          navigate("/");
+        onMouseEnter={() => {
+          setHovering(true);
         }}
-        style={{ cursor: "pointer" }}
-      ></img>
+        onMouseLeave={() => {
+          setHovering(false);
+        }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          className="logo"
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{ cursor: "pointer", marginLeft: "10px" }}
+        ></img>
+        <img
+          src={logo2}
+          alt="Logo"
+          className="logo"
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{ cursor: "pointer" }}
+        ></img>
+      </div>
       {localStorage.getItem("type") !== "admin" && (
         <div className="searchbar" tabIndex={-1}>
           <input
@@ -155,52 +180,30 @@ function Header() {
           overflow: "hidden",
         }}
       >
-        
-          <SelectCountry
-            id={"countries"}
-            ref={myRef}
-            open={isOpen}
-            onToggle={() => setIsOpen(!isOpen)}
-            onChange={(val) => {
-              setCountry(val);
-            }}
-            selectedValue={COUNTRIES.find((option) => option.value === country)}
-          />
-          <button
-            className='button1'
-            onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
-          >
-            {!localStorage.getItem("type") ? "Login" : "Logout"}
-          </button>
-          <button
-            className='button1'
-            onClick={
-              !localStorage.getItem("type") ? handleSignup : handleProfile
-            }
-          >
-            {!localStorage.getItem("type") ? "Signup" : "Profile"}
-          </button>
-        </div>
+        <SelectCountry
+          id={"countries"}
+          ref={myRef}
+          open={isOpen}
+          onToggle={() => setIsOpen(!isOpen)}
+          onChange={(val) => {
+            setCountry(val);
+          }}
+          selectedValue={COUNTRIES.find((option) => option.value === country)}
+        />
+        <button
+          className="button1"
+          onClick={!localStorage.getItem("type") ? handleLogin : handleLogout}
+        >
+          {!localStorage.getItem("type") ? "Login" : "Logout"}
+        </button>
+        <button
+          className="button1"
+          onClick={!localStorage.getItem("type") ? handleSignup : handleProfile}
+        >
+          {!localStorage.getItem("type") ? "Signup" : "Profile"}
+        </button>
       </div>
-      <Modal size='lg' centered show={show}>
-        <div className='tos-wrapper'>
-          <div className='tos-border-success'>
-            <Modal.Header>
-              <Modal.Title>Complete your profile</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className='tos'>
-              {done ? (
-                <UpdatedSuccessfully onClickHide={onClickHide} />
-              ) : localStorage.getItem("type") === "corporate" ? (
-                <CorporateCompleteProfile Done={Done} />
-              ) : (
-                <InstructorCompleteProfile Done={Done} />
-              )}
-            </Modal.Body>
-          </div>
-        </div>
-      </Modal>
-    </>
+    </div>
   );
 }
 export default memo(Header);

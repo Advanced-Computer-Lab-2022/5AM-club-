@@ -5,36 +5,29 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import request from "../../assets/AdminHomePage/request.png";
-import "./CoursePromoCard.css";
-import { useNavigate } from "react-router-dom";
+import "./CourseRequestsCard.css";
 
-function AddUserCard() {
-  const navigate = useNavigate();
-
+function CourseRequestsCard() {
   return (
-    <Card
-      sx={{ maxWidth: 345, height: "500px" }}
-      onClick={() => {
-        navigate("add-user");
-      }}
-    >
+    <Card sx={{ maxWidth: 345, height: "400px" }} className="card-hover-green">
       <CardActionArea>
         <CardMedia
           component="img"
-          height="200"
+          height="250"
           image={request}
           alt="course request"
         />
         <CardContent>
           <Typography gutterBottom variant="h4" component="div">
-            Add User
+            Course Requests
           </Typography>
           <Typography variant="h6" color="text.secondary">
-            You can add corporate trainees, instructors, or admins.
+            View and manage course access requests.
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
   );
 }
-export default memo(AddUserCard);
+
+export default memo(CourseRequestsCard);

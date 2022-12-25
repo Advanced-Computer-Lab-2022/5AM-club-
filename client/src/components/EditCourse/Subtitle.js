@@ -278,7 +278,7 @@ function Subtitle(props) {
                   defaultValue={props.subtitle.title}
                 ></input>
                 <button
-                  class="btn btn-outline-success"
+                  className="btn btn-outline-success"
                   onClick={() => {
                     finishEdit();
                     toggleEditing2();
@@ -367,7 +367,7 @@ function Subtitle(props) {
                       defaultValue={props.subtitle.description}
                     ></TextareaAutosize>
                     <button
-                      class="btn btn-outline-success"
+                      className="btn btn-outline-success"
                       onClick={() => {
                         finishEdit();
                         toggleEditing();
