@@ -18,7 +18,7 @@ function Header() {
   const { show, onClickShow, onClickHide, done, Done } = useModalData();
   console.log(show);
   const myRef = useRef();
-
+  const [hovering, setHovering] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
