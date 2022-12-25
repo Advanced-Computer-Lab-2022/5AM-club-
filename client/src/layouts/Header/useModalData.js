@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 
 const useModalData = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [done, setDone] = useState(false);
@@ -12,7 +11,7 @@ const useModalData = () => {
       app
         .get("/trainee/complete-profile")
         .then((res) => {
-          if (res.data == "false") {
+          if (res.data === "false") {
             setShow(true);
             if (window.location.pathname !== "/corporate-trainee")
               navigate("../corporate-trainee");
@@ -25,7 +24,7 @@ const useModalData = () => {
       app
         .get("/instructor/complete-profile")
         .then((res) => {
-          if (res.data == "false") {
+          if (res.data === "false") {
             setShow(true);
             if (window.location.pathname !== "/instructor")
               navigate("../instructor");
@@ -35,6 +34,7 @@ const useModalData = () => {
           console.log(err);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem("type")]);
 
   const onClickShow = () => {

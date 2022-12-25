@@ -4,7 +4,7 @@
   background-color: rgb(150, 206, 168);
   height: 60px;
   overflow: "hidden";
-  min-width: 800px;
+  min-width: 980px;
 }
 .logo {
   cursor: pointer;
@@ -142,13 +142,12 @@
   width: 0px;
   background: transparent; /* make scrollbar transparent */
 }
-.tos{
+.tos {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   padding-inline-start: 0px;
-  overflow-y:scroll;
-  padding:20px;
-  height: 70vh;
+  overflow-y: scroll;
+  padding: 20px;
 }
 
 .tos-wrapper {

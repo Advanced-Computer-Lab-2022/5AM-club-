@@ -8,7 +8,7 @@ function TraineeHomePage() {
 
   useEffect(() => {
     app
-      .get("/courses")
+      .get("/populated-courses")
       .then((res) => {
         res.data.sort((a, b) => b.owners.length - a.owners.length);
         res.data = res.data.slice(0, 4);
@@ -48,7 +48,7 @@ function TraineeHomePage() {
                       </a>
                       <div
                         id="accordion-list-1"
-                        className="collapse show"
+                        className="collapse"
                         data-bs-parent=".accordion-list"
                       >
                         <p>Use the search bar above to browse our courses</p>
@@ -61,7 +61,7 @@ function TraineeHomePage() {
                         className="collapsed"
                         style={{ color: "#96cea8" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>02</span> Buy a
+                        <span style={{ color: "#96bea8" }}>02</span> Buy a
                         course <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
@@ -119,10 +119,23 @@ function TraineeHomePage() {
         <section id="popular-courses" className="services">
           <div className="container" data-aos="fade-up">
             <div className="section-title">
-              <h2 style={{ color: "#96cea8" }}>Popular Courses</h2>
+              <h2
+                style={{ color: "#96cea8", cursor: "pointer" }}
+                onClick={() => {
+                  navigate("courses");
+                }}
+              >
+                Popular Courses
+              </h2>
               <p>Check out our most popular courses</p>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                minWidth: "100%",
+              }}
+            >
               {popularCourses.map((course) => (
                 <div key={course._id}>
                   <CourseCard course={course}></CourseCard>

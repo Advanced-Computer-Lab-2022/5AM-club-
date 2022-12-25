@@ -209,7 +209,7 @@ async function addAdmin(req, res) {
   }
   const unhashed = req.body.password;
   req.body.password = bcrypt.hashSync(unhashed, 8);
-  const newAdmin = new Admin(req.body);
+  const newAdmin = new Admin({ ...req.body, country: "United States" });
 
   await newAdmin
     .save()
@@ -252,6 +252,7 @@ async function addTrainee(req, res) {
   const newCorporateTrainee = new Trainee({
     ...req.body,
     courses: [],
+    country: "United States",
     type: "corporate",
   });
   await newCorporateTrainee
@@ -283,7 +284,7 @@ async function editPersonalInformationInstructor(req, res) {
 async function signUp(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
-    res.status(400).send(result.error.details[0].message);
+    res.status(406).send(result.error.details[0].message);
     return;
   }
 
@@ -299,6 +300,7 @@ async function signUp(req, res) {
   }
   const newindividualTrainee = new Trainee({
     ...req.body,
+    password: bcrypt.hashSync(req.body.password, 8),
     courses: [],
     country: "United States",
     type: "individual",
@@ -306,8 +308,7 @@ async function signUp(req, res) {
   await newindividualTrainee
     .save()
     .then((response) => {
-      login(req, res);
-      //res.send("Trainee added successfully!");
+      res.send("Trainee added successfully!");
     })
     .catch((err) => res.status(400).send("Please, enter valid data"));
 }
@@ -397,11 +398,14 @@ async function changePassword(req, res) {
         break;
       default:
         res.status(400).send("Invalid UserType");
+        return;
         break;
     }
     res.send("Password changed successfully");
+    return;
   } else {
     res.status(400).send("Missing Id");
+    return;
   }
   res.send("Password changed successfully");
 }
@@ -526,6 +530,7 @@ const login = async (req, res) => {
     res.status(401).send("Wrong Username ");
   } else {
     if (admins) {
+      console.log(bcrypt.hashSync(admins.password, 8), "fucking");
       if (!bcrypt.compareSync(req.body.password, admins.password))
         return res.status(401).send("Wrong Password");
       user.type = "admin";
@@ -574,6 +579,7 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
   const id = req.user.id;
   const type = req.user.type;
+  req.body.password = bcrypt.hashSync(req.body.password, 8);
   let user;
   switch (type) {
     case "corporate":

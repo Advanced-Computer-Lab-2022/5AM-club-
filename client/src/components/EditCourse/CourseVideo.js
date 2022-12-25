@@ -4,13 +4,10 @@ import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 function CourseVideo(props) {
   const [validURL, setValidURL] = useState(true);
   const [editingURL, setEditingURL] = useState(false);
   const [videoURL, setVideoURL] = useState(props.url);
-
-  const location = useLocation();
 
   const videoRef = useRef();
 
@@ -80,6 +77,7 @@ function CourseVideo(props) {
                 : props.url?.replace("watch?v=", "embed/")
             }
             allowFullScreen
+            style={{ borderRadius: "10px" }}
           ></iframe>
         ) : (
           <></>

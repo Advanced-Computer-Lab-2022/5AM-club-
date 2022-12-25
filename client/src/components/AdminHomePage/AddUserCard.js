@@ -168,7 +168,7 @@ function AddUser() {
                       id="filled-hidden-label-small"
                       style={{ height: "50px" }}
                       variant="outlined"
-                      label="Email"
+                      label="Username"
                       onChange={(event) => setUserName(event.target.value)}
                     />
                   </div>

@@ -6,7 +6,6 @@ import GuestHomePage from "./pages/GuestHomePage/GuestHomePage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ViewMyCourses from "./pages/ViewMyCourses/ViewMyCourses";
-import MainPage from "./pages/MainPage/MainPage";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
 import InstructorCreateCourse from "./pages/InstructorCreateCourse/InstructorCreateCourse";
 import ViewDetailedCourse from "./pages/ViewDetailedCourse/ViewDetailedCourse";
@@ -27,7 +26,6 @@ import TraineeTakeCourse from "./pages/TraineeTakeCourse/TraineeTakeCourse";
 import ViewContract from "./pages/ViewContract/ViewContract";
 import Error from "./pages/Error/Error";
 import ChangeForgottenPassword from "./pages/ChangeForgottenPassword/ChangeForgottenPassword.js";
-import { Train } from "@mui/icons-material";
 import TraineeHomePage from "./pages/TraineeHomePage/TraineeHomePage";
 
 function App() {
@@ -43,9 +41,15 @@ function App() {
     <>
       <BrowserRouter>
         <div
-          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            width: "100%",
+          }}
         >
           <Header></Header>
+
           <div style={{ flexGrow: "1" }}>
             <ErrorBoundary
               FallbackComponent={fallBack}
@@ -90,14 +94,7 @@ function App() {
                     </PrivateRoute>
                   }
                 ></Route>
-                <Route
-                  path="/"
-                  element={
-                    <PrivateRoute type={"guest"}>
-                      <MainPage />
-                    </PrivateRoute>
-                  }
-                ></Route>
+
                 <Route
                   path="/courses"
                   element={

@@ -178,9 +178,17 @@ function CourseCard(props) {
           : "/courses/increment-views/") + props.course._id
       )
       .then(() => {
-        navigate("view-course", {
-          state: { id: props.course._id },
-        });
+        navigate(
+          "/" +
+            (localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+              ? localStorage.getItem("type") + "-trainee"
+              : localStorage.getItem("type")) +
+            "/courses/view-course",
+          {
+            state: { id: props.course._id },
+          }
+        );
       });
   }
 

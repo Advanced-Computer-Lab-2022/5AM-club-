@@ -66,7 +66,7 @@ function Content(props) {
               width="inherit"
               className="iframe"
               src={content.video.link.replace("watch?v=", "embed/")}
-              frameBorder="0"
+              style={{ borderRadius: "10px" }}
               allowFullScreen
             ></iframe>
           </div>
