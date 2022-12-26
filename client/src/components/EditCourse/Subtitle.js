@@ -16,7 +16,6 @@ import cancel from "../../assets/EditCourse/cancelblack.png";
 import edit from "../../assets/EditCourse/edit.png";
 import trash from "../../assets/EditCourse/delete.png";
 import { formatTime, convertISO8601ToMs } from "../../utils/Helpers";
-import { useLocation } from "react-router-dom";
 
 function Subtitle(props) {
   const [title, setTitle] = useState(props.subtitle.title);
@@ -32,8 +31,6 @@ function Subtitle(props) {
   const [video, setVideo] = useState();
   const [exercise, setExercise] = useState("quiz");
   const [expandSections, setExpandSections] = useState(false);
-
-  const location = useLocation();
 
   const sectionTitleRef = useRef();
   const sectionDescriptionRef = useRef();

@@ -13,11 +13,19 @@ const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
 const bcrypt = require("bcryptjs");
-const stripe = require("stripe")(process.env.STRIPE_SECRET);
-let refreshTokens = [];
 
 const countrySchema = Joi.object({
   country: Joi.string().required(),
+});
+
+const updateUserSchema = Joi.object({
+  password: Joi.string().required().messages({
+    "string.empty": `"Password" cannot be an empty field`,
+  }),
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
 });
 
 const addUserSchema = Joi.object({
@@ -44,10 +52,10 @@ const editPersonalInformationSchema = Joi.object({
 async function getUserType(req, res) {
   let User;
 
-  User = await Trainee.findById(req.user.id);
+  User = await Trainee.findById(req.headers.id);
   if (User) res.send(User.type);
   else {
-    User = await Instructor.findById(req.user.id);
+    User = await Instructor.findById(req.headers.id);
     if (User) res.send("instructor");
     else {
       return res.status(400).send("Invalid ID");
@@ -207,6 +215,10 @@ async function addAdmin(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
+    return;
+  }
   const unhashed = req.body.password;
   req.body.password = bcrypt.hashSync(unhashed, 8);
   const newAdmin = new Admin({ ...req.body, country: "United States" });
@@ -216,13 +228,17 @@ async function addAdmin(req, res) {
     .then((response) => {
       res.send("Admin added successfully!");
     })
-    .catch((err) => res.status(400).send("username already used "));
+    .catch((err) => res.status(400).send("Username already used "));
 }
 
 async function addInstructor(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
     return;
   }
   const unhashed = req.body.password;
@@ -245,6 +261,10 @@ async function addTrainee(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
     return;
   }
   const unhashed = req.body.password;
@@ -428,6 +448,7 @@ async function getCourseInstructor(req, res) {
 
 async function changePasswordEmail(req, res) {
   // search for email by type and name
+  console.log(req.headers, "headers heeeere");
   const email = req.headers.email;
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -436,8 +457,9 @@ async function changePasswordEmail(req, res) {
       pass: "rxfhkqvgqpdfwmmk",
     },
   });
-
+  console.log(email, "email heeeeere");
   let user = await Trainee.findOne({ email: email });
+  console.log(user, "look here mega loser");
   if (user) {
     await Trainee.findByIdAndUpdate(
       user._id,
@@ -450,18 +472,20 @@ async function changePasswordEmail(req, res) {
     await transporter.sendMail({
       from: "5AMClubACL@gmail.com",
       to: email,
-      subject: "change password",
+      subject: "Change Password",
       html:
-        "<html><head></head><body><a href=" +
+        '<!doctype html><html lang=/en-US"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><title>Reset Password Email Template</title><meta name="description" content="Reset Password Email Template."><style type="text/css">a:hover {text-decoration: underline !important;}</style></head><body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0"><!--100% body table--><table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: \'Open Sans\', sans-serif;"><tr><td><table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"    align="center" cellpadding="0" cellspacing="0">    <tr>        <td style="height:80px;">&nbsp;</td>    </tr>    <tr>        <td style="text-align:center;">          <a href="https://rakeshmandal.com" title="logo" target="_blank">                     </a>        </td>    </tr>    <tr>        <td style="height:20px;">&nbsp;</td>    </tr>    <tr>        <td>            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"                style="max-width:670px;background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);">                <tr>                    <td style="height:40px;">&nbsp;</td>                </tr>                <tr>                    <td style="padding:0 35px;">                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:\'Rubik\',sans-serif;">You have                            requested to reset your password</h1>                        <span                            style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>                        <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">                            A unique link to reset your                            password has been generated for you. To reset your password, click the                            following link and fill in the new password.                        </p>                        <a href=' +
         proxy.URL +
         "/change-forgotten-password/" +
         user._id +
-        ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
+        ' target="_blank"                            style="background:#96ceaf;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset                            Password</a>                    </td>                </tr>                <tr>                    <td style="height:40px;">&nbsp;</td>                </tr>            </table>        </td>    <tr>        <td style="height:20px;">&nbsp;</td>    </tr>    <tr>        <td style="text-align:center;">            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>CANADIAN CHAMBER OF COMMERCE</strong></p>        </td>    </tr>    <tr>        <td style="height:80px;">&nbsp;</td>    </tr></table></td></tr></table><!--/100% body table--></body></html>',
     });
+
     res.send("email sent");
     return;
   } else {
     user = await Instructor.findOne({ email: email });
+    console.log(user, "look here loser");
     if (user) {
       await Instructor.findByIdAndUpdate(
         user._id,
@@ -476,11 +500,11 @@ async function changePasswordEmail(req, res) {
         to: email,
         subject: "change password",
         html:
-          "<html><head></head><body><a href=" +
+          '<!doctype html><html lang=/en-US"><head><meta content="text/html; charset=utf-8" http-equiv="Content-Type" /><title>Reset Password Email Template</title><meta name="description" content="Reset Password Email Template."><style type="text/css">a:hover {text-decoration: underline !important;}</style></head><body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0"><!--100% body table--><table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: \'Open Sans\', sans-serif;"><tr><td><table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"    align="center" cellpadding="0" cellspacing="0">    <tr>        <td style="height:80px;">&nbsp;</td>    </tr>    <tr>        <td style="text-align:center;">          <a href="https://rakeshmandal.com" title="logo" target="_blank">                     </a>        </td>    </tr>    <tr>        <td style="height:20px;">&nbsp;</td>    </tr>    <tr>        <td>            <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"                style="max-width:670px;background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);">                <tr>                    <td style="height:40px;">&nbsp;</td>                </tr>                <tr>                    <td style="padding:0 35px;">                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:\'Rubik\',sans-serif;">You have                            requested to reset your password</h1>                        <span                            style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>                        <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">                            A unique link to reset your                            password has been generated for you. To reset your password, click the                            following link and fill in the new password.                        </p>                        <a href=' +
           proxy.URL +
           "/change-forgotten-password/" +
           user._id +
-          ' target="_blank" > change your password </a><p>note this link will expire within 10 minutes </p></body></html>',
+          ' target="_blank"                            style="background:#96ceaf;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset                            Password</a>                    </td>                </tr>                <tr>                    <td style="height:40px;">&nbsp;</td>                </tr>            </table>        </td>    <tr>        <td style="height:20px;">&nbsp;</td>    </tr>    <tr>        <td style="text-align:center;">            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>CANADIAN CHAMBER OF COMMERCE</strong></p>        </td>    </tr>    <tr>        <td style="height:80px;">&nbsp;</td>    </tr></table></td></tr></table><!--/100% body table--></body></html>',
       });
       res.send("email sent");
       return;
@@ -536,6 +560,7 @@ const login = async (req, res) => {
       user.type = "admin";
       user.id = admins._id;
       user.country = admins.country;
+      user.email = admins.email;
     }
     if (instructors) {
       if (!bcrypt.compareSync(req.body.password, instructors.password))
@@ -543,6 +568,7 @@ const login = async (req, res) => {
       user.type = "instructor";
       user.id = instructors._id;
       user.country = instructors.country;
+      user.email = instructors.email;
     }
     if (trainees) {
       if (!bcrypt.compareSync(req.body.password, trainees.password))
@@ -550,13 +576,14 @@ const login = async (req, res) => {
       user.type = trainees.type;
       user.id = trainees._id;
       user.country = trainees.country;
+      user.email = trainees.email;
     }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "120m",
     });
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: "20m",
+      expiresIn: "1d",
     });
     //console.log(refreshToken);
 
@@ -579,8 +606,19 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
   const id = req.user.id;
   const type = req.user.type;
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
+    return;
+  }
   req.body.password = bcrypt.hashSync(req.body.password, 8);
   let user;
+
+  const result = updateUserSchema.validate(req.body);
+  if (result.error) {
+    res.status(406).send(result.error.details[0].message);
+    return;
+  }
+
   switch (type) {
     case "corporate":
       user = await Trainee.findByIdAndUpdate(

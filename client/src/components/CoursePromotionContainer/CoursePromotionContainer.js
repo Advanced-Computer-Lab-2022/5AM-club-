@@ -149,6 +149,7 @@ function CoursePromotionContainer(props) {
             value={endDate}
             onChange={(e) => setEndDate(e)}
             minDateTime={startDate}
+            disablePast={true}
             components={{ OpenPickerIcon: CalendarMonthIcon }}
             InputProps={{ sx: { "& .MuiSvgIcon-root": { color: "#96CEA8" } } }}
             PopperProps={{ sx: popperSx }}

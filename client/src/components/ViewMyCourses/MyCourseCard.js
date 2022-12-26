@@ -1,6 +1,5 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import arrow from "../../assets/ViewCourses/arrow.svg";
 import { formatTime, getSectionCount } from "../../utils/Helpers";
 import "./MyCourseCard.css";

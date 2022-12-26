@@ -186,6 +186,7 @@ const getPopulatedCourses = async (req, res) => {
 
 const getMyPopulatedCourses = async (req, res) => {
   let filter = await getCourseFilter(req);
+  console.log(req.params, "req.params");
   filter = {
     ...filter,
     ...(req.user?.id &&
@@ -239,6 +240,7 @@ const getMyCourses = async (req, res) => {
         ? { instructor: req.user.id }
         : { owners: req.user.id })),
   };
+  console.log("filter balabizo ", filter);
   let courses = await Course.find(filter);
   if (req.query.rating) {
     courses = courses.filter((course) => {
@@ -645,8 +647,64 @@ async function getCourseMaxMin(req, res) {
   res.send({ max: max, min: min === Infinity ? 0 : min });
 }
 
+async function getMyCourseMaxMin(req, res) {
+  let filter = {
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  const courses = await Course.find(filter);
+  let max = 0;
+  let min = Infinity;
+  await changePrice(req, courses);
+  for (let course of courses) {
+    if (course.price > max) {
+      max = course.price;
+    }
+  }
+  for (let course of courses) {
+    if (course.price < min) {
+      min = course.price;
+    }
+  }
+  res.send({ max: max, min: min === Infinity ? 0 : min });
+}
+
 async function getCourseSubjects(req, res) {
   const courses = await Course.find();
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    }
+  }
+  // sort array by object value
+  subjects.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(subjects);
+}
+
+async function getMyCourseSubjects(req, res) {
+  let filter = {
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  const courses = await Course.find(filter);
   if (!courses) {
     res.send([]);
     return;
@@ -692,4 +750,6 @@ module.exports = {
   findPopulatedCourseByID,
   setCoursePromotion,
   incrementCourseViews,
+  getMyCourseSubjects,
+  getMyCourseMaxMin,
 };

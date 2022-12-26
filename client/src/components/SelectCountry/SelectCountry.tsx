@@ -33,6 +33,7 @@ export const SelectCountry = React.forwardRef<
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref]);
 
   const [query, setQuery] = useState("");
@@ -157,11 +158,11 @@ export const SelectCountry = React.forwardRef<
                           <div
                             key={`${props.id}-${index}`}
                             id="listbox-option-0"
-                            role="option"
                             onClick={() => {
                               props.onChange(value.value);
                               setQuery("");
                               props.onToggle();
+                              localStorage.setItem("refresh", "true");
                             }}
                             style={{
                               height: "40px",

@@ -11,6 +11,8 @@ const useModalData = () => {
       app
         .get("/trainee/complete-profile")
         .then((res) => {
+          console.log(res);
+
           if (res.data === "false") {
             setShow(true);
             if (window.location.pathname !== "/corporate-trainee")
@@ -24,6 +26,7 @@ const useModalData = () => {
       app
         .get("/instructor/complete-profile")
         .then((res) => {
+          console.log(res);
           if (res.data === "false") {
             setShow(true);
             if (window.location.pathname !== "/instructor")
@@ -47,12 +50,17 @@ const useModalData = () => {
     setDone(true);
   };
 
+  const unDone = () => {
+    setDone(false);
+  };
+
   return {
     show,
     onClickShow,
     onClickHide,
     done,
     Done,
+    unDone,
   };
 };
 

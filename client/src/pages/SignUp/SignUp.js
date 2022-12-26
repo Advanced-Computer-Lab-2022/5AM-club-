@@ -246,7 +246,7 @@ function SignUp() {
                 onClick={onClickShow}
                 style={{ position: "relative", right: "10px" }}
               >
-                Terms Of Service
+                Terms of Service
               </button>
             </div>
             <Button
@@ -290,7 +290,7 @@ function SignUp() {
           <div className="tos-border-success">
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Terms Of Service
+                Terms 0f Service
               </Modal.Title>
             </Modal.Header>
             <Modal.Body className="tos">{content}</Modal.Body>

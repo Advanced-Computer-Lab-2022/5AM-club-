@@ -36,7 +36,12 @@ function AddUser() {
           alert(response.data);
         })
         .catch((err) => {
-          alert(err.response.data);
+          if (err.response.status === 402) {
+            alert(
+              "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
+            );
+            return;
+          }
         });
     } else {
       alert("please select the type");

@@ -13,9 +13,10 @@ function Login() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
   async function handleForgotPassword() {
+    console.log(forgotPasswordEmail);
     await app.put(
       "/change-password-email",
-
+      {},
       {
         headers: { email: forgotPasswordEmail },
       }
@@ -30,7 +31,7 @@ function Login() {
         localStorage.setItem("type", res.data.type);
         localStorage.setItem("country", res.data.country);
         localStorage.setItem("username", res.data.username);
-
+        localStorage.removeItem("refresh");
         if (res.data.type === "admin") navigate("../admin");
         if (res.data.type === "instructor") navigate("../instructor");
         if (res.data.type === "individual") navigate("../individual-trainee");
@@ -85,6 +86,7 @@ function Login() {
               variant="outlined"
               label="Username"
               value={username}
+              style={{ minWidth: "575px" }}
               onChange={(e) => {
                 setUsername(e.target.value);
               }}
@@ -93,7 +95,11 @@ function Login() {
 
             <Button
               type="submit"
-              style={{ backgroundColor: "#96cea8", color: "white" }}
+              style={{
+                backgroundColor: "#96cea8",
+                color: "white",
+                minWidth: "575px",
+              }}
               variant="contained"
               onClick={(e) => {
                 e.preventDefault();
@@ -119,19 +125,24 @@ function Login() {
                 <TextField
                   hiddenLabel
                   id="filled-hidden-label-small"
-                  placeholder="email"
                   variant="outlined"
-                  label="email"
+                  label="Email"
                   value={forgotPasswordEmail}
+                  style={{ minWidth: "575px" }}
                   onChange={(e) => {
                     setForgotPasswordEmail(e.target.value);
                   }}
                 />
-                <Button onClick={handleForgotPassword}>Send Email</Button>
+                <Button
+                  onClick={handleForgotPassword}
+                  style={{ color: "#96cea8" }}
+                >
+                  Send Email
+                </Button>
               </>
             )}
             <Button
-              style={{ color: "#96cea8" }}
+              style={{ color: "#96cea8", minWidth: "575px" }}
               onClick={() => {
                 navigate("/signup");
               }}

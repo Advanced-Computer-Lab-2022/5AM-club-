@@ -5,7 +5,6 @@ import "./Exercise.css";
 import app from "../../utils/AxiosConfig.js";
 import "./Question.css";
 import { hasEmptyString } from "../../utils/Helpers";
-import { useLocation } from "react-router-dom";
 
 function Question(props) {
   const [questionTitle, setQuestionTitle] = useState(props.question);
@@ -16,8 +15,6 @@ function Question(props) {
   const [choiceColors, setChoiceColors] = useState(initialChoiceColors);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingChoices, setEditingChoices] = useState(false);
-
-  const location = useLocation();
 
   function toggleEditingTitle() {
     setEditingTitle(!editingTitle);

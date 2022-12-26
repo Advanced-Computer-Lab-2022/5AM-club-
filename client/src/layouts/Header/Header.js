@@ -3,7 +3,7 @@ import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
 import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
@@ -14,7 +14,8 @@ import InstructorCompleteProfile from "./InstructorCompleteProfile";
 import UpdatedSuccessfully from "./UpdatedSuccessfully";
 
 function Header() {
-  const { show, onClickShow, onClickHide, done, Done } = useModalData();
+  const location = useLocation();
+  const { show, onClickHide, done, Done, unDone } = useModalData();
   console.log(show);
   const myRef = useRef();
   const [hovering, setHovering] = useState(false);
@@ -33,9 +34,9 @@ function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem("country")]);
 
-  useEffect(() => {
+  function changeCountry(val) {
     const selectedCountry = COUNTRIES.find(
-      (option) => option.value === country
+      (option) => option.value === val
     ).title;
     console.log(selectedCountry);
     if (localStorage.getItem("type")) {
@@ -57,9 +58,13 @@ function Header() {
       );
     }
     localStorage.setItem("country", selectedCountry);
-    if (!show) navigate(0);
+    const path = location.pathname;
+    console.log(path);
+    if (!show) {
+      navigate(0);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [country]);
+  }
 
   const navigate = useNavigate();
 
@@ -75,6 +80,7 @@ function Header() {
     localStorage.clear();
     localStorage.setItem("country", "United States");
     app.get("/logout");
+    localStorage.removeItem("refresh");
     navigate("/");
   }
   function handleProfile() {
@@ -187,7 +193,7 @@ function Header() {
           open={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
           onChange={(val) => {
-            setCountry(val);
+            changeCountry(val);
           }}
           selectedValue={COUNTRIES.find((option) => option.value === country)}
         />{" "}
@@ -226,7 +232,12 @@ function Header() {
           </button>
         )}
       </div>
-      <Modal size="lg" centered show={show}>
+      <Modal
+        size="lg"
+        centered
+        show={show}
+        style={{ backgroundColor: "#484848" }}
+      >
         <div className="tos-wrapper">
           <div className="tos-border-success">
             <Modal.Header>
@@ -234,7 +245,10 @@ function Header() {
             </Modal.Header>
             <Modal.Body className="tos">
               {done ? (
-                <UpdatedSuccessfully onClickHide={onClickHide} />
+                <UpdatedSuccessfully
+                  onClickHide={onClickHide}
+                  unDone={unDone}
+                />
               ) : localStorage.getItem("type") === "corporate" ? (
                 <CorporateCompleteProfile Done={Done} />
               ) : (
