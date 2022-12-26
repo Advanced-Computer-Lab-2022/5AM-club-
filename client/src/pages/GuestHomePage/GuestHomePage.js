@@ -1,13 +1,5 @@
 import { memo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../assets/SharedStyles/assets/css/aos.css";
-import "../../assets/SharedStyles/assets/css/bootstrap.min.css";
-import "../../assets/SharedStyles/assets/css/bootstrap-icons.css";
-import "../../assets/SharedStyles/assets/css/boxicons.min.css";
-import "../../assets/SharedStyles/assets/css/glightbox.min.css";
-import "../../assets/SharedStyles/assets/css/remixicon.css";
-import "../../assets/SharedStyles/assets/css/swiper-bundle.min.css";
-import "../../assets/SharedStyles/assets/css/style.css";
 
 function GuestHomePage() {
   const navigate = useNavigate();

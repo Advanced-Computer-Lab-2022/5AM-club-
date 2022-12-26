@@ -2,14 +2,6 @@ import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import CourseCard from "../../components/ViewCourses/CourseCard";
-import "../../assets/SharedStyles/assets/css/aos.css";
-import "../../assets/SharedStyles/assets/css/bootstrap.min.css";
-import "../../assets/SharedStyles/assets/css/bootstrap-icons.css";
-import "../../assets/SharedStyles/assets/css/boxicons.min.css";
-import "../../assets/SharedStyles/assets/css/glightbox.min.css";
-import "../../assets/SharedStyles/assets/css/remixicon.css";
-import "../../assets/SharedStyles/assets/css/swiper-bundle.min.css";
-import "../../assets/SharedStyles/assets/css/style.css";
 
 function TraineeHomePage() {
   const navigate = useNavigate();

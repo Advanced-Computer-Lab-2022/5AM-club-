@@ -3,14 +3,6 @@ import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import MyCourseCard from "../../components/ViewMyCourses/MyCourseCard";
 import noCourses from "../../assets/ViewCourses/noCourses.svg";
-import "../../assets/SharedStyles/assets/css/aos.css";
-import "../../assets/SharedStyles/assets/css/bootstrap.min.css";
-import "../../assets/SharedStyles/assets/css/bootstrap-icons.css";
-import "../../assets/SharedStyles/assets/css/boxicons.min.css";
-import "../../assets/SharedStyles/assets/css/glightbox.min.css";
-import "../../assets/SharedStyles/assets/css/remixicon.css";
-import "../../assets/SharedStyles/assets/css/swiper-bundle.min.css";
-import "../../assets/SharedStyles/assets/css/style.css";
 
 function InstructorHomePage() {
   const navigate = useNavigate();

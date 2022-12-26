@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -8,8 +9,15 @@ import Refund from "../../assets/AdminHomePage/refund.png";
 import "./CourseRefundCard.css";
 
 function CourseRefundCard() {
+  const navigate = useNavigate();
   return (
-    <Card sx={{ maxWidth: 345, height: "400px" }} className="card-hover-green">
+    <Card
+      onClick={() => {
+        navigate("refunds");
+      }}
+      sx={{ maxWidth: 345, height: "400px" }}
+      className="card-hover-green"
+    >
       <CardActionArea>
         <CardMedia
           component="img"

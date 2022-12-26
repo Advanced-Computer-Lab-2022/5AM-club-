@@ -13,9 +13,10 @@ function Login() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
   async function handleForgotPassword() {
+    console.log(forgotPasswordEmail);
     await app.put(
       "/change-password-email",
-
+      {},
       {
         headers: { email: forgotPasswordEmail },
       }
