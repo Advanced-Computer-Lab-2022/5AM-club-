@@ -1,16 +1,13 @@
 import { useRef, useState, memo, useEffect } from "react";
 import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
+import logout from "../../assets/Header/logout.png";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import { SelectCountry } from "../../components/SelectCountry/SelectCountry.tsx";
 import { COUNTRIES } from "../../components/SelectCountry/countries.ts";
-<<<<<<< HEAD
-=======
-import useCo from "./useModalData";
->>>>>>> 78a3be8 (complete profile modals done)
 import Modal from "react-bootstrap/Modal";
 import useModalData from "./useModalData";
 import CorporateCompleteProfile from "./CorporateCompleteProfile";
@@ -18,17 +15,11 @@ import InstructorCompleteProfile from "./InstructorCompleteProfile";
 import UpdatedSuccessfully from "./UpdatedSuccessfully";
 
 function Header() {
-<<<<<<< HEAD
   const location = useLocation();
   const { show, onClickHide, done, Done, unDone } = useModalData();
   console.log(show);
   const myRef = useRef();
   const [hovering, setHovering] = useState(false);
-=======
-  const { show, onClickShow, onClickHide, done, Done } = useModalData();
-  console.log(show);
-  const myRef = useRef();
->>>>>>> 78a3be8 (complete profile modals done)
   const [isOpen, setIsOpen] = useState(false);
   const [country, setCountry] = useState(
     COUNTRIES.find((option) => option.title === localStorage.getItem("country"))
@@ -68,7 +59,6 @@ function Header() {
       );
     }
     localStorage.setItem("country", selectedCountry);
-<<<<<<< HEAD
     const path = location.pathname;
     console.log(path);
     if (!show) {
@@ -76,10 +66,6 @@ function Header() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }
-=======
-    if (!show) navigate(0);
-  }, [country]);
->>>>>>> 78a3be8 (complete profile modals done)
 
   const navigate = useNavigate();
 
@@ -278,7 +264,6 @@ function Header() {
           >
             {!localStorage.getItem("type") ? "Signup" : "Profile"}
           </button>
-<<<<<<< HEAD
         )}
       </div>
       <Modal
@@ -298,19 +283,6 @@ function Header() {
                   onClickHide={onClickHide}
                   unDone={unDone}
                 />
-=======
-        </div>
-      </div>
-      <Modal size='lg' centered show={show}>
-        <div className='tos-wrapper'>
-          <div className='tos-border-success'>
-            <Modal.Header>
-              <Modal.Title>Complete your profile</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className='tos'>
-              {done ? (
-                <UpdatedSuccessfully onClickHide={onClickHide} />
->>>>>>> 78a3be8 (complete profile modals done)
               ) : localStorage.getItem("type") === "corporate" ? (
                 <CorporateCompleteProfile Done={Done} />
               ) : (
@@ -320,11 +292,7 @@ function Header() {
           </div>
         </div>
       </Modal>
-<<<<<<< HEAD
     </div>
-=======
-    </>
->>>>>>> 78a3be8 (complete profile modals done)
   );
 }
 export default memo(Header);

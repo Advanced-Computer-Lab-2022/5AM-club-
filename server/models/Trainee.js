@@ -43,5 +43,5 @@ const traineeSchema = new mongoose.Schema({
   passwordTimeout: { type: Date, default: Date.now() },
 });
 
-const Trainee = mongoose.model("Trainees", traineeSchema);
+const Trainee = mongoose.model("Trainee", traineeSchema);
 module.exports = Trainee;

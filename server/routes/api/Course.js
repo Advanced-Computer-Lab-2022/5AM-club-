@@ -20,6 +20,7 @@ router.put(
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
+router.get("/course-requests", CourseController.getCourseRequests);
 
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
 router.put(
@@ -59,7 +60,15 @@ router.put(
   "/my-courses/edit-course/:courseid/:subtitleid/delete-section/:sectionid",
   CourseController.deleteSection
 );
-
+router.put("/courses/:id/course-request", CourseController.requestCourseAccess);
+router.put(
+  "/courses/:id/accept-course-request",
+  CourseController.acceptCourseAccess
+);
+router.put(
+  "/courses/:id/reject-course-request",
+  CourseController.rejectCourseAccess
+);
 router.post("/create-course", CourseController.createCourse);
 
 router.delete(
