@@ -1,5 +1,4 @@
 import { memo, useState } from "react";
-import { useLocation } from "react-router-dom";
 import Question from "./Question";
 import plus from "../../assets/EditCourse/plusblack.png";
 import cancel from "../../assets/EditCourse/cancelblack.png";
@@ -23,8 +22,6 @@ function Exercise(props) {
     "#FFFFFF",
     "#FFFFFF",
   ]);
-
-  const location = useLocation();
 
   function toggleAddingQuestion() {
     setAddingQuestion(!addingQuestion);

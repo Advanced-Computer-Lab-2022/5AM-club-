@@ -21,6 +21,25 @@ function CourseContainer(props) {
   const [traineeCourse, setTraineeCourse] = useState();
   console.log(course);
 
+  const handleBuy = () => {
+    console.log("buy pressed", props.course);
+    try {
+      app
+        .post(`/pay`, {
+          courseId: props.course.id,
+          coursePrice: props.course.price,
+          courseName: props.course.title,
+        })
+        .then((res) => {
+          //console.log("paid succ", res.data.url);
+          //navigate(`/${res.data.url}`);
+          window.open(res.data.url, "_self");
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     app
       .get(
@@ -29,8 +48,7 @@ function CourseContainer(props) {
             localStorage.getItem("type") === "individual"
             ? "/trainee/populated-courses/"
             : "/" + localStorage.getItem("type") + "/populated-courses/"
-          : "/populated-courses/") + props.course.id,
-        { headers: { country: localStorage.getItem("country") } }
+          : "/populated-courses/") + props.course.id
       )
       .then((res) => {
         setCourse(res.data);
@@ -81,7 +99,11 @@ function CourseContainer(props) {
           </div>
           <div
             className="properties-wrapper"
-            style={{ alignItems: "center", fontSize: "20px", color: "black" }}
+            style={{
+              alignItems: "center",
+              fontSize: "20px",
+              color: "black",
+            }}
           >
             Subjects:
             {props.course?.subject.map((subject, idx) => (
@@ -170,14 +192,13 @@ function CourseContainer(props) {
                               {Math.floor(course.price + 0.5) - 0.01}{" "}
                             </span>
                             <span>
-                              {(course.price !== 0
-                                ? Math.floor(
-                                    (course.price *
-                                      (100 - props.promotion.percentage)) /
-                                      100 +
-                                      0.5
-                                  ) - 0.01
-                                : 0) +
+                              {Math.floor(
+                                (course.price *
+                                  (100 - props.promotion.percentage)) /
+                                  100 +
+                                  0.5
+                              ) -
+                                0.01 +
                                 (" " +
                                   (countries[
                                     Object.keys(countries).find(
@@ -196,15 +217,15 @@ function CourseContainer(props) {
                             </span>
                           </div>
                           <span className="red">
-                            (-{props.promotion.percentage}% till{" "}
+                            (-
+                            {props.promotion.percentage}% till{" "}
                             {new Date(props.promotion.endDate).toDateString()})
                           </span>
                         </>
                       ) : (
                         <div>
-                          {(course.price !== 0
-                            ? Math.floor(course.price + 0.5) - 0.01
-                            : 0) +
+                          {Math.floor(course.price + 0.5) -
+                            0.01 +
                             (" " +
                               (countries[
                                 Object.keys(countries).find(
@@ -224,7 +245,9 @@ function CourseContainer(props) {
                   )}
                 {localStorage.getItem("type") === "individual" &&
                   !props.owned && (
-                    <Button variant="outline-success">BUY NOW</Button>
+                    <Button variant="outline-success" onClick={handleBuy}>
+                      BUY NOW
+                    </Button>
                   )}
                 {props.owned && location.state.displayAddReview && (
                   <>
@@ -261,10 +284,7 @@ function CourseContainer(props) {
             </div>{" "}
           </div>
 
-          <Card.Text
-            className="editable-container"
-            style={{ marginLeft: "0px" }}
-          >
+          <Card.Text className="editable-container">
             <div style={{ fontWeight: "700", fontSize: "30px" }}>
               Description :{" "}
             </div>

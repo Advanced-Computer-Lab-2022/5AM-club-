@@ -60,12 +60,14 @@ function GeneralFiltersContainer(props) {
             setSubjects(response.data);
           });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const location = useLocation();
 
   useEffect(() => {
     handleFilter();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state?.searchItem]);
 
   function handleFilter() {
@@ -169,6 +171,7 @@ function GeneralFiltersContainer(props) {
               max={max || 0}
               value={price[0] || 0}
               onChange={(nextValue) => {
+                // eslint-disable-next-line no-unused-vars
                 const [start, end] = price;
                 if (parseInt(nextValue) > end) {
                   return;
@@ -183,6 +186,7 @@ function GeneralFiltersContainer(props) {
               max={max || 0}
               value={price[1] || 0}
               onChange={(nextValue) => {
+                // eslint-disable-next-line no-unused-vars
                 const [start, end] = price;
                 if (start > parseInt(nextValue)) {
                   return;

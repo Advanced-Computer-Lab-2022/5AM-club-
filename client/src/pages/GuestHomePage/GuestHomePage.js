@@ -1,7 +1,25 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../assets/SharedStyles/assets/css/aos.css";
+import "../../assets/SharedStyles/assets/css/bootstrap.min.css";
+import "../../assets/SharedStyles/assets/css/bootstrap-icons.css";
+import "../../assets/SharedStyles/assets/css/boxicons.min.css";
+import "../../assets/SharedStyles/assets/css/glightbox.min.css";
+import "../../assets/SharedStyles/assets/css/remixicon.css";
+import "../../assets/SharedStyles/assets/css/swiper-bundle.min.css";
+import "../../assets/SharedStyles/assets/css/style.css";
+
 function GuestHomePage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("refresh")) {
+      localStorage.removeItem("refresh");
+      navigate(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="App">
       <section
@@ -27,7 +45,7 @@ function GuestHomePage() {
               <div className="d-flex justify-content-center justify-content-lg-start">
                 {" "}
                 <button
-                  className="btn-get-started scrollto"
+                  className="btn-get-started"
                   style={{ backgroundColor: "#96cea8" }}
                   onClick={() => {
                     navigate("/signup");
@@ -35,7 +53,6 @@ function GuestHomePage() {
                 >
                   Get Started
                 </button>{" "}
-                <a className="glightbox btn-watch-video"></a>
               </div>
             </div>
             <div
@@ -189,6 +206,7 @@ function GuestHomePage() {
               >
                 <div className="pic">
                   <img
+                    style={{ height: "185px", width: "185px" }}
                     src="assets/img/team/team-1.jpg"
                     className="img-fluid"
                     alt=""
@@ -209,6 +227,7 @@ function GuestHomePage() {
                 >
                   <div className="pic">
                     <img
+                      style={{ height: "185px", width: "185px" }}
                       src="assets/img/team/team-1.jpg"
                       className="img-fluid"
                       alt=""
@@ -228,6 +247,7 @@ function GuestHomePage() {
                 >
                   <div className="pic">
                     <img
+                      style={{ height: "185px", width: "185px" }}
                       src="assets/img/team/team-2.jpg"
                       className="img-fluid"
                       alt=""
@@ -247,6 +267,7 @@ function GuestHomePage() {
                 >
                   <div className="pic">
                     <img
+                      style={{ height: "185px", width: "185px" }}
                       src="assets/img/team/team-3.jpg"
                       className="img-fluid"
                       alt=""
@@ -266,6 +287,7 @@ function GuestHomePage() {
                 >
                   <div className="pic">
                     <img
+                      style={{ height: "185px", width: "185px" }}
                       src="assets/img/team/team-4.jpg"
                       className="img-fluid"
                       alt=""

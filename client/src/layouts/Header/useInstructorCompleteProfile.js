@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import app from "../../utils/AxiosConfig.js";
-function useInstructorCompleteProfile() {
-  console.log("useCompleteProfile");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+function useInstructorCompleteProfile(Done) {
   const [email, setEmail] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedContract, setAcceptedContract] = useState(false);
@@ -11,6 +8,7 @@ function useInstructorCompleteProfile() {
   const [showContract, setShowContract] = useState(false);
   const [tos, setTos] = useState("");
   const [contract, setContract] = useState("");
+  // eslint-disable-next-line
   const [match, setMatch] = useState(true);
 
   useEffect(() => {
@@ -22,22 +20,25 @@ function useInstructorCompleteProfile() {
     });
   }, []);
   const updateProfile = async (obj) => {
-    try {
-      app.put("/instructor/update-profile", obj).then((res) => {});
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const checkMatching = () => {
-    setMatch(password === repeatPassword);
+    app
+      .put("/instructor/update-profile", obj)
+      .then((res) => {
+        Done();
+      })
+      .catch((err) => {
+        if (err.response.status === 402) {
+          alert(
+            "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
+          );
+          return;
+        } else if (err.response.status === 406) {
+          alert("Invalid email address.");
+          return;
+        }
+      });
   };
 
   return {
-    password,
-    setPassword,
-    repeatPassword,
-    setRepeatPassword,
     email,
     setEmail,
     acceptedTerms,
@@ -52,7 +53,6 @@ function useInstructorCompleteProfile() {
     showContract,
     setShowContract,
     match,
-    checkMatching,
   };
 }
 export default useInstructorCompleteProfile;

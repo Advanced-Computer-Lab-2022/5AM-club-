@@ -1,10 +1,10 @@
 import { useState, memo } from "react";
 import app from "../../utils/AxiosConfig.js";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
+
 function PersonalInformationContainer(props) {
   const [email, setEmail] = useState(props.instructor.email);
   const [biography, setBiography] = useState(props.instructor.biography);
@@ -29,11 +29,9 @@ function PersonalInformationContainer(props) {
       });
   };
   return (
-    <Card sx={{ m: 2, p: 2 }}>
-      <Typography gutterBottom variant="h5" component="div">
-        Personal Information
-      </Typography>
+    <Card sx={{ p: 2, backgroundColor: "#96cea8" }}>
       <Box component="form" onSubmit={handleSubmit} autoComplete="off">
+        <div style={{ display: "flex", alignItems: "center" }}></div>
         <Typography variant="h6" sx={{ m: 1 }}>
           Email
         </Typography>
@@ -65,29 +63,36 @@ function PersonalInformationContainer(props) {
           value={biography}
           onChange={(e) => setBiography(e.target.value)}
         />
-        {editable === true ? (
-          <Button
-            variant="outlined"
-            color="success"
-            sx={{ m: 1 }}
-            type="submit"
-          >
-            Save
-          </Button>
-        ) : (
-          <div>
-            <Button
-              variant="outlined"
-              color="success"
-              sx={{ m: 1 }}
-              onClick={() => {
-                setEditable(true);
-              }}
+        <div
+          style={{
+            display: "inline-block",
+            borderRadius: "5px",
+            marginLeft: "8px",
+            backgroundColor: "white",
+            marginTop: "10px",
+          }}
+        >
+          {editable === true ? (
+            <button
+              className="btn btn-outline-success"
+              sx={{ m: 1, backgroundColor: "white !important" }}
+              type="submit"
             >
-              Edit
-            </Button>
-          </div>
-        )}
+              Save
+            </button>
+          ) : (
+            <div>
+              <button
+                className="btn btn-outline-success"
+                onClick={() => {
+                  setEditable(true);
+                }}
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
       </Box>
     </Card>
   );

@@ -13,11 +13,19 @@ const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
 const { passwordStrength } = require("check-password-strength");
 const bcrypt = require("bcryptjs");
-const stripe = require("stripe")(process.env.STRIPE_SECRET);
-let refreshTokens = [];
 
 const countrySchema = Joi.object({
   country: Joi.string().required(),
+});
+
+const updateUserSchema = Joi.object({
+  password: Joi.string().required().messages({
+    "string.empty": `"Password" cannot be an empty field`,
+  }),
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
 });
 
 const addUserSchema = Joi.object({
@@ -207,6 +215,10 @@ async function addAdmin(req, res) {
     res.status(400).send(result.error.details[0].message);
     return;
   }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
+    return;
+  }
   const unhashed = req.body.password;
   req.body.password = bcrypt.hashSync(unhashed, 8);
   const newAdmin = new Admin({ ...req.body, country: "United States" });
@@ -216,13 +228,17 @@ async function addAdmin(req, res) {
     .then((response) => {
       res.send("Admin added successfully!");
     })
-    .catch((err) => res.status(400).send("username already used "));
+    .catch((err) => res.status(400).send("Username already used "));
 }
 
 async function addInstructor(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
     return;
   }
   const unhashed = req.body.password;
@@ -245,6 +261,10 @@ async function addTrainee(req, res) {
   const result = addUserSchema.validate(req.body);
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
     return;
   }
   const unhashed = req.body.password;
@@ -536,6 +556,7 @@ const login = async (req, res) => {
       user.type = "admin";
       user.id = admins._id;
       user.country = admins.country;
+      user.email = admins.email;
     }
     if (instructors) {
       if (!bcrypt.compareSync(req.body.password, instructors.password))
@@ -543,6 +564,7 @@ const login = async (req, res) => {
       user.type = "instructor";
       user.id = instructors._id;
       user.country = instructors.country;
+      user.email = instructors.email;
     }
     if (trainees) {
       if (!bcrypt.compareSync(req.body.password, trainees.password))
@@ -550,13 +572,14 @@ const login = async (req, res) => {
       user.type = trainees.type;
       user.id = trainees._id;
       user.country = trainees.country;
+      user.email = trainees.email;
     }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "10m",
+      expiresIn: "120m",
     });
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: "20m",
+      expiresIn: "1d",
     });
     //console.log(refreshToken);
 
@@ -579,8 +602,19 @@ const login = async (req, res) => {
 const updateProfile = async (req, res) => {
   const id = req.user.id;
   const type = req.user.type;
+  if (passwordStrength(req.body.password).value !== "Strong") {
+    res.status(402).send(passwordStrength(req.body.password).value);
+    return;
+  }
   req.body.password = bcrypt.hashSync(req.body.password, 8);
   let user;
+
+  const result = updateUserSchema.validate(req.body);
+  if (result.error) {
+    res.status(406).send(result.error.details[0].message);
+    return;
+  }
+
   switch (type) {
     case "corporate":
       user = await Trainee.findByIdAndUpdate(

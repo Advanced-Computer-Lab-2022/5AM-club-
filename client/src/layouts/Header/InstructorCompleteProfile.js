@@ -1,19 +1,20 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import "./InstructorCompleteProfile.css";
 import { TextField } from "@mui/material";
 import Button from "react-bootstrap/Button";
 import { Box, Container } from "@mui/system";
-
+import { InputAdornment } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import Checkbox from "@mui/material/Checkbox";
-
 import useInstructorCompleteProfile from "./useInstructorCompleteProfile.js";
 
 function InstructorCompleteProfile(props) {
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
   const {
-    password,
-    setPassword,
-    repeatPassword,
-    setRepeatPassword,
     email,
     setEmail,
     acceptedTerms,
@@ -28,8 +29,7 @@ function InstructorCompleteProfile(props) {
     showContract,
     setShowContract,
     match,
-    checkMatching,
-  } = useInstructorCompleteProfile();
+  } = useInstructorCompleteProfile(props.Done);
 
   return (
     <div className="instructor-complete-container">
@@ -68,37 +68,57 @@ function InstructorCompleteProfile(props) {
               }}
             />
             <TextField
-              hiddenLabel
-              password="true"
-              id="password"
-              type="password"
-              placeholder="password"
+              type={showPassword ? "text" : "password"}
+              id="filled-hidden-label-small"
               variant="outlined"
               label="Password"
+              autoComplete="no"
+              InputProps={{
+                autoComplete: showPassword ? "off" : "new-password",
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowPassword(!showPassword);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </InputAdornment>
+                ),
+              }}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              onBlur={(e) => {
-                checkMatching();
-              }}
             />
+
             <TextField
-              hiddenLabel
-              password="true"
-              type="password"
-              id="repeat-password"
-              placeholder="repeat password"
+              type={showRepeatPassword ? "text" : "password"}
+              id="filled-hidden-label-small"
               variant="outlined"
               label="Repeat Password"
+              autoComplete="no"
+              InputProps={{
+                autoComplete: showRepeatPassword ? "off" : "new-password",
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setShowRepeatPassword(!showRepeatPassword);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </InputAdornment>
+                ),
+              }}
               value={repeatPassword}
               onChange={(e) => {
                 setRepeatPassword(e.target.value);
               }}
-              onBlur={(e) => {
-                checkMatching();
-              }}
             />
+
             {!match && (
               <span style={{ color: "red" }}>Passwords do not match</span>
             )}
@@ -150,7 +170,7 @@ function InstructorCompleteProfile(props) {
             </div>
             {showTos && (
               <>
-                <h5>Terms Of Service :</h5>
+                <h5>Terms of Service :</h5>
                 <div style={{ height: "300px", overflowY: "scroll" }}>
                   {tos}
                 </div>
@@ -181,8 +201,11 @@ function InstructorCompleteProfile(props) {
                   password,
                   email,
                 };
+                if (repeatPassword !== password) {
+                  alert("Passwords do not match");
+                  return;
+                }
                 updateProfile(obj);
-                props.Done();
               }}
             >
               Update profile

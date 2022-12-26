@@ -27,6 +27,7 @@ import ViewContract from "./pages/ViewContract/ViewContract";
 import Error from "./pages/Error/Error";
 import ChangeForgottenPassword from "./pages/ChangeForgottenPassword/ChangeForgottenPassword.js";
 import TraineeHomePage from "./pages/TraineeHomePage/TraineeHomePage";
+import InstructorHomePage from "./pages/InstructorHomePage/InstructorHomePage";
 
 function App() {
   const [error, setError] = useState(false);
@@ -445,6 +446,14 @@ function App() {
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorProfile />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/instructor"
+                  element={
+                    <PrivateRoute type={"instructor"}>
+                      <InstructorHomePage />
                     </PrivateRoute>
                   }
                 ></Route>

@@ -18,6 +18,7 @@ function CorporateCompleteProfile(props) {
   const [repeatPassword, setRepeatPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
   const {
     email,
     setEmail,
@@ -34,8 +35,7 @@ function CorporateCompleteProfile(props) {
     showTos,
     setShowTos,
     match,
-    checkMatching,
-  } = useCorporateCompleteProfile();
+  } = useCorporateCompleteProfile(props.Done);
 
   return (
     <div className="corporate-complete-container">
@@ -117,9 +117,6 @@ function CorporateCompleteProfile(props) {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
-              onBlur={(e) => {
-                checkMatching();
-              }}
             />
 
             <TextField
@@ -146,9 +143,6 @@ function CorporateCompleteProfile(props) {
               onChange={(e) => {
                 setRepeatPassword(e.target.value);
               }}
-              onBlur={(e) => {
-                checkMatching();
-              }}
             />
 
             {!match && (
@@ -164,14 +158,14 @@ function CorporateCompleteProfile(props) {
                 }}
               >
                 <FormControlLabel
-                  value="female"
-                  control={<Radio color="success" />}
-                  label="Female"
-                />
-                <FormControlLabel
                   value="male"
                   control={<Radio color="success" />}
                   label="Male"
+                />{" "}
+                <FormControlLabel
+                  value="female"
+                  control={<Radio color="success" />}
+                  label="Female"
                 />
               </RadioGroup>
             </FormControl>
@@ -195,13 +189,13 @@ function CorporateCompleteProfile(props) {
                 onClick={() => setShowTos(!showTos)}
                 style={{ position: "relative", right: "10px" }}
               >
-                Terms Of Service
+                Terms of Service
               </button>
             </div>
 
             {showTos && (
               <>
-                <h5> Terms Of Service :</h5>
+                <h5> Terms of Service :</h5>
                 <div style={{ height: "300px", overflowY: "scroll" }}>
                   {tos}
                 </div>
@@ -228,10 +222,12 @@ function CorporateCompleteProfile(props) {
                   gender,
                   firstName,
                   lastName,
-                  accepted: true,
                 };
+                if (repeatPassword !== password) {
+                  alert("Passwords do not match");
+                  return;
+                }
                 updateProfile(obj);
-                props.Done();
               }}
             >
               Update profile

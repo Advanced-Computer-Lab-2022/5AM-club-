@@ -2,21 +2,36 @@ import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import CourseCard from "../../components/ViewCourses/CourseCard";
+import "../../assets/SharedStyles/assets/css/aos.css";
+import "../../assets/SharedStyles/assets/css/bootstrap.min.css";
+import "../../assets/SharedStyles/assets/css/bootstrap-icons.css";
+import "../../assets/SharedStyles/assets/css/boxicons.min.css";
+import "../../assets/SharedStyles/assets/css/glightbox.min.css";
+import "../../assets/SharedStyles/assets/css/remixicon.css";
+import "../../assets/SharedStyles/assets/css/swiper-bundle.min.css";
+import "../../assets/SharedStyles/assets/css/style.css";
+
 function TraineeHomePage() {
   const navigate = useNavigate();
   const [popularCourses, setPopularCourses] = useState([]);
 
   useEffect(() => {
     app
-      .get("/populated-courses")
+      .get("/trainee/populated-courses")
       .then((res) => {
         res.data.sort((a, b) => b.owners.length - a.owners.length);
         res.data = res.data.slice(0, 4);
         setPopularCourses(res.data);
+        if (localStorage.getItem("refresh")) {
+          console.log("asdbjkn");
+          localStorage.removeItem("refresh");
+          navigate(0);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -35,6 +50,8 @@ function TraineeHomePage() {
                 <div className="accordion-list">
                   <ul>
                     <li>
+                      {" "}
+                      {/*eslint-disable-next-line*/}
                       <a
                         data-bs-toggle="collapse"
                         className="collapse"
@@ -48,13 +65,15 @@ function TraineeHomePage() {
                       </a>
                       <div
                         id="accordion-list-1"
-                        className="collapse"
+                        className="collapse show"
                         data-bs-parent=".accordion-list"
                       >
                         <p>Use the search bar above to browse our courses</p>
                       </div>
                     </li>
                     <li>
+                      {" "}
+                      {/*eslint-disable-next-line*/}
                       <a
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-2"
@@ -78,6 +97,8 @@ function TraineeHomePage() {
                       </div>
                     </li>
                     <li>
+                      {" "}
+                      {/*eslint-disable-next-line*/}
                       <a
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-3"
@@ -127,7 +148,7 @@ function TraineeHomePage() {
               >
                 Popular Courses
               </h2>
-              <p>Check out our most popular courses</p>
+              <p>Check out our most popular courses.</p>
             </div>
             <div
               style={{

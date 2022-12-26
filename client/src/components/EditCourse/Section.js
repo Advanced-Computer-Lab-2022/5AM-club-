@@ -7,7 +7,6 @@ import trash from "../../assets/EditCourse/delete.png";
 import { formatTime } from "../../utils/Helpers";
 import Video from "./Video";
 import Exercise from "./Exercise";
-import { useLocation } from "react-router-dom";
 
 function Section(props) {
   const [showDescription, setShowDescription] = useState(false);
@@ -16,8 +15,6 @@ function Section(props) {
   const [editingLength, setEditingLength] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const [length, setLength] = useState(props.section.minutes);
-
-  const location = useLocation();
 
   const [description, setDescription] = useState(props.section.description);
   const [title, setTitle] = useState(props.section.title);
