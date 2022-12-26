@@ -28,6 +28,9 @@ import Error from "./pages/Error/Error";
 import ChangeForgottenPassword from "./pages/ChangeForgottenPassword/ChangeForgottenPassword.js";
 import TraineeHomePage from "./pages/TraineeHomePage/TraineeHomePage";
 import InstructorHomePage from "./pages/InstructorHomePage/InstructorHomePage";
+import RefundsPage from "./pages/RefundsPage/RefundsPage";
+import RequestsPage from "./pages/RequestsPage/RequestsPage";
+import ReportsPage from "./pages/ReportsPage/ReportsPage";
 
 function App() {
   const [error, setError] = useState(false);
@@ -137,39 +140,31 @@ function App() {
                     </PrivateRoute>
                   }
                 ></Route>
+                <Route
+                  path="/admin/refunds"
+                  element={
+                    <PrivateRoute type={"admin"}>
+                      <RefundsPage />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/requests"
+                  element={
+                    <PrivateRoute type={"admin"}>
+                      <RequestsPage />
+                    </PrivateRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/reports"
+                  element={
+                    <PrivateRoute type={"admin"}>
+                      <ReportsPage />
+                    </PrivateRoute>
+                  }
+                ></Route>
 
-                <Route
-                  path="/admin/courses"
-                  element={
-                    <PrivateRoute type={"admin"}>
-                      <ViewCourses />
-                    </PrivateRoute>
-                  }
-                ></Route>
-                <Route
-                  path="/admin/courses/view-course"
-                  element={
-                    <PrivateRoute type={"admin"}>
-                      <ViewDetailedCourse />
-                    </PrivateRoute>
-                  }
-                ></Route>
-                <Route
-                  path="/admin/courses/view-course/view-course-reviews"
-                  element={
-                    <PrivateRoute type={"admin"}>
-                      <ViewCourseReviews />
-                    </PrivateRoute>
-                  }
-                ></Route>
-                <Route
-                  path="/admin/courses/view-course/view-instructor-reviews"
-                  element={
-                    <PrivateRoute type={"admin"}>
-                      <InstructorReviews />
-                    </PrivateRoute>
-                  }
-                ></Route>
                 {/* Individual */}
                 <Route
                   path="/individual-trainee"
