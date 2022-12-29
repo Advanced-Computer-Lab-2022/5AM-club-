@@ -566,6 +566,7 @@ const login = async (req, res) => {
       if (!bcrypt.compareSync(req.body.password, admins.password))
         return res.status(401).send("Wrong Password");
       user.type = "admin";
+      user.username = admins.username;
       user.id = admins._id;
       user.country = admins.country;
       user.email = admins.email;
@@ -575,6 +576,7 @@ const login = async (req, res) => {
         return res.status(401).send("Wrong Password");
       user.type = "instructor";
       user.id = instructors._id;
+      user.username = instructors.username;
       user.country = instructors.country;
       user.email = instructors.email;
     }
@@ -583,6 +585,7 @@ const login = async (req, res) => {
         return res.status(401).send("Wrong Password");
       user.type = trainees.type;
       user.id = trainees._id;
+      user.username = trainees.username;
       user.country = trainees.country;
       user.email = trainees.email;
     }
@@ -758,24 +761,28 @@ const addBoughtCourse = async (req, res) => {
   );
 };
 
-async function reportProblem (req,res){
-  const newProblem = new Problem({...req.body,comments:[],userId:req.user.id});
-  await newProblem
-    .save()
-    .then((response) => {
-      res.send("Problem reported successfully!");
-    })
+async function reportProblem(req, res) {
+  const newProblem = new Problem({
+    ...req.body,
+    username: req.user.username,
+    userId: req.user.id,
+  });
+  await newProblem.save().then((response) => {
+    res.send("Problem reported successfully!");
+  });
 }
-async function viewProblems(req,res){
+async function viewProblems(req, res) {
   const problems = await Problem.find({ userId: req.user.id });
   res.send(problems);
   //req.user.id get id of the user, filter problems where user id in problem model == user id
 }
-async function followUp(req,res){
-  await Problem.findByIdAndUpdate({ $push: {comments: req.body }},{ upsert: true });
+async function followUp(req, res) {
+  await Problem.findByIdAndUpdate(
+    { $push: { comments: req.body } },
+    { upsert: true }
+  );
   res.send("comment added successfully");
 }
-
 
 module.exports = {
   getCourseInstructor,
@@ -804,6 +811,5 @@ module.exports = {
   checkCompleteProfile,
   reportProblem,
   viewProblems,
-  followUp
+  followUp,
 };
-

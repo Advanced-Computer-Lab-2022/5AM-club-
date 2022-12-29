@@ -21,6 +21,7 @@ function TraineeProfile() {
   const [user, setUser] = useState({});
   const [courses, setCourses] = useState([]);
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
 
   useEffect(() => {
     app
@@ -45,6 +46,9 @@ function TraineeProfile() {
 
   function onClickHide() {
     setShow(false);
+  }
+  function onClickHide2() {
+    setShow2(false);
   }
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#FFFFFF" }}>
@@ -137,6 +141,7 @@ function TraineeProfile() {
                     </MDBCardText>
                   </div>
                 </div>
+
                 <div
                   className="btn btn-outline-success"
                   style={{
@@ -154,6 +159,27 @@ function TraineeProfile() {
                   }}
                 >
                   <p>Change Password</p>
+                </div>
+                <div
+                  className="btn btn-outline-success"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    width: "fit-content",
+                    padding: "0px",
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    height: "40px",
+                    fontSize: "15px",
+                    marginTop: "20px",
+                  }}
+                  onClick={() => {
+                    setShow2(true);
+                  }}
+                >
+                  <p>View all reported problems</p>
                 </div>
                 {courses.length > 0 && (
                   <>
@@ -213,6 +239,35 @@ function TraineeProfile() {
               }}
             >
               <ChangePassword setShow={setShow}></ChangePassword>
+            </Modal.Body>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        size="lg"
+        centered
+        show={show2}
+        onHide={onClickHide2}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <div className="tos-wrapper" style={{ width: "100%" }}>
+          <div className="tos-border-success" style={{ width: "100%" }}>
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                Reported Problems
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body
+              className="tos"
+              style={{
+                height: "fit-content",
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+              }}
+            >
+              Problems
             </Modal.Body>
           </div>
         </div>

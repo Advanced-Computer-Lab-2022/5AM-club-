@@ -17,6 +17,7 @@ import plus from "../../assets/EditCourse/plusblack.png";
 import cancel from "../../assets/EditCourse/cancelblack.png";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
+import ReportProblem from "../ReportProblem/ReportProblem.js";
 
 function EditCourse(props) {
   const [addingSubtitle, setAddingSubtitle] = useState(false);
@@ -249,6 +250,8 @@ function EditCourse(props) {
               )}
             </div>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <ReportProblem courseName={props.course?.title}></ReportProblem>
+
               {!props.course?.closed && props.course?.published ? (
                 <button
                   className="btn btn-outline-danger"

@@ -303,7 +303,6 @@ const findCourseByID = async (req, res) => {
 };
 
 async function updateCourse(req, res) {
-  console.log("asbdknasmld", req.body);
   if (typeof req.body.instructor[0] === "object") {
     for (let i = 0; i < req.body.instructor.length; i++) {
       req.body.instructor[i] = req.body.instructor[i]._id;
@@ -376,21 +375,6 @@ async function deleteSubtitle(req, res) {
     }
   }
 
-  const traineeCourses = await TraineeCourse.find({ course: course._id });
-  for (const traineeCourse of traineeCourses) {
-    traineeCourse.progress.splice(sectionIndices[0], sectionIndices.length);
-    traineeCourse.answers.splice(sectionIndices[0], sectionIndices.length);
-    traineeCourse.notes.splice(sectionIndices[0], sectionIndices.length);
-    traineeCourse.grades.splice(sectionIndices[0], sectionIndices.length);
-    if (
-      traineeCourse.lastSection >= sectionIndices[0] &&
-      traineeCourse.lastSection !== 0
-    ) {
-      traineeCourse.lastSection--;
-    }
-    await traineeCourse.save();
-  }
-
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -441,16 +425,6 @@ async function addSection(req, res) {
   }
   await course.save();
 
-  const traineeCourses = await TraineeCourse.find({ course: course._id });
-  for (const traineeCourse of traineeCourses) {
-    traineeCourse.progress.push(false);
-    traineeCourse.answers.push([]);
-    traineeCourse.notes.push({});
-    traineeCourse.grades.push(0);
-
-    await traineeCourse.save();
-  }
-
   if (req.headers.country) {
     course.price = await convert(
       course.price,
@@ -486,20 +460,6 @@ async function deleteSection(req, res) {
       }
       k++;
     }
-  }
-
-  const traineeCourses = await TraineeCourse.find({ course: course._id });
-  for (const traineeCourse of traineeCourses) {
-    traineeCourse.progress.splice(sectionIndex, 1);
-    traineeCourse.answers.splice(sectionIndex, 1);
-    traineeCourse.notes.splice(sectionIndex, 1);
-    traineeCourse.grades.splice(sectionIndex, 1);
-    if (
-      sectionIndex <= traineeCourse.lastSection &&
-      traineeCourse.lastSection !== 0
-    )
-      traineeCourse.lastSection--;
-    await traineeCourse.save();
   }
 
   if (req.headers.country) {
@@ -545,15 +505,6 @@ async function updateSection(req, res) {
       }
       k++;
     }
-  }
-
-  const traineeCourses = await TraineeCourse.find({ course: course._id });
-  for (const traineeCourse of traineeCourses) {
-    traineeCourse.progress[sectionIndex] = false;
-    traineeCourse.answers[sectionIndex] = [];
-    traineeCourse.notes[sectionIndex] = {};
-    traineeCourse.grades[sectionIndex] = 0;
-    await traineeCourse.save();
   }
 
   if (req.headers.country) {
