@@ -17,6 +17,7 @@ import plus from "../../assets/EditCourse/plusblack.png";
 import cancel from "../../assets/EditCourse/cancelblack.png";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
+import ReportProblem from "../ReportProblem/ReportProblem.js";
 
 function EditCourse(props) {
   const [addingSubtitle, setAddingSubtitle] = useState(false);
@@ -298,6 +299,7 @@ function EditCourse(props) {
                   )}
                 </>
               )}
+              <ReportProblem courseName={props.course.title}></ReportProblem>
             </div>
           </div>
           <div className="properties-wrapper">
