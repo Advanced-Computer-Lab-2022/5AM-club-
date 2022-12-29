@@ -562,9 +562,9 @@ const login = async (req, res) => {
   } else {
     if (admins) {
       console.log(bcrypt.hashSync(admins.password, 8), "fucking");
-      /* if (!bcrypt.compareSync(req.body.password, admins.password))
-        return res.status(401).send("Wrong Password");*/
-      if (req.body.password === admins.password) user.type = "admin";
+      if (!bcrypt.compareSync(req.body.password, admins.password))
+        return res.status(401).send("Wrong Password");
+      user.type = "admin";
       user.id = admins._id;
       user.country = admins.country;
       user.email = admins.email;
@@ -578,14 +578,12 @@ const login = async (req, res) => {
       user.email = instructors.email;
     }
     if (trainees) {
-      /* if (!bcrypt.compareSync(req.body.password, trainees.password))
-        return res.status(401).send("Wrong Password");*/
-      if (req.body.password === trainees.password) {
-        user.type = trainees.type;
-        user.id = trainees._id;
-        user.country = trainees.country;
-        user.email = trainees.email;
-      }
+      if (!bcrypt.compareSync(req.body.password, trainees.password))
+        return res.status(401).send("Wrong Password");
+      user.type = trainees.type;
+      user.id = trainees._id;
+      user.country = trainees.country;
+      user.email = trainees.email;
     }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
