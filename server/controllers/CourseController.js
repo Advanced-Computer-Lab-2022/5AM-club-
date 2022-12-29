@@ -171,6 +171,10 @@ const getPopulatedCourses = async (req, res) => {
     .populate({
       path: "owners",
     })
+    .populate({ path: "pending" })
+    .populate({
+      path: "rejected",
+    })
     .populate("userReviews.user");
   console.log("courses  ", courses);
   if (req.query.rating) {
@@ -263,6 +267,10 @@ const findPopulatedCourseByID = async (req, res) => {
       })
       .populate({
         path: "owners",
+      })
+      .populate({ path: "pending" })
+      .populate({
+        path: "rejected",
       })
       .populate("userReviews.user");
     if (req.headers.country) {
@@ -728,6 +736,58 @@ async function getMyCourseSubjects(req, res) {
   });
   res.send(subjects);
 }
+const requestCourseAccess = async (req, res) => {
+  console.log(req.user);
+  if (req.user && req.user.type === "corporate") {
+    const courseId = req.params.id;
+    const traineeId = req.user.id;
+    console.log(courseId, traineeId, "I am here let me in");
+    const course = await Course.findByIdAndUpdate(courseId, {
+      $push: { pending: traineeId },
+    });
+    res.send(course);
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+const getCourseRequests = async (req, res) => {
+  if (req.user && req.user.type === "admin") {
+    const courses = Course.find({
+      pending: { $exists: true, $ne: [] },
+    }).populate("pending");
+    res.send(courses);
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+
+const acceptCourseAccess = async (req, res) => {
+  if (req.user && req.user.type === "admin") {
+    const courseId = req.params.id;
+    const traineeId = req.body.traineeId;
+    const course = await Course.findByIdAndUpdate(courseId, {
+      $pull: { pending: traineeId },
+      $push: { owners: traineeId },
+    });
+    res.send(course);
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+
+const rejectCourseAccess = async (req, res) => {
+  if (req.user && req.user.type === "admin") {
+    const courseId = req.params.id;
+    const traineeId = req.body.traineeId;
+    const course = await Course.findByIdAndUpdate(courseId, {
+      $pull: { pending: traineeId },
+      $push: { rejected: traineeId },
+    });
+    res.send(course);
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
 
 module.exports = {
   setMultipleCoursesPromotion,
@@ -752,4 +812,8 @@ module.exports = {
   incrementCourseViews,
   getMyCourseSubjects,
   getMyCourseMaxMin,
+  requestCourseAccess,
+  getCourseRequests,
+  acceptCourseAccess,
+  rejectCourseAccess,
 };

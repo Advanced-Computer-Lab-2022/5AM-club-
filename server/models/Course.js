@@ -16,7 +16,7 @@ const exerciseSchema = {
 const reviewSchema = {
   user: {
     type: mongoose.Types.ObjectId,
-    ref: "Trainees",
+    ref: "Trainee",
     required: true,
   },
   review: { type: String },
@@ -97,7 +97,7 @@ const courseSchema = new mongoose.Schema(
         {
           user: {
             type: mongoose.Types.ObjectId,
-            ref: "Trainees",
+            ref: "Trainee",
             required: true,
           },
           review: { type: String },
@@ -110,7 +110,25 @@ const courseSchema = new mongoose.Schema(
       type: [
         {
           type: mongoose.Types.ObjectId,
-          ref: "Trainees",
+          ref: "Trainee",
+          required: true,
+        },
+      ],
+    },
+    pending: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: "Trainee",
+          required: true,
+        },
+      ],
+    },
+    rejected: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: "Trainee",
           required: true,
         },
       ],
@@ -165,7 +183,7 @@ courseSchema.virtual("courseRating").get(function () {
 });
 courseSchema.set("toJSON", { getters: true, virtuals: true });
 
-const Course = mongoose.model("Courses", courseSchema);
+const Course = mongoose.model("Course", courseSchema);
 
 module.exports = {
   Course,

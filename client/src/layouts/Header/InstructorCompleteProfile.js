@@ -32,7 +32,7 @@ function InstructorCompleteProfile(props) {
   } = useInstructorCompleteProfile(props.Done);
 
   return (
-    <div className="instructor-complete-container">
+    <div className='instructor-complete-container'>
       <Container
         sx={{
           display: "flex",
@@ -59,9 +59,9 @@ function InstructorCompleteProfile(props) {
           >
             <TextField
               hiddenLabel
-              id="email"
-              variant="outlined"
-              label="Email"
+              id='email'
+              variant='outlined'
+              label='Email'
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -69,15 +69,15 @@ function InstructorCompleteProfile(props) {
             />
             <TextField
               type={showPassword ? "text" : "password"}
-              id="filled-hidden-label-small"
-              variant="outlined"
-              label="Password"
-              autoComplete="no"
+              id='filled-hidden-label-small'
+              variant='outlined'
+              label='Password'
+              autoComplete='no'
               InputProps={{
                 autoComplete: showPassword ? "off" : "new-password",
                 endAdornment: (
                   <InputAdornment
-                    position="end"
+                    position='end'
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setShowPassword(!showPassword);
@@ -95,15 +95,15 @@ function InstructorCompleteProfile(props) {
 
             <TextField
               type={showRepeatPassword ? "text" : "password"}
-              id="filled-hidden-label-small"
-              variant="outlined"
-              label="Repeat Password"
-              autoComplete="no"
+              id='filled-hidden-label-small'
+              variant='outlined'
+              label='Repeat Password'
+              autoComplete='no'
               InputProps={{
                 autoComplete: showRepeatPassword ? "off" : "new-password",
                 endAdornment: (
                   <InputAdornment
-                    position="end"
+                    position='end'
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setShowRepeatPassword(!showRepeatPassword);
@@ -130,15 +130,15 @@ function InstructorCompleteProfile(props) {
               }}
             >
               <Checkbox
-                color="success"
+                color='success'
                 onChange={(e) => {
                   setAcceptedTerms(e.target.checked);
                 }}
               />
               <span>I accept the</span>
               <button
-                type="button"
-                class="btn btn-link"
+                type='button'
+                class='btn btn-link'
                 onClick={() => setShowTos(!showTos)}
                 style={{ position: "relative", right: "10px" }}
               >
@@ -153,15 +153,15 @@ function InstructorCompleteProfile(props) {
               }}
             >
               <Checkbox
-                color="success"
+                color='success'
                 onChange={(e) => {
                   setAcceptedContract(e.target.checked);
                 }}
               />
               <span>I accept the</span>
               <button
-                type="button"
-                class="btn btn-link"
+                type='button'
+                class='btn btn-link'
                 onClick={() => setShowContract(!showContract)}
                 style={{ position: "relative", right: "10px" }}
               >
@@ -186,8 +186,8 @@ function InstructorCompleteProfile(props) {
               </>
             )}
             <Button
-              type="submit"
-              variant="outline-success"
+              type='submit'
+              variant='outline-success'
               disabled={
                 !acceptedTerms ||
                 !acceptedContract ||

@@ -22,7 +22,7 @@ function Login() {
       }
     );
   }
-
+  const navigate = useNavigate();
   async function onSubmit(obj) {
     app
       .post(`/login`, obj)
@@ -41,7 +41,7 @@ function Login() {
         alert(err.response.data);
       });
   }
-  const navigate = useNavigate();
+
   return (
     <div
       style={{
@@ -56,12 +56,12 @@ function Login() {
       <div style={{ marginRight: "50px" }}>
         <img
           src={logo}
-          alt="Logo"
+          alt='Logo'
           style={{ width: "300px", height: "200px" }}
         ></img>
         <img
           src={logo2}
-          alt="Logo"
+          alt='Logo'
           style={{ width: "250px", height: "150px" }}
         ></img>
       </div>
@@ -82,9 +82,9 @@ function Login() {
           >
             <TextField
               hiddenLabel
-              id="filled-hidden-label-small"
-              variant="outlined"
-              label="Username"
+              id='filled-hidden-label-small'
+              variant='outlined'
+              label='Username'
               value={username}
               style={{ minWidth: "575px" }}
               onChange={(e) => {
@@ -94,13 +94,13 @@ function Login() {
             <PasswordBox setPassword={setPassword}></PasswordBox>
 
             <Button
-              type="submit"
+              type='submit'
               style={{
                 backgroundColor: "#96cea8",
                 color: "white",
                 minWidth: "575px",
               }}
-              variant="contained"
+              variant='contained'
               onClick={(e) => {
                 e.preventDefault();
                 const obj = {
@@ -124,9 +124,9 @@ function Login() {
               <>
                 <TextField
                   hiddenLabel
-                  id="filled-hidden-label-small"
-                  variant="outlined"
-                  label="Email"
+                  id='filled-hidden-label-small'
+                  variant='outlined'
+                  label='Email'
                   value={forgotPasswordEmail}
                   style={{ minWidth: "575px" }}
                   onChange={(e) => {

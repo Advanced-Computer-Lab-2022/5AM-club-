@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { convert } = require("../utils/CurrencyConverter");
 const ObjectId = require("bson-objectid");
 const countries = require("../utils/Countries.json");
 const Joi = require("joi");
@@ -65,12 +66,18 @@ async function getUserType(req, res) {
 }
 
 async function getTraineeCourse(req, res) {
-  res.send(
-    await TraineeCourse.findOne({
-      traineeId: req.user.id,
-      courseId: req.headers.courseid,
-    })
-  );
+  const traineeCourse = await TraineeCourse.findOne({
+    traineeId: req.user.id,
+    courseId: req.headers.courseid,
+  });
+  if (traineeCourse) {
+    traineeCourse.purchasingCost = await convert(
+      traineeCourse.purchasingCost,
+      "United States",
+      req.headers.country
+    );
+    res.send(traineeCourse);
+  } else res.status(404).send();
 }
 
 async function updateTraineeCourse(req, res) {
