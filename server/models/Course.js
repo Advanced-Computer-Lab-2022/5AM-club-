@@ -11,7 +11,6 @@ const exerciseSchema = {
   questions: { type: [String], required: true },
   choices: { type: [Object], required: true },
   answers: { type: [Number], required: true },
-  exerciseType: { type: String, required: true },
 };
 
 const reviewSchema = {
@@ -74,14 +73,16 @@ subtitleSchema.virtual("minutes").get(function () {
 const courseSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, unique: true },
-    rating: { type: Number, required: true },
     price: { type: Number, required: true },
     subject: { type: [String], required: true },
     views: { type: Number, required: true },
     preview_video: { type: String, required: true },
     promotion: {
       percentage: { type: Number },
-      deadline: { type: Date },
+      startDate: { type: Date },
+      endDate: { type: Date },
+      type: { type: String },
+      default: {},
     },
     summary: {
       type: String,
@@ -115,8 +116,10 @@ const courseSchema = new mongoose.Schema(
       ],
     },
     subtitles: { type: [subtitleSchema], required: true },
+    published: { type: Boolean, required: true, default: false },
+    closed: { type: Boolean, required: true, default: false },
   },
-  { toJSON: { virtuals: true } }
+  { toJSON: { virtuals: true }, timestamps: true }
 );
 
 courseSchema.virtual("valid").get(function () {
@@ -167,7 +170,4 @@ const Course = mongoose.model("Courses", courseSchema);
 module.exports = {
   Course,
   reviewSchema,
-  // Subtitle,
-  // Section,
-  // Exercise,
 };

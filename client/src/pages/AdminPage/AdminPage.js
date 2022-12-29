@@ -1,18 +1,40 @@
-import { useNavigate } from "react-router-dom";
 import { memo } from "react";
-import SelectCountry from "../../components/SelectCountry/SelectCountry";
+import CourseRequestsCard from "../../components/AdminHomePage/CourseRequestsCard";
+import CourseRefundCard from "../../components/AdminHomePage/CourseRefundCard";
+import ReportsCard from "../../components/AdminHomePage/ReportsCard";
+import AddUser from "../../components/AdminHomePage/AddUserCard";
+import CoursePromoCard from "../../components/AdminHomePage/CoursePromoCard";
+
 function AdminPage() {
-  const navigate = useNavigate();
+  //const user = window.localStorage.getItem("user");
   return (
-    <div>
-      <button
-        onClick={() => {
-          navigate("add-user");
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "center",
+        gap: "40px",
+        height: "100%",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+
+          justifyContent: "center",
+          gap: "40px",
         }}
       >
-        Add User
-      </button>
-      <SelectCountry></SelectCountry>
+        <ReportsCard />
+        <CourseRequestsCard />
+        <CourseRefundCard />
+      </div>
+      <div style={{ display: "flex", flexDirection: "row", gap: "40px" }}>
+        <AddUser />
+        <CoursePromoCard />
+      </div>
     </div>
   );
 }

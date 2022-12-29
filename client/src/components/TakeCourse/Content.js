@@ -32,7 +32,7 @@ function Content(props) {
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
-
+  console.log(props.traineeCourse);
   const done = props.traineeCourse?.progress[props.traineeCourse?.lastSection];
   const [traineeAnswers, setTraineeAnswers] = useState();
   function handleSubmit() {
@@ -66,7 +66,7 @@ function Content(props) {
               width="inherit"
               className="iframe"
               src={content.video.link.replace("watch?v=", "embed/")}
-              frameBorder="0"
+              style={{ borderRadius: "10px" }}
               allowFullScreen
             ></iframe>
           </div>
@@ -75,7 +75,8 @@ function Content(props) {
             {content.exercise.questions.map((question, index) => {
               return (
                 <div className="question" key={question + index}>
-                  {question + ": "}
+                  <p className="questions-header">Questions:</p>
+                  <p className="question-title">{question + ": "}</p>
                   <FormControl>
                     <FormLabel id="exercise-radio-buttons-group"></FormLabel>
                     <RadioGroup

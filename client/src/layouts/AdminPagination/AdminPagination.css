@@ -1,0 +1,37 @@
+.paginator {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 70px;
+}
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.pagination a {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #96cea8;
+  color: #96cea8;
+}
+
+.pagination__link {
+  font-weight: bold;
+}
+
+.pagination__link--active a {
+  color: #fff;
+  background: #96cea8;
+}
+
+.pagination__link--disabled a {
+  color: rgb(198, 197, 202);
+  border: 1px solid rgb(198, 197, 202);
+}
+a:hover {
+  color: #96cea8 !important;
+}
+a:focus {
+  color: #96cea8 !important;
+}

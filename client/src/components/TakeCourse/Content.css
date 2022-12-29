@@ -1,11 +1,36 @@
 .iframe {
   height: 100%;
   width: 100%;
+  border-radius: "10px";
 }
 .exercise {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   align-items: center;
   justify-content: center;
   border: 5px solid rgb(150, 206, 168);
+  overflow: hidden;
+}
+.questions-header {
+  font-size: 45px;
+  font-weight: bold;
+  margin: 0;
+}
+.question {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+.question-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.choice-container {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
 }

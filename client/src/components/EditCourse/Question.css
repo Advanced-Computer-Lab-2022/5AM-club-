@@ -9,17 +9,16 @@
   cursor: pointer;
 }
 .choices-button {
-  width: 80px;
-  height: 80px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 }
 .choices-edit-container {
   display: flex;
   flex-direction: row;
 }
-.question {
-  display: flex;
-  flex-direction: row;
+.section-question-container {
+  padding: 25px;
 }
 .trash {
   margin-left: auto;

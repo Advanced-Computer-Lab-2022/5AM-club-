@@ -1,18 +1,15 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import "./ViewContract.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, memo } from "react";
-import proxy from "../../utils/proxy.json";
 import { TextareaAutosize } from "@mui/material";
 function ViewContract() {
   const [instructor, setInstructor] = useState({});
 
   useEffect(() => {
-    axios
-      .get(proxy.URL + "/get-user", {
+    app
+      .get("/instructor/get-user", {
         headers: {
-          //TODO REPLACE ID WITH TOKEN
-          id: localStorage.getItem("id"),
           type: "instructor",
         },
       })
@@ -24,23 +21,13 @@ function ViewContract() {
   const [mainText, setMainText] = useState("Loading Contract...");
   const [contract, setContract] = useState([]);
   function acceptContract() {
-    //TODO : CHANGE FROM ID TO TOKEN
-
-    axios
-      .get(
-        proxy.URL + "/accept-contract",
-
-        {
-          headers: { id: localStorage.getItem("id") },
-        }
-      )
-      .then(() => {
-        navigate("/instructor");
-      });
+    app.get("/instructor/accept-contract").then(() => {
+      navigate("/instructor");
+    });
   }
   useEffect(() => {
     setContract([]);
-    axios.get(proxy.URL + "/view-contract", {}).then((response) => {
+    app.get("/instructor/view-contract", {}).then((response) => {
       if (response.data.length === 0)
         setMainText("No contract is available yet");
       else setMainText("");

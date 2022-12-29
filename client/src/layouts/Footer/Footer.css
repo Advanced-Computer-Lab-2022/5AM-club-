@@ -1,6 +1,11 @@
 .footer-wrapper {
   display: flex;
   flex-direction: row;
-  height: 150px;
-  overflow: hidden;
+  height: 50px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: #484848;
+  color: white;
+  flex-shrink: 0;
 }

@@ -1,9 +1,9 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import { memo, useRef, useState } from "react";
-import proxy from "../../utils/proxy.json";
 import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
+import axios from "axios";
 function CourseVideo(props) {
   const [validURL, setValidURL] = useState(true);
   const [editingURL, setEditingURL] = useState(false);
@@ -32,11 +32,9 @@ function CourseVideo(props) {
         )
         .then(() => {
           setValidURL(true);
-          axios
+          app
             .put(
-              proxy.URL +
-                "/instructor/my-courses/edit-course/" +
-                props.course._id,
+              "/instructor/my-courses/edit-course/" + props.course._id,
               {
                 ...props.course,
                 preview_video: value,
@@ -54,58 +52,68 @@ function CourseVideo(props) {
         })
         .catch((e) => {
           setValidURL(false);
+          alert("Invalid Youtube Link!");
         });
     } else {
       setValidURL(false);
+      alert("Invalid Youtube Link!");
     }
     setEditingURL(false);
   }
   return (
-    <div>
-      {validURL ? (
-        <iframe
-          title="course-video"
-          className="course-video"
-          width="420"
-          height="315"
-          src={
-            videoURL
-              ? videoURL.replace("watch?v=", "embed/")
-              : props.url?.replace("watch?v=", "embed/")
-          }
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <p style={{ color: "red" }}>
-          The link you entered is not a valid youtube link.
-        </p>
-      )}
-      {editingURL ? (
-        <>
-          <input
-            ref={videoRef}
-            defaultValue={videoURL ? videoURL : props.url}
-            type=""
-          ></input>
-          <button
-            className="btn btn-success"
-            onClick={() => {
-              handleURLChange(videoRef.current.value);
-              setVideoURL(videoRef.current.value);
-            }}
-          >
-            Done
-          </button>
-        </>
-      ) : (
-        <img
-          className="edit-button"
-          src={edit}
-          alt="edit"
-          onClick={toggleEditingURL}
-        ></img>
-      )}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      {" "}
+      <p>Preview Video:</p>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {validURL ? (
+          <iframe
+            title="course-video"
+            className="course-video"
+            width="420"
+            height="315"
+            src={
+              videoURL
+                ? videoURL.replace("watch?v=", "embed/")
+                : props.url?.replace("watch?v=", "embed/")
+            }
+            allowFullScreen
+            style={{ borderRadius: "10px" }}
+          ></iframe>
+        ) : (
+          <></>
+        )}
+        {!props.course?.published && (
+          <>
+            {editingURL ? (
+              <>
+                <input
+                  style={{ borderRadius: "10px", margin: "10px" }}
+                  ref={videoRef}
+                  defaultValue={videoURL ? videoURL : props.url}
+                  type=""
+                ></input>
+                <button
+                  className="btn btn-outline-success"
+                  onClick={() => {
+                    handleURLChange(videoRef.current.value);
+                    setVideoURL(videoRef.current.value);
+                  }}
+                >
+                  Done
+                </button>
+              </>
+            ) : (
+              <img
+                className="edit-button"
+                src={edit}
+                alt="edit"
+                onClick={toggleEditingURL}
+                style={{ margin: "10px" }}
+              ></img>
+            )}
+          </>
+        )}
+      </div>{" "}
     </div>
   );
 }

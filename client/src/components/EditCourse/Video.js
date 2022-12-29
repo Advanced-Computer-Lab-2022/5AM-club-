@@ -1,8 +1,9 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import React, { memo, useRef, useState } from "react";
-import proxy from "../../utils/proxy.json";
 import "./CourseVideo.css";
 import edit from "../../assets/EditCourse/edit.png";
+import axios from "axios";
+import { convertISO8601ToMs } from "../../utils/Helpers";
 
 function Video(props) {
   const [validURL, setValidURL] = useState(true);
@@ -28,38 +29,57 @@ function Video(props) {
         .then(() => {
           setValidURL(true);
           axios
-            .put(
-              proxy.URL +
-                "/my-courses/edit-course/" +
-                props.courseid +
-                "/" +
-                props.subtitleid +
-                "/edit-section/" +
-                props.sectionid,
-              {
-                ...props.section,
-                content: { video: { link: value } },
-              },
-              {
-                headers: {
-                  country: localStorage.getItem("country"),
-                },
-              }
+            .get(
+              "https://www.googleapis.com/youtube/v3/videos?id=" +
+                value?.substring(value?.lastIndexOf("=") + 1) +
+                "&part=contentDetails&key=AIzaSyDA-c7NayerkKbh5S_74nibw_yp2r4OnAA"
             )
             .then((response) => {
-              props.setCourse(response.data);
+              console.log(
+                convertISO8601ToMs(
+                  response.data.items[0].contentDetails.duration
+                )
+              );
+              app
+                .put(
+                  "/instructor/my-courses/edit-course/" +
+                    props.courseid +
+                    "/" +
+                    props.subtitleid +
+                    "/edit-section/" +
+                    props.sectionid,
+                  {
+                    ...props.section,
+                    minutes: Math.floor(
+                      convertISO8601ToMs(
+                        response.data.items[0].contentDetails.duration
+                      ) / 60
+                    ),
+                    content: { video: { link: value } },
+                  },
+                  {
+                    headers: {
+                      country: localStorage.getItem("country"),
+                    },
+                  }
+                )
+                .then((response) => {
+                  props.setCourse(response.data);
+                });
             });
         })
         .catch((e) => {
           setValidURL(false);
+          alert("Invalid Youtube Link!");
         });
     } else {
       setValidURL(false);
+      alert("Invalid Youtube Link!");
     }
     setEditingURL(false);
   }
   return (
-    <div>
+    <div style={{ display: "flex", alignItems: "center" }}>
       {validURL ? (
         <iframe
           title="course-video"
@@ -71,13 +91,11 @@ function Video(props) {
               ? videoURL.replace("watch?v=", "embed/")
               : props.content?.link.replace("watch?v=", "embed/")
           }
-          frameBorder="0"
           allowFullScreen
+          style={{ borderRadius: "10px" }}
         ></iframe>
       ) : (
-        <p style={{ color: "red" }}>
-          The link you entered is not a valid youtube link.
-        </p>
+        <></>
       )}
       {editingURL ? (
         <>
@@ -87,7 +105,7 @@ function Video(props) {
             type=""
           ></input>
           <button
-            className="btn btn-success"
+            className="btn btn-outline-success"
             onClick={() => {
               handleURLChange(videoRef.current.value);
               setVideoURL(videoRef.current.value);
@@ -97,12 +115,19 @@ function Video(props) {
           </button>
         </>
       ) : (
-        <img
-          className="edit-button"
-          src={edit}
-          alt="edit"
-          onClick={toggleEditingURL}
-        ></img>
+        <>
+          {!props.course?.published && (
+            <>
+              <img
+                className="edit-button"
+                src={edit}
+                alt="edit"
+                onClick={toggleEditingURL}
+                style={{ cursor: "pointer", margin: "10px" }}
+              ></img>
+            </>
+          )}
+        </>
       )}
     </div>
   );

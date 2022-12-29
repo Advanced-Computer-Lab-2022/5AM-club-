@@ -1,7 +1,6 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import { memo, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import proxy from "../../utils/proxy.json";
 import Subtitles from "../../components/TakeCourse/Subtitles";
 import Content from "../../components/TakeCourse/Content";
 import "./TraineeTakeCourse.css";
@@ -13,8 +12,8 @@ function TraineeTakeCourse() {
   const navigate = useNavigate();
   const [flag, setFlag] = useState(false);
   useEffect(() => {
-    axios
-      .get(proxy.URL + "/courses/" + location.state?.courseId, {
+    app
+      .get("/trainee/courses/" + location.state?.courseId, {
         headers: {
           country: localStorage.getItem("country"),
         },
@@ -22,11 +21,9 @@ function TraineeTakeCourse() {
       .then((response) => {
         setCourse(response.data);
 
-        axios
-          .get(proxy.URL + "/get-trainee-course", {
-            // TODO : use token instead of id
+        app
+          .get("/trainee/get-trainee-course", {
             headers: {
-              traineeId: location.state?.traineeId,
               courseId: location.state?.courseId,
             },
           })
@@ -40,11 +37,11 @@ function TraineeTakeCourse() {
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
-    axios
-      .put(proxy.URL + "/edit-trainee-course", {
-        // TODO : use token instead of id------------------ bta3tna
+    console.log(traineeCourse);
+    app
+      .put("/trainee/edit-trainee-course", {
         lastSection: traineeCourse.lastSection,
-        traineeId: location.state?.traineeId,
+
         courseId: location.state?.courseId,
         progress: traineeCourse.progress,
         answers: traineeCourse.answers,
@@ -52,6 +49,7 @@ function TraineeTakeCourse() {
         notes: traineeCourse.notes,
       })
       .then((response) => {
+        console.log(response.data);
         setTraineeCourse(response.data);
       })
       .catch((error) => {
@@ -62,18 +60,18 @@ function TraineeTakeCourse() {
   }
 
   return (
-    <div className='take-course-wrapper'>
-      <div className='content-notes-wrapper'>
-        <div className='content'>
+    <div className="take-course-wrapper">
+      <div className="content-notes-wrapper">
+        <div className="content">
           <Content
             course={course}
             traineeCourse={traineeCourse}
             updateTraineeCourse={updateTraineeCourse}
           ></Content>
         </div>
-        <div className='notes'></div>
+        <div className="notes"></div>
       </div>
-      <div className='subtitles'>
+      <div className="subtitles">
         <Subtitles
           setFlag={setFlag}
           flag={flag}

@@ -1,12 +1,25 @@
 const express = require("express");
 const router = express.Router();
 const CourseController = require("../../controllers/CourseController");
-const authenticateToken = require("../../middleware/authentication");
 
-router.get("/my-courses", CourseController.getCourses);
+router.get("/my-courses", CourseController.getMyCourses);
+router.get("/my-courses/:added", CourseController.getMyCourses);
 router.get("/courses", CourseController.getCourses);
+router.get("/my-populated-courses", CourseController.getMyPopulatedCourses);
+router.get("/populated-courses", CourseController.getPopulatedCourses);
+router.get("/courses/my-course-max-min", CourseController.getMyCourseMaxMin);
+router.get("/courses/course-max-min", CourseController.getCourseMaxMin);
+router.get("/courses/course-subjects", CourseController.getCourseSubjects);
+router.get("/courses/my-course-subjects", CourseController.getMyCourseSubjects);
+
+router.put(
+  "/courses/increment-views/:id",
+  CourseController.incrementCourseViews
+);
+
 router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
+router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
 
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
 router.put(
@@ -20,6 +33,15 @@ router.put(
 router.put(
   "/my-courses/edit-course/:courseid/:subtitleid/add-section",
   CourseController.addSection
+);
+
+router.put(
+  "/set-multiple-promotions",
+  CourseController.setMultipleCoursesPromotion
+);
+router.put(
+  "/my-courses/edit-course/:courseid/add-subtitle",
+  CourseController.addSubtitle
 );
 router.put(
   "/my-courses/edit-course/:courseid/edit-subtitle/:subtitleid",
@@ -39,5 +61,10 @@ router.put(
 );
 
 router.post("/create-course", CourseController.createCourse);
+
+router.delete(
+  "/my-courses/edit-course/:id/delete-course",
+  CourseController.deleteCourse
+);
 
 module.exports = router;

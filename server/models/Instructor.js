@@ -22,20 +22,20 @@ const instructorSchema = new mongoose.Schema({
   biography: { type: String },
   courses: {
     type: [{ type: mongoose.Types.ObjectId, ref: "Course" }],
+    required: true,
     default: [],
   },
   userReviews: {
     type: [reviewSchema],
     required: true,
+    default: [],
+  },
+  money_owed: {
+    type: [{ year: Number, month: Number, amount: Number }],
+    default: [],
   },
 
-  passwordTimeout: { type: Date },
-
-  accepted: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+  passwordTimeout: { type: Date, default: Date.now() },
 });
 
 instructorSchema.virtual("instructorRating").get(function () {

@@ -1,5 +1,4 @@
-import proxy from "../../utils/proxy";
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import { useState, useEffect, memo } from "react";
 import PersonalInformationContainer from "../../components/PersonalInformationContainer/PersonalInformationContainer";
 import "./InstructorPersonalInformation.css";
@@ -8,18 +7,19 @@ function InstructorPersonalInformation() {
   const [instructor, setInstructor] = useState();
 
   useEffect(() => {
-    axios
-      .get(proxy.URL + "/get-user", {
+    app
+      .get("/instructor/get-user", {
         headers: {
-          // TODO : replace id with token
-          id: window.localStorage.getItem("id"),
           type: "instructor",
         },
       })
       .then((res) => {
         setInstructor(res.data);
+        console.log(res.data);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   return instructor && <PersonalInformationContainer instructor={instructor} />;
 }

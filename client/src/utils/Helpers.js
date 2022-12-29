@@ -1,4 +1,5 @@
 const formatTime = (minutes) => {
+  if (minutes === 0) return "0m";
   const hours = Math.floor(minutes / 60);
   minutes = minutes % 60;
   let time = "";
@@ -64,7 +65,73 @@ const getProgress = (arr) => {
   return count / arr.length;
 };
 
+const convertISO8601ToMs = (duration) => {
+  var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+  var hours = 0,
+    minutes = 0,
+    seconds = 0,
+    totalseconds;
+
+  if (reptms.test(duration)) {
+    var matches = reptms.exec(duration);
+    if (matches[1]) hours = Number(matches[1]);
+    if (matches[2]) minutes = Number(matches[2]);
+    if (matches[3]) seconds = Number(matches[3]);
+    totalseconds = hours * 3600 + minutes * 60 + seconds;
+  }
+  return totalseconds;
+};
+
+const getSectionCount = (subtitles) => {
+  let count = 0;
+  for (let subtitle of subtitles) {
+    count += subtitle.sections.length;
+  }
+  return count;
+};
+
+const getSubjectValues = (subjects) => {
+  let subjectValues = [];
+  for (let subject of subjects) {
+    subjectValues.push(subject.value);
+  }
+  return subjectValues;
+};
+
+const getCourseTitles = (courses) => {
+  let courseTitles = [];
+  for (let course of courses) {
+    courseTitles.push(course.title ? course.title : course.value);
+  }
+  console.log(courseTitles);
+  return courseTitles;
+};
+
+const getCourseNames = (courses) => {
+  console.log(courses);
+  if (courses.length === 0 || !courses) return [];
+  let courseNames = [];
+  for (let course of courses) {
+    courseNames.push({ label: course.title, value: course.title });
+  }
+  //sort array by label
+  courseNames.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  return courseNames;
+};
+
 module.exports = {
+  getCourseTitles,
+  getCourseNames,
+  getSubjectValues,
+  getSectionCount,
   replaceAt,
   hasEmptyString,
   displayValues,
@@ -72,4 +139,5 @@ module.exports = {
   formatTime,
   hasNull,
   getProgress,
+  convertISO8601ToMs,
 };

@@ -1,7 +1,6 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import { memo, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import proxy from "../../utils/proxy.json";
 import EditCourse from "../../components/EditCourse/EditCourse";
 function InstructorEditCourse() {
   const [course, setCourse] = useState();
@@ -9,16 +8,22 @@ function InstructorEditCourse() {
   const location = useLocation();
 
   useEffect(() => {
-    axios
-      .get(proxy.URL + "/courses/" + location.state?.id, {
+    app
+      .get("/instructor/courses/" + location.state?.id, {
         headers: {
           country: localStorage.getItem("country"),
         },
       })
       .then((response) => {
+        location.state = {
+          ...location.state,
+          closed: response.data.closed,
+          published: response.data.published,
+        };
         setCourse(response.data);
-        axios
-          .get(proxy.URL + "/get-course-instructor", {
+
+        app
+          .get("/instructor/get-course-instructor", {
             params: { courseid: response.data._id },
           })
           .then((response) => {

@@ -3,9 +3,39 @@ textarea {
   padding: 10px;
   border-radius: 20px;
 }
+.edit-course-card {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
+  min-width: 400px;
+}
+.edit-course-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 50px;
+  overflow: hidden;
+}
+.edit-course-card input {
+  border-radius: 20px;
+}
+
+.edit-course-border-success {
+  border: none !important;
+  box-shadow: 0 0 0 13px #96cea8;
+  border-radius: 10px;
+  border-width: 10px;
+  color: #96cea8;
+  border-color: #96cea8 !important;
+}
+.course-title-text {
+  -webkit-text-stroke: 2px #484848;
+  font-size: 60px;
+}
 .description-textarea {
   min-height: 80px;
-  width: 500px;
+  width: 400px;
 }
 .edit-course-wrapper {
   display: flex;
@@ -18,12 +48,13 @@ textarea {
 }
 
 .course-attribute {
+  border: 1px solid #484848;
   display: inline-flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background-color: rgb(48, 48, 48);
+  background-color: rgb(150, 206, 168);
 }
 .course-attribute > img {
   width: 30px;
@@ -36,7 +67,7 @@ textarea {
 .course-attribute-input {
   background-color: transparent;
   border: 0px;
-  color: white;
+  color: rgb(48, 48, 48);
   outline: transparent;
   -webkit-appearance: none;
   appearance: none;
@@ -47,16 +78,18 @@ textarea {
 }
 
 .rating {
+  border: 1px solid #484848;
+
   display: inline-flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background-color: rgb(48, 48, 48);
+  background-color: rgb(150, 206, 168);
 }
 .rating > p {
   display: inline;
-  color: white;
+  color: rgb(48, 48, 48);
   margin: 8px;
 }
 .rating-box {
@@ -64,8 +97,8 @@ textarea {
   display: inline;
 }
 .course-attribute > p {
+  color: rgb(48, 48, 48);
   display: inline;
-  color: white;
   margin: 8px;
 }
 .course-attribute-title {
@@ -78,6 +111,7 @@ textarea {
   margin: 1rem;
 }
 .properties-wrapper {
+  color: rgb(150, 206, 168);
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -93,11 +127,19 @@ textarea {
   color: white;
 }
 .editable-container {
-  border: solid #000;
+  min-width: 650px;
+  font-size: 25px;
+  background-color: #96cea8;
+  border: solid #484848;
+  color: #484848;
+  margin: 15px;
   border-width: 1px;
   border-radius: 20px;
-  padding: 10px;
+  padding: 25px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
 }
+
 .add-subtitle-button {
   cursor: pointer;
   display: flex;
@@ -105,9 +147,13 @@ textarea {
   align-items: center;
   justify-content: center;
   border-radius: 20px;
+  margin: 15px;
+  min-width: 650px;
   height: 80px;
-  background-color: rgb(48, 48, 48);
-  color: white;
+  background-color: rgb(223, 223, 223);
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border: 1px solid #484848;
 }
 .add-subtitle-button > img {
   height: 40px;
@@ -118,7 +164,11 @@ textarea {
   background-color: rgb(93, 93, 93);
 }
 .subtitle-container {
+  min-width: 650px;
   background-color: rgb(223, 223, 223);
+}
+.subtitle-container .editable-container {
+  min-width: 500px;
 }
 .done-button-wrapper {
   display: flex;
@@ -126,15 +176,31 @@ textarea {
   align-items: flex-end;
   text-align: end;
 }
-.done-button-wrapper > button {
-  border-radius: 20px;
-}
 .subtitles-text {
+  margin-left: 15px;
   font-size: 3rem;
 }
 .price-text {
-  color: white;
+  color: #484848;
   margin: auto;
   margin-left: 8px;
   align-self: center;
+}
+.add-subtitle {
+  margin: 15px;
+  margin-left: 0px;
+  margin-right: 0px;
+  border-radius: 20px;
+  background-color: rgb(223, 223, 223);
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border: 1px solid #484848;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 15px;
+}
+.add-subtitle > textarea {
+  width: 100%;
+  height: 100%;
 }

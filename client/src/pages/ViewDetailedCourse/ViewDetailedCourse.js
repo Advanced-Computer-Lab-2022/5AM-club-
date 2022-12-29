@@ -1,9 +1,8 @@
-import axios from "axios";
+import app from "../../utils/AxiosConfig.js";
 import "./ViewDetailedCourse.css";
 import { useEffect, useState, memo } from "react";
 import { useLocation } from "react-router-dom";
 import CourseContainer from "../../components/CourseContainer/CourseContainer";
-import proxy from "../../utils/proxy.json";
 function ViewDetailedCourse() {
   const location = useLocation();
 
@@ -12,12 +11,20 @@ function ViewDetailedCourse() {
   const [promotion, setPromotion] = useState({});
 
   useEffect(() => {
-    axios
-      .get(proxy.URL + "/courses/" + location.state.id, {
-        headers: {
-          country: localStorage.getItem("country"),
-        },
-      })
+    app
+      .get(
+        (localStorage.getItem("type")
+          ? localStorage.getItem("type") === "corporate" ||
+            localStorage.getItem("type") === "individual"
+            ? "/trainee/populated-courses/"
+            : "/" + localStorage.getItem("type") + "/populated-courses/"
+          : "/populated-courses/") + location.state.id,
+        {
+          headers: {
+            country: localStorage.getItem("country"),
+          },
+        }
+      )
       .then((response) => {
         setCourse(response.data);
         setSubtitles(response.data.subtitles);
@@ -32,7 +39,9 @@ function ViewDetailedCourse() {
         course={course}
         subtitles={subtitles}
         promotion={promotion}
-        owned={course.owners.includes(localStorage.getItem("id"))}
+        owned={course.owners.some(
+          (owner) => owner.username === localStorage.getItem("username")
+        )}
       />
     )
   );

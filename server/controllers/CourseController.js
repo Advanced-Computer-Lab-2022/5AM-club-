@@ -3,21 +3,23 @@ const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const TraineeCourse = require("../models/TraineeCourse");
 const { convert } = require("../utils/CurrencyConverter");
+const objectID = require("objectid");
 const setCoursePromotionSchema = Joi.object({
-  percentage: Joi.number().min(0).max(100),
-  deadline: Joi.date().greater(Date.now()),
-});
+  percentage: Joi.number().min(0).max(100).required(),
+  startDate: Joi.date().greater(Date.now()).required(),
+  endDate: Joi.date().greater(Joi.ref("startDate")).required(),
+  type: Joi.string().valid("instructor", "admin").required(),
+}).unknown();
 
 const courseSchema = Joi.object({
   title: Joi.string().required(),
-  rating: Joi.number().required().min(0).max(5),
   price: Joi.number().required().min(0),
   subject: Joi.array().items(Joi.string()).required(),
   views: Joi.number().required().min(0),
   preview_video: Joi.string().required(),
   summary: Joi.string().required(),
   instructor: Joi.array().items(Joi.string()).required(),
-  userReviews: Joi.array().items(Joi.string()).required(),
+  userReviews: Joi.array().items(Joi.object()).required(),
   owners: Joi.array().items(Joi.string()).required(),
   subtitles: Joi.array().items(Joi.object()).required(),
 }).unknown();
@@ -54,9 +56,11 @@ const createCourse = async (req, res) => {
     };
   });
 
-  const instructors = await Instructor.find({ username: { $in: instructor } });
+  const instructors = await Instructor.find({
+    username: { $in: instructor },
+  });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
-  instructorIds.push(req.headers.id);
+  instructorIds.push(req.user.id);
 
   const createdCourse = await Course.create({
     title,
@@ -85,7 +89,7 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getCourses = async (req, res) => {
+const getCourseFilter = async (req) => {
   let filter = {};
   let searchItem;
 
@@ -100,6 +104,7 @@ const getCourses = async (req, res) => {
         { subject: { $regex: req.query.searchItem, $options: "i" } },
         { instructor: { $in: ids } },
         { title: { $regex: req.query.searchItem, $options: "i" } },
+        { summary: { $regex: req.query.searchItem, $options: "i" } },
       ],
     };
   }
@@ -119,30 +124,27 @@ const getCourses = async (req, res) => {
     }
   }
   filter = {
-    ...(req.headers.id &&
-      (req.headers.type === "instructor"
-        ? { instructor: req.headers.id }
-        : { owners: req.headers.id })),
     ...(req.query.subject && {
-      subject: req.query.subject,
+      subject: { $in: req.query.subject },
     }),
     ...((standardMax || standardMin || standardMax === 0) && {
       price: {
-        ...((standardMax || standardMax === 0) && { $lte: standardMax }),
+        ...((standardMax || standardMax === 0) && {
+          $lte: standardMax,
+        }),
         ...(standardMin && { $gte: standardMin }),
       },
     }),
     ...(searchItem && searchItem),
-    ...(req.query.rating && { rating: parseInt(req.query.rating) }),
   };
-  let courses = await Course.find(filter)
-    .populate({
-      path: "instructor",
-      populate: {
-        path: "userReviews.user",
-      },
-    })
-    .populate("userReviews.user");
+
+  console.log(req.query, "req.query");
+  console.log("filter", filter);
+
+  return filter;
+};
+
+const changePrice = async (req, courses) => {
   if (req.headers.country) {
     for (let course of courses) {
       course.price = await convert(
@@ -152,10 +154,104 @@ const getCourses = async (req, res) => {
       );
     }
   }
+};
+const getPopulatedCourses = async (req, res) => {
+  console.log("getPopulatedCourses", req);
+  const filter = await getCourseFilter(req);
+  filter.closed = false;
+  filter.published = true;
+  console.log("filter  ", filter);
+  let courses = await Course.find(filter)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "userReviews.user",
+      },
+    })
+    .populate({
+      path: "owners",
+    })
+    .populate("userReviews.user");
+  console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
 
+  await changePrice(req, courses);
+  console.log("courseschangedPrice  ", courses);
   res.json(courses);
 };
-const findCourseByID = async (req, res) => {
+
+const getMyPopulatedCourses = async (req, res) => {
+  let filter = await getCourseFilter(req);
+  console.log(req.params, "req.params");
+  filter = {
+    ...filter,
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  console.log("filter bala ", filter);
+  let courses = await Course.find(filter)
+    .populate({
+      path: "instructor",
+      populate: {
+        path: "userReviews.user",
+      },
+    })
+    .populate({
+      path: "owners",
+    })
+    .populate("userReviews.user");
+  console.log("courses  ", courses);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
+  await changePrice(req, courses);
+  console.log("courseschangedPrice  ", courses);
+  res.json(courses);
+};
+
+const getCourses = async (req, res) => {
+  const filter = await getCourseFilter(req);
+  filter.closed = false;
+  filter.published = true;
+  let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
+  await changePrice(req, courses);
+  res.json(courses);
+};
+
+const getMyCourses = async (req, res) => {
+  let filter = await getCourseFilter(req);
+  filter = {
+    ...filter,
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  console.log("filter balabizo ", filter);
+  let courses = await Course.find(filter);
+  if (req.query.rating) {
+    courses = courses.filter((course) => {
+      return course.courseRating >= req.query.rating;
+    });
+  }
+  await changePrice(req, courses);
+  res.json(courses);
+};
+
+const findPopulatedCourseByID = async (req, res) => {
   const id = req.params.id;
   try {
     const course = await Course.findById(id)
@@ -164,6 +260,9 @@ const findCourseByID = async (req, res) => {
         populate: {
           path: "userReviews.user",
         },
+      })
+      .populate({
+        path: "owners",
       })
       .populate("userReviews.user");
     if (req.headers.country) {
@@ -175,13 +274,42 @@ const findCourseByID = async (req, res) => {
     }
     res.send(course);
   } catch (err) {
-    res.status(500).send("Server s Error");
+    res.status(500).send("Server ssssssss Error");
+  }
+};
+const findCourseByID = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const course = await Course.findById(id);
+    if (req.headers.country) {
+      course.price = await convert(
+        course.price,
+        "United States",
+        req.headers.country
+      );
+    }
+    res.send(course);
+  } catch (err) {
+    res.status(500).send("Server sssssss Error");
   }
 };
 
 async function updateCourse(req, res) {
+  console.log("asbdknasmld", req.body);
+  if (typeof req.body.instructor[0] === "object") {
+    for (let i = 0; i < req.body.instructor.length; i++) {
+      req.body.instructor[i] = req.body.instructor[i]._id;
+    }
+  }
+  for (let i = 0; i < req.body.userReviews.length; i++) {
+    if (typeof req.body.userReviews[i].user === "object") {
+      req.body.userReviews[i].user = req.body.userReviews[i].user._id;
+    }
+  }
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
+    console.log(req.body);
+    console.log(valid.error);
     res.status(400).json("Invalid Course Object");
     return;
   }
@@ -438,20 +566,174 @@ const setCoursePromotion = async (req, res) => {
     res.status(400).send("Invalid Promotion");
     return;
   }
-  const course = await Course.findByIdAndUpdate(
-    id,
-    {
-      promotion: {
-        percentage: req.body.percentage,
-        deadline: req.body.deadline,
-      },
-    },
-    { new: true }
-  );
+
+  const course = await Course.findById(id);
+  if (
+    course.promotion.type !== "admin" ||
+    (course.promotion.type === "admin" && course.promotion.endDate < new Date())
+  ) {
+    course.promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "instructor",
+    };
+    await course.save();
+    res.send(course);
+  } else {
+    res.status(407).send("Course already has a promotion set by an admin");
+  }
+};
+
+const setMultipleCoursesPromotion = async (req, res) => {
+  const id = req.params.id;
+
+  console.log(req.body, "<-------------------------------------");
+  const valid = setCoursePromotionSchema.validate(req.body);
+  if (valid.error) {
+    res.status(400).send("Invalid Promotion");
+    return;
+  }
+  console.log(req.body.courses, "<-------------------------------------");
+  const course = await Course.find({ title: { $in: req.body.courses } });
+  for (let i = 0; i < course.length; i++) {
+    course[i].promotion = {
+      percentage: req.body.percentage,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      type: "admin",
+    };
+    console.log(course[i]);
+    await course[i].save();
+  }
   res.send("done");
 };
 
+async function deleteCourse(req, res) {
+  const course = await Course.findByIdAndDelete(req.params.id);
+  if (!course) {
+    res.status(404).send("Course not found");
+    return;
+  }
+  res.send(course);
+}
+
+async function incrementCourseViews(req, res) {
+  const course = await Course.findById(req.params.id);
+  if (!course) {
+    res.status(404).send("Course not found");
+    return;
+  }
+  course.views++;
+  await course.save();
+  res.send(course);
+}
+
+async function getCourseMaxMin(req, res) {
+  const courses = await Course.find();
+  let max = 0;
+  let min = Infinity;
+  await changePrice(req, courses);
+  for (let course of courses) {
+    if (course.price > max) {
+      max = course.price;
+    }
+  }
+  for (let course of courses) {
+    if (course.price < min) {
+      min = course.price;
+    }
+  }
+  res.send({ max: max, min: min === Infinity ? 0 : min });
+}
+
+async function getMyCourseMaxMin(req, res) {
+  let filter = {
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  const courses = await Course.find(filter);
+  let max = 0;
+  let min = Infinity;
+  await changePrice(req, courses);
+  for (let course of courses) {
+    if (course.price > max) {
+      max = course.price;
+    }
+  }
+  for (let course of courses) {
+    if (course.price < min) {
+      min = course.price;
+    }
+  }
+  res.send({ max: max, min: min === Infinity ? 0 : min });
+}
+
+async function getCourseSubjects(req, res) {
+  const courses = await Course.find();
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    }
+  }
+  // sort array by object value
+  subjects.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(subjects);
+}
+
+async function getMyCourseSubjects(req, res) {
+  let filter = {
+    ...(req.user?.id &&
+      (req.headers.type === "instructor"
+        ? { instructor: req.user.id }
+        : { owners: req.user.id })),
+  };
+  const courses = await Course.find(filter);
+  if (!courses) {
+    res.send([]);
+    return;
+  }
+  let subjects = [];
+  for (let course of courses) {
+    for (let i = 0; i < course.subject.length; i++) {
+      if (subjects.filter((s) => s?.value === course.subject[i])?.length === 0)
+        subjects.push({ label: course.subject[i], value: course.subject[i] });
+    }
+  }
+  // sort array by object value
+  subjects.sort((a, b) => {
+    if (a.label.toLowerCase() < b.label.toLowerCase()) {
+      return -1;
+    }
+    if (a.label.toLowerCase() > b.label.toLowerCase()) {
+      return 1;
+    }
+    return 0;
+  });
+  res.send(subjects);
+}
+
 module.exports = {
+  setMultipleCoursesPromotion,
+  getCourseSubjects,
+  getCourseMaxMin,
+  deleteCourse,
   updateCourse,
   addSubtitle,
   deleteSubtitle,
@@ -460,7 +742,14 @@ module.exports = {
   deleteSection,
   updateSection,
   getCourses,
+  getMyCourses,
+  getPopulatedCourses,
+  getMyPopulatedCourses,
   createCourse,
   findCourseByID,
+  findPopulatedCourseByID,
   setCoursePromotion,
+  incrementCourseViews,
+  getMyCourseSubjects,
+  getMyCourseMaxMin,
 };
