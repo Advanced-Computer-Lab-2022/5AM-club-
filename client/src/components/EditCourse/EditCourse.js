@@ -250,6 +250,8 @@ function EditCourse(props) {
               )}
             </div>
             <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <ReportProblem courseName={props.course?.title}></ReportProblem>
+
               {!props.course?.closed && props.course?.published ? (
                 <button
                   className="btn btn-outline-danger"
@@ -299,7 +301,6 @@ function EditCourse(props) {
                   )}
                 </>
               )}
-              <ReportProblem courseName={props.course.title}></ReportProblem>
             </div>
           </div>
           <div className="properties-wrapper">

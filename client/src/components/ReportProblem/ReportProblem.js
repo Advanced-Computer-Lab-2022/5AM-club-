@@ -33,12 +33,13 @@ function ReportProblem(props) {
       });
   }
   return (
-    <>
+    <div>
       <button
         className="btn btn-outline-secondary"
         onClick={() => {
           setShow(true);
         }}
+        style={{ height: props.height }}
       >
         Report a Problem
       </button>
@@ -120,7 +121,7 @@ function ReportProblem(props) {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 }
 
