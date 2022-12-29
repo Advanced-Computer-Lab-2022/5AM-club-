@@ -145,7 +145,7 @@ function TraineeHomePage() {
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "space-around",
                 minWidth: "100%",
               }}
             >

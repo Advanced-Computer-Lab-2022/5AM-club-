@@ -219,7 +219,11 @@ function GuestHomePage() {
                 >
                   <div className="pic">
                     <img
-                      style={{ height: "185px", width: "185px" }}
+                      style={{
+                        height: "185px",
+                        width: "185px",
+                        objectFit: "fill",
+                      }}
                       src="assets/img/team/team-1.jpg"
                       className="img-fluid"
                       alt=""

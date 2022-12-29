@@ -2,7 +2,7 @@ import { memo } from "react";
 import AdminPagination from "../../layouts/AdminPagination/AdminPagination";
 
 function RequestsPage() {
-  // Get all the requests from the backend
+  // Get all the requests from the a
   return (
     <AdminPagination
       items={"The requests"}
