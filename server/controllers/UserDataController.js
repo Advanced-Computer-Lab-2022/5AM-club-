@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { convert } = require("../utils/CurrencyConverter");
 const ObjectId = require("bson-objectid");
 const countries = require("../utils/Countries.json");
 const Joi = require("joi");
@@ -64,12 +65,18 @@ async function getUserType(req, res) {
 }
 
 async function getTraineeCourse(req, res) {
-  res.send(
-    await TraineeCourse.findOne({
-      traineeId: req.user.id,
-      courseId: req.headers.courseid,
-    })
-  );
+  const traineeCourse = await TraineeCourse.findOne({
+    traineeId: req.user.id,
+    courseId: req.headers.courseid,
+  });
+  if (traineeCourse) {
+    traineeCourse.purchasingCost = await convert(
+      traineeCourse.purchasingCost,
+      "United States",
+      req.headers.country
+    );
+    res.send(traineeCourse);
+  } else res.status(404).send();
 }
 
 async function updateTraineeCourse(req, res) {
@@ -555,9 +562,9 @@ const login = async (req, res) => {
   } else {
     if (admins) {
       console.log(bcrypt.hashSync(admins.password, 8), "fucking");
-      if (!bcrypt.compareSync(req.body.password, admins.password))
-        return res.status(401).send("Wrong Password");
-      user.type = "admin";
+      /* if (!bcrypt.compareSync(req.body.password, admins.password))
+        return res.status(401).send("Wrong Password");*/
+      if (req.body.password === admins.password) user.type = "admin";
       user.id = admins._id;
       user.country = admins.country;
       user.email = admins.email;
@@ -571,12 +578,14 @@ const login = async (req, res) => {
       user.email = instructors.email;
     }
     if (trainees) {
-      if (!bcrypt.compareSync(req.body.password, trainees.password))
-        return res.status(401).send("Wrong Password");
-      user.type = trainees.type;
-      user.id = trainees._id;
-      user.country = trainees.country;
-      user.email = trainees.email;
+      /* if (!bcrypt.compareSync(req.body.password, trainees.password))
+        return res.status(401).send("Wrong Password");*/
+      if (req.body.password === trainees.password) {
+        user.type = trainees.type;
+        user.id = trainees._id;
+        user.country = trainees.country;
+        user.email = trainees.email;
+      }
     }
 
     const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
@@ -596,11 +605,7 @@ const login = async (req, res) => {
     res.json({
       type: user.type,
       username: user.username,
-<<<<<<< HEAD
       country: user.country,
-=======
-      email: user.email,
->>>>>>> 78a3be8 (complete profile modals done)
     });
   }
 
@@ -623,51 +628,6 @@ const updateProfile = async (req, res) => {
     return;
   }
 
-  switch (type) {
-    case "corporate":
-      user = await Trainee.findByIdAndUpdate(
-        id,
-
-        req.body,
-
-        { new: true }
-      );
-      console.log("corporate");
-      break;
-    case "instructor":
-      user = await Instructor.findByIdAndUpdate(
-        id,
-
-        req.body,
-
-        { new: true }
-      );
-      break;
-    default:
-      res.status(400).send("Invalid UserType");
-      return;
-  }
-
-  req.user.email = user.email;
-  const accessToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET);
-  const refreshToken = jwt.sign(req.user, process.env.REFRESH_TOKEN_SECRET);
-  //console.log(refreshToken);
-
-  res.cookie("jwt", `${refreshToken}`);
-  res.cookie("accessToken", `${accessToken}`);
-  res.send(user);
-};
-
-const checkCompleteProfile = async (req, res) => {
-  if (!req.user) res.json("true");
-  else if (!req.user.email) res.json("false");
-  else res.json("true");
-};
-
-const updateProfile = async (req, res) => {
-  const id = req.user.id;
-  const type = req.user.type;
-  let user;
   switch (type) {
     case "corporate":
       user = await Trainee.findByIdAndUpdate(

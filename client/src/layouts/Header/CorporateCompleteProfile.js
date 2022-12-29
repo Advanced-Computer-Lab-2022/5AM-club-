@@ -9,7 +9,6 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Checkbox from "@mui/material/Checkbox";
-<<<<<<< HEAD
 import { InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import useCorporateCompleteProfile from "./useCorporateCompleteProfile.js";
@@ -21,19 +20,6 @@ function CorporateCompleteProfile(props) {
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
   const {
-=======
-import Modal from "react-bootstrap/Modal";
-import useModalData from "./useModalData.js";
-import app from "../../utils/AxiosConfig.js";
-import useCorporateCompleteProfile from "./useCorporateCompleteProfile.js";
-
-function CorporateCompleteProfile(props) {
-  const {
-    password,
-    setPassword,
-    repeatPassword,
-    setRepeatPassword,
->>>>>>> 78a3be8 (complete profile modals done)
     email,
     setEmail,
     firstName,
@@ -49,18 +35,10 @@ function CorporateCompleteProfile(props) {
     showTos,
     setShowTos,
     match,
-<<<<<<< HEAD
   } = useCorporateCompleteProfile(props.Done);
 
   return (
-    <div className="corporate-complete-container">
-=======
-    checkMatching,
-  } = useCorporateCompleteProfile();
-
-  return (
     <div className='corporate-complete-container'>
->>>>>>> 78a3be8 (complete profile modals done)
       <Container
         sx={{
           display: "flex",
@@ -87,15 +65,9 @@ function CorporateCompleteProfile(props) {
           >
             <TextField
               hiddenLabel
-<<<<<<< HEAD
-              id="email"
-              variant="outlined"
-              label="Email"
-=======
               id='email'
               variant='outlined'
-              label='email'
->>>>>>> 78a3be8 (complete profile modals done)
+              label='Email'
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -103,15 +75,9 @@ function CorporateCompleteProfile(props) {
             />
             <TextField
               hiddenLabel
-<<<<<<< HEAD
-              id="firstname"
-              variant="outlined"
-              label="First Name"
-=======
               id='firstname'
               variant='outlined'
-              label='first name'
->>>>>>> 78a3be8 (complete profile modals done)
+              label='First Name'
               value={firstName}
               onChange={(e) => {
                 setFirstName(e.target.value);
@@ -119,32 +85,25 @@ function CorporateCompleteProfile(props) {
             />
             <TextField
               hiddenLabel
-<<<<<<< HEAD
-              id="lastname"
-              variant="outlined"
-              label="Last Name"
-=======
               id='lastname'
               variant='outlined'
-              label='last name'
->>>>>>> 78a3be8 (complete profile modals done)
+              label='Last Name'
               value={lastName}
               onChange={(e) => {
                 setLastName(e.target.value);
               }}
             />
             <TextField
-<<<<<<< HEAD
               type={showPassword ? "text" : "password"}
-              id="filled-hidden-label-small"
-              variant="outlined"
-              label="Password"
-              autoComplete="no"
+              id='filled-hidden-label-small'
+              variant='outlined'
+              label='Password'
+              autoComplete='no'
               InputProps={{
                 autoComplete: showPassword ? "off" : "new-password",
                 endAdornment: (
                   <InputAdornment
-                    position="end"
+                    position='end'
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setShowPassword(!showPassword);
@@ -155,33 +114,22 @@ function CorporateCompleteProfile(props) {
                 ),
               }}
               value={password}
-=======
-              hiddenLabel
-              password='true'
-              id='password'
-              placeholder='password'
-              variant='outlined'
-              label='password'
-              value={password}
-              type='password'
->>>>>>> 78a3be8 (complete profile modals done)
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
             />
-<<<<<<< HEAD
 
             <TextField
               type={showRepeatPassword ? "text" : "password"}
-              id="filled-hidden-label-small"
-              variant="outlined"
-              label="Repeat Password"
-              autoComplete="no"
+              id='filled-hidden-label-small'
+              variant='outlined'
+              label='Repeat Password'
+              autoComplete='no'
               InputProps={{
                 autoComplete: showRepeatPassword ? "off" : "new-password",
                 endAdornment: (
                   <InputAdornment
-                    position="end"
+                    position='end'
                     style={{ cursor: "pointer" }}
                     onClick={() => {
                       setShowRepeatPassword(!showRepeatPassword);
@@ -191,38 +139,17 @@ function CorporateCompleteProfile(props) {
                   </InputAdornment>
                 ),
               }}
-=======
-            <TextField
-              hiddenLabel
-              password='true'
-              id='repeatPassword'
-              placeholder='repeat password'
-              variant='outlined'
-              label='repeat password'
-              type='password'
->>>>>>> 78a3be8 (complete profile modals done)
               value={repeatPassword}
               onChange={(e) => {
                 setRepeatPassword(e.target.value);
               }}
-<<<<<<< HEAD
             />
 
-=======
-              onBlur={(e) => {
-                checkMatching();
-              }}
-            />
->>>>>>> 78a3be8 (complete profile modals done)
             {!match && (
               <span style={{ color: "red" }}>Passwords do not match</span>
             )}
             <FormControl>
-<<<<<<< HEAD
-              <FormLabel color="success">Gender</FormLabel>
-=======
               <FormLabel color='success'>Gender</FormLabel>
->>>>>>> 78a3be8 (complete profile modals done)
               <RadioGroup
                 row
                 value={gender}
@@ -231,30 +158,14 @@ function CorporateCompleteProfile(props) {
                 }}
               >
                 <FormControlLabel
-<<<<<<< HEAD
-                  value="male"
-                  control={<Radio color="success" />}
-                  label="Male"
-                />{" "}
-                <FormControlLabel
-                  value="female"
-                  control={<Radio color="success" />}
-                  label="Female"
-=======
-                  value='female'
-                  control={<Radio color='success' />}
-                  label='Female'
-                />
-                <FormControlLabel
                   value='male'
                   control={<Radio color='success' />}
                   label='Male'
-                />
+                />{" "}
                 <FormControlLabel
-                  value='other'
+                  value='female'
                   control={<Radio color='success' />}
-                  label='Other'
->>>>>>> 78a3be8 (complete profile modals done)
+                  label='Female'
                 />
               </RadioGroup>
             </FormControl>
@@ -266,42 +177,25 @@ function CorporateCompleteProfile(props) {
               }}
             >
               <Checkbox
-<<<<<<< HEAD
-                color="success"
-=======
                 color='success'
->>>>>>> 78a3be8 (complete profile modals done)
                 onChange={(e) => {
                   setAcceptedTerms(e.target.checked);
                 }}
               />
               <span>I accept the</span>
               <button
-<<<<<<< HEAD
-                type="button"
-                className="btn btn-link"
+                type='button'
+                className='btn btn-link'
                 onClick={() => setShowTos(!showTos)}
                 style={{ position: "relative", right: "10px" }}
               >
                 Terms of Service
-=======
-                type='button'
-                className='btn btn-link'
-                onClick={() => setShowTos(!showTos)}
-                style={{ right: "20px", position: "relative", right: "10px" }}
-              >
-                Terms Of Service
->>>>>>> 78a3be8 (complete profile modals done)
               </button>
             </div>
 
             {showTos && (
               <>
-<<<<<<< HEAD
                 <h5> Terms of Service :</h5>
-=======
-                <h5> Terms Of Service :</h5>
->>>>>>> 78a3be8 (complete profile modals done)
                 <div style={{ height: "300px", overflowY: "scroll" }}>
                   {tos}
                 </div>
@@ -309,13 +203,8 @@ function CorporateCompleteProfile(props) {
             )}
 
             <Button
-<<<<<<< HEAD
-              type="submit"
-              variant="outline-success"
-=======
               type='submit'
               variant='outline-success'
->>>>>>> 78a3be8 (complete profile modals done)
               disabled={
                 !acceptedTerms ||
                 gender === "" ||
@@ -334,16 +223,11 @@ function CorporateCompleteProfile(props) {
                   firstName,
                   lastName,
                 };
-<<<<<<< HEAD
                 if (repeatPassword !== password) {
                   alert("Passwords do not match");
                   return;
                 }
                 updateProfile(obj);
-=======
-                updateProfile(obj);
-                props.Done();
->>>>>>> 78a3be8 (complete profile modals done)
               }}
             >
               Update profile

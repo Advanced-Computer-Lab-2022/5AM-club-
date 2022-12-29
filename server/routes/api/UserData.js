@@ -24,29 +24,26 @@ router.get("/logout", UserDataController.logout);
 
 router.put("/set-country", UserDataController.setCountry);
 router.put(
-    "/edit-personal-info",
-    UserDataController.editPersonalInformationInstructor
+  "/edit-personal-info",
+  UserDataController.editPersonalInformationInstructor
 );
 router.put("/set-country", UserDataController.setCountry);
 router.put("/edit-trainee-course", UserDataController.updateTraineeCourse);
 router.put("/change-password-email", UserDataController.changePasswordEmail);
 router.put(
-    "/change-password",
-    authenticateToken,
-    UserDataController.changePassword
+  "/change-password",
+  authenticateToken,
+  UserDataController.changePassword
 );
-<<<<<<< HEAD
 
 router.get(
-    "/wallet-money",
-    authenticateToken,
-    UserDataController.getWalletMoney
+  "/wallet-money",
+  authenticateToken,
+  UserDataController.getWalletMoney
 );
 
 router.post("/pay", authenticateToken, pay);
 
-=======
->>>>>>> 78a3be8 (complete profile modals done)
 router.put("/update-profile", UserDataController.updateProfile);
 //router.get("/decode-token", UserDataController.decodeToken);
 

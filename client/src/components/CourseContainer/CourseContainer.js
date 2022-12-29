@@ -79,9 +79,11 @@ function CourseContainer(props) {
             .get("/trainee/get-trainee-course", {
               headers: {
                 courseId: course.id,
+                country: localStorage.getItem("country"),
               },
             })
             .then((response) => {
+              console.log(response.data);
               setTraineeCourse(response.data);
             });
         });
@@ -110,7 +112,7 @@ function CourseContainer(props) {
             }}
           >
             <p className='course-title-text'> {props.course?.title}</p>
-            {props.owned && (
+            {props.owned && localStorage.getItem("type") === "individual" && (
               <button
                 className='btn btn-outline-danger'
                 style={{
@@ -123,7 +125,21 @@ function CourseContainer(props) {
                   if (
                     progress < 50 &&
                     window.confirm(
-                      "You will not have access to this course any more. Are you sure you want to request a refund?"
+                      "You will not have access to this course any more. You will be refunded " +
+                        (Math.floor(traineeCourse.purchasingCost + 0.5 - 0.01) +
+                          (" " +
+                            (countries[
+                              Object.keys(countries).find(
+                                (e) => e === localStorage.getItem("country")
+                              )
+                            ]
+                              ? countries[
+                                  Object.keys(countries).find(
+                                    (e) => e === localStorage.getItem("country")
+                                  )
+                                ]
+                              : "USD"))) +
+                        " Are you sure you want to refund?"
                     ) == true
                   ) {
                     // refund the course
@@ -134,7 +150,7 @@ function CourseContainer(props) {
                   }
                 }}
               >
-                Refund
+                Refund Course
               </button>
             )}
           </div>

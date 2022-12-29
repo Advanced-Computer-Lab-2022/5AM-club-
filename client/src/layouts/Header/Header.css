@@ -140,22 +140,12 @@
   width: 0px;
   background: transparent; /* make scrollbar transparent */
 }
-<<<<<<< HEAD
 .tos {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
   padding-inline-start: 0px;
   overflow-y: scroll;
   padding: 20px;
-=======
-.tos{
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-  padding-inline-start: 0px;
-  overflow-y:scroll;
-  padding:20px;
-  height: 70vh;
->>>>>>> 78a3be8 (complete profile modals done)
 }
 
 .tos-wrapper {
@@ -168,8 +158,4 @@
   border-radius: 10px;
   border-width: 10px;
   border-color: #96cea8 !important;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 78a3be8 (complete profile modals done)

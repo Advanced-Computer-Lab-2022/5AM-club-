@@ -743,7 +743,6 @@ const requestCourseAccess = async (req, res) => {
     const traineeId = req.user.id;
     console.log(courseId, traineeId, "I am here let me in");
     const course = await Course.findByIdAndUpdate(courseId, {
-      $pull: { rejected: traineeId },
       $push: { pending: traineeId },
     });
     res.send(course);
