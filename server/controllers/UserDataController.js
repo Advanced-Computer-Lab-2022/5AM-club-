@@ -4,6 +4,7 @@ const countries = require("../utils/Countries.json");
 const Joi = require("joi");
 const Trainee = require("../models/Trainee");
 const Admin = require("../models/Admin");
+const Problem = require("../models/Problem");
 const Instructor = require("../models/Instructor");
 const { Course } = require("../models/Course");
 const jwt = require("jsonwebtoken");
@@ -750,6 +751,25 @@ const addBoughtCourse = async (req, res) => {
   );
 };
 
+async function reportProblem (req,res){
+  const newProblem = new Problem({...req.body,comments:[],userId:req.user.id});
+  await newProblem
+    .save()
+    .then((response) => {
+      res.send("Problem reported successfully!");
+    })
+}
+async function viewProblems(req,res){
+  const problems = await Problem.find({ userId: req.user.id });
+  res.send(problems);
+  //req.user.id get id of the user, filter problems where user id in problem model == user id
+}
+async function followUp(req,res){
+  await Problem.findByIdAndUpdate({ $push: {comments: req.body }},{ upsert: true });
+  res.send("comment added successfully");
+}
+
+
 module.exports = {
   getCourseInstructor,
   setCountry,
@@ -775,4 +795,8 @@ module.exports = {
   getUserType,
   updateProfile,
   checkCompleteProfile,
+  reportProblem,
+  viewProblems,
+  followUp
 };
+

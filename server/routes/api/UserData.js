@@ -30,6 +30,10 @@ router.put(
 router.put("/set-country", UserDataController.setCountry);
 router.put("/edit-trainee-course", UserDataController.updateTraineeCourse);
 router.put("/change-password-email", UserDataController.changePasswordEmail);
+router.post("/report-problem", UserDataController.reportProblem);
+router.get("/view-problems", UserDataController.viewProblems);
+router.put("/followUp", UserDataController.followUp);
+
 router.put(
     "/change-password",
     authenticateToken,
