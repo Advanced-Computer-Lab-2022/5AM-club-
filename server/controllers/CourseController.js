@@ -45,8 +45,6 @@ const createCourse = async (req, res) => {
     views,
     preview_video,
     instructor,
-    subtitles,
-    subDescriptions,
   } = req.body;
 
   const instructors = await Instructor.find({
@@ -54,17 +52,22 @@ const createCourse = async (req, res) => {
   });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
   instructorIds.push(req.user.id);
-
-  const createdCourse = await Course.create({
-    title,
-    price,
-    subject,
-    summary,
-    rating,
-    views,
-    preview_video,
-    instructor: instructorIds,
-  });
+  let createdCourse;
+  try {
+    createdCourse = await Course.create({
+      title,
+      price: Math.floor(price + 0.5),
+      subject,
+      summary,
+      rating,
+      views,
+      preview_video,
+      instructor: instructorIds,
+    });
+  } catch (err) {
+    res.status(406).send("error");
+    return;
+  }
   for (const id of instructorIds) {
     await Instructor.findByIdAndUpdate(
       id,

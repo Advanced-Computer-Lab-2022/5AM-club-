@@ -21,3 +21,11 @@
   border-width: 10px;
   border-color: #96cea8 !important;
 }
+.slanted {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 15% 100%);
+  flex-grow: 1;
+  background-color: #484848;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

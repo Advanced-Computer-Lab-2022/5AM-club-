@@ -712,13 +712,17 @@ const addBoughtCourse = async (req, res) => {
             );
           })
           .catch((err) => console.log(err));
-        //console.log(courseAfterAdd);
-        //change array lengthssss and price value
+        const myCourse = await Course.findById(courseId).exec();
+        console.log("asdfnlkm");
+        console.log(myCourse, "balabkadmnv");
+        const progressArray = new Array(sectionsNum).fill(false);
+        if (myCourse.subtitles[0].sections[0].content.video)
+          progressArray[0] = true;
 
         const newTraineeCourse = await TraineeCourse.create({
           courseId,
           traineeId,
-          progress: Array(sectionsNum).fill(false),
+          progress: progressArray,
           answers: Array(sectionsNum).fill(Array(4).fill(-1)),
           notes: Array(sectionsNum).fill(null),
           lastSection: 0,
