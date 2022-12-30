@@ -13,7 +13,6 @@ function ReportProblem(props) {
     setType("");
     setProblem("");
   }
-
   function reportProblem() {
     app
       .post(

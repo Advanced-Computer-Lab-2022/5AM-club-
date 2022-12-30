@@ -31,7 +31,7 @@ const problemSchema = new mongoose.Schema(
       required: true,
     },
     comments: {
-      type: [String],
+      type: [Object],
       required: true,
       default: [],
     },

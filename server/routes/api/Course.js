@@ -71,9 +71,6 @@ router.put(
 );
 router.post("/create-course", CourseController.createCourse);
 
-router.delete(
-  "/my-courses/edit-course/:id/delete-course",
-  CourseController.deleteCourse
-);
+router.delete("/my-courses/:id/delete-course", CourseController.deleteCourse);
 
 module.exports = router;

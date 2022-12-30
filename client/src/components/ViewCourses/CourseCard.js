@@ -179,12 +179,14 @@ function CourseCard(props) {
       )
       .then(() => {
         navigate(
-          "/" +
-            (localStorage.getItem("type") === "corporate" ||
-            localStorage.getItem("type") === "individual"
-              ? localStorage.getItem("type") + "-trainee"
-              : localStorage.getItem("type")) +
-            "/courses/view-course",
+          localStorage.getItem("type")
+            ? "/" +
+                (localStorage.getItem("type") === "corporate" ||
+                localStorage.getItem("type") === "individual"
+                  ? localStorage.getItem("type") + "-trainee"
+                  : localStorage.getItem("type")) +
+                "/courses/view-course"
+            : "/courses/view-course",
           {
             state: { id: props.course._id },
           }

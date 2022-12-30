@@ -3,7 +3,7 @@ import Modal from "react-bootstrap/Modal";
 import ChangePassword from "../../components/ChangePassword/ChangePassword";
 import MyCourseCard from "../../components/ViewMyCourses/MyCourseCard";
 import countries from "../../utils/Countries.json";
-
+import noCourses from "../../assets/ViewCourses/noCourses.svg";
 import {
   MDBCol,
   MDBRow,
@@ -16,13 +16,14 @@ import {
 import "./TraineeProfile.css";
 import profile from "../../assets/TraineeProfile/profile.png";
 import app from "../../utils/AxiosConfig";
+import MyReportCard from "../../components/MyReportCard/MyReportCard";
 
 function TraineeProfile() {
   const [user, setUser] = useState({});
   const [courses, setCourses] = useState([]);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
-
+  const [reports, setReports] = useState([]);
   useEffect(() => {
     app
       .get("trainee/get-user", {
@@ -44,12 +45,19 @@ function TraineeProfile() {
       });
   }, []);
 
+  function getReports() {
+    app.get("trainee/view-problems").then((response) => {
+      response.data.reverse();
+      setReports(response.data);
+    });
+  }
   function onClickHide() {
     setShow(false);
   }
   function onClickHide2() {
     setShow2(false);
   }
+
   return (
     <div className="gradient-custom-2" style={{ backgroundColor: "#FFFFFF" }}>
       <div className="py-5 h-100" style={{}}>
@@ -177,9 +185,10 @@ function TraineeProfile() {
                   }}
                   onClick={() => {
                     setShow2(true);
+                    getReports();
                   }}
                 >
-                  <p>View all reported problems</p>
+                  <p>My Reports</p>
                 </div>
                 {courses.length > 0 && (
                   <>
@@ -254,7 +263,7 @@ function TraineeProfile() {
           <div className="tos-border-success" style={{ width: "100%" }}>
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Reported Problems
+                My Reports
               </Modal.Title>
             </Modal.Header>
 
@@ -263,11 +272,46 @@ function TraineeProfile() {
               style={{
                 height: "fit-content",
                 display: "flex",
-                flexDirection: "row",
+                padding: "25px",
+                flexDirection: "column",
+                gap: "25px",
                 width: "100%",
               }}
             >
-              Problems
+              {reports.length > 0 ? (
+                reports.map((report) => (
+                  <div key={report._id} style={{ width: "100%" }}>
+                    <MyReportCard report={report}></MyReportCard>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    flexGrow: "1",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={noCourses}
+                    alt="noCourses"
+                    style={{ width: "200px", height: "200px" }}
+                  ></img>
+                  <p
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "700",
+                      marginTop: "50px",
+                    }}
+                  >
+                    You have no reported problems.
+                  </p>
+                </div>
+              )}
             </Modal.Body>
           </div>
         </div>

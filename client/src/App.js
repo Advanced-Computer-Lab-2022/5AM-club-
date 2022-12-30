@@ -7,7 +7,6 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ViewMyCourses from "./pages/ViewMyCourses/ViewMyCourses";
 import InstructorProfile from "./pages/InstructorProfile/InstructorProfile";
-import InstructorCreateCourse from "./pages/InstructorCreateCourse/InstructorCreateCourse";
 import ViewDetailedCourse from "./pages/ViewDetailedCourse/ViewDetailedCourse";
 import TraineeMyCourseDetails from "./pages/TraineeMyCourseDetails/TraineeMyCourseDetails";
 import ViewCourses from "./pages/ViewCourses/ViewCourses";
@@ -63,11 +62,11 @@ function App() {
               resetKeys={[error]}
             >
               <Routes>
-                <Route path='/error' element={<Error />}></Route>
+                <Route path="/error" element={<Error />}></Route>
 
                 {/* Guest */}
                 <Route
-                  path='/'
+                  path="/"
                   element={
                     <PrivateRoute type={"guest"}>
                       <GuestHomePage />
@@ -75,7 +74,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/change-forgotten-password/:id'
+                  path="/change-forgotten-password/:id"
                   element={
                     <PrivateRoute type={"guest"}>
                       <ChangeForgottenPassword></ChangeForgottenPassword>{" "}
@@ -83,7 +82,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/login'
+                  path="/login"
                   element={
                     <PrivateRoute type={"guest"}>
                       <Login />
@@ -91,7 +90,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/signup'
+                  path="/signup"
                   element={
                     <PrivateRoute type={"guest"}>
                       <SignUp />
@@ -100,7 +99,7 @@ function App() {
                 ></Route>
 
                 <Route
-                  path='/courses'
+                  path="/courses"
                   element={
                     <PrivateRoute type={"guest"}>
                       <ViewCourses />
@@ -108,7 +107,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/courses/view-course'
+                  path="/courses/view-course"
                   element={
                     <PrivateRoute type={"guest"}>
                       <ViewDetailedCourse />
@@ -116,7 +115,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/courses/view-course/view-course-reviews'
+                  path="/courses/view-course/view-course-reviews"
                   element={
                     <PrivateRoute type={"guest"}>
                       <ViewCourseReviews />
@@ -124,7 +123,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/courses/view-course/view-instructor-reviews'
+                  path="/courses/view-course/view-instructor-reviews"
                   element={
                     <PrivateRoute type={"guest"}>
                       <InstructorReviews />
@@ -133,7 +132,7 @@ function App() {
                 ></Route>
                 {/* Admin */}
                 <Route
-                  path='/admin'
+                  path="/admin"
                   element={
                     <PrivateRoute type={"admin"}>
                       <AdminPage />
@@ -141,7 +140,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/admin/refunds'
+                  path="/admin/refunds"
                   element={
                     <PrivateRoute type={"admin"}>
                       <RefundsPage />
@@ -149,7 +148,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/admin/requests'
+                  path="/admin/requests"
                   element={
                     <PrivateRoute type={"admin"}>
                       <RequestsPage />
@@ -157,7 +156,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/admin/reports'
+                  path="/admin/reports"
                   element={
                     <PrivateRoute type={"admin"}>
                       <ReportsPage />
@@ -167,7 +166,7 @@ function App() {
 
                 {/* Individual */}
                 <Route
-                  path='/individual-trainee'
+                  path="/individual-trainee"
                   element={
                     <PrivateRoute type={"individual"}>
                       <TraineeHomePage />
@@ -175,7 +174,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-courses/view-course-details/view-instructor-reviews'
+                  path="/individual-trainee/my-courses/view-course-details/view-instructor-reviews"
                   element={
                     <PrivateRoute type={"individual"}>
                       <InstructorReviews />
@@ -184,7 +183,7 @@ function App() {
                 ></Route>
 
                 <Route
-                  path='/individual-trainee/courses/view-course/view-instructor-reviews'
+                  path="/individual-trainee/courses/view-course/view-instructor-reviews"
                   element={
                     <PrivateRoute type={"individual"}>
                       <InstructorReviews />
@@ -192,7 +191,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-courses'
+                  path="/individual-trainee/my-courses"
                   element={
                     <PrivateRoute type={"individual"}>
                       <ViewMyCourses />
@@ -200,7 +199,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-courses/view-course-details'
+                  path="/individual-trainee/my-courses/view-course-details"
                   element={
                     <PrivateRoute type={"individual"}>
                       <TraineeMyCourseDetails />
@@ -208,7 +207,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-courses/view-course-details/view-course-reviews'
+                  path="/individual-trainee/my-courses/view-course-details/view-course-reviews"
                   element={
                     <PrivateRoute type={"individual"}>
                       <ViewCourseReviews />
@@ -216,7 +215,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/courses/view-course/view-course-reviews'
+                  path="/individual-trainee/courses/view-course/view-course-reviews"
                   element={
                     <PrivateRoute type={"individual"}>
                       <ViewCourseReviews />
@@ -224,7 +223,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/courses/view-course'
+                  path="/individual-trainee/courses/view-course"
                   element={
                     <PrivateRoute type={"individual"}>
                       <ViewDetailedCourse />
@@ -232,7 +231,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/courses'
+                  path="/individual-trainee/courses"
                   element={
                     <PrivateRoute type={"individual"}>
                       <ViewCourses />
@@ -240,7 +239,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-profile'
+                  path="/individual-trainee/my-profile"
                   element={
                     <PrivateRoute type={"individual"}>
                       <TraineeProfile />
@@ -248,7 +247,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/individual-trainee/my-courses/view-course-details/take-course'
+                  path="/individual-trainee/my-courses/view-course-details/take-course"
                   element={
                     <PrivateRoute type={"individual"}>
                       <TraineeTakeCourse />
@@ -257,7 +256,7 @@ function App() {
                 ></Route>
                 {/* Corporate */}
                 <Route
-                  path='/corporate-trainee'
+                  path="/corporate-trainee"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <TraineeHomePage />
@@ -265,7 +264,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/courses/view-course/view-instructor-reviews'
+                  path="/corporate-trainee/courses/view-course/view-instructor-reviews"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <InstructorReviews />
@@ -273,7 +272,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/my-courses'
+                  path="/corporate-trainee/my-courses"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <ViewMyCourses />
@@ -281,7 +280,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/my-courses/view-course-details'
+                  path="/corporate-trainee/my-courses/view-course-details"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <TraineeMyCourseDetails />
@@ -289,7 +288,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/my-courses/view-course-details/view-course-reviews'
+                  path="/corporate-trainee/my-courses/view-course-details/view-course-reviews"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <ViewCourseReviews />
@@ -297,7 +296,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/courses/view-course/view-course-reviews'
+                  path="/corporate-trainee/courses/view-course/view-course-reviews"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <ViewCourseReviews />
@@ -305,7 +304,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/courses/view-course'
+                  path="/corporate-trainee/courses/view-course"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <ViewDetailedCourse />
@@ -313,7 +312,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/courses'
+                  path="/corporate-trainee/courses"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <ViewCourses />
@@ -321,7 +320,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/my-courses/view-course-details/take-course'
+                  path="/corporate-trainee/my-courses/view-course-details/take-course"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <TraineeTakeCourse />
@@ -329,7 +328,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/corporate-trainee/my-profile'
+                  path="/corporate-trainee/my-profile"
                   element={
                     <PrivateRoute type={"corporate"}>
                       <TraineeProfile />
@@ -339,7 +338,7 @@ function App() {
                 {/* Instructor */}
 
                 <Route
-                  path='/instructor/my-personal-information'
+                  path="/instructor/my-personal-information"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorPersonalInformation />
@@ -347,7 +346,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/my-courses'
+                  path="/instructor/my-courses"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewMyCourses />
@@ -355,7 +354,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/my-reviews'
+                  path="/instructor/my-reviews"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorReviews />
@@ -364,7 +363,7 @@ function App() {
                 ></Route>
 
                 <Route
-                  path='/instructor/my-courses/edit-course'
+                  path="/instructor/my-courses/edit-course"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorEditCourse />
@@ -372,7 +371,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/view-contract'
+                  path="/instructor/view-contract"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewContract />
@@ -380,7 +379,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/my-courses/view-course-reviews'
+                  path="/instructor/my-courses/view-course-reviews"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewCourseReviews />
@@ -389,7 +388,7 @@ function App() {
                 ></Route>
 
                 <Route
-                  path='/instructor/courses/view-course/view-course-reviews'
+                  path="/instructor/courses/view-course/view-course-reviews"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewCourseReviews />
@@ -397,7 +396,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/courses/view-course/view-instructor-reviews'
+                  path="/instructor/courses/view-course/view-instructor-reviews"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorReviews />
@@ -405,23 +404,16 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/my-courses/set-course-promotion'
+                  path="/instructor/my-courses/set-course-promotion"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <SetCoursePromotion />
                     </PrivateRoute>
                   }
                 ></Route>
+
                 <Route
-                  path='/instructor/create-course'
-                  element={
-                    <PrivateRoute type={"instructor"}>
-                      <InstructorCreateCourse />
-                    </PrivateRoute>
-                  }
-                ></Route>
-                <Route
-                  path='/instructor/courses/view-course'
+                  path="/instructor/courses/view-course"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewDetailedCourse />
@@ -429,7 +421,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/courses'
+                  path="/instructor/courses"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <ViewCourses />
@@ -437,7 +429,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor/my-profile'
+                  path="/instructor/my-profile"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorProfile />
@@ -445,7 +437,7 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path='/instructor'
+                  path="/instructor"
                   element={
                     <PrivateRoute type={"instructor"}>
                       <InstructorHomePage />
@@ -453,7 +445,7 @@ function App() {
                   }
                 ></Route>
                 {/* Error */}
-                <Route path='/*' element={<Error />}></Route>
+                <Route path="/*" element={<Error />}></Route>
               </Routes>
             </ErrorBoundary>
           </div>

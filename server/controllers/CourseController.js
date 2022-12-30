@@ -45,34 +45,29 @@ const createCourse = async (req, res) => {
     views,
     preview_video,
     instructor,
-    subtitles,
-    subDescriptions,
   } = req.body;
-
-  const courseSubs = subtitles.map((subtitle, idx) => {
-    return {
-      title: subtitle,
-      description: subDescriptions[idx],
-    };
-  });
 
   const instructors = await Instructor.find({
     username: { $in: instructor },
   });
   let instructorIds = instructors.map((inst) => inst._id.valueOf());
   instructorIds.push(req.user.id);
-
-  const createdCourse = await Course.create({
-    title,
-    price,
-    subject,
-    summary,
-    rating,
-    views,
-    preview_video,
-    instructor: instructorIds,
-    subtitles: courseSubs,
-  });
+  let createdCourse;
+  try {
+    createdCourse = await Course.create({
+      title,
+      price: Math.floor(price + 0.5),
+      subject,
+      summary,
+      rating,
+      views,
+      preview_video,
+      instructor: instructorIds,
+    });
+  } catch (err) {
+    res.status(406).send("error");
+    return;
+  }
   for (const id of instructorIds) {
     await Instructor.findByIdAndUpdate(
       id,
@@ -569,6 +564,7 @@ const setMultipleCoursesPromotion = async (req, res) => {
 };
 
 async function deleteCourse(req, res) {
+  console.log(req.params.id, "over here balbooz");
   const course = await Course.findByIdAndDelete(req.params.id);
   if (!course) {
     res.status(404).send("Course not found");
