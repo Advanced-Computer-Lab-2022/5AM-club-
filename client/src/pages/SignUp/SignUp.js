@@ -228,7 +228,6 @@ function SignUp() {
             <div
               style={{
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
                 marginRight: "25px",
               }}

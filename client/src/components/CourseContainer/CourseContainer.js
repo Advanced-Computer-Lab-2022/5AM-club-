@@ -10,6 +10,7 @@ import { formatTime, getProgress } from "../../utils/Helpers";
 import countries from "../../utils/Countries.json";
 import EmbeddedReviewPage from "./EmbeddedReviewPage";
 import useRequestCourse from "./useRequestCourse";
+
 function CourseContainer(props) {
   console.log(props.course);
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ function CourseContainer(props) {
             })
             .then((response) => {
               console.log(response.data);
+              if (!response.data) navigate("/error");
               setTraineeCourse(response.data);
             });
         });
@@ -116,6 +118,13 @@ function CourseContainer(props) {
               {" "}
               {props.course?.title}
             </p>
+            {props.owned && (
+              <ReportProblem
+                courseName={props.course?.title}
+                height="50px"
+              ></ReportProblem>
+            )}
+
             {props.owned && localStorage.getItem("type") === "individual" && (
               <div
                 style={{
@@ -152,7 +161,7 @@ function CourseContainer(props) {
                                   ]
                                 : "USD"))) +
                           " Are you sure you want to refund? "
-                      ) == true
+                      ) === true
                     ) {
                       // refund the course
                     } else if (progress > 50) {
@@ -164,7 +173,6 @@ function CourseContainer(props) {
                 >
                   Refund Course
                 </button>
-                <ReportProblem height="50px"></ReportProblem>
               </div>
             )}
           </div>

@@ -1,15 +1,28 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import app from "../../utils/AxiosConfig";
+import CourseCard from "../../components/ViewCourses/CourseCard";
 function GuestHomePage() {
   const navigate = useNavigate();
+  const [popularCourses, setPopularCourses] = useState([]);
 
   useEffect(() => {
-    if (localStorage.getItem("refresh")) {
-      localStorage.removeItem("refresh");
-      navigate(0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    app
+      .get("/trainee/populated-courses")
+      .then((res) => {
+        res.data.sort((a, b) => b.owners.length - a.owners.length);
+        res.data = res.data.slice(0, 4);
+        setPopularCourses(res.data);
+        if (localStorage.getItem("refresh")) {
+          console.log("asdbjkn");
+          localStorage.removeItem("refresh");
+          navigate(0);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -176,7 +189,34 @@ function GuestHomePage() {
             </div>
           </div>
         </section>
-
+        <section id="popular-courses" className="services">
+          <div className="container" data-aos="fade-up">
+            <div className="section-title">
+              <h2
+                style={{ color: "#96cea8", cursor: "pointer" }}
+                onClick={() => {
+                  navigate("courses");
+                }}
+              >
+                Popular Courses
+              </h2>
+              <p>Check out our most popular courses.</p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                minWidth: "100%",
+              }}
+            >
+              {popularCourses.map((course) => (
+                <div key={course._id}>
+                  <CourseCard course={course}></CourseCard>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
         <section id="team" className="team section-bg">
           <div className="container" data-aos="fade-up">
             <div className="section-title">

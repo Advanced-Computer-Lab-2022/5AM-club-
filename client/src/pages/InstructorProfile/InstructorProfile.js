@@ -4,6 +4,8 @@ import ChangePassword from "../../components/ChangePassword/ChangePassword";
 import Typography from "@mui/material/Typography";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import { Rating } from "@mui/material";
+import noCourses from "../../assets/ViewCourses/noCourses.svg";
+import MyReportCard from "../../components/MyReportCard/MyReportCard";
 
 import {
   MDBCol,
@@ -23,6 +25,14 @@ function InstructorProfile() {
   const [user, setUser] = useState({});
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+  const [reports, setReports] = useState([]);
+
+  function getReports() {
+    app.get("trainee/view-problems").then((response) => {
+      response.data.reverse();
+      setReports(response.data);
+    });
+  }
 
   useEffect(() => {
     app
@@ -139,9 +149,10 @@ function InstructorProfile() {
                   }}
                   onClick={() => {
                     setShow2(true);
+                    getReports();
                   }}
                 >
-                  <p>View all reported problems </p>
+                  <p>My Reports </p>
                 </div>
               </MDBCardBody>
             </MDBCard>
@@ -204,7 +215,7 @@ function InstructorProfile() {
           <div className="tos-border-success" style={{ width: "100%" }}>
             <Modal.Header closeButton>
               <Modal.Title id="example-modal-sizes-title-lg">
-                Reported Problems
+                My Reports
               </Modal.Title>
             </Modal.Header>
 
@@ -213,10 +224,47 @@ function InstructorProfile() {
               style={{
                 height: "fit-content",
                 display: "flex",
-                flexDirection: "row",
+                padding: "25px",
+                flexDirection: "column",
+                gap: "25px",
                 width: "100%",
               }}
-            ></Modal.Body>
+            >
+              {reports.length > 0 ? (
+                reports.map((report) => (
+                  <div key={report._id} style={{ width: "100%" }}>
+                    <MyReportCard report={report}></MyReportCard>
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    flexGrow: "1",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={noCourses}
+                    alt="noCourses"
+                    style={{ width: "200px", height: "200px" }}
+                  ></img>
+                  <p
+                    style={{
+                      fontSize: "25px",
+                      fontWeight: "700",
+                      marginTop: "50px",
+                    }}
+                  >
+                    You have no reported problems.
+                  </p>
+                </div>
+              )}
+            </Modal.Body>
           </div>
         </div>
       </Modal>

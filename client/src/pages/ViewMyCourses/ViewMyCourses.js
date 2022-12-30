@@ -67,10 +67,12 @@ function ViewMyCourses() {
 
   return (
     <div className="view-courses-wrapper">
-      <MyFiltersContainer
-        setFilter={setFilter}
-        setNoCourses={setNoCourses}
-      ></MyFiltersContainer>
+      {localStorage.getItem("type") === "instructor" && (
+        <MyFiltersContainer
+          setFilter={setFilter}
+          setNoCourses={setNoCourses}
+        ></MyFiltersContainer>
+      )}
       <div className="main-content">
         <MyCoursesContainer
           courses={courses}

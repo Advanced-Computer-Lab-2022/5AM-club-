@@ -138,9 +138,32 @@ function InstructorHomePage() {
           </div>
         </section>
         <section
+          style={{
+            zIndex: "9999",
+          }}
+        >
+          <div className="container" data-aos="fade-up">
+            <div className="section-title">
+              <button
+                className="btn btn-outline-success"
+                onClick={() => navigate("create-course")}
+                style={{
+                  cursor: "pointer",
+                  width: "800px",
+                  height: "100px",
+                  marginTop: "-50px",
+                  fontSize: "50px",
+                }}
+              >
+                Create Course{" "}
+              </button>
+            </div>
+          </div>{" "}
+        </section>
+        <section
           id="popular-courses"
           className="services"
-          style={{ marginBottom: "-200px" }}
+          style={{ marginBottom: "-200px", marginTop: "-70px" }}
         >
           <div className="container" data-aos="fade-up">
             <div className="section-title">
@@ -199,25 +222,7 @@ function InstructorHomePage() {
             </div>
           </div>
         </section>
-        <section>
-          <div className="container" data-aos="fade-up">
-            <div className="section-title">
-              <button
-                className="btn btn-outline-success"
-                onClick={() => navigate("create-course")}
-                style={{
-                  cursor: "pointer",
-                  width: "800px",
-                  height: "100px",
-                  marginTop: "-50px",
-                  fontSize: "50px",
-                }}
-              >
-                Create Course{" "}
-              </button>
-            </div>
-          </div>{" "}
-        </section>
+        <div style={{ height: "220px" }}></div>
       </main>
     </div>
   );

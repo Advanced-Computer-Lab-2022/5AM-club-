@@ -773,11 +773,13 @@ async function reportProblem(req, res) {
 }
 async function viewProblems(req, res) {
   const problems = await Problem.find({ userId: req.user.id });
+  console.log(problems, "over here");
   res.send(problems);
   //req.user.id get id of the user, filter problems where user id in problem model == user id
 }
 async function followUp(req, res) {
   await Problem.findByIdAndUpdate(
+    req.headers.id,
     { $push: { comments: req.body } },
     { upsert: true }
   );
