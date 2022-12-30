@@ -752,10 +752,45 @@ const requestCourseAccess = async (req, res) => {
 };
 const getCourseRequests = async (req, res) => {
   if (req.user && req.user.type === "admin") {
-    const courses = Course.find({
-      pending: { $exists: true, $ne: [] },
-    }).populate("pending");
-    res.send(courses);
+    const courses = await Course.find({
+      $or: [
+        { pending: { $exists: true, $ne: [] } },
+        { accepted: { $exists: true, $ne: [] } },
+        { rejected: { $exists: true, $ne: [] } },
+      ],
+    })
+      .populate("pending")
+      .populate("accepted")
+      .populate("rejected");
+    const requests = { accepted: [], rejected: [], pending: [] };
+    for (let course of courses) {
+      for (let accepted of course.accepted) {
+        requests.accepted.push({
+          course: course.title,
+          trainee: accepted.username,
+          courseId: course._id,
+          traineeId: accepted._id,
+        });
+      }
+      for (let rejected of course.rejected) {
+        requests.rejected.push({
+          course: course.title,
+          trainee: rejected.username,
+          courseId: course._id,
+          traineeId: rejected._id,
+        });
+      }
+      for (let pending of course.pending) {
+        requests.pending.push({
+          course: course.title,
+          trainee: pending.username,
+          courseId: course._id,
+          traineeId: pending._id,
+        });
+      }
+    }
+
+    res.send(requests);
   } else {
     res.status(401).send("Unauthorized");
   }
@@ -767,8 +802,25 @@ const acceptCourseAccess = async (req, res) => {
     const traineeId = req.body.traineeId;
     const course = await Course.findByIdAndUpdate(courseId, {
       $pull: { pending: traineeId },
-      $push: { owners: traineeId },
+      $push: { owners: traineeId, accepted: traineeId },
     });
+    const sectionsNum = course.subtitles.reduce(
+      (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
+      0
+    );
+    const progressArray = new Array(course.sectionsNum).fill(false);
+
+    await TraineeCourse.create({
+      courseId,
+      traineeId,
+      progress: progressArray,
+      answers: Array(sectionsNum).fill(Array(4).fill(-1)),
+      notes: Array(sectionsNum).fill(null),
+      lastSection: 0,
+      grades: Array(sectionsNum).fill(0),
+      purchasingCost: 0,
+    });
+
     res.send(course);
   } else {
     res.status(401).send("Unauthorized");

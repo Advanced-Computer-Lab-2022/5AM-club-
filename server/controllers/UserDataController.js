@@ -27,7 +27,7 @@ const updateUserSchema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ["com", "net"] },
   }),
-});
+}).unknown();
 
 const addUserSchema = Joi.object({
   username: Joi.string().required().messages({
@@ -544,8 +544,8 @@ const decodeToken = async (req, res) => {
 
 const login = async (req, res) => {
   const user = { username: req.body.username };
-  //var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
-  //console.log(hash);
+  var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
+  console.log(hash);
 
   const admins = await Admin.findOne({
     username: user.username,
