@@ -32,7 +32,6 @@ function Content(props) {
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
-  console.log(props.traineeCourse);
   const done = props.traineeCourse?.progress[props.traineeCourse?.lastSection];
   const [traineeAnswers, setTraineeAnswers] = useState();
   function handleSubmit() {

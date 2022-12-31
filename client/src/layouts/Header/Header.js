@@ -16,7 +16,6 @@ import UpdatedSuccessfully from "./UpdatedSuccessfully";
 function Header() {
   const location = useLocation();
   const { show, onClickHide, done, Done, unDone } = useModalData();
-  console.log(show);
   const myRef = useRef();
   const [hovering, setHovering] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +37,6 @@ function Header() {
     const selectedCountry = COUNTRIES.find(
       (option) => option.value === val
     ).title;
-    console.log(selectedCountry);
     if (localStorage.getItem("type")) {
       app.put(
         "/" +
@@ -59,7 +57,6 @@ function Header() {
     }
     localStorage.setItem("country", selectedCountry);
     const path = location.pathname;
-    console.log(path);
     if (!show) {
       navigate(0);
     }

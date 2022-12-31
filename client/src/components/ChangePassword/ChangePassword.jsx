@@ -12,13 +12,8 @@ function ChangePassword(props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
-  //   useEffect(() => {
-  //     console.log(name);
-  //   }, [name]);
-
   const onSubmit = async (obj) => {
     if (password === repeatPassword) {
-      // console.log(`Bearer ${token}`);
       try {
         app
           .put(`/change-password`, obj, {
@@ -27,17 +22,13 @@ function ChangePassword(props) {
           .then((res) => {
             alert("Password changed successfully");
             props.setShow(false);
-            console.log(res);
           })
           .catch((err) => {
             alert(
               "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
             );
           });
-        // console.log("changed password");
-      } catch (err) {
-        console.log(err);
-      }
+      } catch (err) {}
     } else alert("Passwords don't match");
   };
 
@@ -120,7 +111,6 @@ function ChangePassword(props) {
               const obj = {
                 password,
               };
-              console.log(obj);
               onSubmit(obj);
             }}
           >

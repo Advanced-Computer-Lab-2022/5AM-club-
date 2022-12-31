@@ -103,12 +103,10 @@ const getCourseTitles = (courses) => {
   for (let course of courses) {
     courseTitles.push(course.title ? course.title : course.value);
   }
-  console.log(courseTitles);
   return courseTitles;
 };
 
 const getCourseNames = (courses) => {
-  console.log(courses);
   if (courses.length === 0 || !courses) return [];
   let courseNames = [];
   for (let course of courses) {

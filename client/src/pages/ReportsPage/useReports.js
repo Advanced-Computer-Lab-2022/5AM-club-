@@ -4,12 +4,10 @@ function useReportCourse() {
   const [reportsContainer, setReportsContainer] = useState();
   const [reports, setReports] = useState();
   const [type, setType] = useState("unseen");
-  console.log(reports);
   useEffect(() => {
     app.get("/admin/reports").then((res) => {
       setReportsContainer(res.data);
       setReports(res.data.filter((r) => r.status === "unseen"));
-      console.log(res.data);
     });
   }, []);
   const changeReports = (type) => {
@@ -33,9 +31,7 @@ function useReportCourse() {
         setReportsContainer(res.data);
         setReports(res.data.filter((r) => r.status === type));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
   const resolve = (report) => {
     app
@@ -54,9 +50,7 @@ function useReportCourse() {
         setReportsContainer(res.data);
         setReports(res.data.filter((r) => r.status === type));
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   return { reports, type, changeReports, pend, resolve };

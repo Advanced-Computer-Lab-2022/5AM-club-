@@ -38,9 +38,6 @@ function ViewCourses() {
         }
       )
       .then((response) => {
-        console.log("filterlmao", filter);
-
-        console.log(response.data, "<<<<<<<<<<");
         switch (sort) {
           case "Most Popular":
             response.data.sort(function (a, b) {

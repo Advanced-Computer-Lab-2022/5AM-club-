@@ -46,7 +46,6 @@ function SignUp() {
         }
       })
       .catch((err) => {
-        console.log(err);
         if (err.response.status === 405) {
           alert("Username already exists.");
           return;

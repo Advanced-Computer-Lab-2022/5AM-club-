@@ -166,7 +166,7 @@ export const SelectCountry = React.forwardRef<
                             className={
                               "green-hover" +
                               (props.selectedValue.value === value.value
-                                ? " selected"
+                                ? " selected-country"
                                 : "")
                             }
                             style={{

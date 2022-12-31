@@ -10,7 +10,6 @@ import Rating from "@mui/material/Rating";
 import CornerRibbon from "react-corner-ribbon";
 
 function Card(props) {
-  console.log(props.course.promotion);
   return (
     <MDBCard className="course-card" style={{ width: "300px" }}>
       {props.course.promotion &&

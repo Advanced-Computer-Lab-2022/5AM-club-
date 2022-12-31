@@ -230,7 +230,6 @@ function EditCourse(props) {
                       className="course-attribute-input"
                       value={title}
                       onInput={(e) => {
-                        console.log(e.target.innerText);
                         setTitle(e.target.innerText);
                       }}
                       style={{

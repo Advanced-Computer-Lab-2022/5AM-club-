@@ -7,8 +7,6 @@ const app = axios.create({
 });
 app.interceptors.response.use(
   function (response) {
-    console.log(response);
-    console.log(response.status === 401);
     if (response.status === 401) {
       localStorage.clear();
       localStorage.setItem("country", "United States");
@@ -16,7 +14,6 @@ app.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log(error);
     if (error.response?.status === 401) {
       localStorage.clear();
       localStorage.setItem("country", "United States");
