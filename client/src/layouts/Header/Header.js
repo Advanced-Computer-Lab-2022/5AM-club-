@@ -1,7 +1,6 @@
 import { useRef, useState, memo, useEffect } from "react";
 import logo from "../../assets/Header/logo.svg";
 import logo2 from "../../assets/Header/logo2.svg";
-import logout from "../../assets/Header/logout.png";
 import search from "../../assets/Header/search.svg";
 import "./Header.css";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -237,14 +236,19 @@ function Header() {
         size="lg"
         centered
         show={show}
-        style={{ backgroundColor: "#484848" }}
+        style={{
+          backgroundColor: "#484848",
+        }}
       >
         <div className="tos-wrapper">
           <div className="tos-border-success">
             <Modal.Header>
               <Modal.Title>Complete your profile</Modal.Title>
             </Modal.Header>
-            <Modal.Body className="tos">
+            <Modal.Body
+              className="tos"
+              style={{ maxHeight: "700px", overFlowY: "auto" }}
+            >
               {done ? (
                 <UpdatedSuccessfully
                   onClickHide={onClickHide}

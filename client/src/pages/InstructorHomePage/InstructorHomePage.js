@@ -345,6 +345,7 @@ function InstructorHomePage() {
                           onChange={(e) => {
                             let subjects = "";
                             for (let i = 0; i < e.length; i++) {
+                              if (e[i].value === " ") continue;
                               if (i === e.length - 1) subjects += e[i].value;
                               else subjects += e[i].value + ",";
                             }

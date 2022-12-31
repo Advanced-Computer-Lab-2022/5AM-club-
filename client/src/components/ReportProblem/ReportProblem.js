@@ -6,7 +6,6 @@ import Select from "react-select";
 function ReportProblem(props) {
   const [type, setType] = useState("");
   const [problem, setProblem] = useState("");
-
   const [show, setShow] = useState(false);
   function onClickHide() {
     setShow(false);

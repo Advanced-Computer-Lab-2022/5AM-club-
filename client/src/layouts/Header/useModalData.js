@@ -14,6 +14,7 @@ const useModalData = () => {
           console.log(res);
 
           if (res.data === "false") {
+            localStorage.removeItem("refresh");
             setShow(true);
             if (window.location.pathname !== "/corporate-trainee")
               navigate("../corporate-trainee");
@@ -28,6 +29,7 @@ const useModalData = () => {
         .then((res) => {
           console.log(res);
           if (res.data === "false") {
+            localStorage.removeItem("refresh");
             setShow(true);
             if (window.location.pathname !== "/instructor")
               navigate("../instructor");

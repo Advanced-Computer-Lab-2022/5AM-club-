@@ -42,6 +42,10 @@ function AddUser() {
             );
             return;
           }
+          if (err.response.status === 400) {
+            alert("Username already exists.");
+            return;
+          }
         });
     } else {
       alert("please select the type");
