@@ -115,6 +115,15 @@ const courseSchema = new mongoose.Schema(
         },
       ],
     },
+    accepted: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: "Trainee",
+          required: true,
+        },
+      ],
+    },
     pending: {
       type: [
         {

@@ -322,27 +322,63 @@ function CourseContainer(props) {
                       )}
                     </div>
                   )}
+
                 {localStorage.getItem("type") === "individual" &&
                   !props.owned && (
-                    <Button variant="outline-success" onClick={handleBuy}>
-                      BUY NOW
-                    </Button>
+                    <div
+                      style={{
+                        display: "inline-block",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Button variant="outline-success" onClick={handleBuy}>
+                        BUY NOW
+                      </Button>
+                    </div>
                   )}
                 {localStorage.getItem("type") === "corporate" &&
                   !props.owned &&
                   (requested ? (
-                    "Pending"
+                    <div
+                      style={{
+                        display: "inline-block",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Button
+                        variant="outline-success"
+                        style={{
+                          height: "50px",
+                        }}
+                        onClick={requestCourse}
+                        disabled={true}
+                      >
+                        Pending
+                      </Button>
+                    </div>
                   ) : (
-                    <Button
+                    <div
                       variant="outline-success"
                       style={{
-                        height: "50px",
+                        display: "inline-block",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
                       }}
-                      onClick={requestCourse}
                     >
-                      REQUEST ACCESS
-                    </Button>
+                      <Button
+                        variant="outline-success"
+                        style={{
+                          height: "50px",
+                        }}
+                        onClick={requestCourse}
+                      >
+                        Request Access
+                      </Button>
+                    </div>
                   ))}
+
                 {props.owned && location.state.displayAddReview && (
                   <>
                     <div className="attribute">

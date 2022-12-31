@@ -11,6 +11,7 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.15",
+    "@mui/styles": "^5.11.2",
     "@mui/x-date-pickers": "^5.0.10",
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.16.5",
