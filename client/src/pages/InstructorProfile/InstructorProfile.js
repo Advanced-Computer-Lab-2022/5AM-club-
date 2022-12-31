@@ -6,6 +6,7 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import { Rating } from "@mui/material";
 import noCourses from "../../assets/ViewCourses/noCourses.svg";
 import MyReportCard from "../../components/MyReportCard/MyReportCard";
+import countries from "../../utils/Countries.json";
 
 import {
   MDBCol,
@@ -16,10 +17,27 @@ import {
   MDBCardImage,
   MDBTypography,
 } from "mdb-react-ui-kit";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from "react-responsive-carousel";
 import "./InstructorProfile.css";
 import profile from "../../assets/TraineeProfile/profile.png";
 import app from "../../utils/AxiosConfig";
 import InstructorPersonalInformation from "../InstructorPersonalInformation/InstructorPersonalInformation";
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 function InstructorProfile() {
   const [user, setUser] = useState({});
@@ -28,7 +46,7 @@ function InstructorProfile() {
   const [reports, setReports] = useState([]);
 
   function getReports() {
-    app.get("trainee/view-problems").then((response) => {
+    app.get("instructor/view-problems").then((response) => {
       response.data.reverse();
       setReports(response.data);
     });
@@ -36,20 +54,20 @@ function InstructorProfile() {
 
   useEffect(() => {
     app
-      .get("trainee/get-user", {
+      .get("instructor/get-user", {
         headers: {
           type: localStorage.getItem("type"),
+          country: localStorage.getItem("country"),
         },
       })
       .then((response) => {
         setUser(response.data);
-        app.get("trainee/my-populated-courses").then((response) => {
+        app.get("instructor/my-populated-courses").then((response) => {
           response.data.reverse();
 
           if (response.data.length > 3) {
             response.data = response.data.slice(0, 3);
           }
-          console.log(response.data);
         });
       });
   }, []);
@@ -153,7 +171,73 @@ function InstructorProfile() {
                   }}
                 >
                   <p>My Reports </p>
-                </div>
+                </div>{" "}
+                <h3 style={{ marginTop: "20px" }}>Money Owed :</h3>{" "}
+                <MDBCard
+                  className="course-card"
+                  style={{
+                    display: "inline-block",
+                    borderRadius: "20px",
+                    width: "180px",
+                    padding: "0px",
+                    marginTop: "15px",
+                    height: "145px",
+                  }}
+                >
+                  <Carousel
+                    showThumbs={false}
+                    width="180px"
+                    autoPlay={false}
+                    style={{
+                      backgroundColor: "#96cea8",
+                      height: "145px",
+                    }}
+                    showArrows={true}
+                    infiniteLoop={true}
+                    showStatus={false}
+                  >
+                    {user.money_owed?.map((money, idx) => (
+                      <div style={{ width: "180px" }} key={idx}>
+                        {" "}
+                        <div
+                          style={{
+                            marginTop: "10px",
+                          }}
+                        >
+                          Amount :
+                          <h6
+                            style={{
+                              color: money.amount >= 0 ? "green" : "red",
+                            }}
+                          >
+                            {(money.amount > 0
+                              ? Math.floor(money.amount + 0.5) - 0.01
+                              : money.amount === 0
+                              ? 0
+                              : Math.floor(money.amount + 0.5) + 0.01) +
+                              " " +
+                              (" " +
+                                (countries[
+                                  Object.keys(countries).find(
+                                    (e) => e === localStorage.getItem("country")
+                                  )
+                                ]
+                                  ? countries[
+                                      Object.keys(countries).find(
+                                        (e) =>
+                                          e === localStorage.getItem("country")
+                                      )
+                                    ]
+                                  : "USD"))}
+                          </h6>
+                        </div>
+                        <h3>{money.year}</h3>
+                        <p>{months[money.month - 1]}</p>
+                        <div style={{ height: "30px" }}></div>
+                      </div>
+                    ))}
+                  </Carousel>{" "}
+                </MDBCard>
               </MDBCardBody>
             </MDBCard>
             <Typography variant="h6" sx={{ m: 1 }}>

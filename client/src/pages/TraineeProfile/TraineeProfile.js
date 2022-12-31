@@ -29,6 +29,7 @@ function TraineeProfile() {
       .get("trainee/get-user", {
         headers: {
           type: localStorage.getItem("type"),
+          country: localStorage.getItem("country"),
         },
       })
       .then((response) => {
@@ -39,7 +40,6 @@ function TraineeProfile() {
           if (response.data.length > 3) {
             response.data = response.data.slice(0, 3);
           }
-          console.log(response.data);
           setCourses(response.data);
         });
       });

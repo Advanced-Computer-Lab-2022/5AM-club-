@@ -46,7 +46,6 @@ function TraineeTakeCourse() {
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
-    console.log(traineeCourse);
     app
       .put("/trainee/edit-trainee-course", {
         lastSection: traineeCourse.lastSection,
@@ -57,14 +56,12 @@ function TraineeTakeCourse() {
         notes: traineeCourse.notes,
       })
       .then((response) => {
-        console.log(response.data);
         if (response.data.complete && response.data.sent !== true) {
           setShow(true);
           app.put("/trainee/send-certificate", {
             courseId: location.state?.courseId,
           });
         }
-        console.log(response.data);
         setTraineeCourse(response.data);
       })
       .catch((error) => {

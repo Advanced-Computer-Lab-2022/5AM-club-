@@ -13,7 +13,6 @@ import EmbeddedReviewPage from "./EmbeddedReviewPage";
 import useRequestCourse from "./useRequestCourse";
 
 function CourseContainer(props) {
-  console.log(props.course);
   const navigate = useNavigate();
   const location = useLocation();
   const [myReviews, setMyReviews] = useState({
@@ -23,7 +22,6 @@ function CourseContainer(props) {
   const [course, setCourse] = useState(props.course);
   const [traineeCourse, setTraineeCourse] = useState();
 
-  console.log(course);
   const { requested, setRequested, requestCourse } = useRequestCourse(
     props.course
   );
@@ -31,7 +29,6 @@ function CourseContainer(props) {
   const downloadRef = useRef();
 
   const handleBuy = () => {
-    console.log("buy pressed", props.course);
     try {
       app
         .post(`/pay`, {
@@ -40,13 +37,10 @@ function CourseContainer(props) {
           courseName: props.course.title,
         })
         .then((res) => {
-          //console.log("paid succ", res.data.url);
           //navigate(`/${res.data.url}`);
           window.open(res.data.url, "_self");
         });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -61,7 +55,6 @@ function CourseContainer(props) {
       )
       .then((res) => {
         setCourse(res.data);
-        console.log(res.data);
         setRequested(
           res.data.pending.some(
             (trainee) => trainee.username === localStorage.getItem("username")
@@ -89,7 +82,6 @@ function CourseContainer(props) {
               },
             })
             .then((response) => {
-              console.log(response.data);
               if (!response.data) navigate("/error");
               setTraineeCourse(response.data);
             });

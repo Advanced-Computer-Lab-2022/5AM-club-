@@ -13,7 +13,6 @@ function Login() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
 
   async function handleForgotPassword() {
-    console.log(forgotPasswordEmail);
     await app
       .put(
         "/change-password-email",
@@ -34,7 +33,6 @@ function Login() {
     app
       .post(`/login`, obj)
       .then((res) => {
-        console.log(res);
         localStorage.setItem("type", res.data.type);
         localStorage.setItem("country", res.data.country);
         localStorage.setItem("username", res.data.username);

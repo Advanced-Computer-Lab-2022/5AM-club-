@@ -14,14 +14,11 @@ function GuestHomePage() {
         res.data = res.data.slice(0, 4);
         setPopularCourses(res.data);
         if (localStorage.getItem("refresh")) {
-          console.log("asdbjkn");
           localStorage.removeItem("refresh");
           navigate(0);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
     // eslint-disable-next-line
   }, []);
 

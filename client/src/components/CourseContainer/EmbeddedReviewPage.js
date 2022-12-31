@@ -10,7 +10,6 @@ import Button from "react-bootstrap/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 function EmbeddedReviewPage(props) {
-  console.log(props);
   const navigate = useNavigate();
   const location = useLocation();
   const [review, setReview] = useState("");

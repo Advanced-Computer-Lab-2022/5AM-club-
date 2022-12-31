@@ -6,7 +6,6 @@ const useModalData = () => {
   const [content, SetContent] = useState("");
 
   app.get("/terms-of-service").then((res) => {
-    console.log(res.data);
     SetContent(res.data.content);
   });
 

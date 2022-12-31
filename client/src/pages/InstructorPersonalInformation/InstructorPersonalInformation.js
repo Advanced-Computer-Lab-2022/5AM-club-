@@ -15,11 +15,8 @@ function InstructorPersonalInformation() {
       })
       .then((res) => {
         setInstructor(res.data);
-        console.log(res.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }, []);
   return instructor && <PersonalInformationContainer instructor={instructor} />;
 }

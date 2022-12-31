@@ -35,11 +35,6 @@ function Video(props) {
                 "&part=contentDetails&key=AIzaSyDA-c7NayerkKbh5S_74nibw_yp2r4OnAA"
             )
             .then((response) => {
-              console.log(
-                convertISO8601ToMs(
-                  response.data.items[0].contentDetails.duration
-                )
-              );
               app
                 .put(
                   "/instructor/my-courses/edit-course/" +

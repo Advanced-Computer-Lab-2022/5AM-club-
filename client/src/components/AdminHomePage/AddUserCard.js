@@ -20,7 +20,6 @@ function AddUser() {
 
   const addNewUser = (event) => {
     event.preventDefault();
-    console.log(type);
     if (type) {
       app
         .post("/admin/add-" + type, {
@@ -67,7 +66,7 @@ function AddUser() {
         onClick={() => setShow(true)}
         sx={{
           height: "100px",
-          width: "537px",
+          width: "345px",
         }}
         className="card-hover-green"
       >
@@ -83,7 +82,7 @@ function AddUser() {
         >
           <img height="100" width="150" src={addUser} alt="add user" />
 
-          <Typography gutterBottom variant="h4" component="div">
+          <Typography gutterBottom variant="h5" component="div">
             Add New User
           </Typography>
         </CardActionArea>

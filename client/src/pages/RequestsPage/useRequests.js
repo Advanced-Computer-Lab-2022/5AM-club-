@@ -8,7 +8,6 @@ function useRequestCourse() {
     app.get("/admin/course-requests").then((res) => {
       setRequestsContainer(res.data);
       setRequests(res.data.pending);
-      console.log(res.data);
     });
   }, []);
   const changeRequests = (type) => {
@@ -31,9 +30,7 @@ function useRequestCourse() {
         newRequestsContainer.accepted.push(request);
         setRequestsContainer(newRequestsContainer);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
   const reject = (request) => {
     app
@@ -49,9 +46,7 @@ function useRequestCourse() {
         newRequestsContainer.rejected.push(request);
         setRequestsContainer(newRequestsContainer);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   return { requests, type, changeRequests, accept, reject };
