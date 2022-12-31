@@ -48,6 +48,16 @@ function Card(props) {
             {props.course.closed ? "Closed" : "Published"}
           </CornerRibbon>
         )}
+      {!props.course.published && (
+        <CornerRibbon
+          position="top-right"
+          fontColor="white"
+          style={{ fontSize: "10px" }}
+          backgroundColor={"black"}
+        >
+          Private
+        </CornerRibbon>
+      )}
       <div
         className="d-flex justify-content-between p-3 pb-0"
         style={{ alignItems: "center" }}

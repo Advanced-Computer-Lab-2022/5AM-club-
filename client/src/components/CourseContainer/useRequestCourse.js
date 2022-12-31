@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import app from "../../utils/AxiosConfig";
 function useRequestCourse(course) {
   const [requested, setRequested] = useState(

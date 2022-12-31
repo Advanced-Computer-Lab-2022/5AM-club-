@@ -34,6 +34,7 @@ router.post("/report-problem", UserDataController.reportProblem);
 router.get("/view-problems", UserDataController.viewProblems);
 router.put("/follow-up", UserDataController.followUp);
 router.put("/set-problem-status", UserDataController.setProblemStatus);
+router.put("/send-certificate", UserDataController.sendCertificate);
 
 router.put(
   "/change-password",

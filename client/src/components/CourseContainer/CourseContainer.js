@@ -1,6 +1,7 @@
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ReportProblem from "../../components/ReportProblem/ReportProblem";
+import Certificate from "../../assets/Certificate/Certificate.pdf";
 import app from "../../utils/AxiosConfig.js";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
@@ -26,6 +27,9 @@ function CourseContainer(props) {
   const { requested, setRequested, requestCourse } = useRequestCourse(
     props.course
   );
+
+  const downloadRef = useRef();
+
   const handleBuy = () => {
     console.log("buy pressed", props.course);
     try {
@@ -381,8 +385,39 @@ function CourseContainer(props) {
 
                 {props.owned && location.state.displayAddReview && (
                   <>
-                    <div className="attribute">
-                      Progress: {getProgress(traineeCourse?.progress) * 100}%
+                    <div>
+                      <div className="attribute">
+                        Progress: {getProgress(traineeCourse?.progress) * 100}%
+                      </div>
+                      {getProgress(traineeCourse?.progress) * 100 === 100 && (
+                        <>
+                          <div
+                            style={{
+                              display: "inline-block",
+                              borderRadius: "5px",
+                              backgroundColor: "white",
+                              marginBottom: "20px",
+                            }}
+                          >
+                            <button
+                              style={{ height: "50px" }}
+                              className="btn btn-outline-success"
+                              onClick={() => {
+                                downloadRef.current.click();
+                              }}
+                            >
+                              Download Certificate
+                            </button>
+                          </div>
+                          <a
+                            style={{ display: "none", visibility: "hidden" }}
+                            ref={downloadRef}
+                            href={Certificate}
+                            download="Certificate.pdf"
+                            onClick={(e) => {}}
+                          ></a>
+                        </>
+                      )}
                     </div>
                     <div
                       style={{
@@ -419,6 +454,12 @@ function CourseContainer(props) {
               Description :{" "}
             </div>
             {course.summary}
+          </Card.Text>
+          <Card.Text className="editable-container">
+            <div style={{ fontWeight: "700", fontSize: "30px" }}>
+              About the instructor :{" "}
+            </div>
+            {course.instructor[0].biography}
           </Card.Text>
           <div className="attribute" style={{ fontSize: "30px" }}>
             {" "}
