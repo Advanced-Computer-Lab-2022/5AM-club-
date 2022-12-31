@@ -8,7 +8,7 @@ function GuestHomePage() {
 
   useEffect(() => {
     app
-      .get("/trainee/populated-courses")
+      .get("/populated-courses")
       .then((res) => {
         res.data.sort((a, b) => b.owners.length - a.owners.length);
         res.data = res.data.slice(0, 4);

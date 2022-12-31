@@ -17,7 +17,7 @@ function RequestsPage() {
         marginTop: "50px",
         marginBottom: "50px",
         minWidth: "550px",
-        minHeight: "700px",
+        minHeight: "675px",
       }}
     >
       <Card.Header style={{ display: "flex" }}>
@@ -54,6 +54,33 @@ function RequestsPage() {
               { value: "accepted", label: "Accepted" },
               { value: "rejected", label: "Rejected" },
             ]}
+            styles={{
+              control: (base) => ({
+                ...base,
+                border: "1px solid #96cea8",
+                boxShadow: "none",
+              }),
+              option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+                return {
+                  ...styles,
+                  backgroundColor: isDisabled
+                    ? null
+                    : isSelected
+                    ? "#96cea8"
+                    : isFocused
+                    ? "#A6D6B5"
+                    : null,
+                  color: isDisabled
+                    ? "#ccc"
+                    : isSelected
+                    ? "white"
+                    : isFocused
+                    ? "black"
+                    : "black",
+                  cursor: isDisabled ? "not-allowed" : "default",
+                };
+              },
+            }}
             placeholder="Pending"
           />
         </div>
@@ -75,7 +102,6 @@ function RequestsPage() {
           ) : (
             <div
               style={{
-                marginBottom: "200px",
                 width: "100%",
                 height: "100%",
                 flexGrow: "1",
@@ -83,7 +109,6 @@ function RequestsPage() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: "120px",
               }}
             >
               <img

@@ -1,11 +1,15 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, memo } from "react";
-import { TextField, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import app from "../../utils/AxiosConfig.js";
+import PasswordBox from "../../components/PasswordBox/PasswordBox.js";
+import logo from "../../assets/Header/logo.svg";
+import logo2 from "../../assets/Header/logo2.svg";
 
 function ChangeForgottenPassword() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const navigate = useNavigate();
 
@@ -16,63 +20,122 @@ function ChangeForgottenPassword() {
   );
 
   const onSubmit = async (obj) => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
     app.get("/get-user-type", { headers: { id: userId } }).then((response) => {
       app
-        .put("/change-password", obj, {
+        .put("/change-forgotten-password", obj, {
           headers: { type: response.data, id: userId },
         })
         .then(() => {
+          alert("Password changed successfully.");
           navigate("/login");
+        })
+        .catch((err) => {
+          alert(
+            "Password is too weak. Needs to be at least 10 characters long and contain at least one number, one lowercase, one uppercase letter, and one symbol."
+          );
         });
     });
   };
 
   return (
-    <Container sx={{ display: "grid", placeItems: "center" }}>
-      <form style={{ width: "max(22rem,50%)" }}>
-        <Box
-          sx={{
-            marginTop: "15px",
+    <div style={{ display: "flex", height: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          marginBottom: "80.5px",
+          height: "100%",
+          flexShrink: "0",
+          width: "40%",
+          minWidth: "700px",
+        }}
+      >
+        <div style={{ marginRight: "50px" }}></div>
+
+        <div
+          style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            // justifyContent: "space-evenly",
+            justifyContent: "center",
             alignItems: "center",
-            // minHeight: "50rem",
-            width: "100%",
-            "& > *": {
-              width: "100%",
-            },
+            flexDirection: "column",
+            height: "100%",
           }}
         >
-          <TextField
-            hiddenLabel
-            id="filled-hidden-label-small"
-            placeholder="password"
-            variant="outlined"
-            label="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
+          <Container sx={{ display: "grid", placeItems: "center" }}>
+            <form style={{ width: "max(22rem,50%)" }}>
+              <Box
+                sx={{
+                  marginTop: "15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "15px",
+                  // justifyContent: "space-evenly",
+                  alignItems: "center",
+                  // minHeight: "50rem",
+                  width: "100%",
+                  "& > *": {
+                    width: "100%",
+                  },
+                }}
+              >
+                <PasswordBox setPassword={setPassword}></PasswordBox>
+                <PasswordBox
+                  setPassword={setConfirmPassword}
+                  repeat={true}
+                ></PasswordBox>
 
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={(e) => {
-              e.preventDefault();
-              const obj = {
-                password,
-              };
-              onSubmit(obj);
+                <Button
+                  type="submit"
+                  style={{
+                    backgroundColor: "#96cea8",
+                    color: "white",
+                    minWidth: "575px",
+                  }}
+                  variant="contained"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const obj = {
+                      password,
+                    };
+                    onSubmit(obj);
+                  }}
+                >
+                  Change Password{" "}
+                </Button>
+              </Box>
+            </form>
+          </Container>
+        </div>
+      </div>
+      <div className="slanted">
+        <div style={{ marginBottom: "50px" }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "300px",
+              height: "200px",
+              filter: "invert(100%)",
             }}
-          >
-            Submit{" "}
-          </Button>
-        </Box>
-      </form>
-    </Container>
+          ></img>
+          <img
+            src={logo2}
+            alt="Logo"
+            style={{
+              width: "250px",
+              height: "150px",
+              filter: "invert(100%)",
+            }}
+          ></img>
+        </div>
+      </div>
+    </div>
   );
 }
 export default memo(ChangeForgottenPassword);

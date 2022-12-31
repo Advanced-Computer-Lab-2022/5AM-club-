@@ -11,7 +11,7 @@ function useRequestCourse(course) {
       .put("/trainee/courses/" + course._id + "/course-request")
       .then((res) => {
         alert(
-          "Course requested successfully. Please wait for the admin to accept your request."
+          "Course requested successfully. Please wait for an admin to accept your request."
         );
         setRequested(true);
       })

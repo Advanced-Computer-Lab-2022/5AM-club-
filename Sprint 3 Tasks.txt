@@ -1,5 +1,5 @@
-Amr Mohamed Abd El-Monem Ahmed Younis: Task 24,25,26,27
-Mahmoud Khaled: Task 5,31,32
-Amr Esmaeel El-Said: Task 35,36,37,38,39
-Abdelraheman Khaled Ali Asran: Task 17,21,28,29,30,33,34
-Mahmoud Bakheet: Task N/A (Worked on sprint 3)
+Amr Mohamed Abd El-Monem Ahmed Younis: Task 13,14,46,51,52,53,60
+Mahmoud Khaled: Task 47,48,49
+Amr Esmaeel El-Said: Task 41,42,43,44
+Abdelraheman Khaled Ali Asran: Task 45,50,54,58,59,40,4
+Mahmoud Bakheet: Task 1,2,3,15,16,22

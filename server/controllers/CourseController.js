@@ -2,6 +2,7 @@ const Joi = require("joi");
 const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const TraineeCourse = require("../models/TraineeCourse");
+const Problem = require("../models/Problem");
 const { convert } = require("../utils/CurrencyConverter");
 const objectID = require("objectid");
 const setCoursePromotionSchema = Joi.object({
@@ -743,6 +744,16 @@ const getCourseRequests = async (req, res) => {
   }
 };
 
+const getReports = async (req, res) => {
+  if (req.user && req.user.type === "admin") {
+    const reports = await Problem.find();
+    console.log(reports, "hah xd");
+    res.send(reports);
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+
 const acceptCourseAccess = async (req, res) => {
   if (req.user && req.user.type === "admin") {
     const courseId = req.params.id;
@@ -813,6 +824,7 @@ module.exports = {
   getMyCourseMaxMin,
   requestCourseAccess,
   getCourseRequests,
+  getReports,
   acceptCourseAccess,
   rejectCourseAccess,
 };

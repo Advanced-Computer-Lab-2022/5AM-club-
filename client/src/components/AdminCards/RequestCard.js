@@ -1,17 +1,17 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import Typography from "@mui/material/Typography";
 import Button from "react-bootstrap/Button";
-import { MDBCard, MDBCardBody } from "mdb-react-ui-kit";
+import { MDBCard } from "mdb-react-ui-kit";
 import "./RequestCard.css";
 
 function RequestCard(props) {
   return (
-    <MDBCard className='request-card'>
+    <MDBCard className="request-card">
       <div style={{ display: "flex" }}>
         <Typography
           gutterBottom
-          variant='h5'
-          component='div'
+          variant="h5"
+          component="div"
           sx={{
             mt: 2,
             ml: 2,
@@ -21,7 +21,7 @@ function RequestCard(props) {
             <div>
               Trainee
               <span style={{ fontStyle: "italic", fontWeight: "700" }}>
-                {props.request.trainee}
+                {" " + props.request.trainee}
               </span>
               {" requested to enroll in course "}{" "}
               <span style={{ fontStyle: "italic", fontWeight: "700" }}>
@@ -47,7 +47,7 @@ function RequestCard(props) {
       {props.requestType === "pending" && (
         <div style={{ display: "flex", gap: "10px" }}>
           <button
-            className='btn btn-outline-danger'
+            className="btn btn-outline-danger"
             style={{ marginLeft: "auto" }}
             onClick={() => {
               props.reject(props.request);
@@ -56,7 +56,7 @@ function RequestCard(props) {
             Reject
           </button>
           <Button
-            variant='outline-success'
+            variant="outline-success"
             style={{ marginRight: "10px" }}
             onClick={() => {
               props.accept(props.request);

@@ -21,6 +21,7 @@ router.get("/courses/:id/set-promotion", CourseController.setCoursePromotion);
 router.get("/courses/:id", CourseController.findCourseByID);
 router.get("/populated-courses/:id", CourseController.findPopulatedCourseByID);
 router.get("/course-requests", CourseController.getCourseRequests);
+router.get("/reports", CourseController.getReports);
 
 router.put("/my-courses/edit-course/:courseid", CourseController.updateCourse);
 router.put(

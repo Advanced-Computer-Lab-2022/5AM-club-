@@ -63,7 +63,7 @@ function SignUp() {
   };
   const navigate = useNavigate();
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", overflow: "hidden" }}>
       <div
         style={{
           display: "flex",
@@ -74,204 +74,213 @@ function SignUp() {
           height: "100%",
           flexShrink: "0",
           width: "40%",
+          minWidth: "700px",
         }}
       >
         <div style={{ marginRight: "50px" }}></div>
-
-        <Container
-          sx={{
+        <div
+          style={{
             display: "flex",
-            marginLeft: "50px",
-
             justifyContent: "center",
             alignItems: "center",
+            flexDirection: "column",
+            height: "100%",
           }}
         >
-          <form style={{ width: "max(22rem,50%)" }}>
-            <Box
-              sx={{
-                marginTop: "15px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "15px",
-                // justifyContent: "space-evenly",
-                alignItems: "center",
-                // minHeight: "50rem",
-                width: "100%",
-                "& > *": {
-                  width: "100%",
-                },
-              }}
-            >
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="Username"
-                value={username}
-                style={{ marginTop: "80.5px" }}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                }}
-              />
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="Email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-              />
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="First Name"
-                value={firstName}
-                onChange={(e) => {
-                  setFirstName(e.target.value);
-                }}
-              />
-              <TextField
-                hiddenLabel
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="Last Name"
-                value={lastName}
-                onChange={(e) => {
-                  setLastName(e.target.value);
-                }}
-              />
+          <Container
+            sx={{
+              display: "flex",
+              marginLeft: "50px",
 
-              <TextField
-                type={showPassword ? "text" : "password"}
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="Password"
-                autoComplete="no"
-                InputProps={{
-                  autoComplete: showPassword ? "off" : "new-password",
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setShowPassword(!showPassword);
-                      }}
-                    >
-                      <VisibilityIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-              />
-
-              <TextField
-                type={showRepeatPassword ? "text" : "password"}
-                id="filled-hidden-label-small"
-                variant="outlined"
-                label="Repeat Password"
-                autoComplete="no"
-                InputProps={{
-                  autoComplete: showRepeatPassword ? "off" : "new-password",
-                  endAdornment: (
-                    <InputAdornment
-                      position="end"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setShowRepeatPassword(!showRepeatPassword);
-                      }}
-                    >
-                      <VisibilityIcon />
-                    </InputAdornment>
-                  ),
-                }}
-                value={repeatPassword}
-                onChange={(e) => {
-                  setRepeatPassword(e.target.value);
-                }}
-              />
-
-              <FormControl>
-                <FormLabel color="success">Gender</FormLabel>
-                <RadioGroup
-                  row
-                  value={gender}
-                  onChange={(e) => {
-                    setGender(e.target.value);
-                  }}
-                >
-                  {" "}
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio color="success" />}
-                    label="Male"
-                  />
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio color="success" />}
-                    label="Female"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <div
-                style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <form style={{ width: "max(22rem,50%)" }}>
+              <Box
+                sx={{
+                  marginTop: "15px",
                   display: "flex",
+                  flexDirection: "column",
+                  gap: "15px",
+                  // justifyContent: "space-evenly",
                   alignItems: "center",
-                  marginRight: "25px",
+                  // minHeight: "50rem",
+                  width: "100%",
+                  "& > *": {
+                    width: "100%",
+                  },
                 }}
               >
-                <Checkbox
-                  color="success"
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="Username"
+                  value={username}
+                  style={{ marginTop: "80.5px" }}
                   onChange={(e) => {
-                    setAcceptedTerms(e.target.checked);
+                    setUsername(e.target.value);
                   }}
                 />
-                <span>I accept the</span>
-                <button
-                  type="button"
-                  className="btn btn-link"
-                  onClick={onClickShow}
-                  style={{ position: "relative", right: "10px" }}
-                >
-                  Terms of Service
-                </button>
-              </div>
-              <Button
-                variant="outline-success"
-                disabled={
-                  !acceptedTerms ||
-                  gender === "" ||
-                  username === "" ||
-                  password === "" ||
-                  email === "" ||
-                  firstName === "" ||
-                  lastName === ""
-                }
-                onClick={(e) => {
-                  e.preventDefault();
-                  const obj = {
-                    username,
-                    password,
-                    email,
-                    gender,
-                    firstName,
-                    lastName,
-                  };
-                  onSubmit(obj);
-                }}
-              >
-                Create Account
-              </Button>
-            </Box>
-          </form>
-        </Container>
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="Email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
+                />
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
+                />
+                <TextField
+                  hiddenLabel
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
+                />
 
+                <TextField
+                  type={showPassword ? "text" : "password"}
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="Password"
+                  autoComplete="no"
+                  InputProps={{
+                    autoComplete: showPassword ? "off" : "new-password",
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
+
+                <TextField
+                  type={showRepeatPassword ? "text" : "password"}
+                  id="filled-hidden-label-small"
+                  variant="outlined"
+                  label="Repeat Password"
+                  autoComplete="no"
+                  InputProps={{
+                    autoComplete: showRepeatPassword ? "off" : "new-password",
+                    endAdornment: (
+                      <InputAdornment
+                        position="end"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setShowRepeatPassword(!showRepeatPassword);
+                        }}
+                      >
+                        <VisibilityIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  value={repeatPassword}
+                  onChange={(e) => {
+                    setRepeatPassword(e.target.value);
+                  }}
+                />
+
+                <FormControl>
+                  <FormLabel color="success">Gender</FormLabel>
+                  <RadioGroup
+                    row
+                    value={gender}
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                    }}
+                  >
+                    {" "}
+                    <FormControlLabel
+                      value="male"
+                      control={<Radio color="success" />}
+                      label="Male"
+                    />
+                    <FormControlLabel
+                      value="female"
+                      control={<Radio color="success" />}
+                      label="Female"
+                    />
+                  </RadioGroup>
+                </FormControl>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginRight: "25px",
+                  }}
+                >
+                  <Checkbox
+                    color="success"
+                    onChange={(e) => {
+                      setAcceptedTerms(e.target.checked);
+                    }}
+                  />
+                  <span>I accept the</span>
+                  <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={onClickShow}
+                    style={{ position: "relative", right: "10px" }}
+                  >
+                    Terms of Service
+                  </button>
+                </div>
+                <Button
+                  variant="outline-success"
+                  disabled={
+                    !acceptedTerms ||
+                    gender === "" ||
+                    username === "" ||
+                    password === "" ||
+                    email === "" ||
+                    firstName === "" ||
+                    lastName === ""
+                  }
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const obj = {
+                      username,
+                      password,
+                      email,
+                      gender,
+                      firstName,
+                      lastName,
+                    };
+                    onSubmit(obj);
+                  }}
+                >
+                  Create Account
+                </Button>
+              </Box>
+            </form>
+          </Container>
+        </div>
         <Modal
           size="lg"
           centered
