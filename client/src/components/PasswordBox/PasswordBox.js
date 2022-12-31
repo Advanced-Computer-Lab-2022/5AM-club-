@@ -8,7 +8,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { memo } from "react";
 
-export default memo(function PasswordBox({ setPassword }) {
+export default memo(function PasswordBox({ setPassword, repeat }) {
   const [values, setValues] = React.useState({
     amount: "",
     password: "",
@@ -35,7 +35,9 @@ export default memo(function PasswordBox({ setPassword }) {
 
   return (
     <FormControl sx={{ m: 1, width: "76.3ch" }} variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+      <InputLabel htmlFor="outlined-adornment-password">
+        {repeat ? "Repeat Password" : "Password"}
+      </InputLabel>
       <OutlinedInput
         id="outlined-adornment-password"
         type={values.showPassword ? "text" : "password"}
@@ -53,7 +55,7 @@ export default memo(function PasswordBox({ setPassword }) {
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={repeat ? "Repeat Password" : "Password"}
       />
     </FormControl>
   );

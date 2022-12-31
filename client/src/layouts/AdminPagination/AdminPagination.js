@@ -33,7 +33,12 @@ export default memo(function AdminPagination({
       {items.slice(offset, offset + itemsPerPage).map((item, idx) => (
         <div key={item._id + idx}>
           {type === "report" ? (
-            <ReportCard report={item}></ReportCard>
+            <ReportCard
+              report={item}
+              pend={accept}
+              resolve={reject}
+              requestType={requestType}
+            ></ReportCard>
           ) : type === "request" ? (
             <div style={{ flexGrow: "1" }}>
               <RequestCard
@@ -55,7 +60,7 @@ export default memo(function AdminPagination({
 
   return (
     <div
-      className='paginator'
+      className="paginator"
       style={{ height: "100%", flexGrow: "1", display: "flex" }}
     >
       <div style={{ marginTop: "auto" }}>

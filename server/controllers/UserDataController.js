@@ -396,7 +396,62 @@ async function changePassword(req, res) {
   if (req.user.id) {
     const id = req.user.id;
     let User;
+    console.log(req.user.type, "asdkml");
     switch (req.user.type) {
+      case "individual":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            password: hashedPassword,
+          },
+          { new: true }
+        );
+        break;
+      case "corporate":
+        User = await Trainee.findByIdAndUpdate(
+          id,
+          {
+            password: hashedPassword,
+          },
+          { new: true }
+        );
+        break;
+      case "instructor":
+        User = await Instructor.findByIdAndUpdate(
+          id,
+          {
+            password: hashedPassword,
+          },
+          { new: true }
+        );
+        break;
+      default:
+        res.status(400).send("Invalid UserType");
+        return;
+        break;
+    }
+    res.send("Password changed successfully");
+    return;
+  } else {
+    res.status(400).send("Missing Id");
+    return;
+  }
+  res.send("Password changed successfully");
+}
+
+async function changeForgottenPassword(req, res) {
+  const pass = req.body.password;
+  if (passwordStrength(pass).value !== "Strong") {
+    res.status(400).send(passwordStrength(pass).value);
+    return;
+  }
+
+  var hashedPassword = bcrypt.hashSync(pass, 8);
+  if (req.headers.id) {
+    const id = req.headers.id;
+    let User;
+    console.log(req.headers.type, "asdkml");
+    switch (req.headers.type) {
       case "individual":
         User = await Trainee.findByIdAndUpdate(
           id,
@@ -467,7 +522,6 @@ async function changePasswordEmail(req, res) {
   });
   console.log(email, "email heeeeere");
   let user = await Trainee.findOne({ email: email });
-  console.log(user, "look here mega loser");
   if (user) {
     await Trainee.findByIdAndUpdate(
       user._id,
@@ -516,10 +570,11 @@ async function changePasswordEmail(req, res) {
       });
       res.send("email sent");
       return;
+    } else {
+      res.status(406).send("email not found");
+      return;
     }
   }
-
-  res.send("Invalid user data");
 }
 
 async function viewContract(req, res) {
@@ -786,6 +841,14 @@ async function followUp(req, res) {
   res.send("comment added successfully");
 }
 
+async function setProblemStatus(req, res) {
+  await Problem.findByIdAndUpdate(req.headers.id, {
+    status: req.body.status,
+  });
+  const problems = await Problem.find();
+  res.send(problems);
+}
+
 module.exports = {
   getCourseInstructor,
   setCountry,
@@ -805,6 +868,7 @@ module.exports = {
   getTraineeCourse,
   updateTraineeCourse,
   changePassword,
+  changeForgottenPassword,
   changePasswordEmail,
   viewContract,
   acceptContract,
@@ -813,5 +877,6 @@ module.exports = {
   checkCompleteProfile,
   reportProblem,
   viewProblems,
+  setProblemStatus,
   followUp,
 };

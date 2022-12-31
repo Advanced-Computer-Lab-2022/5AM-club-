@@ -16,7 +16,7 @@ function AddReportsCard() {
       sx={{ maxWidth: 345, height: "400px" }}
       className="card-hover-green"
       onClick={() => {
-        navigate("/reports");
+        navigate("reports");
       }}
     >
       <CardActionArea>

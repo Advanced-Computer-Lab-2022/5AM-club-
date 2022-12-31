@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import app from "../../utils/AxiosConfig";
-function useRequestCourse(course) {
+function useRequestCourse() {
   const [requestsContainer, setRequestsContainer] = useState();
   const [requests, setRequests] = useState();
   const [type, setType] = useState("pending");
