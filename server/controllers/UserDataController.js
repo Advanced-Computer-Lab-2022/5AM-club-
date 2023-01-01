@@ -17,10 +17,11 @@ const { passwordStrength } = require("check-password-strength");
 const bcrypt = require("bcryptjs");
 
 const countrySchema = Joi.object({
-  country: Joi.string().required(),
+    country: Joi.string().required(),
 });
 
 const updateUserSchema = Joi.object({
+
   password: Joi.string().required().messages({
     "string.empty": `"Password" cannot be an empty field`,
   }),
@@ -31,56 +32,57 @@ const updateUserSchema = Joi.object({
 }).unknown();
 
 const addUserSchema = Joi.object({
-  username: Joi.string().required().messages({
-    "string.empty": `"Username" cannot be an empty field`,
-  }),
-  password: Joi.string().required().messages({
-    "string.empty": `"Password" cannot be an empty field`,
-  }),
-  email: Joi.string().email({
-    minDomainSegments: 2,
-    tlds: { allow: ["com", "net"] },
-  }),
-  gender: Joi.string(),
-  firstName: Joi.string(),
-  lastName: Joi.string(),
+    username: Joi.string().required().messages({
+        "string.empty": `"Username" cannot be an empty field`,
+    }),
+    password: Joi.string().required().messages({
+        "string.empty": `"Password" cannot be an empty field`,
+    }),
+    email: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ["com", "net"] },
+    }),
+    gender: Joi.string(),
+    firstName: Joi.string(),
+    lastName: Joi.string(),
 });
 
 const editPersonalInformationSchema = Joi.object({
-  email: Joi.string().email().required(),
-  biography: Joi.string(),
+    email: Joi.string().email().required(),
+    biography: Joi.string(),
 });
 
 async function getUserType(req, res) {
-  let User;
+    let User;
 
-  User = await Trainee.findById(req.headers.id);
-  if (User) res.send(User.type);
-  else {
-    User = await Instructor.findById(req.headers.id);
-    if (User) res.send("instructor");
+    User = await Trainee.findById(req.headers.id);
+    if (User) res.send(User.type);
     else {
-      return res.status(400).send("Invalid ID");
+        User = await Instructor.findById(req.headers.id);
+        if (User) res.send("instructor");
+        else {
+            return res.status(400).send("Invalid ID");
+        }
     }
-  }
 }
 
 async function getTraineeCourse(req, res) {
-  const traineeCourse = await TraineeCourse.findOne({
-    traineeId: req.user.id,
-    courseId: req.headers.courseid,
-  });
-  if (traineeCourse) {
-    traineeCourse.purchasingCost = await convert(
-      traineeCourse.purchasingCost,
-      "United States",
-      req.headers.country
-    );
-    res.send(traineeCourse);
-  } else res.status(404).send();
+    const traineeCourse = await TraineeCourse.findOne({
+        traineeId: req.user.id,
+        courseId: req.headers.courseid,
+    });
+    if (traineeCourse) {
+        traineeCourse.purchasingCost = await convert(
+            traineeCourse.purchasingCost,
+            "United States",
+            req.headers.country
+        );
+        res.send(traineeCourse);
+    } else res.status(404).send();
 }
 
 async function updateTraineeCourse(req, res) {
+
   const test = await Course.findById(req.body.courseId);
 
   const traineeCourses = await TraineeCourse.findOneAndUpdate(
@@ -168,283 +170,313 @@ async function getUser(req, res) {
         break;
     }
     res.send(User);
-  }
+}
+
+async function getUser(req, res) {
+    if (req.user.id) {
+        console.log("started");
+        let id = req.user.id;
+        console.log(req.headers);
+        if (req.headers.id) id = req.headers.id;
+        console.log(id);
+        let User;
+        switch (req.headers.type) {
+            case "corporate":
+                User = await Trainee.findById(id);
+                break;
+            case "individual":
+                User = await Trainee.findById(id);
+                break;
+            case "admin":
+                User = await Admin.findById(id);
+                break;
+            case "instructor":
+                User = await Instructor.findById(id).populate(
+                    "userReviews.user"
+                );
+                break;
+            default:
+                res.status(400).send("Invalid UserType");
+                break;
+        }
+        res.send(User);
+    }
 }
 
 async function setCountry(req, res) {
-  const valid = countrySchema.validate(req.body);
+    const valid = countrySchema.validate(req.body);
 
-  if (valid.error) {
-    res.status(400).send("Invalid Country");
-    return;
-  }
-
-  if (req.user.id) {
-    const id = req.user.id;
-    let User;
-    switch (req.headers.type) {
-      case "individual":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            country: req.body.country,
-          },
-          { new: true }
-        );
-        break;
-      case "corporate":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            country: req.body.country,
-          },
-          { new: true }
-        );
-        break;
-      case "admin":
-        User = await Admin.findByIdAndUpdate(
-          id,
-          {
-            country: req.body.country,
-          },
-          { new: true }
-        );
-        break;
-      case "instructor":
-        User = await Instructor.findByIdAndUpdate(
-          id,
-          {
-            country: req.body.country,
-          },
-          { new: true }
-        );
-        break;
-      default:
-        res.status(400).send("Invalid UserType");
-        break;
+    if (valid.error) {
+        res.status(400).send("Invalid Country");
+        return;
     }
-  }
+
+    if (req.user.id) {
+        const id = req.user.id;
+        let User;
+        switch (req.headers.type) {
+            case "individual":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        country: req.body.country,
+                    },
+                    { new: true }
+                );
+                break;
+            case "corporate":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        country: req.body.country,
+                    },
+                    { new: true }
+                );
+                break;
+            case "admin":
+                User = await Admin.findByIdAndUpdate(
+                    id,
+                    {
+                        country: req.body.country,
+                    },
+                    { new: true }
+                );
+                break;
+            case "instructor":
+                User = await Instructor.findByIdAndUpdate(
+                    id,
+                    {
+                        country: req.body.country,
+                    },
+                    { new: true }
+                );
+                break;
+            default:
+                res.status(400).send("Invalid UserType");
+                break;
+        }
+    }
 }
 
 async function addAdmin(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  if (passwordStrength(req.body.password).value !== "Strong") {
-    res.status(402).send(passwordStrength(req.body.password).value);
-    return;
-  }
-  const unhashed = req.body.password;
-  req.body.password = bcrypt.hashSync(unhashed, 8);
-  const newAdmin = new Admin({ ...req.body, country: "United States" });
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    if (passwordStrength(req.body.password).value !== "Strong") {
+        res.status(402).send(passwordStrength(req.body.password).value);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newAdmin = new Admin({ ...req.body, country: "United States" });
 
-  await newAdmin
-    .save()
-    .then((response) => {
-      res.send("Admin added successfully!");
-    })
-    .catch((err) => res.status(400).send("Username already used "));
+    await newAdmin
+        .save()
+        .then((response) => {
+            res.send("Admin added successfully!");
+        })
+        .catch((err) => res.status(400).send("Username already used "));
 }
 
 async function addInstructor(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  if (passwordStrength(req.body.password).value !== "Strong") {
-    res.status(402).send(passwordStrength(req.body.password).value);
-    return;
-  }
-  const unhashed = req.body.password;
-  req.body.password = bcrypt.hashSync(unhashed, 8);
-  const newInstructor = new Instructor({
-    ...req.body,
-    email: "",
-    country: "United States",
-    biography: "",
-  });
-  await newInstructor
-    .save()
-    .then((response) => {
-      res.send("Instructor added successfully!");
-    })
-    .catch((err) => res.status(400).send("Username already used"));
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    if (passwordStrength(req.body.password).value !== "Strong") {
+        res.status(402).send(passwordStrength(req.body.password).value);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newInstructor = new Instructor({
+        ...req.body,
+        email: "",
+        country: "United States",
+        biography: "",
+    });
+    await newInstructor
+        .save()
+        .then((response) => {
+            res.send("Instructor added successfully!");
+        })
+        .catch((err) => res.status(400).send("Username already used"));
 }
 
 async function addTrainee(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(400).send(result.error.details[0].message);
-    return;
-  }
-  if (passwordStrength(req.body.password).value !== "Strong") {
-    res.status(402).send(passwordStrength(req.body.password).value);
-    return;
-  }
-  const unhashed = req.body.password;
-  req.body.password = bcrypt.hashSync(unhashed, 8);
-  const newCorporateTrainee = new Trainee({
-    ...req.body,
-    courses: [],
-    country: "United States",
-    type: "corporate",
-  });
-  await newCorporateTrainee
-    .save()
-    .then((response) => {
-      res.send("Trainee added successfully!");
-    })
-    .catch((err) => res.status(400).send("Username already used"));
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(400).send(result.error.details[0].message);
+        return;
+    }
+    if (passwordStrength(req.body.password).value !== "Strong") {
+        res.status(402).send(passwordStrength(req.body.password).value);
+        return;
+    }
+    const unhashed = req.body.password;
+    req.body.password = bcrypt.hashSync(unhashed, 8);
+    const newCorporateTrainee = new Trainee({
+        ...req.body,
+        courses: [],
+        country: "United States",
+        type: "corporate",
+    });
+    await newCorporateTrainee
+        .save()
+        .then((response) => {
+            res.send("Trainee added successfully!");
+        })
+        .catch((err) => res.status(400).send("Username already used"));
 }
 
 async function editPersonalInformationInstructor(req, res) {
-  const valid = editPersonalInformationSchema.validate(req.body);
-  if (valid.error) {
-    res.status(400).send("Invalid Email");
-    return;
-  }
+    const valid = editPersonalInformationSchema.validate(req.body);
+    if (valid.error) {
+        res.status(400).send("Invalid Email");
+        return;
+    }
 
-  if (req.user.id) {
-    const id = req.user.id;
-    const User = await Instructor.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    res.send(User);
-  } else {
-    res.status(400).send("Missing Id");
-  }
+    if (req.user.id) {
+        const id = req.user.id;
+        const User = await Instructor.findByIdAndUpdate(id, req.body, {
+            new: true,
+        });
+        res.send(User);
+    } else {
+        res.status(400).send("Missing Id");
+    }
 }
 
 async function signUp(req, res) {
-  const result = addUserSchema.validate(req.body);
-  if (result.error) {
-    res.status(406).send(result.error.details[0].message);
-    return;
-  }
+    const result = addUserSchema.validate(req.body);
+    if (result.error) {
+        res.status(406).send(result.error.details[0].message);
+        return;
+    }
 
-  const foundDup = await nameChecker(req.body.username);
+    const foundDup = await nameChecker(req.body.username);
 
-  if (foundDup) {
-    res.status(405).send("username already used!");
-    return;
-  }
-  if (passwordStrength(req.body.password).value !== "Strong") {
-    res.status(402).send(passwordStrength(req.body.password).value);
-    return;
-  }
-  const newindividualTrainee = new Trainee({
-    ...req.body,
-    password: bcrypt.hashSync(req.body.password, 8),
-    courses: [],
-    country: "United States",
-    type: "individual",
-  });
-  await newindividualTrainee
-    .save()
-    .then((response) => {
-      res.send("Trainee added successfully!");
-    })
-    .catch((err) => res.status(400).send("Please, enter valid data"));
+    if (foundDup) {
+        res.status(405).send("username already used!");
+        return;
+    }
+    if (passwordStrength(req.body.password).value !== "Strong") {
+        res.status(402).send(passwordStrength(req.body.password).value);
+        return;
+    }
+    const newindividualTrainee = new Trainee({
+        ...req.body,
+        password: bcrypt.hashSync(req.body.password, 8),
+        courses: [],
+        country: "United States",
+        type: "individual",
+    });
+    await newindividualTrainee
+        .save()
+        .then((response) => {
+            res.send("Trainee added successfully!");
+        })
+        .catch((err) => res.status(400).send("Please, enter valid data"));
 }
 
 async function editEmailInstructor(req, res) {
-  const valid = editEmailSchema.validate(req.body);
-  if (valid.error) {
-    res.status(400).send("Invalid Email");
-    return;
-  }
+    const valid = editEmailSchema.validate(req.body);
+    if (valid.error) {
+        res.status(400).send("Invalid Email");
+        return;
+    }
 
-  if (req.user.id) {
-    const id = req.user.id;
-    const User = await Instructor.findByIdAndUpdate(
-      id,
-      {
-        email: req.body.email,
-      },
-      { new: true }
-    );
-    res.send(User);
-  } else {
-    res.status(400).send("Missing Id");
-  }
+    if (req.user.id) {
+        const id = req.user.id;
+        const User = await Instructor.findByIdAndUpdate(
+            id,
+            {
+                email: req.body.email,
+            },
+            { new: true }
+        );
+        res.send(User);
+    } else {
+        res.status(400).send("Missing Id");
+    }
 }
 
 async function editBiographyInstructor(req, res) {
-  const valid = editBiographySchema.validate(req.body);
+    const valid = editBiographySchema.validate(req.body);
 
-  if (valid.error) {
-    res.status(400).send("Invalid Biography");
-    return;
-  }
+    if (valid.error) {
+        res.status(400).send("Invalid Biography");
+        return;
+    }
 
-  if (req.user.id) {
-    const id = req.user.id;
-    const User = await Instructor.findByIdAndUpdate(
-      id,
-      {
-        biography: req.body.biography,
-      },
-      { new: true }
-    );
-    res.send(User);
-  } else {
-    res.status(400).send("Missing Id");
-  }
+    if (req.user.id) {
+        const id = req.user.id;
+        const User = await Instructor.findByIdAndUpdate(
+            id,
+            {
+                biography: req.body.biography,
+            },
+            { new: true }
+        );
+        res.send(User);
+    } else {
+        res.status(400).send("Missing Id");
+    }
 }
 async function changePassword(req, res) {
-  const pass = req.body.password;
-  if (passwordStrength(pass).value !== "Strong") {
-    res.status(400).send(passwordStrength(pass).value);
-    return;
-  }
-
-  var hashedPassword = bcrypt.hashSync(pass, 8);
-  if (req.user.id) {
-    const id = req.user.id;
-    let User;
-    switch (req.user.type) {
-      case "individual":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            password: hashedPassword,
-          },
-          { new: true }
-        );
-        break;
-      case "corporate":
-        User = await Trainee.findByIdAndUpdate(
-          id,
-          {
-            password: hashedPassword,
-          },
-          { new: true }
-        );
-        break;
-      case "instructor":
-        User = await Instructor.findByIdAndUpdate(
-          id,
-          {
-            password: hashedPassword,
-          },
-          { new: true }
-        );
-        break;
-      default:
-        res.status(400).send("Invalid UserType");
+    const pass = req.body.password;
+    if (passwordStrength(pass).value !== "Strong") {
+        res.status(400).send(passwordStrength(pass).value);
         return;
-        break;
+    }
+
+    var hashedPassword = bcrypt.hashSync(pass, 8);
+    if (req.user.id) {
+        const id = req.user.id;
+        let User;
+        switch (req.user.type) {
+            case "individual":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            case "corporate":
+                User = await Trainee.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            case "instructor":
+                User = await Instructor.findByIdAndUpdate(
+                    id,
+                    {
+                        password: hashedPassword,
+                    },
+                    { new: true }
+                );
+                break;
+            default:
+                res.status(400).send("Invalid UserType");
+                return;
+                break;
+        }
+        res.send("Password changed successfully");
+        return;
+    } else {
+        res.status(400).send("Missing Id");
+        return;
     }
     res.send("Password changed successfully");
-    return;
-  } else {
-    res.status(400).send("Missing Id");
-    return;
-  }
-  res.send("Password changed successfully");
 }
 
 async function changeForgottenPassword(req, res) {
@@ -501,22 +533,23 @@ async function changeForgottenPassword(req, res) {
 }
 
 async function getWalletMoney(req, res) {
-  if (req.user.id) {
-    const id = req.user.id;
+    if (req.user.id) {
+        const id = req.user.id;
 
-    const User = await Trainee.findById(id);
+        const User = await Trainee.findById(id);
 
-    res.status(200).json(User.WalletMoney);
-  } else {
-    res.status(400).send("Missing Id");
-  }
+        res.status(200).json(User.WalletMoney);
+    } else {
+        res.status(400).send("Missing Id");
+    }
 }
 
 async function getCourseInstructor(req, res) {
-  res.send(await Instructor.find({ courses: ObjectId(req.query.courseid) }));
+    res.send(await Instructor.find({ courses: ObjectId(req.query.courseid) }));
 }
 
 async function changePasswordEmail(req, res) {
+
   // search for email by type and name
   const email = req.headers.email;
   let transporter = nodemailer.createTransport({
@@ -582,27 +615,28 @@ async function changePasswordEmail(req, res) {
 }
 
 async function viewContract(req, res) {
-  const contract = await Contract.findOne();
-  res.send(contract.description);
+    const contract = await Contract.findOne();
+    res.send(contract.description);
 }
 async function acceptContract(req, res) {
-  let id = req.user.id;
-  await Instructor.findByIdAndUpdate(id, {
-    accepted: true,
-  });
-  res.send("accepted");
+    let id = req.user.id;
+    await Instructor.findByIdAndUpdate(id, {
+        accepted: true,
+    });
+    res.send("accepted");
 }
 
 const decodeToken = async (req, res) => {
-  const token = req.cookies.accessToken;
-  if (token == null) return res.sendStatus(401);
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) res.sendStatus(401);
-    else return res.json(user);
-  });
+    const token = req.cookies.accessToken;
+    if (token == null) return res.sendStatus(401);
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) res.sendStatus(401);
+        else return res.json(user);
+    });
 };
 
 const login = async (req, res) => {
+
   const user = { username: req.body.username };
   var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
 
@@ -646,28 +680,39 @@ const login = async (req, res) => {
       user.email = trainees.email;
     }
 
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "120m",
+    const admins = await Admin.findOne({
+        username: user.username,
     });
-    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-      expiresIn: "1d",
+    const instructors = await Instructor.findOne({
+        username: user.username,
     });
 
-    res.cookie("jwt", `${refreshToken}`);
-    res.cookie("accessToken", `${accessToken}`);
 
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: "120m",
+        });
+        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+            expiresIn: "1d",
+        });
+        //console.log(refreshToken);
+
+        res.cookie("jwt", `${refreshToken}`);
+        res.cookie("accessToken", `${accessToken}`);
+
+        //refreshTokens.push(refreshToken);
+
+        // console.log(res.cookie);
+        res.json({
+            type: user.type,
+            username: user.username,
+            country: user.country,
+        });
+    }
+};
     //refreshTokens.push(refreshToken);
 
-    res.json({
-      type: user.type,
-      username: user.username,
-      country: user.country,
-    });
-  }
 
-  //refreshTokens.push(refreshToken);
-};
-
+   
 const updateProfile = async (req, res) => {
   const id = req.user.id;
   const type = req.user.type;
@@ -718,116 +763,216 @@ const updateProfile = async (req, res) => {
 };
 
 const checkCompleteProfile = async (req, res) => {
-  if (!req.user) res.json("true");
-  else if (!req.user.email) res.json("false");
-  else res.json("true");
+    if (!req.user) res.json("true");
+    else if (!req.user.email) res.json("false");
+    else res.json("true");
 };
 
 const logout = async (req, res) => {
-  res.clearCookie("accessToken");
-  res.clearCookie("jwt");
+    console.log("logging out!!");
+    res.clearCookie("accessToken");
+    res.clearCookie("jwt");
 };
 
 const addBoughtCourse = async (req, res) => {
-  await jwt.verify(
-    req.body.token,
-    process.env.BUY_COURSE_SECRET,
-    async (err, decoded) => {
-      if (err) {
-        // Wrong or expired refresh token
-        return res.status(401).json({ message: "Wrong course token" });
-      } else {
-        //logic here
-        const { courseId, traineeId, paidFromWallet } = decoded;
-        const traineeAfterAdd = await Trainee.findOneAndUpdate(
-          { _id: traineeId },
-          {
-            $push: { courses: courseId },
-            $inc: { walletMoney: -1 * paidFromWallet },
-          }
-        );
+    await jwt.verify(
+        req.body.token,
+        process.env.BUY_COURSE_SECRET,
+        async (err, decoded) => {
+            if (err) {
+                // Wrong or expired refresh token
+                return res.status(401).json({ message: "Wrong course token" });
+            } else {
+                //logic here
+                console.log("token in back", decoded);
+                const { courseId, traineeId, paidFromWallet } = decoded;
+                await TraineeCourse.findOne({
+                    courseId: courseId,
+                    traineeId: traineeId,
+                }).then((result) => {
+                    if (result?.courseId) {
+                        console.log("already exists");
+                        return res.json({ message: "already have the course" });
+                    }
+                });
+                const traineeAfterAdd = await Trainee.findOneAndUpdate(
+                    { _id: traineeId },
+                    {
+                        $push: { courses: courseId },
+                        $inc: { walletMoney: -1 * paidFromWallet },
+                    }
+                )
+                    .then(() => console.log("trainee has the course"))
+                    .catch((err) => console.log(err));
+                let courseAfterAdd, sectionsNum;
+                await Course.findOneAndUpdate(
+                    { _id: courseId },
+                    { $push: { owners: traineeId } }
+                )
+                    .then((result) => {
+                        courseAfterAdd = result;
+                        console.log("course has new owner", courseAfterAdd);
+                        sectionsNum = courseAfterAdd.subtitles.reduce(
+                            (Acc, curSubtitle) =>
+                                Acc + curSubtitle.sections.length,
+                            0
+                        );
+                    })
+                    .catch((err) => console.log(err));
+                //console.log(courseAfterAdd);
+                //change array lengthssss and price value
 
-        let courseAfterAdd, sectionsNum;
-        await Course.findOneAndUpdate(
-          { _id: courseId },
-          { $push: { owners: traineeId } }
-        ).then((result) => {
-          courseAfterAdd = result;
-          sectionsNum = courseAfterAdd.subtitles.reduce(
-            (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
-            0
-          );
-        });
+                const newTraineeCourse = await TraineeCourse.create({
+                    courseId,
+                    traineeId,
+                    progress: Array(sectionsNum).fill(false),
+                    answers: Array(sectionsNum).fill(Array(4).fill(-1)),
+                    notes: Array(sectionsNum).fill([]),
+                    lastSection: 0,
+                    grades: Array(sectionsNum).fill(0),
+                    purchasingCost: courseAfterAdd.price,
+                })
+                    .then(() => console.log("new traineeCourse doc created"))
+                    .catch((err) => console.log(err));
 
-        const progressArray = new Array(sectionsNum).fill(false);
+                //dont forget instructors
+                const moneyPerInst =
+                    courseAfterAdd.price / courseAfterAdd.instructor.length;
+                for (let instId of courseAfterAdd.instructor) {
+                    const tmpInst = await Instructor.findById(instId);
+                    const now = new Date();
+                    if (
+                        tmpInst.money_owed.slice(-1)[0]?.year ==
+                            now.getFullYear() &&
+                        tmpInst.money_owed.slice(-1)[0]?.month ==
+                            now.getMonth() + 1
+                    ) {
+                        tmpInst.money_owed.at(-1).amount += moneyPerInst;
+                        await Instructor.findByIdAndUpdate(instId, {
+                            $set: { money_owed: tmpInst.money_owed },
+                        });
+                    } else {
+                        await Instructor.findByIdAndUpdate(instId, {
+                            $push: {
+                                money_owed: {
+                                    year: now.getFullYear(),
+                                    month: now.getMonth() + 1,
+                                    amount: moneyPerInst,
+                                },
+                            },
+                        });
+                    }
 
-        await TraineeCourse.create({
-          courseId,
-          traineeId,
-          progress: progressArray,
-          answers: Array(sectionsNum).fill(Array(4).fill(-1)),
-          notes: Array(sectionsNum).fill([]),
-          lastSection: 0,
-          grades: Array(sectionsNum).fill(0),
-          purchasingCost: courseAfterAdd.price,
-        });
+                    res.json({ message: "boaught succ" });
+                }
+            }
 
-        //dont forget instructors
-        const moneyPerInst =
-          courseAfterAdd.price / courseAfterAdd.instructor.length;
-        for (let instId of courseAfterAdd.instructor) {
-          const tmpInst = await Instructor.findById(instId);
-          const now = new Date();
-          if (
-            tmpInst.money_owed.slice(-1)[0]?.year == now.getFullYear() &&
-            tmpInst.money_owed.slice(-1)[0]?.month == now.getMonth() + 1
-          ) {
-            tmpInst.money_owed.at(-1).amount += moneyPerInst;
-            await Instructor.findByIdAndUpdate(instId, {
-              $set: { money_owed: tmpInst.money_owed },
-            });
-          } else {
-            await Instructor.findByIdAndUpdate(instId, {
-              $push: {
-                money_owed: {
-                  year: now.getFullYear(),
-                  month: now.getMonth() + 1,
-                  amount: moneyPerInst,
-                },
-              },
-            });
-          }
-
-          res.json({ message: "boaught succ" });
         }
-      }
-    }
-  );
+    );
 };
 
 async function reportProblem(req, res) {
-  const newProblem = new Problem({
-    ...req.body,
-    username: req.user.username,
-    userId: req.user.id,
-  });
-  await newProblem.save().then((response) => {
-    res.send("Problem reported successfully!");
-  });
+    const newProblem = new Problem({
+        ...req.body,
+        username: req.user.username,
+        userId: req.user.id,
+    });
+    await newProblem.save().then((response) => {
+        res.send("Problem reported successfully!");
+    });
 }
 async function viewProblems(req, res) {
-  const problems = await Problem.find({ userId: req.user.id });
-  res.send(problems);
-  //req.user.id get id of the user, filter problems where user id in problem model == user id
+    const problems = await Problem.find({ userId: req.user.id });
+    res.send(problems);
+    //req.user.id get id of the user, filter problems where user id in problem model == user id
 }
 async function followUp(req, res) {
+
   await Problem.findByIdAndUpdate(
     req.headers.id,
     { $push: { comments: req.body } },
     { upsert: true }
   );
   res.send("comment added successfully");
+
 }
+const refund = async (req, res) => {
+    const traineeId = req.user.id;
+    const courseId = req.body.courseId;
+    console.log("body:", req.body);
+    console.log(traineeId, courseId);
+    await TraineeCourse.findOneAndDelete({
+        courseId: courseId,
+        traineeId: traineeId,
+    })
+        .then(async (DeletedTraineeCourse) => {
+            console.log("deleted from TraineeCourse");
+            await Trainee.findOneAndUpdate(
+                { _id: traineeId },
+                {
+                    $pull: { courses: courseId },
+                    $inc: { walletMoney: DeletedTraineeCourse.purchasingCost },
+                }
+            )
+                .then(async (traineeAfterRemove) => {
+                    console.log("trainee lost the course");
+
+                    await Course.findOneAndUpdate(
+                        { _id: courseId },
+                        { $pull: { owners: traineeId } }
+                    )
+                        .then(async (lostCourse) => {
+                            console.log("course lost an owner");
+                            //dont forget instructors
+                            const instId = lostCourse.instructor[0];
+                            await Instructor.findById(instId).then(
+                                async (tmpInst) => {
+                                    console.log(
+                                        "tmpInst just in",
+                                        tmpInst,
+                                        DeletedTraineeCourse.createdAt.getFullYear(),
+                                        DeletedTraineeCourse.createdAt.getMonth()
+                                    );
+                                    tmpInst.money_owed.forEach(
+                                        async (element) => {
+                                            console.log(
+                                                "deletedTC",
+                                                DeletedTraineeCourse
+                                            );
+                                            if (
+                                                element.year ==
+                                                    DeletedTraineeCourse.createdAt.getFullYear() &&
+                                                element.month ==
+                                                    DeletedTraineeCourse.createdAt.getMonth() +
+                                                        1
+                                            )
+                                                element.amount -=
+                                                    DeletedTraineeCourse.purchasingCost;
+                                        }
+                                    );
+                                    console.log(
+                                        "money_owed new=",
+                                        tmpInst.money_owed
+                                    );
+                                    await Instructor.findOneAndUpdate(
+                                        { _id: instId },
+                                        {
+                                            $set: {
+                                                money_owed: tmpInst.money_owed,
+                                            },
+                                        }
+                                    );
+                                }
+                            );
+                        })
+                        .catch((err) => console.log(err));
+                })
+                .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+
+    res.json({ message: "refunded succ" });
+};
 
 async function setProblemStatus(req, res) {
   await Problem.findByIdAndUpdate(req.headers.id, {
@@ -873,6 +1018,7 @@ async function sendCertificate(req, res) {
 }
 
 module.exports = {
+
   getCourseInstructor,
   setCountry,
   getUser,
