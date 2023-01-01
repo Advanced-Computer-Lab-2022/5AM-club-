@@ -24,7 +24,7 @@ function Notes(props) {
       <div></div>
       <div>
         {addingNote ? (
-          <>
+          <div style={{ display: "flex" }}>
             <div
               ref={noteRef}
               className="course-attribute-input"
@@ -35,7 +35,9 @@ function Notes(props) {
               style={{
                 fontSize: "60px",
                 width: "auto",
+
                 display: "inline-block",
+                flexGrow: "1",
               }}
               contentEditable
               role="textbox"
@@ -43,6 +45,7 @@ function Notes(props) {
 
             <button
               className="btn btn-outline-success"
+              style={{ flexshrink: "0" }}
               onClick={() => {
                 console.log(traineeNotes, "asgdlkm");
                 setAddingNote(false);
@@ -64,7 +67,7 @@ function Notes(props) {
             >
               Add
             </button>
-          </>
+          </div>
         ) : (
           <>
             <div style={{ display: "flex", flexDirection: "row-reverse" }}>
