@@ -81,7 +81,6 @@ function Subtitles(props) {
       }
     }
     setCompletedSubtitles(completedSub);
-
     setChosenSection(props.traineeCourse?.lastSection);
     //eslint-disable-next-line
   }, [props.traineeCourse?.lastSection, props.course?.subtitles, progress]);
@@ -113,12 +112,16 @@ function Subtitles(props) {
             >
               <div className="subtitle-header-take">
                 {completedSubtitles[index] && (
-                  <CheckIcon fontSize="large" style={{ marginBottom: "12px" }}>
+                  <CheckIcon fontSize="large" style={{ marginBottom: "27px" }}>
                     {" "}
                   </CheckIcon>
                 )}
-
-                <p className="subtitle-header-take">{subtitle.title}</p>
+                <div>
+                  <p className="subtitle-header-take">{subtitle.title}</p>
+                  <p style={{ fontSize: "15px", color: "#999999" }}>
+                    {subtitle.description}
+                  </p>
+                </div>
               </div>
             </AccordionSummary>
             <AccordionDetails>
@@ -157,7 +160,6 @@ function Subtitles(props) {
                       );
                     }}
                     onClick={() => {
-                      console.log(props.traineeCourse);
                       props.updateTraineeCourse({
                         ...props.traineeCourse,
                         progress: section.content.video

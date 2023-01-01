@@ -24,18 +24,10 @@ function ViewMyCourses() {
   useEffect(() => {
     async function insideEffect() {
       //handle somethingggg
-      console.log("welcome to ypur courses");
       if (token != null) {
-        console.log(token);
-        console.log(">>>>>>>>>>>>>>>>>>>>");
-        await app.post("add-course-to-individual", { token }).then((res) => {
-          console.log("<<<<<<<<<<<<<<<<<<<<<");
-          console.log("added course to ind");
-          console.log(res);
-        });
+        await app.post("add-course-to-individual", { token }).then((res) => {});
       }
       setCourses([]);
-      console.log(filter);
       await app
         .get(
           localStorage.getItem("type")
@@ -53,7 +45,6 @@ function ViewMyCourses() {
           }
         )
         .then((response) => {
-          console.log(response.data);
           if (response.data.length === 0) setNoCourses(true);
           else {
             setNoCourses(false);
@@ -67,10 +58,12 @@ function ViewMyCourses() {
 
   return (
     <div className="view-courses-wrapper">
-      <MyFiltersContainer
-        setFilter={setFilter}
-        setNoCourses={setNoCourses}
-      ></MyFiltersContainer>
+      {localStorage.getItem("type") === "instructor" && (
+        <MyFiltersContainer
+          setFilter={setFilter}
+          setNoCourses={setNoCourses}
+        ></MyFiltersContainer>
+      )}
       <div className="main-content">
         <MyCoursesContainer
           courses={courses}

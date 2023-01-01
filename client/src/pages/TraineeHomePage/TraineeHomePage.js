@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import CourseCard from "../../components/ViewCourses/CourseCard";
+import "./TraineeHomePage.css";
 
 function TraineeHomePage() {
   const navigate = useNavigate();
@@ -15,14 +16,11 @@ function TraineeHomePage() {
         res.data = res.data.slice(0, 4);
         setPopularCourses(res.data);
         if (localStorage.getItem("refresh")) {
-          console.log("asdbjkn");
           localStorage.removeItem("refresh");
           navigate(0);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
     // eslint-disable-next-line
   }, []);
 
@@ -41,6 +39,7 @@ function TraineeHomePage() {
                 </div>
                 <div className="accordion-list">
                   <ul>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -48,10 +47,10 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         className="collapse"
                         data-bs-target="#accordion-list-1"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>01</span> Search for
-                        a course
+                        <span style={{ color: "#96Bea8" }}>1</span> Search for a
+                        course
                         <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
@@ -63,6 +62,7 @@ function TraineeHomePage() {
                         <p>Use the search bar above to browse our courses</p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -70,10 +70,10 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-2"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96bea8" }}>02</span> Buy a
-                        course <i className="bx bx-chevron-down icon-show"></i>
+                        <span style={{ color: "#96bea8" }}>2</span> Buy a course{" "}
+                        <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
                       <div
@@ -88,6 +88,7 @@ function TraineeHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -95,9 +96,9 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-3"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>03</span> Take your
+                        <span style={{ color: "#96Bea8" }}>3</span> Take your
                         course <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
@@ -115,17 +116,20 @@ function TraineeHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                   </ul>
                 </div>
               </div>
               <div
-                className="col-lg-5 align-items-stretch order-1 order-lg-2 img"
-                style={{ backgroundImage: 'url("assets/img/why-us.png")' }}
+                className="col-lg-5 align-items-stretch order-1 order-lg-2 img hover-grow"
+                style={{
+                  backgroundImage: 'url("assets/img/why-us.png")',
+                  width: "550px",
+                  marginLeft: "40px",
+                }}
                 data-aos="zoom-in"
                 data-aos-delay="150"
-              >
-                {" "}
-              </div>
+              ></div>
             </div>
           </div>
         </section>

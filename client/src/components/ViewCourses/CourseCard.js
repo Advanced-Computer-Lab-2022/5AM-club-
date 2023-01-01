@@ -10,7 +10,6 @@ import Rating from "@mui/material/Rating";
 import CornerRibbon from "react-corner-ribbon";
 
 function Card(props) {
-  console.log(props.course.promotion);
   return (
     <MDBCard className="course-card" style={{ width: "300px" }}>
       {props.course.promotion &&
@@ -147,6 +146,15 @@ function Card(props) {
                 formatTime(props.course.minutes)}
             </p>
           </div>
+          <p className="text-muted" style={{ marginTop: "5px" }}>
+            {props.course.views +
+              (props.course.views === 1 ? " View" : " Views") +
+              " • " +
+              (props.course.owners.length + props.course.accepted.length) +
+              (props.course.owners.length + props.course.accepted.length === 1
+                ? " Purchase"
+                : " Purchases")}
+          </p>
         </div>
       </MDBCardBody>{" "}
       <img
@@ -179,12 +187,14 @@ function CourseCard(props) {
       )
       .then(() => {
         navigate(
-          "/" +
-            (localStorage.getItem("type") === "corporate" ||
-            localStorage.getItem("type") === "individual"
-              ? localStorage.getItem("type") + "-trainee"
-              : localStorage.getItem("type")) +
-            "/courses/view-course",
+          localStorage.getItem("type")
+            ? "/" +
+                (localStorage.getItem("type") === "corporate" ||
+                localStorage.getItem("type") === "individual"
+                  ? localStorage.getItem("type") + "-trainee"
+                  : localStorage.getItem("type")) +
+                "/courses/view-course"
+            : "/courses/view-course",
           {
             state: { id: props.course._id },
           }

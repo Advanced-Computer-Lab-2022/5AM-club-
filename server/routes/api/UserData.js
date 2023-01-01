@@ -32,12 +32,19 @@ router.put("/edit-trainee-course", UserDataController.updateTraineeCourse);
 router.put("/change-password-email", UserDataController.changePasswordEmail);
 router.post("/report-problem", UserDataController.reportProblem);
 router.get("/view-problems", UserDataController.viewProblems);
-router.put("/followUp", UserDataController.followUp);
+router.put("/follow-up", UserDataController.followUp);
+router.put("/set-problem-status", UserDataController.setProblemStatus);
+router.put("/send-certificate", UserDataController.sendCertificate);
 
 router.put(
     "/change-password",
     authenticateToken,
     UserDataController.changePassword
+);
+router.put(
+  "/change-forgotten-password",
+  authenticateToken,
+  UserDataController.changeForgottenPassword
 );
 
 router.get(

@@ -162,7 +162,6 @@ function Subtitle(props) {
                 "&part=contentDetails&key=AIzaSyDA-c7NayerkKbh5S_74nibw_yp2r4OnAA"
             )
             .then((response) => {
-              console.log(response);
               app
                 .put(
                   "/instructor/my-courses/edit-course/" +

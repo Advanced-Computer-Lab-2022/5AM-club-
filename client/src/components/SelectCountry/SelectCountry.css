@@ -30,7 +30,7 @@
   border-radius: 20px;
   background-color: rgb(150, 206, 168);
 }
-.selected {
+.selected-country {
   border-radius: 20px;
 
   background-color: rgb(150, 206, 168);
@@ -40,4 +40,9 @@
   font-weight: 700;
   color: #484848;
   margin-left: 5px;
+}
+.expand-search:focus-within,
+.expand-search:focus {
+  flex-grow: 1;
+  transition: all 0.5s;
 }

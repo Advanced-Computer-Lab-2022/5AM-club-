@@ -4,13 +4,24 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Subtitles from "../../components/TakeCourse/Subtitles";
 import Content from "../../components/TakeCourse/Content";
 import "./TraineeTakeCourse.css";
+import Modal from "react-bootstrap/Modal";
+import success from "../../assets/Header/success.png";
+import Notes from "../../components/TakeCourse/Notes";
 
 function TraineeTakeCourse() {
   const [course, setCourse] = useState();
   const [traineeCourse, setTraineeCourse] = useState();
+  const [currentSectionName, setCurrentSectionName] = useState("");
+  const [flag, setFlag] = useState(false);
+  const [show, setShow] = useState(false);
+
+  function onClickHide() {
+    setShow(false);
+  }
+
   const location = useLocation();
   const navigate = useNavigate();
-  const [flag, setFlag] = useState(false);
+
   useEffect(() => {
     app
       .get("/trainee/courses/" + location.state?.courseId, {
@@ -27,8 +38,11 @@ function TraineeTakeCourse() {
               courseId: location.state?.courseId,
             },
           })
-          .then((response) => {
-            setTraineeCourse(response.data);
+          .then((res) => {
+            if (response.data.subtitles[0].sections[0].content.video) {
+              res.data.progress[0] = true;
+            }
+            setTraineeCourse(res.data);
           });
       });
 
@@ -37,11 +51,9 @@ function TraineeTakeCourse() {
   }, []);
 
   function updateTraineeCourse(traineeCourse) {
-    console.log(traineeCourse);
     app
       .put("/trainee/edit-trainee-course", {
         lastSection: traineeCourse.lastSection,
-
         courseId: location.state?.courseId,
         progress: traineeCourse.progress,
         answers: traineeCourse.answers,
@@ -49,27 +61,38 @@ function TraineeTakeCourse() {
         notes: traineeCourse.notes,
       })
       .then((response) => {
-        console.log(response.data);
+        if (response.data.complete && response.data.sent !== true) {
+          setShow(true);
+          app.put("/trainee/send-certificate", {
+            courseId: location.state?.courseId,
+          });
+        }
         setTraineeCourse(response.data);
       })
-      .catch((error) => {
-        if (error.response.status === 409) {
-          navigate(0);
-        }
-      });
+      .catch((error) => {});
   }
 
   return (
     <div className="take-course-wrapper">
       <div className="content-notes-wrapper">
-        <div className="content">
-          <Content
-            course={course}
-            traineeCourse={traineeCourse}
-            updateTraineeCourse={updateTraineeCourse}
-          ></Content>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="course-content">
+            <Content
+              course={course}
+              setCurrentSectionName={setCurrentSectionName}
+              traineeCourse={traineeCourse}
+              updateTraineeCourse={updateTraineeCourse}
+            ></Content>
+          </div>{" "}
+          <div className="notes">
+            <Notes
+              course={course}
+              traineeCourse={traineeCourse}
+              currentSectionName={currentSectionName}
+              updateTraineeCourse={updateTraineeCourse}
+            ></Notes>
+          </div>
         </div>
-        <div className="notes"></div>
       </div>
       <div className="subtitles">
         <Subtitles
@@ -80,6 +103,48 @@ function TraineeTakeCourse() {
           traineeCourse={traineeCourse}
         ></Subtitles>
       </div>
+      <Modal
+        size="lg"
+        centered
+        show={show}
+        onHide={onClickHide}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <div className="tos-wrapper" style={{ width: "100%" }}>
+          <div className="tos-border-success" style={{ width: "100%" }}>
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                Congratulations!
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body
+              className="tos"
+              style={{
+                height: "fit-content",
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+              }}
+            >
+              <div className="updated-successfully">
+                <div className="updated-successfully-text">
+                  <h4>Congratulations!</h4>
+
+                  <p>
+                    You have completed this course. You can now download your
+                    certificate from the course page. An email with the
+                    certificate will also be sent to you.
+                  </p>
+                </div>
+                <div className="updated-successfully-image">
+                  <img src={success} alt="Success" className="success" />
+                </div>
+              </div>
+            </Modal.Body>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

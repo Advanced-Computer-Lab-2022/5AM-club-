@@ -1,15 +1,26 @@
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import app from "../../utils/AxiosConfig";
+import CourseCard from "../../components/ViewCourses/CourseCard";
+import "./GuestHomePage.css";
 function GuestHomePage() {
   const navigate = useNavigate();
+  const [popularCourses, setPopularCourses] = useState([]);
 
   useEffect(() => {
-    if (localStorage.getItem("refresh")) {
-      localStorage.removeItem("refresh");
-      navigate(0);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    app
+      .get("/populated-courses")
+      .then((res) => {
+        res.data.sort((a, b) => b.owners.length - a.owners.length);
+        res.data = res.data.slice(0, 4);
+        setPopularCourses(res.data);
+        if (localStorage.getItem("refresh")) {
+          localStorage.removeItem("refresh");
+          navigate(0);
+        }
+      })
+      .catch((err) => {});
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -48,7 +59,7 @@ function GuestHomePage() {
               </div>
             </div>
             <div
-              className="col-lg-6 order-1 order-lg-2 hero-img"
+              className="col-lg-6 order-1 order-lg-2 hero-img hover-grow"
               data-aos="zoom-in"
               data-aos-delay="200"
             >
@@ -85,11 +96,12 @@ function GuestHomePage() {
             </div>
             <div className="row">
               <div
-                className="col-xl-3 col-md-6 d-flex align-items-stretch"
+                className="col-xl-3 col-md-6 d-flex align-items-stretch grow-hover"
                 data-aos="zoom-in"
                 data-aos-delay="100"
               >
-                <div className="icon-box">
+                {" "}
+                <div className="icon-box green-grow-hover">
                   <div
                     className="icon"
                     style={{
@@ -107,11 +119,11 @@ function GuestHomePage() {
                 </div>
               </div>
               <div
-                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0"
+                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0 grow-hover"
                 data-aos="zoom-in"
                 data-aos-delay="200"
               >
-                <div className="icon-box">
+                <div className="icon-box green-grow-hover">
                   <div
                     className="icon"
                     style={{
@@ -130,11 +142,11 @@ function GuestHomePage() {
               </div>
 
               <div
-                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0"
+                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0 grow-hover"
                 data-aos="zoom-in"
                 data-aos-delay="400"
               >
-                <div className="icon-box">
+                <div className="icon-box green-grow-hover">
                   <div
                     className="icon"
                     style={{
@@ -152,11 +164,11 @@ function GuestHomePage() {
                 </div>
               </div>
               <div
-                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0"
+                className="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0 grow-hover"
                 data-aos="zoom-in"
                 data-aos-delay="300"
               >
-                <div className="icon-box">
+                <div className="icon-box green-grow-hover">
                   <div
                     className="icon"
                     style={{
@@ -176,7 +188,34 @@ function GuestHomePage() {
             </div>
           </div>
         </section>
-
+        <section id="popular-courses" className="services">
+          <div className="container" data-aos="fade-up">
+            <div className="section-title">
+              <h2
+                style={{ color: "#96cea8", cursor: "pointer" }}
+                onClick={() => {
+                  navigate("courses");
+                }}
+              >
+                Popular Courses
+              </h2>
+              <p>Check out our most popular courses.</p>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                minWidth: "100%",
+              }}
+            >
+              {popularCourses.map((course) => (
+                <div key={course._id}>
+                  <CourseCard course={course}></CourseCard>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
         <section id="team" className="team section-bg">
           <div className="container" data-aos="fade-up">
             <div className="section-title">
@@ -192,7 +231,7 @@ function GuestHomePage() {
               }}
             >
               <div
-                className="member d-flex align-items-start"
+                className="member d-flex align-items-start green-grow-hover grow-hover"
                 data-aos="zoom-in"
                 data-aos-delay="100"
               >
@@ -213,7 +252,7 @@ function GuestHomePage() {
             <div className="row">
               <div className="col-lg-6">
                 <div
-                  className="member d-flex align-items-start"
+                  className="member d-flex align-items-start green-grow-hover grow-hover"
                   data-aos="zoom-in"
                   data-aos-delay="100"
                 >
@@ -237,7 +276,7 @@ function GuestHomePage() {
               </div>
               <div className="col-lg-6 mt-4 mt-lg-0">
                 <div
-                  className="member d-flex align-items-start"
+                  className="member d-flex align-items-start green-grow-hover grow-hover"
                   data-aos="zoom-in"
                   data-aos-delay="200"
                 >
@@ -257,7 +296,7 @@ function GuestHomePage() {
               </div>
               <div className="col-lg-6 mt-4">
                 <div
-                  className="member d-flex align-items-start"
+                  className="member d-flex align-items-start green-grow-hover grow-hover"
                   data-aos="zoom-in"
                   data-aos-delay="300"
                 >
@@ -277,7 +316,7 @@ function GuestHomePage() {
               </div>
               <div className="col-lg-6 mt-4">
                 <div
-                  className="member d-flex align-items-start"
+                  className="member d-flex align-items-start green-grow-hover grow-hover"
                   data-aos="zoom-in"
                   data-aos-delay="400"
                 >

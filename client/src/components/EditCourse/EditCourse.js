@@ -157,6 +157,12 @@ function EditCourse(props) {
   }
 
   async function publishCourse() {
+    if (!props.course?.valid) {
+      alert(
+        "You can't publish a course without any content. Please add at least one course section."
+      );
+      return;
+    }
     const newPrice = await convert(
       price,
       localStorage.getItem("country"),
@@ -224,7 +230,6 @@ function EditCourse(props) {
                       className="course-attribute-input"
                       value={title}
                       onInput={(e) => {
-                        console.log(e.target.innerText);
                         setTitle(e.target.innerText);
                       }}
                       style={{
@@ -281,7 +286,6 @@ function EditCourse(props) {
                 <button
                   className="btn btn-outline-success"
                   onClick={publishCourse}
-                  disabled={!props.course?.valid}
                 >
                   Publish Course
                 </button>

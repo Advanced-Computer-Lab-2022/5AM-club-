@@ -14,7 +14,6 @@ const instructorSchema = new mongoose.Schema({
   },
   email: { type: String },
   country: { type: String },
-  money_owed: { type: Number, default: 0 },
   rating: {
     type: Number,
     default: 0,

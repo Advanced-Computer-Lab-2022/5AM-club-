@@ -97,7 +97,6 @@ function CoursePromoCard() {
         headers: { type: "admin", country: localStorage.getItem("country") },
       })
       .then((response) => {
-        console.log(response.data);
         setCourses(response.data);
       });
   }, []);
@@ -123,7 +122,6 @@ function CoursePromoCard() {
                 : getCourseTitles(selectedCourses),
           })
           .then((res) => {
-            console.log(res);
             setShow(false);
             setSelectedCourses([]);
             setPercentage(1);
@@ -155,7 +153,7 @@ function CoursePromoCard() {
         onClick={() => setShow(true)}
         sx={{
           height: "100px",
-          width: "537px",
+          width: "345px",
         }}
         className="card-hover-green"
       >
@@ -171,7 +169,7 @@ function CoursePromoCard() {
         >
           <img height="100" width="150" src={addUser} alt="add user" />
 
-          <Typography gutterBottom variant="h4" component="div">
+          <Typography gutterBottom variant="h5" component="div">
             Add Course Promotion{" "}
           </Typography>
         </CardActionArea>

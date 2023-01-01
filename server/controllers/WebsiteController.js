@@ -3,7 +3,6 @@ const Document = require("../models/Document");
 getContract = async (req, res) => {
   try {
     const contract = await Document.findOne({ type: "contract" });
-    console.log(contract);
     res.send(contract);
   } catch (err) {
     res.status(500);

@@ -1,6 +1,5 @@
 import { memo } from "react";
 import CourseRequestsCard from "../../components/AdminHomePage/CourseRequestsCard";
-import CourseRefundCard from "../../components/AdminHomePage/CourseRefundCard";
 import ReportsCard from "../../components/AdminHomePage/ReportsCard";
 import AddUser from "../../components/AdminHomePage/AddUserCard";
 import CoursePromoCard from "../../components/AdminHomePage/CoursePromoCard";
@@ -29,7 +28,6 @@ function AdminPage() {
       >
         <ReportsCard />
         <CourseRequestsCard />
-        <CourseRefundCard />
       </div>
       <div style={{ display: "flex", flexDirection: "row", gap: "40px" }}>
         <AddUser />

@@ -82,7 +82,6 @@ function CoursePromotionContainer(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(startDate);
     if (endDate < startDate) {
       alert("Promotion end date must be after its start date");
     } else {
@@ -94,7 +93,6 @@ function CoursePromotionContainer(props) {
           type: "instructor",
         })
         .then((res) => {
-          console.log(res);
           alert("Course promotion has been set successfully!");
         })
         .catch((err) => {

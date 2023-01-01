@@ -47,8 +47,8 @@ app.use("/api/", userDataRouter);
 app.use("/api/instructor", authenticateToken, reviewRouter);
 app.use("/api/trainee", authenticateToken, reviewRouter);
 app.use("/api/", websiteRouter);
-app.use("api/instructor", authenticateToken, websiteRouter);
-app.use("api/trainee", authenticateToken, websiteRouter);
+app.use("/api/instructor", authenticateToken, websiteRouter);
+app.use("/api/trainee", authenticateToken, websiteRouter);
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
     if (err) {

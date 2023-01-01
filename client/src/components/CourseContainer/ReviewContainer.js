@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import "./ReviewContainer.css";
 function ReviewContainer(props) {
-  console.log(props);
   const location = useLocation();
   const [hovering, setHovering] = useState(false);
   const toggleHovering = () => setHovering(!hovering);
@@ -47,8 +46,8 @@ function ReviewContainer(props) {
         <div style={{ display: "flex" }}>
           <Typography
             gutterBottom
-            variant='h5'
-            component='div'
+            variant="h5"
+            component="div"
             sx={{
               display: "flex",
               alignItems: "center",
@@ -61,9 +60,9 @@ function ReviewContainer(props) {
             }}
           >
             <Rating
-              name='read-only'
+              name="read-only"
               value={parseFloat(props.userReview.rating)}
-              size='small'
+              size="small"
               sx={{
                 color: "success.main",
               }}
@@ -80,19 +79,19 @@ function ReviewContainer(props) {
           </Typography>
           {props.myReview === true && location.state.displayAddReview && (
             <IconButton
-              aria-label='delete'
-              size='large'
-              className='red-hover'
+              aria-label="delete"
+              size="large"
+              className="red-hover"
               onMouseEnter={toggleHovering}
               onMouseLeave={toggleHovering}
               sx={{ color: hovering ? "red" : "black" }}
               onClick={deleteReview}
             >
-              <DeleteIcon fontSize='inherit' />
+              <DeleteIcon fontSize="inherit" />
             </IconButton>
           )}
         </div>
-        <Typography variant='h6'>{props.userReview.review} </Typography>
+        <Typography variant="h6">{props.userReview.review} </Typography>
       </Card>
     </div>
   );

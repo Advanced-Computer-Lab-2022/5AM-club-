@@ -11,31 +11,26 @@ const useModalData = () => {
       app
         .get("/trainee/complete-profile")
         .then((res) => {
-          console.log(res);
-
           if (res.data === "false") {
+            localStorage.removeItem("refresh");
             setShow(true);
             if (window.location.pathname !== "/corporate-trainee")
               navigate("../corporate-trainee");
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     } else if (localStorage.getItem("type") === "instructor") {
       app
         .get("/instructor/complete-profile")
         .then((res) => {
-          console.log(res);
           if (res.data === "false") {
+            localStorage.removeItem("refresh");
             setShow(true);
             if (window.location.pathname !== "/instructor")
               navigate("../instructor");
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [localStorage.getItem("type")]);
