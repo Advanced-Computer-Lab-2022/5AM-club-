@@ -691,6 +691,15 @@ const addBoughtCourse = async (req, res) => {
                 //logic here
                 console.log("token in back", decoded);
                 const { courseId, traineeId, paidFromWallet } = decoded;
+                await TraineeCourse.findOne({
+                    courseId: courseId,
+                    traineeId: traineeId,
+                }).then((result) => {
+                    if (result?.courseId) {
+                        console.log("already exists");
+                        return res.json({ message: "already have the course" });
+                    }
+                });
                 const traineeAfterAdd = await Trainee.findOneAndUpdate(
                     { _id: traineeId },
                     {
@@ -789,56 +798,85 @@ async function followUp(req, res) {
     res.send("comment added successfully");
 }
 const refund = async (req, res) => {
-    const tarineeId = req.user.id;
+    const traineeId = req.user.id;
     const courseId = req.body.courseId;
-
-    const DeletedTraineeCourse = await TraineeCourse.findOneAndDelete({
+    console.log("body:", req.body);
+    console.log(traineeId, courseId);
+    await TraineeCourse.findOneAndDelete({
         courseId: courseId,
         traineeId: traineeId,
     })
-        .then(() => console.log("deleted from TraineeCourse"))
-        .catch((err) => console.log(err));
+        .then(async (DeletedTraineeCourse) => {
+            console.log("deleted from TraineeCourse");
+            await Trainee.findOneAndUpdate(
+                { _id: traineeId },
+                {
+                    $pull: { courses: courseId },
+                    $inc: { walletMoney: DeletedTraineeCourse.purchasingCost },
+                }
+            )
+                .then(async (traineeAfterRemove) => {
+                    console.log("trainee lost the course");
 
-    const traineeAfterRemove = await Trainee.findOneAndUpdate(
-        { _id: traineeId },
-        {
-            $pull: { courses: courseId },
-            $inc: { walletMoney: DeletedTraineeCourse.purchasingCost },
-        }
-    )
-        .then(() => console.log("trainee lost the course"))
-        .catch((err) => console.log(err));
-
-    const lostCourse = await Course.findOneAndUpdate(
-        { _id: courseId },
-        { $pull: { owners: traineeId } }
-    )
-        .then(() => {
-            console.log("course lost an owner", courseAfterAdd);
+                    await Course.findOneAndUpdate(
+                        { _id: courseId },
+                        { $pull: { owners: traineeId } }
+                    )
+                        .then(async (lostCourse) => {
+                            console.log("course lost an owner");
+                            //dont forget instructors
+                            const instId = lostCourse.instructor[0];
+                            await Instructor.findById(instId).then(
+                                async (tmpInst) => {
+                                    console.log(
+                                        "tmpInst just in",
+                                        tmpInst,
+                                        DeletedTraineeCourse.createdAt.getFullYear(),
+                                        DeletedTraineeCourse.createdAt.getMonth()
+                                    );
+                                    tmpInst.money_owed.forEach(
+                                        async (element) => {
+                                            console.log(
+                                                "deletedTC",
+                                                DeletedTraineeCourse
+                                            );
+                                            if (
+                                                element.year ==
+                                                    DeletedTraineeCourse.createdAt.getFullYear() &&
+                                                element.month ==
+                                                    DeletedTraineeCourse.createdAt.getMonth() +
+                                                        1
+                                            )
+                                                element.amount -=
+                                                    DeletedTraineeCourse.purchasingCost;
+                                        }
+                                    );
+                                    console.log(
+                                        "money_owed new=",
+                                        tmpInst.money_owed
+                                    );
+                                    await Instructor.findOneAndUpdate(
+                                        { _id: instId },
+                                        {
+                                            $set: {
+                                                money_owed: tmpInst.money_owed,
+                                            },
+                                        }
+                                    );
+                                }
+                            );
+                        })
+                        .catch((err) => console.log(err));
+                })
+                .catch((err) => console.log(err));
         })
         .catch((err) => console.log(err));
-
-    //dont forget instructors
-    const instId = lostCourse.instructor[0];
-    const tmpInst = await Instructor.findById(instId);
-    tmpInst.money_owed.forEach((element) => {
-        if (
-            element.year == DeletedTraineeCourse._id.getTimeStamp.getFullYear &&
-            element.month == DeletedTraineeCourse._id.getTimeStamp.getMonth
-        )
-            element.amount -= DeletedTraineeCourse.purchasingCost;
-    });
-    await Instructor.findOneAndUpdate(
-        { _id: instId },
-        {
-            $set: { money_owed: tmpInst.money_owed },
-        }
-    );
 
     res.json({ message: "refunded succ" });
 };
 
 module.exports = {
+    refund,
     getCourseInstructor,
     setCountry,
     getUser,
