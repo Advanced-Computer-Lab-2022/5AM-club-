@@ -75,19 +75,21 @@ function TraineeTakeCourse() {
   return (
     <div className="take-course-wrapper">
       <div className="content-notes-wrapper">
-        <div className="content">
-          <Content
-            course={course}
-            traineeCourse={traineeCourse}
-            updateTraineeCourse={updateTraineeCourse}
-          ></Content>
-        </div>
-        <div className="notes">
-          <Notes
-            course={course}
-            traineeCourse={traineeCourse}
-            updateTraineeCourse={updateTraineeCourse}
-          ></Notes>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="content">
+            <Content
+              course={course}
+              traineeCourse={traineeCourse}
+              updateTraineeCourse={updateTraineeCourse}
+            ></Content>
+          </div>{" "}
+          <div className="notes">
+            <Notes
+              course={course}
+              traineeCourse={traineeCourse}
+              updateTraineeCourse={updateTraineeCourse}
+            ></Notes>
+          </div>
         </div>
       </div>
       <div className="subtitles">
