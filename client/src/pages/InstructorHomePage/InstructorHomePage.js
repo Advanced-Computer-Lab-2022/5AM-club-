@@ -82,15 +82,16 @@ function InstructorHomePage() {
                 </div>
                 <div className="accordion-list">
                   <ul>
+                    <hr></hr>
                     <li>
                       {/*eslint-disable-next-line*/}
                       <a
                         data-bs-toggle="collapse"
                         className="collapse"
                         data-bs-target="#accordion-list-1"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>01</span> Create a
+                        <span style={{ color: "#96Bea8" }}>1</span> Create a
                         course
                         <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
@@ -108,6 +109,7 @@ function InstructorHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -115,11 +117,10 @@ function InstructorHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-2"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96bea8" }}>02</span> Publish
-                        your course{" "}
-                        <i className="bx bx-chevron-down icon-show"></i>
+                        <span style={{ color: "#96bea8" }}>2</span> Publish your
+                        course <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
                       <div
@@ -135,6 +136,7 @@ function InstructorHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -142,7 +144,7 @@ function InstructorHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-3"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
                         <span style={{ color: "#96Bea8" }}>03</span> Get paid{" "}
                         <i className="bx bx-chevron-down icon-show"></i>
@@ -161,6 +163,7 @@ function InstructorHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                   </ul>
                 </div>
               </div>

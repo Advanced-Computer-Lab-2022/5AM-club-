@@ -38,6 +38,7 @@ function TraineeHomePage() {
                 </div>
                 <div className="accordion-list">
                   <ul>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -45,10 +46,10 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         className="collapse"
                         data-bs-target="#accordion-list-1"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>01</span> Search for
-                        a course
+                        <span style={{ color: "#96Bea8" }}>1</span> Search for a
+                        course
                         <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
@@ -60,6 +61,7 @@ function TraineeHomePage() {
                         <p>Use the search bar above to browse our courses</p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -67,10 +69,10 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-2"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96bea8" }}>02</span> Buy a
-                        course <i className="bx bx-chevron-down icon-show"></i>
+                        <span style={{ color: "#96bea8" }}>2</span> Buy a course{" "}
+                        <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
                       <div
@@ -85,6 +87,7 @@ function TraineeHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                     <li>
                       {" "}
                       {/*eslint-disable-next-line*/}
@@ -92,9 +95,9 @@ function TraineeHomePage() {
                         data-bs-toggle="collapse"
                         data-bs-target="#accordion-list-3"
                         className="collapsed"
-                        style={{ color: "#96cea8" }}
+                        style={{ color: "#96cea8", fontWeight: "700" }}
                       >
-                        <span style={{ color: "#96Bea8" }}>03</span> Take your
+                        <span style={{ color: "#96Bea8" }}>3</span> Take your
                         course <i className="bx bx-chevron-down icon-show"></i>
                         <i className="bx bx-chevron-up icon-close"></i>
                       </a>
@@ -112,6 +115,7 @@ function TraineeHomePage() {
                         </p>
                       </div>
                     </li>
+                    <hr></hr>
                   </ul>
                 </div>
               </div>
