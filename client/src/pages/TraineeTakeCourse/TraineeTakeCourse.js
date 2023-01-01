@@ -6,6 +6,7 @@ import Content from "../../components/TakeCourse/Content";
 import "./TraineeTakeCourse.css";
 import Modal from "react-bootstrap/Modal";
 import success from "../../assets/Header/success.png";
+import Notes from "../../components/TakeCourse/Notes";
 
 function TraineeTakeCourse() {
   const [course, setCourse] = useState();
@@ -81,7 +82,13 @@ function TraineeTakeCourse() {
             updateTraineeCourse={updateTraineeCourse}
           ></Content>
         </div>
-        <div className="notes"></div>
+        <div className="notes">
+          <Notes
+            course={course}
+            traineeCourse={traineeCourse}
+            updateTraineeCourse={updateTraineeCourse}
+          ></Notes>
+        </div>
       </div>
       <div className="subtitles">
         <Subtitles

@@ -1,4 +1,6 @@
 const Joi = require("joi");
+const Trainee = require("../models/Trainee");
+
 const { Course } = require("../models/Course");
 const Instructor = require("../models/Instructor");
 const TraineeCourse = require("../models/TraineeCourse");
@@ -134,9 +136,6 @@ const getCourseFilter = async (req) => {
     ...(searchItem && searchItem),
   };
 
-  console.log(req.query, "req.query");
-  console.log("filter", filter);
-
   return filter;
 };
 
@@ -152,11 +151,9 @@ const changePrice = async (req, courses) => {
   }
 };
 const getPopulatedCourses = async (req, res) => {
-  console.log("getPopulatedCourses", req);
   const filter = await getCourseFilter(req);
   filter.closed = false;
   filter.published = true;
-  console.log("filter  ", filter);
   let courses = await Course.find(filter)
     .populate({
       path: "instructor",
@@ -172,7 +169,6 @@ const getPopulatedCourses = async (req, res) => {
       path: "rejected",
     })
     .populate("userReviews.user");
-  console.log("courses  ", courses);
   if (req.query.rating) {
     courses = courses.filter((course) => {
       return course.courseRating >= req.query.rating;
@@ -180,13 +176,11 @@ const getPopulatedCourses = async (req, res) => {
   }
 
   await changePrice(req, courses);
-  console.log("courseschangedPrice  ", courses);
   res.json(courses);
 };
 
 const getMyPopulatedCourses = async (req, res) => {
   let filter = await getCourseFilter(req);
-  console.log(req.params, "req.params");
   filter = {
     ...filter,
     ...(req.user?.id &&
@@ -194,7 +188,6 @@ const getMyPopulatedCourses = async (req, res) => {
         ? { instructor: req.user.id }
         : { owners: req.user.id })),
   };
-  console.log("filter bala ", filter);
   let courses = await Course.find(filter)
     .populate({
       path: "instructor",
@@ -206,14 +199,12 @@ const getMyPopulatedCourses = async (req, res) => {
       path: "owners",
     })
     .populate("userReviews.user");
-  console.log("courses  ", courses);
   if (req.query.rating) {
     courses = courses.filter((course) => {
       return course.courseRating >= req.query.rating;
     });
   }
   await changePrice(req, courses);
-  console.log("courseschangedPrice  ", courses);
   res.json(courses);
 };
 
@@ -240,7 +231,6 @@ const getMyCourses = async (req, res) => {
         ? { instructor: req.user.id }
         : { owners: req.user.id })),
   };
-  console.log("filter balabizo ", filter);
   let courses = await Course.find(filter);
   if (req.query.rating) {
     courses = courses.filter((course) => {
@@ -311,8 +301,6 @@ async function updateCourse(req, res) {
   }
   const valid = courseSchema.validate(req.body);
   if (valid.error) {
-    console.log(req.body);
-    console.log(valid.error);
     res.status(400).json("Invalid Course Object");
     return;
   }
@@ -543,13 +531,11 @@ const setCoursePromotion = async (req, res) => {
 const setMultipleCoursesPromotion = async (req, res) => {
   const id = req.params.id;
 
-  console.log(req.body, "<-------------------------------------");
   const valid = setCoursePromotionSchema.validate(req.body);
   if (valid.error) {
     res.status(400).send("Invalid Promotion");
     return;
   }
-  console.log(req.body.courses, "<-------------------------------------");
   const course = await Course.find({ title: { $in: req.body.courses } });
   for (let i = 0; i < course.length; i++) {
     course[i].promotion = {
@@ -558,14 +544,12 @@ const setMultipleCoursesPromotion = async (req, res) => {
       endDate: req.body.endDate,
       type: "admin",
     };
-    console.log(course[i]);
     await course[i].save();
   }
   res.send("done");
 };
 
 async function deleteCourse(req, res) {
-  console.log(req.params.id, "over here balbooz");
   const course = await Course.findByIdAndDelete(req.params.id);
   if (!course) {
     res.status(404).send("Course not found");
@@ -685,11 +669,9 @@ async function getMyCourseSubjects(req, res) {
   res.send(subjects);
 }
 const requestCourseAccess = async (req, res) => {
-  console.log(req.user);
   if (req.user && req.user.type === "corporate") {
     const courseId = req.params.id;
     const traineeId = req.user.id;
-    console.log(courseId, traineeId, "I am here let me in");
     const course = await Course.findByIdAndUpdate(courseId, {
       $push: { pending: traineeId },
     });
@@ -747,7 +729,6 @@ const getCourseRequests = async (req, res) => {
 const getReports = async (req, res) => {
   if (req.user && req.user.type === "admin") {
     const reports = await Problem.find();
-    console.log(reports, "hah xd");
     res.send(reports);
   } else {
     res.status(401).send("Unauthorized");
@@ -762,6 +743,12 @@ const acceptCourseAccess = async (req, res) => {
       $pull: { pending: traineeId },
       $push: { owners: traineeId, accepted: traineeId },
     });
+    await Trainee.findOneAndUpdate(
+      { _id: traineeId },
+      {
+        $push: { courses: courseId },
+      }
+    );
     const sectionsNum = course.subtitles.reduce(
       (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
       0
@@ -773,7 +760,7 @@ const acceptCourseAccess = async (req, res) => {
       traineeId,
       progress: progressArray,
       answers: Array(sectionsNum).fill(Array(4).fill(-1)),
-      notes: Array(sectionsNum).fill(null),
+      notes: Array(sectionsNum).fill([]),
       lastSection: 0,
       grades: Array(sectionsNum).fill(0),
       purchasingCost: 0,

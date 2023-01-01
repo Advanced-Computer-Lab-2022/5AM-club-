@@ -90,7 +90,6 @@ async function updateTraineeCourse(req, res) {
     res.status(409).send();
     return;
   }
-  console.log(req.user);
 
   const traineeCourses = await TraineeCourse.findOneAndUpdate(
     {
@@ -108,7 +107,6 @@ async function updateTraineeCourse(req, res) {
       new: true,
     }
   );
-  console.log(traineeCourses, "<<<<<<<<<<<<< traineeCourses");
   res.send(traineeCourses);
 }
 
@@ -117,15 +115,19 @@ async function getUsers(req, res) {
   switch (req.headers.type) {
     case "individual":
       User = await Trainee.find({ type: "individual" });
+
       break;
     case "corporate":
       User = await Trainee.find({ type: "corporate" });
+
       break;
     case "admin":
       User = await Admin.find();
       break;
     case "instructor":
       User = await Instructor.find();
+      //convert all instructor's wallet money to the country of the user
+
       break;
     default:
       res.status(400).send("Invalid UserType");
@@ -136,24 +138,38 @@ async function getUsers(req, res) {
 
 async function getUser(req, res) {
   if (req.user.id) {
-    console.log("started");
     let id = req.user.id;
-    console.log(req.headers);
     if (req.headers.id) id = req.headers.id;
-    console.log(id);
     let User;
     switch (req.headers.type) {
       case "corporate":
         User = await Trainee.findById(id);
+        User.walletMoney = await convert(
+          User.walletMoney,
+          "United States",
+          req.headers.country
+        );
         break;
       case "individual":
         User = await Trainee.findById(id);
+        User.walletMoney = await convert(
+          User.walletMoney,
+          "United States",
+          req.headers.country
+        );
         break;
       case "admin":
         User = await Admin.findById(id);
         break;
       case "instructor":
         User = await Instructor.findById(id).populate("userReviews.user");
+        for (let i = 0; i < User.money_owed.length; i++) {
+          User.money_owed[i].amount = await convert(
+            User.money_owed[i].amount,
+            "United States",
+            req.headers.country
+          );
+        }
         break;
       default:
         res.status(400).send("Invalid UserType");
@@ -397,7 +413,6 @@ async function changePassword(req, res) {
   if (req.user.id) {
     const id = req.user.id;
     let User;
-    console.log(req.user.type, "asdkml");
     switch (req.user.type) {
       case "individual":
         User = await Trainee.findByIdAndUpdate(
@@ -451,7 +466,6 @@ async function changeForgottenPassword(req, res) {
   if (req.headers.id) {
     const id = req.headers.id;
     let User;
-    console.log(req.headers.type, "asdkml");
     switch (req.headers.type) {
       case "individual":
         User = await Trainee.findByIdAndUpdate(
@@ -512,7 +526,6 @@ async function getCourseInstructor(req, res) {
 
 async function changePasswordEmail(req, res) {
   // search for email by type and name
-  console.log(req.headers, "headers heeeere");
   const email = req.headers.email;
   let transporter = nodemailer.createTransport({
     service: "gmail",
@@ -521,7 +534,6 @@ async function changePasswordEmail(req, res) {
       pass: "rxfhkqvgqpdfwmmk",
     },
   });
-  console.log(email, "email heeeeere");
   let user = await Trainee.findOne({ email: email });
   if (user) {
     await Trainee.findByIdAndUpdate(
@@ -548,7 +560,6 @@ async function changePasswordEmail(req, res) {
     return;
   } else {
     user = await Instructor.findOne({ email: email });
-    console.log(user, "look here loser");
     if (user) {
       await Instructor.findByIdAndUpdate(
         user._id,
@@ -602,7 +613,6 @@ const decodeToken = async (req, res) => {
 const login = async (req, res) => {
   const user = { username: req.body.username };
   var hash = bcrypt.hashSync(req.body.password, process.env.SALT_SECRET);
-  console.log(hash);
 
   const admins = await Admin.findOne({
     username: user.username,
@@ -613,12 +623,10 @@ const login = async (req, res) => {
   const trainees = await Trainee.findOne({
     username: user.username,
   });
-  //console.log(admins, instructors, trainees);
   if (!admins && !instructors && !trainees) {
     res.status(401).send("Wrong Username ");
   } else {
     if (admins) {
-      console.log(bcrypt.hashSync(admins.password, 8), "fucking");
       if (!bcrypt.compareSync(req.body.password, admins.password))
         return res.status(401).send("Wrong Password");
       user.type = "admin";
@@ -652,14 +660,12 @@ const login = async (req, res) => {
     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: "1d",
     });
-    //console.log(refreshToken);
 
     res.cookie("jwt", `${refreshToken}`);
     res.cookie("accessToken", `${accessToken}`);
 
     //refreshTokens.push(refreshToken);
 
-    // console.log(res.cookie);
     res.json({
       type: user.type,
       username: user.username,
@@ -695,7 +701,6 @@ const updateProfile = async (req, res) => {
 
         { new: true }
       );
-      console.log("corporate");
       break;
     case "instructor":
       user = await Instructor.findByIdAndUpdate(
@@ -714,7 +719,6 @@ const updateProfile = async (req, res) => {
   req.user.email = user.email;
   const accessToken = jwt.sign(req.user, process.env.ACCESS_TOKEN_SECRET);
   const refreshToken = jwt.sign(req.user, process.env.REFRESH_TOKEN_SECRET);
-  //console.log(refreshToken);
 
   res.cookie("jwt", `${refreshToken}`);
   res.cookie("accessToken", `${accessToken}`);
@@ -728,7 +732,6 @@ const checkCompleteProfile = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  console.log("logging out!!");
   res.clearCookie("accessToken");
   res.clearCookie("jwt");
 };
@@ -743,7 +746,6 @@ const addBoughtCourse = async (req, res) => {
         return res.status(401).json({ message: "Wrong course token" });
       } else {
         //logic here
-        console.log("token in back", decoded);
         const { courseId, traineeId, paidFromWallet } = decoded;
         const traineeAfterAdd = await Trainee.findOneAndUpdate(
           { _id: traineeId },
@@ -751,23 +753,19 @@ const addBoughtCourse = async (req, res) => {
             $push: { courses: courseId },
             $inc: { walletMoney: -1 * paidFromWallet },
           }
-        )
-          .then(() => console.log("trainee has the course"))
-          .catch((err) => console.log(err));
+        );
+
         let courseAfterAdd, sectionsNum;
         await Course.findOneAndUpdate(
           { _id: courseId },
           { $push: { owners: traineeId } }
-        )
-          .then((result) => {
-            courseAfterAdd = result;
-            console.log("course has new owner", courseAfterAdd);
-            sectionsNum = courseAfterAdd.subtitles.reduce(
-              (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
-              0
-            );
-          })
-          .catch((err) => console.log(err));
+        ).then((result) => {
+          courseAfterAdd = result;
+          sectionsNum = courseAfterAdd.subtitles.reduce(
+            (Acc, curSubtitle) => Acc + curSubtitle.sections.length,
+            0
+          );
+        });
 
         const progressArray = new Array(sectionsNum).fill(false);
 
@@ -776,13 +774,11 @@ const addBoughtCourse = async (req, res) => {
           traineeId,
           progress: progressArray,
           answers: Array(sectionsNum).fill(Array(4).fill(-1)),
-          notes: Array(sectionsNum).fill(null),
+          notes: Array(sectionsNum).fill([]),
           lastSection: 0,
           grades: Array(sectionsNum).fill(0),
           purchasingCost: courseAfterAdd.price,
-        })
-          .then(() => console.log("new traineeCourse doc created"))
-          .catch((err) => console.log(err));
+        });
 
         //dont forget instructors
         const moneyPerInst =
@@ -829,7 +825,6 @@ async function reportProblem(req, res) {
 }
 async function viewProblems(req, res) {
   const problems = await Problem.find({ userId: req.user.id });
-  console.log(problems, "over here");
   res.send(problems);
   //req.user.id get id of the user, filter problems where user id in problem model == user id
 }
