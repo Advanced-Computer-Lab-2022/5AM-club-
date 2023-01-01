@@ -11,7 +11,7 @@ function ReportsPage() {
 
   return (
     <Card
-      className="card course-details-border-success"
+      className='card course-details-border-success'
       style={{
         margin: "250px",
         marginTop: "50px",
@@ -33,12 +33,12 @@ function ReportsPage() {
         >
           <div>
             <Select
-              className="basic-single-type"
-              classNamePrefix="select"
+              className='basic-single-type'
+              classNamePrefix='select'
               onChange={(event) => changeReports(event.value)}
               isClearable={false}
               isSearchable={false}
-              name="color"
+              name='color'
               theme={(theme) => ({
                 ...theme,
                 colors: {
@@ -85,13 +85,13 @@ function ReportsPage() {
                   };
                 },
               }}
-              placeholder="Unseen"
+              placeholder='Unseen'
             />
           </div>
         </div>
       </Card.Header>
       <Card.Body
-        className="course-details-card-body"
+        className='course-details-card-body'
         style={{ minWidth: "400px", display: "flex", flexDirection: "column" }}
       >
         {reports &&
@@ -101,7 +101,7 @@ function ReportsPage() {
               reject={resolve}
               items={reports}
               itemsPerPage={5}
-              type="report"
+              type='report'
               requestType={type}
             ></AdminPagination>
           ) : (
@@ -118,7 +118,7 @@ function ReportsPage() {
             >
               <img
                 src={noCourses}
-                alt="noCourses"
+                alt='noCourses'
                 style={{ width: "200px", height: "200px" }}
               ></img>
               <p
