@@ -11,9 +11,10 @@ import Notes from "../../components/TakeCourse/Notes";
 function TraineeTakeCourse() {
   const [course, setCourse] = useState();
   const [traineeCourse, setTraineeCourse] = useState();
-
+  const [currentSectionName, setCurrentSectionName] = useState("");
   const [flag, setFlag] = useState(false);
   const [show, setShow] = useState(false);
+
   function onClickHide() {
     setShow(false);
   }
@@ -76,9 +77,10 @@ function TraineeTakeCourse() {
     <div className="take-course-wrapper">
       <div className="content-notes-wrapper">
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <div className="content">
+          <div className="course-content">
             <Content
               course={course}
+              setCurrentSectionName={setCurrentSectionName}
               traineeCourse={traineeCourse}
               updateTraineeCourse={updateTraineeCourse}
             ></Content>
@@ -87,6 +89,7 @@ function TraineeTakeCourse() {
             <Notes
               course={course}
               traineeCourse={traineeCourse}
+              currentSectionName={currentSectionName}
               updateTraineeCourse={updateTraineeCourse}
             ></Notes>
           </div>
