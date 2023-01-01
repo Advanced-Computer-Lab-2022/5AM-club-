@@ -30,6 +30,7 @@ function CourseContainer(props) {
 
   const handleBuy = () => {
     try {
+      console.log("sdfhbgjnkvlm;hbnjklm");
       app
         .post(`/pay`, {
           courseId: props.course.id,
@@ -130,73 +131,55 @@ function CourseContainer(props) {
                 }}
               >
                 <button
-                                        className="btn btn-outline-danger"
-                                        style={{
-                                            height: "50px",
-                                        }}
-                                        onClick={() => {
-                                            const progress =
-                                                getProgress(
-                                                    traineeCourse?.progress
-                                                ) * 100;
-                                            if (
-                                                progress < 50 &&
-                                                window.confirm(
-                                                    "You will not have access to this course any more. You will be refunded " +
-                                                        (Math.floor(
-                                                            traineeCourse.purchasingCost +
-                                                                0.5 -
-                                                                0.01
-                                                        ) +
-                                                            (" " +
-                                                                (countries[
-                                                                    Object.keys(
-                                                                        countries
-                                                                    ).find(
-                                                                        (e) =>
-                                                                            e ===
-                                                                            localStorage.getItem(
-                                                                                "country"
-                                                                            )
-                                                                    )
-                                                                ]
-                                                                    ? countries[
-                                                                          Object.keys(
-                                                                              countries
-                                                                          ).find(
-                                                                              (
-                                                                                  e
-                                                                              ) =>
-                                                                                  e ===
-                                                                                  localStorage.getItem(
-                                                                                      "country"
-                                                                                  )
-                                                                          )
-                                                                      ]
-                                                                    : "USD"))) +
-                                                        " Are you sure you want to refund? "
-                                                ) == true
-                                            ) {
-                                                // refund the course
-                                                console.log("props", props);
-                                                app.put("/refund", {
-                                                    courseId: props.course.id,
-                                                })
-                                                    .then((msg) => {
-                                                        console.log(msg);
-                                                    })
-                                                    .catch((err) =>
-                                                        console.log(err)
-                                                    );
-                                            } else if (progress > 50) {
-                                                alert(
-                                                    "Sorry, you can't refund a course if you've viewed more than 50% of it's content."
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        Refund Course
-                                    </button>
+                  className="btn btn-outline-danger"
+                  style={{
+                    height: "50px",
+                  }}
+                  onClick={() => {
+                    const progress = getProgress(traineeCourse?.progress) * 100;
+                    if (
+                      progress < 50 &&
+                      window.confirm(
+                        "You will not have access to this course any more. You will be refunded " +
+                          (Math.floor(
+                            traineeCourse.purchasingCost + 0.5 - 0.01
+                          ) +
+                            (" " +
+                              (countries[
+                                Object.keys(countries).find(
+                                  (e) => e === localStorage.getItem("country")
+                                )
+                              ]
+                                ? countries[
+                                    Object.keys(countries).find(
+                                      (e) =>
+                                        e === localStorage.getItem("country")
+                                    )
+                                  ]
+                                : "USD"))) +
+                          " Are you sure you want to refund? "
+                      ) == true
+                    ) {
+                      // refund the course
+                      console.log("props", props);
+                      app
+                        .put("/refund", {
+                          courseId: props.course.id,
+                        })
+                        .then((msg) => {
+                          navigate("/individual-trainee/my-courses");
+                          console.log(msg);
+                        })
+                        .catch((err) => console.log(err));
+                    } else if (progress > 50) {
+                      alert(
+                        "Sorry, you can't refund a course if you've viewed more than 50% of it's content."
+                      );
+                    }
+                  }}
+                >
+                  Refund Course
+                </button>
               </div>
             )}
           </div>
