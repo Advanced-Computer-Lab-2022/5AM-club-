@@ -13,7 +13,7 @@ const traineeCourseSchema = new mongoose.Schema(
     },
     progress: { type: [Boolean], required: true },
     answers: { type: [[Number]], required: true },
-    notes: { type: [Object], required: true },
+    notes: { type: [[Object]], required: true },
     lastSection: { type: Number, required: true },
     grades: { type: [Number], required: true },
     purchasingCost: { type: Number, required: true },

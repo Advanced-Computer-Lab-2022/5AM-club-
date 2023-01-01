@@ -43,10 +43,8 @@ const pay = async (req, res) => {
       customer: req.user.stripeId,
       payment_intent_data: { setup_future_usage: "on_session" },
     });
-    console.log(session.url);
     res.json({ url: session.url });
   } catch (e) {
-    console.log("errrrr", e.message);
     res.status(500).json({ error: e.message });
   }
 };
