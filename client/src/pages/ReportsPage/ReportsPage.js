@@ -21,7 +21,7 @@ function ReportsPage() {
       }}
     >
       <Card.Header style={{ display: "flex" }}>
-        <h3>Course Requests</h3>
+        <h3>User Reports</h3>
         <div
           style={{
             display: "flex",

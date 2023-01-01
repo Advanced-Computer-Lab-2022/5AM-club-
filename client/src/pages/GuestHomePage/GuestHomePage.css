@@ -1,0 +1,9 @@
+.green-grow-hover {
+  transition: all 0.1s ease-in-out;
+}
+.green-grow-hover:hover {
+  box-shadow: rgb(150 205 168 / 100%) 0px 10px 25px;
+}
+.grow-hover:hover {
+  transform: translate3D(0, -1px, 0) scale(1.07) !important;
+}

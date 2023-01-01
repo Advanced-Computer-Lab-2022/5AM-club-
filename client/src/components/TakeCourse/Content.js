@@ -32,9 +32,7 @@ function Content(props) {
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
-  props.setCurrentSectionName(
-    props.course?.subtitles[subtitleNumber].sections[sectionNumber]?.title
-  );
+
   const done = props.traineeCourse?.progress[props.traineeCourse?.lastSection];
   const [traineeAnswers, setTraineeAnswers] = useState();
   function handleSubmit() {
@@ -57,24 +55,9 @@ function Content(props) {
     );
   }, [props.traineeCourse?.lastSection]);
 
-  useEffect(() => {
-    console.log(
-      props.course?.subtitles[0].sections[0].content.video,
-      props.traineeCourse
-    );
-    if (props.traineeCourse) {
-      if (
-        props.course?.subtitles[0].sections[0].content.video &&
-        !props.traineeCourse.progress[0]
-      ) {
-        props.traineeCourse.progress[0] = true;
-        props.updateTraineeCourse({
-          ...props.traineeCourse,
-          progress: props.traineeCourse.progress,
-        });
-      }
-    }
-  }, [props.course, props.traineeCourse]);
+  props.setCurrentSectionName(
+    props.course?.subtitles[subtitleNumber].sections[sectionNumber]?.title
+  );
 
   return (
     <>

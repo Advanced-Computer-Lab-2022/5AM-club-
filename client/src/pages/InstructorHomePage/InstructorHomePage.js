@@ -168,7 +168,7 @@ function InstructorHomePage() {
                 </div>
               </div>
               <div
-                className="col-lg-5 align-items-stretch order-1 order-lg-2 img"
+                className="col-lg-5 align-items-stretch order-1 order-lg-2 img hover-grow"
                 style={{ backgroundImage: 'url("assets/img/why-us2.png")' }}
                 data-aos="zoom-in"
                 data-aos-delay="150"
