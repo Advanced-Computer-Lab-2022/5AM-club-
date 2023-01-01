@@ -1,5 +1,5 @@
 import { TextareaAutosize } from "@mui/material";
-import { memo, useState, useRef } from "react";
+import { memo, useState } from "react";
 import { useUpdateEffect } from "react-use";
 import { jsPDF } from "jspdf";
 
@@ -10,8 +10,6 @@ function Notes(props) {
   const [note, setNote] = useState("");
 
   const notesPDF = new jsPDF();
-
-  const notesRef = useRef();
 
   useUpdateEffect(() => {
     setTraineeNotes(

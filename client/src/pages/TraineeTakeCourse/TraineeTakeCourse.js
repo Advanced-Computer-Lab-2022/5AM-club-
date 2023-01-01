@@ -38,8 +38,11 @@ function TraineeTakeCourse() {
               courseId: location.state?.courseId,
             },
           })
-          .then((response) => {
-            setTraineeCourse(response.data);
+          .then((res) => {
+            if (response.data.subtitles[0].sections[0].content.video) {
+              res.data.progress[0] = true;
+            }
+            setTraineeCourse(res.data);
           });
       });
 
@@ -66,11 +69,7 @@ function TraineeTakeCourse() {
         }
         setTraineeCourse(response.data);
       })
-      .catch((error) => {
-        if (error.response.status === 409) {
-          navigate(0);
-        }
-      });
+      .catch((error) => {});
   }
 
   return (

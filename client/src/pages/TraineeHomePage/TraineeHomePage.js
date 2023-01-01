@@ -2,6 +2,7 @@ import { memo, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import app from "../../utils/AxiosConfig";
 import CourseCard from "../../components/ViewCourses/CourseCard";
+import "./TraineeHomePage.css";
 
 function TraineeHomePage() {
   const navigate = useNavigate();
@@ -120,13 +121,15 @@ function TraineeHomePage() {
                 </div>
               </div>
               <div
-                className="col-lg-5 align-items-stretch order-1 order-lg-2 img"
-                style={{ backgroundImage: 'url("assets/img/why-us.png")' }}
+                className="col-lg-5 align-items-stretch order-1 order-lg-2 img hover-grow"
+                style={{
+                  backgroundImage: 'url("assets/img/why-us.png")',
+                  width: "550px",
+                  marginLeft: "40px",
+                }}
                 data-aos="zoom-in"
                 data-aos-delay="150"
-              >
-                {" "}
-              </div>
+              ></div>
             </div>
           </div>
         </section>

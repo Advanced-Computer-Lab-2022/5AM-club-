@@ -82,14 +82,6 @@ async function getTraineeCourse(req, res) {
 
 async function updateTraineeCourse(req, res) {
   const test = await Course.findById(req.body.courseId);
-  let noSections = 0;
-  for (let subtitle of test.subtitles) {
-    noSections += subtitle.sections.length;
-  }
-  if (noSections !== req.body.progress.length) {
-    res.status(409).send();
-    return;
-  }
 
   const traineeCourses = await TraineeCourse.findOneAndUpdate(
     {
