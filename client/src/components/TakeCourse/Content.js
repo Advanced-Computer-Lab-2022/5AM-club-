@@ -32,6 +32,9 @@ function Content(props) {
   let content = props.traineeCourse
     ? props.course?.subtitles[subtitleNumber].sections[sectionNumber].content
     : undefined;
+  props.setCurrentSectionName(
+    props.course?.subtitles[subtitleNumber].sections[sectionNumber]?.title
+  );
   const done = props.traineeCourse?.progress[props.traineeCourse?.lastSection];
   const [traineeAnswers, setTraineeAnswers] = useState();
   function handleSubmit() {
@@ -77,7 +80,7 @@ function Content(props) {
     <>
       {props.traineeCourse &&
         (content.video ? (
-          <div className="exercise">
+          <div className="exercise" style={{ height: "644px" }}>
             <div className="iframe">
               <iframe
                 key={content.video.link.replace("watch?v=", "embed/")}
@@ -95,7 +98,7 @@ function Content(props) {
             className="exercise"
             style={{
               border: "5px solid rgb(150, 206, 168)",
-              maxHeight: "446px",
+              maxHeight: "644px",
               overflow: "auto",
             }}
           >
@@ -129,7 +132,7 @@ function Content(props) {
                         <div style={{ display: "flex", gap: "25px" }}>
                           <div
                             style={{
-                              minWidth: "200px",
+                              minWidth: "300px",
                               borderRadius: "10px",
                               paddingLeft: "10px",
                               backgroundColor: done
@@ -153,7 +156,7 @@ function Content(props) {
                           </div>{" "}
                           <div
                             style={{
-                              minWidth: "200px",
+                              minWidth: "300px",
                               borderRadius: "10px",
                               paddingLeft: "10px",
                               backgroundColor: done
@@ -180,7 +183,7 @@ function Content(props) {
                           {" "}
                           <div
                             style={{
-                              minWidth: "200px",
+                              minWidth: "300px",
                               borderRadius: "10px",
                               paddingLeft: "10px",
                               backgroundColor: done
@@ -204,7 +207,7 @@ function Content(props) {
                           </div>{" "}
                           <div
                             style={{
-                              minWidth: "200px",
+                              minWidth: "300px",
                               borderRadius: "10px",
                               paddingLeft: "10px",
                               backgroundColor: done
@@ -236,7 +239,7 @@ function Content(props) {
                       {" "}
                       <h4 style={{ color: "#96cea8", marginTop: "10px" }}>
                         {" "}
-                        {"The correct answer is: " +
+                        {"The correct answer is : " +
                           content.exercise.choices[index][
                             "c" + content.exercise.answers[index]
                           ]}
