@@ -400,8 +400,7 @@ instructor deletes his own course with id provided
 
 
 ## Credits
-
-- 
+ 
 - [Abdelraheman Khaled](https://github.com/abdelrahmankhaled2001)
 - [Amr Esmaeel El-Said](https://github.com/AmrKollohm)
 - [Amr Mohamed Abdelmonem](https://github.com/IrrationalInteger)
