@@ -6,7 +6,7 @@
 Canadian Chamber of Commerce Learning Platform is an online learning and teaching platform meant to allow both students
 and teachers to be in one simple to use and convenient platform for learning.
 
-
+ 
 
 ## Motivation
 As students, we created this project simply because we needed something like it, a place where
