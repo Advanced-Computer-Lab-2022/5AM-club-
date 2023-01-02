@@ -460,6 +460,10 @@ function CourseContainer(props) {
           </Card.Text>
           <Card.Text className="editable-container">
             <div style={{ fontWeight: "700", fontSize: "30px" }}>
+              {"Instructor Email : "}
+            </div>
+            {course.instructor[0].email}
+            <div style={{ fontWeight: "700", fontSize: "30px" }}>
               About the instructor :{" "}
             </div>
             {course.instructor[0].biography}

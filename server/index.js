@@ -15,6 +15,10 @@ const reviewRouter = require("./routes/api/Review");
 const websiteRouter = require("./routes/api/Website");
 const authenticateToken = require("./middleware/authentication");
 
+process.on("uncaughtException", (err) => {
+  console.log(`Caught exception: ${err}`);
+});
+
 connect();
 app.use(cookieParser());
 app.use(express.json({ extended: false }));
