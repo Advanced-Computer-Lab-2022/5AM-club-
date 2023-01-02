@@ -90,14 +90,12 @@ function ChangeForgottenPassword() {
                   repeat={true}
                 ></PasswordBox>
 
-                <Button
-                  type="submit"
+                <button
+                  type='submit'
                   style={{
-                    backgroundColor: "#96cea8",
-                    color: "white",
                     minWidth: "575px",
                   }}
-                  variant="contained"
+                  className='btn btn-outline-success'
                   onClick={(e) => {
                     e.preventDefault();
                     const obj = {
@@ -107,17 +105,17 @@ function ChangeForgottenPassword() {
                   }}
                 >
                   Change Password{" "}
-                </Button>
+                </button>
               </Box>
             </form>
           </Container>
         </div>
       </div>
-      <div className="slanted">
+      <div className='slanted'>
         <div style={{ marginBottom: "50px" }}>
           <img
             src={logo}
-            alt="Logo"
+            alt='Logo'
             style={{
               width: "300px",
               height: "200px",
@@ -126,7 +124,7 @@ function ChangeForgottenPassword() {
           ></img>
           <img
             src={logo2}
-            alt="Logo"
+            alt='Logo'
             style={{
               width: "250px",
               height: "150px",

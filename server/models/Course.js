@@ -118,27 +118,36 @@ const courseSchema = new mongoose.Schema(
     accepted: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
-          ref: "Trainee",
-          required: true,
+          trainee: {
+            type: mongoose.Types.ObjectId,
+            ref: "Trainee",
+            required: true,
+          },
+          date: { type: Date, required: true },
         },
       ],
     },
     pending: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
-          ref: "Trainee",
-          required: true,
+          trainee: {
+            type: mongoose.Types.ObjectId,
+            ref: "Trainee",
+            required: true,
+          },
+          date: { type: Date, required: true },
         },
       ],
     },
     rejected: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
-          ref: "Trainee",
-          required: true,
+          trainee: {
+            type: mongoose.Types.ObjectId,
+            ref: "Trainee",
+            required: true,
+          },
+          date: { type: Date, required: true },
         },
       ],
     },

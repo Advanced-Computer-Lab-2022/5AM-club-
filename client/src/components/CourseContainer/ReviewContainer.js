@@ -12,23 +12,25 @@ function ReviewContainer(props) {
   const [hovering, setHovering] = useState(false);
   const toggleHovering = () => setHovering(!hovering);
   const deleteReview = () => {
-    app
-      .delete(
-        "/trainee/my-courses/" +
-          location.state.course._id +
-          (props.instructor ? "/instructors/" + props.instructor._id : "") +
-          "/delete-review"
-      )
-      .then((res) => {
-        let myNewReviews = { ...props.myReviews };
-        if (!props.instructor) {
-          myNewReviews.courseReview = {};
-          props.setMyReviews(myNewReviews);
-        } else {
-          myNewReviews.instructorReview[props.index] = {};
-          props.setMyReviews(myNewReviews);
-        }
-      });
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      app
+        .delete(
+          "/trainee/my-courses/" +
+            location.state.course._id +
+            (props.instructor ? "/instructors/" + props.instructor._id : "") +
+            "/delete-review"
+        )
+        .then((res) => {
+          let myNewReviews = { ...props.myReviews };
+          if (!props.instructor) {
+            myNewReviews.courseReview = {};
+            props.setMyReviews(myNewReviews);
+          } else {
+            myNewReviews.instructorReview[props.index] = {};
+            props.setMyReviews(myNewReviews);
+          }
+        });
+    }
   };
   if (
     !props.myReview &&
@@ -46,8 +48,8 @@ function ReviewContainer(props) {
         <div style={{ display: "flex" }}>
           <Typography
             gutterBottom
-            variant="h5"
-            component="div"
+            variant='h5'
+            component='div'
             sx={{
               display: "flex",
               alignItems: "center",
@@ -60,9 +62,9 @@ function ReviewContainer(props) {
             }}
           >
             <Rating
-              name="read-only"
+              name='read-only'
               value={parseFloat(props.userReview.rating)}
-              size="small"
+              size='small'
               sx={{
                 color: "success.main",
               }}
@@ -79,19 +81,19 @@ function ReviewContainer(props) {
           </Typography>
           {props.myReview === true && location.state.displayAddReview && (
             <IconButton
-              aria-label="delete"
-              size="large"
-              className="red-hover"
+              aria-label='delete'
+              size='large'
+              className='red-hover'
               onMouseEnter={toggleHovering}
               onMouseLeave={toggleHovering}
               sx={{ color: hovering ? "red" : "black" }}
               onClick={deleteReview}
             >
-              <DeleteIcon fontSize="inherit" />
+              <DeleteIcon fontSize='inherit' />
             </IconButton>
           )}
         </div>
-        <Typography variant="h6">{props.userReview.review} </Typography>
+        <Typography variant='h6'>{props.userReview.review} </Typography>
       </Card>
     </div>
   );

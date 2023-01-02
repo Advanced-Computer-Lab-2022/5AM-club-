@@ -15,12 +15,12 @@ import "./ReportCard.css";
 
 function ReportCard(props) {
   return (
-    <MDBCard className="request-card">
+    <MDBCard className='request-card'>
       <div style={{ display: "flex" }}>
         <Typography
           gutterBottom
-          variant="h5"
-          component="div"
+          variant='h5'
+          component='div'
           sx={{
             mt: 2,
             ml: 2,
@@ -95,7 +95,7 @@ function ReportCard(props) {
       {props.requestType === "unseen" && (
         <div style={{ display: "flex", gap: "10px" }}>
           <button
-            className="btn btn-outline-danger"
+            className='btn btn-outline-danger'
             style={{ marginLeft: "auto" }}
             onClick={() => {
               props.pend(props.report);
@@ -104,7 +104,7 @@ function ReportCard(props) {
             Mark as pending
           </button>
           <Button
-            variant="outline-success"
+            variant='outline-success'
             style={{ marginRight: "10px" }}
             onClick={() => {
               props.resolve(props.report);
@@ -119,7 +119,7 @@ function ReportCard(props) {
           style={{ display: "flex", gap: "10px", flexDirection: "row-reverse" }}
         >
           <Button
-            variant="outline-success"
+            variant='outline-success'
             style={{ marginRight: "10px" }}
             onClick={() => {
               props.resolve(props.report);
