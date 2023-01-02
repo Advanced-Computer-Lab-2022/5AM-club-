@@ -34,6 +34,9 @@ function useInstructorCompleteProfile(Done) {
         } else if (err.response.status === 406) {
           alert("Invalid email address.");
           return;
+        } else if (err.response.status === 411) {
+          alert("An account with this email already exists.");
+          return;
         }
       });
   };

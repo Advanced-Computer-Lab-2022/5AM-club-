@@ -13,6 +13,7 @@ const TraineeCourse = require("../models/TraineeCourse");
 const nodemailer = require("nodemailer");
 const proxy = require("../utils/Proxy.json");
 const nameChecker = require("../utils/checkNames");
+const emailChecker = require("../utils/EmailChecker");
 const { passwordStrength } = require("check-password-strength");
 const bcrypt = require("bcryptjs");
 
@@ -358,6 +359,11 @@ async function signUp(req, res) {
 
   if (foundDup) {
     res.status(405).send("username already used!");
+    return;
+  }
+  const foundDupEmail = await emailChecker(req.body.email);
+  if (foundDupEmail) {
+    res.status(411).send("email already used!");
     return;
   }
   if (passwordStrength(req.body.password).value !== "Strong") {
@@ -710,6 +716,12 @@ const updateProfile = async (req, res) => {
   const result = updateUserSchema.validate(req.body);
   if (result.error) {
     res.status(406).send(result.error.details[0].message);
+    return;
+  }
+
+  const foundDupEmail = await emailChecker(req.body.email);
+  if (foundDupEmail) {
+    res.status(411).send("email already used!");
     return;
   }
 

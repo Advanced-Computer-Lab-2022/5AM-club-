@@ -28,9 +28,12 @@ function Card(props) {
         "Are you sure you want to delete this course? This action cannot be undone."
       ) === true
     ) {
-      app.delete("/my-courses/" + props.course._id + "/delete-course", {
-        params: { id: props.course._id },
-      });
+      app.delete(
+        "/instructor/my-courses/" + props.course._id + "/delete-course",
+        {
+          params: { id: props.course._id },
+        }
+      );
       navigate(0);
     }
   }

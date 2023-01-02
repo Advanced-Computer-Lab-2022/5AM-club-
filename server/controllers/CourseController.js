@@ -551,6 +551,10 @@ const setMultipleCoursesPromotion = async (req, res) => {
 
 async function deleteCourse(req, res) {
   const course = await Course.findByIdAndDelete(req.params.id);
+  await Instructor.findByIdAndUpdate(req.user.id, {
+    $pull: { courses: course._id },
+  });
+
   if (!course) {
     res.status(404).send("Course not found");
     return;

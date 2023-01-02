@@ -15,7 +15,6 @@ import Footer from "./layouts/Footer/Footer";
 import TraineeProfile from "./pages/TraineeProfile/TraineeProfile";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import ViewCourseReviews from "./pages/ViewCourseReviews/ViewCourseReviews";
-import SetCoursePromotion from "./pages/SetCoursePromotion/SetCoursePromotion";
 import InstructorReviews from "./pages/InstructorReviews/InstructorReviews";
 import InstructorPersonalInformation from "./pages/InstructorPersonalInformation/InstructorPersonalInformation";
 import InstructorEditCourse from "./pages/InstructorEditCourse/InstructorEditCourse";
@@ -401,14 +400,6 @@ function App() {
                     element={
                       <PrivateRoute type={"instructor"}>
                         <InstructorReviews />
-                      </PrivateRoute>
-                    }
-                  ></Route>
-                  <Route
-                    path="/instructor/my-courses/set-course-promotion"
-                    element={
-                      <PrivateRoute type={"instructor"}>
-                        <SetCoursePromotion />
                       </PrivateRoute>
                     }
                   ></Route>

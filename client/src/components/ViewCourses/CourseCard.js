@@ -150,10 +150,8 @@ function Card(props) {
             {props.course.views +
               (props.course.views === 1 ? " View" : " Views") +
               " • " +
-              (props.course.owners.length + props.course.accepted.length) +
-              (props.course.owners.length + props.course.accepted.length === 1
-                ? " Purchase"
-                : " Purchases")}
+              props.course.owners.length +
+              (props.course.owners.length === 1 ? " Purchase" : " Purchases")}
           </p>
         </div>
       </MDBCardBody>{" "}
