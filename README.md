@@ -1,5 +1,26 @@
 # 5AM-club-
 
+
+# Canadian Chamber of Commerce Learning Platform
+
+Canadian Chamber of Commerce Learning Platform is an online learning and teaching platform meant to allow both students
+and teachers to be in one simple to use and convenient platform for learning.
+
+
+
+## Motivation
+As students, we created this project simply because we needed something like it, a place where
+quality learning can be found with the touch a button. Also as Computer Science students we needed 
+to practice/learn web development, as it is the most popular form of Software development in recent years, so this project
+was a great entry and got us familiar with the technologies used in that particular field.
+It is also part of our curriculum CSEN 704.
+## Build Status
+The project is complete as of January 2023
+
+## Screenshots
+
+
+
 Guest:
 
 ![1](https://user-images.githubusercontent.com/99425163/210193774-5f68ebc4-3466-484f-a95b-d969d1b07ce4.png)
@@ -44,3 +65,349 @@ Admin:
 ![5](https://user-images.githubusercontent.com/99425163/210193846-798005d5-2503-4c6e-8d17-164a04f74ea5.png)
 ![6](https://user-images.githubusercontent.com/99425163/210193847-1a65aa1b-77f2-46ba-8765-14fca7f59616.png)
 ![7](https://user-images.githubusercontent.com/99425163/210193848-838061a7-b9af-4d3c-a59f-cb9f37dee30d.png)
+
+
+## Tech Stack
+
+**Client:** React, Axios 
+
+**Server:** Node, Express
+
+**Database:** MongoDB
+
+
+## Features
+- Cross Platform
+- Intuitive design
+- Responsive 
+
+
+
+## Installation
+
+1) Install my-project        
+```bash
+  git clone https://github.com/Advanced-Computer-Lab-2022/5AM-club-.git
+```
+2) Install NPM packages in both client and server
+```bash
+  cd 5AM-club-/client
+  npm install --force
+  cd ../server
+  npm install --force
+  ```
+## API Reference
+
+```http
+  GET/contract
+```
+This API fetches the contract from the database and sends it.
+
+```http
+  GET/terms-of-service
+```
+Fetches the most updated version of the tos in the database and sends it.
+
+```http
+GET/get-user
+```
+Fetches a user using his id 
+```http
+GET/get-users
+```
+gets users' data
+```http
+GET/get-trainee-course
+```
+Fetches the trainee's data of a specific course
+
+```http
+GET/get-course-instructor
+```
+Fetches the instructor of a course
+
+```http
+GET/get-user-type
+```
+Fetches the type a user using his Id
+```http
+GET/complete-profile
+```
+Completes the missing fields for a created user by the admin
+```http
+POST/add-admin
+```
+Adds an admin user to the database  
+```http
+POST/add-instructor
+```
+Adds an instructor user to the database
+```http
+POST/add-corporate-trainee
+```
+Adds a corporate trainee user to the database
+
+```http
+POST/signUp
+```
+Adds an individual trainee user to the database
+
+```http
+POST/login
+```
+Allow the user to access the main home page
+```http
+GET/logout
+```
+logs out a user from the page
+
+```http
+PUT/set-country
+```
+Changes the country of a user to the selected country
+
+```http
+PUT/edit-personal-info
+```
+Changes information of a instructor in the database
+
+```http
+PUT/edit-trainee-course
+```
+allows the instructor to change the 
+```http
+PUT/change-password-email
+```
+Allowes a user to change his/her password through an email
+```http
+POST/report-problem
+```
+allowes a user to report a problem
+```http
+GET/view-problems
+```
+allowes the admin to view the sent problems from the users
+```http
+PUT/follow-up
+```
+Adds a follow up to the report
+```http
+PUT/set-problem-status
+```
+allowes the admin to set the problem status 
+```http
+PUT/send-certificate
+```
+sends a certificate to the trainees upon finishing a course 
+```http
+PUT/change-password
+```
+allowes user to change the password 
+```http
+PUT/change-forgotten-password
+```
+allowes user to change password via email
+```http
+GET/wallet-money
+```
+gets the amount of money in the wallet of the trainee
+```http
+POST/pay
+```
+allowes trainees to pay for courses
+```http
+PUT/refund
+```
+Allows trainees to request a refund
+
+```http
+PUT/update-profile
+```
+Allows the user to update his profile
+```http
+POST/add-course-to-individual
+```
+Allows a course to be added to an individual courses
+
+```http
+GET/my-reviews
+```
+fetches the reviews of an instructor
+```http
+GET/my-courses/${id}/get-my-reviews
+```
+fetches a trainee reviews for a specific course and its instructors
+```http
+POST/my-courses/${id}/instructors/${id}/add-review
+```
+allows a trainee to add a review and rating for one of the instructors of his courses 
+```http
+POST/my-courses/${id}/add-review
+```
+allows a trainee to add a review and rating for an one of his courses
+```http
+PUT/my-courses/${id}/instructors/${id}/edit-review
+```
+allows a trainee to edit a review and rating for one of the instructors of his courses 
+```http
+PUT/my-courses/${id}/edit-review
+```
+allows a trainee to edit a review and rating for one of of his courses 
+``` http
+DELETE/my-courses/${id}/delete-review
+```
+allows a trainee to delete a review and rating for one of of his courses 
+```http
+DELETE/my-courses/${id}/instructors/${id}/delete-review
+```
+allows a trainee to delete a review and rating for one of the instructors of his courses 
+```http
+GET/my-courses
+```
+get the user courses (user can be Trainee(individual/corporate) or instructor)
+```http
+GET/my-courses${addCourse}
+```
+same as get/mycourses above but get a token as parameter to add a new course for individual trainee(this endPoint is dedicated for individual trainee users)
+```http
+GET/courses
+```
+gets all published courses
+```http
+GET/my-populated-courses
+```
+get the data of my courses (as authorized type) with any data associated to(like instructors data, owners data ...etc)
+```http
+GET/populated-courses
+```
+get all details of courses (not only related to users)
+```http
+GET/my-courses/my-course-max-min
+```
+get user courses with filter on price to be between max and min values provided
+```http
+GET/courses/course-max-min
+```
+get all courses with filter on price to be between max and min values provided
+```http
+GET/courses/course-subjects
+```
+get all courses with filter on their subjects
+```http
+PUT/my-courses/increament-views${courseId}
+```
+increament the number of view for course with id provided
+```http
+GET/courses/${courseId}
+```
+get the course with id provided 
+```http
+GET/populated-courses/${courseId}
+```
+get all data associated for the course with id provided
+```http
+GET/course-requests
+```
+the admin gets all requests done by corporate trainees on different courses
+```http
+GET/reports
+```
+admin all reports (problems) issued by different users
+```http
+PUT/my-courses/edit-course/${courseid}
+```
+instructor edit his own course content (edit the course with provided id)
+```http
+PUT/my-courses/${courseid}/set-promotion
+```
+instructor set a promotion (discount) for limited time on his course with id provided
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/add-section
+```
+instructor add section to his course with id provided inside subtitle with provided id
+```http
+PUT/set-multiple-promotions
+```
+admin set discount on many courses at once
+```http
+PUT/my-courses/edit-course/${courseid}/add-subtitle
+```
+instructor add subtitle to his course with id provided 
+```http
+PUT/my-courses/edit-course/${courseid}/edit-subtitle/${subtitleid}
+```
+instructor edit the content of subtitle of id provided inside his course with provided id
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/edit-section/${sectionid}
+```
+instructor edit the content of section with id provided inside subtitle of id provided inside his course with provided id
+```http
+PUT/my-courses/edit-course/${courseid}/delete-subtitle/${subtitleid}/
+```
+instructor delete a subtitle with id provided in his course with id provided
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/delete-section/${sectionid}
+```
+instructor delete a section with id provided inside subtitle with id provided in his course with id provided
+```http
+PUT/courses/${courseId}/course-request
+```
+corporate trainee issue new request for a course with id provided
+```http
+PUT/courses/${courseId}/accept-course-request
+```
+admin accepts the request issued by corporate trainee
+```http
+PUT/courses/${courseId}/reject-course-request
+```
+admin rejects the request issued by corporate trainee
+```http
+POST/create-course
+```
+instructor creates new course defining its main structure
+```http
+DELETE/my-courses/${courseId}/delete-course
+```
+instructor deletes his own course with id provided
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Credits
+
+- Abdelraheman Khaled
+- Amr Esmaeel El-Said
+- Amr Mohamed Abd El-Monem
+- Mahmoud Bakheet Eldaly
+- Mahmoud Khaled
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
