@@ -401,11 +401,12 @@ instructor deletes his own course with id provided
 
 ## Credits
 
-- Abdelraheman Khaled
-- Amr Esmaeel El-Said
-- Amr Mohamed Abd El-Monem
-- Mahmoud Bakheet Eldaly
-- Mahmoud Khaled
+- 
+- [Abdelraheman Khaled](https://github.com/abdelrahmankhaled2001)
+- [Amr Esmaeel El-Said](https://github.com/AmrKollohm)
+- [Amr Mohamed Abdelmonem](https://github.com/IrrationalInteger)
+- [Mahmoud Bakheet Eldaly](https://github.com/Mahmoud-Eldaly)
+- [Mahmoud Khaled](https://github.com/mahmouddkhaledd)
 
 ## License
 
