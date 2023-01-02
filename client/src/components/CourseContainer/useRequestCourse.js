@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import app from "../../utils/AxiosConfig";
 function useRequestCourse(course) {
-  const [requested, setRequested] = useState(
+  console.log(
     course.pending.some(
-      (trainee) => trainee.username === localStorage.getItem("username")
+      (request) => request.trainee.username === localStorage.getItem("username")
     )
   );
+  const [requested, setRequested] = useState(
+    course.pending.some(
+      (request) => request.trainee.username === localStorage.getItem("username")
+    )
+  );
+
   const requestCourse = () => {
     app
       .put("/trainee/courses/" + course._id + "/course-request")

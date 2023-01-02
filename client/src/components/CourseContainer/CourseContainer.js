@@ -25,6 +25,7 @@ function CourseContainer(props) {
   const { requested, setRequested, requestCourse } = useRequestCourse(
     props.course
   );
+  console.log(requested);
 
   const downloadRef = useRef();
 
@@ -56,11 +57,6 @@ function CourseContainer(props) {
       )
       .then((res) => {
         setCourse(res.data);
-        setRequested(
-          res.data.pending.some(
-            (trainee) => trainee.username === localStorage.getItem("username")
-          )
-        );
       });
     //eslint-disable-next-line
   }, [myReviews]);
@@ -75,17 +71,19 @@ function CourseContainer(props) {
         .get("/trainee/my-courses/" + course.id + "/get-my-reviews")
         .then((res) => {
           setMyReviews(res.data);
-          app
-            .get("/trainee/get-trainee-course", {
-              headers: {
-                courseId: course.id,
-                country: localStorage.getItem("country"),
-              },
-            })
-            .then((response) => {
-              if (!response.data) navigate("/error");
-              setTraineeCourse(response.data);
-            });
+          if (props.owned) {
+            app
+              .get("/trainee/get-trainee-course", {
+                headers: {
+                  courseId: course.id,
+                  country: localStorage.getItem("country"),
+                },
+              })
+              .then((response) => {
+                if (!response.data) navigate("/error");
+                setTraineeCourse(response.data);
+              });
+          }
         });
     }
     //eslint-disable-next-line
@@ -93,7 +91,7 @@ function CourseContainer(props) {
   return (
     course && (
       <Card
-        className="card course-details-border-success"
+        className='card course-details-border-success'
         style={{
           margin: "250px",
           marginTop: "50px",
@@ -102,7 +100,7 @@ function CourseContainer(props) {
         }}
       >
         <Card.Body
-          className="course-details-card-body"
+          className='course-details-card-body'
           style={{ minWidth: "400px" }}
         >
           <div
@@ -111,14 +109,14 @@ function CourseContainer(props) {
               gap: "10px",
             }}
           >
-            <p className="course-title-text" style={{ flexGrow: "1" }}>
+            <p className='course-title-text' style={{ flexGrow: "1" }}>
               {" "}
               {props.course?.title}
             </p>
             {props.owned && (
               <ReportProblem
                 courseName={props.course?.title}
-                height="50px"
+                height='50px'
               ></ReportProblem>
             )}
 
@@ -131,7 +129,7 @@ function CourseContainer(props) {
                 }}
               >
                 <button
-                  className="btn btn-outline-danger"
+                  className='btn btn-outline-danger'
                   style={{
                     height: "50px",
                   }}
@@ -184,7 +182,7 @@ function CourseContainer(props) {
             )}
           </div>
           <div
-            className="properties-wrapper"
+            className='properties-wrapper'
             style={{
               alignItems: "center",
               fontSize: "20px",
@@ -193,7 +191,7 @@ function CourseContainer(props) {
           >
             Subjects:
             {props.course?.subject.map((subject, idx) => (
-              <div className="course-attribute" key={subject + idx}>
+              <div className='course-attribute' key={subject + idx}>
                 <p>{subject}</p>
               </div>
             ))}
@@ -207,16 +205,16 @@ function CourseContainer(props) {
             }}
           >
             <iframe
-              className="preview_video"
+              className='preview_video'
               key={course.preview_video?.replace("watch?v=", "embed/")}
-              title="course-video"
+              title='course-video'
               src={course.preview_video?.replace("watch?v=", "embed/")}
               allowFullScreen
               style={{ flexShrink: "0", borderRadius: "10px" }}
             ></iframe>
             <div style={{ flexGrow: "1" }}>
               <div
-                className="editable-container"
+                className='editable-container'
                 style={{
                   minWidth: "245px",
                   overflow: "hidden",
@@ -224,7 +222,7 @@ function CourseContainer(props) {
                 }}
               >
                 <div
-                  className="attribute"
+                  className='attribute'
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
@@ -241,7 +239,7 @@ function CourseContainer(props) {
                   )}
                 </div>
                 <div
-                  className="attribute"
+                  className='attribute'
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
@@ -257,7 +255,7 @@ function CourseContainer(props) {
                 {localStorage.getItem("type") !== "corporate" &&
                   props.owned !== true && (
                     <div
-                      className="attribute"
+                      className='attribute'
                       style={{
                         display: "flex",
                         flexWrap: "wrap",
@@ -274,7 +272,7 @@ function CourseContainer(props) {
                       new Date(props.promotion.startDate) < new Date() ? (
                         <>
                           <div>
-                            <span className="scratched">
+                            <span className='scratched'>
                               {Math.floor(course.price + 0.5) - 0.01}{" "}
                             </span>
                             <span>
@@ -302,7 +300,7 @@ function CourseContainer(props) {
                                     : "USD"))}
                             </span>
                           </div>
-                          <span className="red">
+                          <span className='red'>
                             (-
                             {props.promotion.percentage}% till{" "}
                             {new Date(props.promotion.endDate).toDateString()})
@@ -339,7 +337,7 @@ function CourseContainer(props) {
                         backgroundColor: "white",
                       }}
                     >
-                      <Button variant="outline-success" onClick={handleBuy}>
+                      <Button variant='outline-success' onClick={handleBuy}>
                         BUY NOW
                       </Button>
                     </div>
@@ -355,7 +353,7 @@ function CourseContainer(props) {
                       }}
                     >
                       <Button
-                        variant="outline-success"
+                        variant='outline-success'
                         style={{
                           height: "50px",
                         }}
@@ -367,7 +365,7 @@ function CourseContainer(props) {
                     </div>
                   ) : (
                     <div
-                      variant="outline-success"
+                      variant='outline-success'
                       style={{
                         display: "inline-block",
                         borderRadius: "5px",
@@ -375,7 +373,7 @@ function CourseContainer(props) {
                       }}
                     >
                       <Button
-                        variant="outline-success"
+                        variant='outline-success'
                         style={{
                           height: "50px",
                         }}
@@ -389,7 +387,7 @@ function CourseContainer(props) {
                 {props.owned && location.state.displayAddReview && (
                   <>
                     <div>
-                      <div className="attribute">
+                      <div className='attribute'>
                         Progress: {getProgress(traineeCourse?.progress) * 100}%
                       </div>
                       {getProgress(traineeCourse?.progress) * 100 === 100 && (
@@ -404,7 +402,7 @@ function CourseContainer(props) {
                           >
                             <button
                               style={{ height: "50px" }}
-                              className="btn btn-outline-success"
+                              className='btn btn-outline-success'
                               onClick={() => {
                                 downloadRef.current.click();
                               }}
@@ -416,7 +414,7 @@ function CourseContainer(props) {
                             style={{ display: "none", visibility: "hidden" }}
                             ref={downloadRef}
                             href={Certificate}
-                            download="Certificate.pdf"
+                            download='Certificate.pdf'
                             onClick={(e) => {}}
                           ></a>
                         </>
@@ -430,7 +428,7 @@ function CourseContainer(props) {
                       }}
                     >
                       <Button
-                        variant="outline-success"
+                        variant='outline-success'
                         onClick={() => {
                           navigate("take-course", {
                             state: {
@@ -452,13 +450,13 @@ function CourseContainer(props) {
             </div>{" "}
           </div>
 
-          <Card.Text className="editable-container">
+          <Card.Text className='editable-container'>
             <div style={{ fontWeight: "700", fontSize: "30px" }}>
               Description :{" "}
             </div>
             {course.summary}
           </Card.Text>
-          <Card.Text className="editable-container">
+          <Card.Text className='editable-container'>
             <div style={{ fontWeight: "700", fontSize: "30px" }}>
               {"Instructor Email : "}
             </div>
@@ -468,7 +466,7 @@ function CourseContainer(props) {
             </div>
             {course.instructor[0].biography}
           </Card.Text>
-          <div className="attribute" style={{ fontSize: "30px" }}>
+          <div className='attribute' style={{ fontSize: "30px" }}>
             {" "}
             Content:{" "}
           </div>
