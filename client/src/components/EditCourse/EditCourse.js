@@ -1,6 +1,7 @@
 import app from "../../utils/AxiosConfig.js";
 import { memo, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import CoursePromotionContainer from "../../components/CoursePromotionContainer/CoursePromotionContainer";
 import Subtitle from "./Subtitle";
 import TextareaAutosize from "react-textarea-autosize";
 import { formatTime } from "../../utils/Helpers";
@@ -18,6 +19,7 @@ import cancel from "../../assets/EditCourse/cancelblack.png";
 import edit from "../../assets/EditCourse/edit.png";
 import convert from "../../utils/CurrencyConverter";
 import ReportProblem from "../ReportProblem/ReportProblem.js";
+import Modal from "react-bootstrap/Modal";
 
 function EditCourse(props) {
   const [addingSubtitle, setAddingSubtitle] = useState(false);
@@ -33,6 +35,10 @@ function EditCourse(props) {
   const [editingPrice, setEditingPrice] = useState(false);
   const [addingSubject, setAddingSubject] = useState(false);
   const [subject, setSubject] = useState("");
+  const [show, setShow] = useState(false);
+  function onClickHide() {
+    setShow(false);
+  }
 
   const location = useLocation();
 
@@ -308,33 +314,93 @@ function EditCourse(props) {
             </div>
           </div>
           <div className="properties-wrapper">
-            {props.course?.subject.map((subject, idx) => (
-              <div className="course-attribute" key={subject + idx}>
-                <p>{subject}</p>
-                {!props.course?.published && (
-                  <>
-                    <ClearIcon
-                      onClick={() => {
-                        const newSubjects = props.course.subject.filter(
-                          (s) => s !== subject
-                        );
-                        editCourse(newSubjects);
-                      }}
-                      style={{
-                        color: "#303030",
-                        cursor: "pointer",
-                      }}
-                    ></ClearIcon>
-                  </>
-                )}
+            <div className="course-attribute">
+              <p>
+                {"Total length : " +
+                  (props.course?.minutes
+                    ? formatTime(props.course?.minutes)
+                    : "You don't have any course sections yet.")}
+              </p>
+            </div>
+            <div className="rating">
+              {" "}
+              <p>Rating :</p>
+              <div className="rating-box">
+                <Box
+                  sx={{
+                    "& > legend": { mt: 2 },
+                  }}
+                >
+                  <Rating
+                    name="read-only"
+                    value={props.course?.rating || 0}
+                    readOnly
+                    sx={{ color: "success.main" }}
+                    emptyIcon={
+                      <StarBorderIcon
+                        style={{ color: "#484848" }}
+                        fontSize="inherit"
+                        className="empty-star"
+                      />
+                    }
+                  />
+                </Box>
               </div>
-            ))}
-            {!props.course?.published && (
-              <>
+            </div>
+            <div className="course-attribute">
+              <p>{"Views : " + props.course?.views}</p>
+            </div>
+            <div className="course-attribute">
+              <p>
+                {"Number of Enrolled Students : " + props.course?.owners.length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          className="editable-container"
+          style={{
+            display: "flex",
+            width: "fit-content",
+            minWidth: "0px",
+            flexDirection: "column",
+            gap: "10px",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ width: "fit-content" }}>
+            <div style={{ display: "flex", gap: "10px", width: "fit-content" }}>
+              {props.course?.subject.map((subject, idx) => (
+                <div
+                  className="course-attribute"
+                  style={{ backgroundColor: "white" }}
+                  key={subject + idx}
+                >
+                  <p>{subject}</p>
+                  {!props.course?.published && (
+                    <>
+                      <ClearIcon
+                        onClick={() => {
+                          const newSubjects = props.course.subject.filter(
+                            (s) => s !== subject
+                          );
+                          editCourse(newSubjects);
+                        }}
+                        style={{
+                          color: "#303030",
+                          cursor: "pointer",
+                        }}
+                      ></ClearIcon>
+                    </>
+                  )}
+                </div>
+              ))}
+              {!props.course?.published && (
                 <div
                   className="course-attribute"
                   style={{
                     cursor: !addingSubject ? "pointer" : null,
+                    backgroundColor: "white",
                   }}
                   onClick={() => {
                     if (!addingSubject) toggleAddingSubject();
@@ -388,6 +454,7 @@ function EditCourse(props) {
                         onClick={() => {
                           props.course.subject.push(subjectRef.current.value);
                           editCourse(props.course.subject);
+                          setSubject("");
                         }}
                         disabled={subject === ""}
                       >
@@ -396,144 +463,117 @@ function EditCourse(props) {
                     </>
                   )}
                 </div>
-              </>
-            )}
-            <div
-              className="course-attribute"
-              onBlur={(e) => {
-                if (e.relatedTarget?.nodeName === "BUTTON") return;
-
-                if (
-                  e.relatedTarget === null &&
-                  e.target?.nodeName === "DIV" &&
-                  !editingPrice
-                )
-                  return;
-                if (e.relatedTarget !== null) return;
-                if (
-                  e.relatedTarget?.nodeName !== "INPUT" &&
-                  !(
-                    e.relatedTarget?.nodeName === "DIV" &&
-                    e.target?.nodeName === "INPUT"
-                  )
-                )
-                  toggleEditingPrice();
-              }}
-              tabIndex={-2}
-            >
-              {!editingPrice && (
-                <>
-                  <p>
-                    {"Price : " +
-                      (props.course?.price !== 0
-                        ? Math.floor(props.course?.price + 0.5) - 0.01
-                        : 0) +
-                      " " +
-                      (" " +
-                        (countries[
-                          Object.keys(countries).find(
-                            (e) => e === localStorage.getItem("country")
-                          )
-                        ]
-                          ? countries[
-                              Object.keys(countries).find(
-                                (e) => e === localStorage.getItem("country")
-                              )
-                            ]
-                          : "USD"))}
-                  </p>
-                  {!props.course?.published && (
-                    <>
-                      <img
-                        src={edit}
-                        alt="edit"
-                        onClick={toggleEditingPrice}
-                        style={{ margin: "10px" }}
-                      ></img>
-                    </>
-                  )}
-                </>
               )}
-              {editingPrice && (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div>
-                    <p className="price-text">Price : </p>
-                  </div>
-                  <div>
-                    <input
-                      className="course-attribute-input"
-                      value={price || ""}
-                      type="number"
-                      onChange={(e) => setPrice(e.target.value)}
-                    />
-                    <button
-                      className="btn btn-outline-success"
-                      style={{
-                        borderRadius: "9px",
-                        margin: "6px 6px",
-                      }}
-                      onClick={() => {
-                        editCourse();
-                      }}
-                      disabled={price <= 0}
-                    >
-                      Done
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="course-attribute">
-              <p>
-                {"Total length : " +
-                  (props.course?.minutes
-                    ? formatTime(props.course?.minutes)
-                    : "You don't have any course sections yet.")}
-              </p>
-            </div>
-            <div className="rating">
-              {" "}
-              <p>Rating :</p>
-              <div className="rating-box">
-                <Box
-                  sx={{
-                    "& > legend": { mt: 2 },
-                  }}
-                >
-                  <Rating
-                    name="read-only"
-                    value={props.course?.rating || 0}
-                    readOnly
-                    sx={{ color: "success.main" }}
-                    emptyIcon={
-                      <StarBorderIcon
-                        style={{ color: "#484848" }}
-                        fontSize="inherit"
-                        className="empty-star"
-                      />
-                    }
-                  />
-                </Box>
-              </div>
-            </div>
-            <div className="course-attribute">
-              <p>{"Views : " + props.course?.views}</p>
-            </div>
-            <div className="course-attribute">
-              <p>
-                {"Number of Enrolled Students : " + props.course?.owners.length}
-              </p>
             </div>
           </div>
-        </div>
+          <div
+            className="course-attribute"
+            style={{ backgroundColor: "white", width: "fit-content" }}
+            onBlur={(e) => {
+              if (e.relatedTarget?.nodeName === "BUTTON") return;
 
+              if (
+                e.relatedTarget === null &&
+                e.target?.nodeName === "DIV" &&
+                !editingPrice
+              )
+                return;
+              if (e.relatedTarget !== null) return;
+              if (
+                e.relatedTarget?.nodeName !== "INPUT" &&
+                !(
+                  e.relatedTarget?.nodeName === "DIV" &&
+                  e.target?.nodeName === "INPUT"
+                )
+              )
+                toggleEditingPrice();
+            }}
+            tabIndex={-2}
+          >
+            {!editingPrice && (
+              <>
+                <p>
+                  {"Price : " +
+                    (props.course?.price !== 0
+                      ? Math.floor(props.course?.price + 0.5) - 0.01
+                      : 0) +
+                    " " +
+                    (" " +
+                      (countries[
+                        Object.keys(countries).find(
+                          (e) => e === localStorage.getItem("country")
+                        )
+                      ]
+                        ? countries[
+                            Object.keys(countries).find(
+                              (e) => e === localStorage.getItem("country")
+                            )
+                          ]
+                        : "USD"))}
+                </p>
+                {!props.course?.published && (
+                  <>
+                    <img
+                      src={edit}
+                      alt="edit"
+                      onClick={toggleEditingPrice}
+                      style={{ margin: "10px" }}
+                    ></img>
+                  </>
+                )}
+              </>
+            )}
+            {editingPrice && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div>
+                  <p className="price-text">Price : </p>
+                </div>
+                <div>
+                  <input
+                    className="course-attribute-input"
+                    value={price || ""}
+                    type="number"
+                    onChange={(e) => setPrice(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-outline-success"
+                    style={{
+                      borderRadius: "9px",
+                      margin: "6px 6px",
+                    }}
+                    onClick={() => {
+                      editCourse();
+                    }}
+                    disabled={price <= 0}
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className="course-attribute"
+            style={{
+              width: "fit-content",
+              padding: "10px",
+              cursor: !addingSubject ? "pointer" : null,
+              backgroundColor: "white",
+            }}
+            onClick={() => {
+              setShow(true);
+            }}
+          >
+            Add Course Promotion
+          </div>
+        </div>
         <div
           className="editable-container"
           style={{
@@ -671,6 +711,35 @@ function EditCourse(props) {
           </div>
         )}
       </Card.Body>
+      <Modal
+        size="lg"
+        centered
+        show={show}
+        onHide={onClickHide}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <div className="tos-wrapper" style={{ width: "100%" }}>
+          <div className="tos-border-success" style={{ width: "100%" }}>
+            <Modal.Header closeButton>
+              <Modal.Title id="example-modal-sizes-title-lg">
+                Add Course Promotion
+              </Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body
+              className="tos"
+              style={{
+                height: "fit-content",
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+              }}
+            >
+              <CoursePromotionContainer course={props.course} />;
+            </Modal.Body>
+          </div>
+        </div>
+      </Modal>
     </Card>
   );
 }

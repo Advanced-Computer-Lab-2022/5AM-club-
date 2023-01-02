@@ -9,6 +9,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
+import { display } from "@mui/system";
 
 function CoursePromotionContainer(props) {
   const [percentage, setPercentage] = useState(1);
@@ -102,64 +103,66 @@ function CoursePromotionContainer(props) {
     }
   };
   return (
-    <Card sx={{ m: 2, p: 2 }}>
-      <Typography gutterBottom variant="h5" component="div">
-        {props.course.title}
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      autoComplete="off"
+      style={{ width: "100%" }}
+    >
+      <Typography variant="h6" sx={{ m: 1 }}>
+        Percentage
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} autoComplete="off">
-        <Typography variant="h6" sx={{ m: 1 }}>
-          Percentage
-        </Typography>
-        <TextField
-          sx={{ m: 1 }}
-          variant="outlined"
-          size="small"
-          fullWidth
-          type="number"
-          InputProps={{ inputProps: { min: 1, max: 100 } }}
-          id="percentage"
-          value={percentage}
-          onChange={(e) => {
-            if (e.target.value < 1) setPercentage(1);
-            else if (e.target.value > 100) setPercentage(100);
-            else setPercentage(e.target.value);
-          }}
+      <TextField
+        sx={{ m: 1 }}
+        variant="outlined"
+        size="small"
+        fullWidth
+        type="number"
+        InputProps={{ inputProps: { min: 1, max: 100 } }}
+        id="percentage"
+        value={percentage}
+        onChange={(e) => {
+          if (e.target.value < 1) setPercentage(1);
+          else if (e.target.value > 100) setPercentage(100);
+          else setPercentage(e.target.value);
+        }}
+      />
+      <Typography variant="h6" sx={{ m: 1 }}>
+        Start date
+      </Typography>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimePicker
+          label="start"
+          value={startDate}
+          onChange={(e) => setStartDate(e)}
+          disablePast={true}
+          components={{ OpenPickerIcon: CalendarMonthIcon }}
+          InputProps={{ sx: { "& .MuiSvgIcon-root": { color: "#96CEA8" } } }}
+          PopperProps={{ sx: popperSx }}
+          renderInput={(params) => <TextField {...params} />}
         />
         <Typography variant="h6" sx={{ m: 1 }}>
-          Start date
+          End date
         </Typography>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            label="start"
-            value={startDate}
-            onChange={(e) => setStartDate(e)}
-            disablePast={true}
-            components={{ OpenPickerIcon: CalendarMonthIcon }}
-            InputProps={{ sx: { "& .MuiSvgIcon-root": { color: "#96CEA8" } } }}
-            PopperProps={{ sx: popperSx }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <Typography variant="h6" sx={{ m: 1 }}>
-            End date
-          </Typography>
-          <DateTimePicker
-            label="end"
-            value={endDate}
-            onChange={(e) => setEndDate(e)}
-            minDateTime={startDate}
-            disablePast={true}
-            components={{ OpenPickerIcon: CalendarMonthIcon }}
-            InputProps={{ sx: { "& .MuiSvgIcon-root": { color: "#96CEA8" } } }}
-            PopperProps={{ sx: popperSx }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
+        <DateTimePicker
+          label="end"
+          value={endDate}
+          onChange={(e) => setEndDate(e)}
+          minDateTime={startDate}
+          disablePast={true}
+          components={{ OpenPickerIcon: CalendarMonthIcon }}
+          InputProps={{ sx: { "& .MuiSvgIcon-root": { color: "#96CEA8" } } }}
+          PopperProps={{ sx: popperSx }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
 
+      <div style={{ display: "flex", flexDirection: "row-reverse" }}>
         <Button variant="outlined" color="success" sx={{ m: 1 }} type="submit">
           Set promotion
         </Button>
-      </Box>
-    </Card>
+      </div>
+    </Box>
   );
 }
 export default memo(CoursePromotionContainer);

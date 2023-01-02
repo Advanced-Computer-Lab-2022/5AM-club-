@@ -36,19 +36,20 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use("/api/", courseRouter);
 app.use("/api/instructor", authenticateToken, courseRouter);
 app.use("/api/admin", authenticateToken, courseRouter);
 app.use("/api/trainee", authenticateToken, courseRouter);
 app.use("/api/instructor", authenticateToken, userDataRouter);
 app.use("/api/trainee", authenticateToken, userDataRouter);
 app.use("/api/admin", authenticateToken, userDataRouter);
-app.use("/api/", userDataRouter);
 app.use("/api/instructor", authenticateToken, reviewRouter);
 app.use("/api/trainee", authenticateToken, reviewRouter);
-app.use("/api/", websiteRouter);
 app.use("/api/instructor", authenticateToken, websiteRouter);
 app.use("/api/trainee", authenticateToken, websiteRouter);
+app.use("/api/", courseRouter);
+app.use("/api/", userDataRouter);
+app.use("/api/", websiteRouter);
+
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/build/index.html"), function (err) {
     if (err) {
