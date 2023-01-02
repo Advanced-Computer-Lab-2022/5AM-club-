@@ -5,13 +5,14 @@ import { MDBCard } from "mdb-react-ui-kit";
 import "./RequestCard.css";
 
 function RequestCard(props) {
+  console.log(props.request);
   return (
-    <MDBCard className="request-card">
+    <MDBCard className='request-card'>
       <div style={{ display: "flex" }}>
         <Typography
           gutterBottom
-          variant="h5"
-          component="div"
+          variant='h5'
+          component='div'
           sx={{
             mt: 2,
             ml: 2,
@@ -40,6 +41,9 @@ function RequestCard(props) {
                 {" "}
                 {props.request.course}{" "}
               </span>
+              <div style={{ fontSize: "13px", color: "#999999" }}>
+                {new Date(props.request.date).toLocaleString()}
+              </div>
             </div>
           )}
         </Typography>
@@ -47,7 +51,7 @@ function RequestCard(props) {
       {props.requestType === "pending" && (
         <div style={{ display: "flex", gap: "10px" }}>
           <button
-            className="btn btn-outline-danger"
+            className='btn btn-outline-danger'
             style={{ marginLeft: "auto" }}
             onClick={() => {
               props.reject(props.request);
@@ -56,7 +60,7 @@ function RequestCard(props) {
             Reject
           </button>
           <Button
-            variant="outline-success"
+            variant='outline-success'
             style={{ marginRight: "10px" }}
             onClick={() => {
               props.accept(props.request);

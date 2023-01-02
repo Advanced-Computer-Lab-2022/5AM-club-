@@ -5,7 +5,7 @@ import Rating from "@mui/material/Rating";
 import ReviewContainer from "./ReviewContainer";
 function ReviewsPage(props) {
   return (
-    <Card style={{ display: "flex", flexDirection: "column" }}>
+    <Card style={{ display: "flex", flexDirection: "column", padding: "10px" }}>
       <Typography gutterBottom variant='h5' component='div'>
         {props.type === "course" ? props.item?.title : props.item?.username}
       </Typography>
@@ -47,6 +47,10 @@ function ReviewsPage(props) {
           myReview={
             localStorage.getItem("username") === userReview.user.username
           }
+          instructor={props.type === "instructor" ? props.item : undefined}
+          myReviews={props.myReviews}
+          setMyReviews={props.setMyReviews}
+          index={props.index}
         />
       ))}
     </Card>

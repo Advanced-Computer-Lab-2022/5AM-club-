@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { TextField, Button } from "@mui/material";
+
+import { Button as ButtonMui } from "@mui/material";
+import Button from "react-bootstrap/Button";
+import { TextField } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import app from "../../utils/AxiosConfig.js";
 import logo from "../../assets/Header/logo.svg";
@@ -99,9 +102,9 @@ function Login() {
               >
                 <TextField
                   hiddenLabel
-                  id="filled-hidden-label-small"
-                  variant="outlined"
-                  label="Username"
+                  id='filled-hidden-label-small'
+                  variant='outlined'
+                  label='Username'
                   value={username}
                   style={{ minWidth: "575px" }}
                   onChange={(e) => {
@@ -110,14 +113,12 @@ function Login() {
                 />
                 <PasswordBox setPassword={setPassword}></PasswordBox>
 
-                <Button
-                  type="submit"
+                <button
+                  type='submit'
                   style={{
-                    backgroundColor: "#96cea8",
-                    color: "white",
                     minWidth: "575px",
                   }}
-                  variant="contained"
+                  className='btn-outline-success btn'
                   onClick={(e) => {
                     e.preventDefault();
                     const obj = {
@@ -127,56 +128,56 @@ function Login() {
                     onSubmit(obj);
                   }}
                 >
-                  login
-                </Button>
-                <Button
+                  Login
+                </button>
+                <ButtonMui
                   style={{ color: "#96cea8" }}
                   onClick={() => {
                     setForgotPassword(true);
                   }}
                 >
                   Forgot your password?
-                </Button>
+                </ButtonMui>
                 {forgotPassword && (
                   <>
                     <TextField
                       hiddenLabel
-                      id="filled-hidden-label-small"
-                      variant="outlined"
-                      label="Email"
-                      placeholder="Enter your email to receive a password reset link"
+                      id='filled-hidden-label-small'
+                      variant='outlined'
+                      label='Email'
+                      placeholder='Enter your email to receive a password reset link'
                       value={forgotPasswordEmail}
                       style={{ minWidth: "575px" }}
                       onChange={(e) => {
                         setForgotPasswordEmail(e.target.value);
                       }}
                     />
-                    <Button
+                    <ButtonMui
                       onClick={handleForgotPassword}
                       style={{ color: "#96cea8" }}
                     >
                       Send Email
-                    </Button>
+                    </ButtonMui>
                   </>
                 )}
-                <Button
+                <ButtonMui
                   style={{ color: "#96cea8", minWidth: "575px" }}
                   onClick={() => {
                     navigate("/signup");
                   }}
                 >
                   Don't have an Account?
-                </Button>
+                </ButtonMui>
               </Box>
             </form>
           </Container>
         </div>
       </div>{" "}
-      <div className="slanted">
+      <div className='slanted'>
         <div style={{ marginBottom: "50px" }}>
           <img
             src={logo}
-            alt="Logo"
+            alt='Logo'
             style={{
               width: "300px",
               height: "200px",
@@ -185,7 +186,7 @@ function Login() {
           ></img>
           <img
             src={logo2}
-            alt="Logo"
+            alt='Logo'
             style={{
               width: "250px",
               height: "150px",

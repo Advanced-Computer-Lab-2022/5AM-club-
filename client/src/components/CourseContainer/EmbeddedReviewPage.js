@@ -30,7 +30,7 @@ function EmbeddedReviewPage(props) {
     event.preventDefault();
     if (
       props.myReview !== undefined &&
-      Object.keys(props.myReview).length !== 0
+      Object.keys(props.myReview)?.length !== 0
     ) {
       let url = "/trainee/my-courses/" + props.course._id + "/edit-review";
       if (props.instructor)
@@ -102,7 +102,7 @@ function EmbeddedReviewPage(props) {
   useEffect(() => {
     if (
       props.myReview !== undefined &&
-      Object.keys(props.myReview).length !== 0
+      Object.keys(props.myReview)?.length !== 0
     ) {
       setReview(props.myReview.review);
       setRating(props.myReview.rating);
@@ -198,7 +198,7 @@ function EmbeddedReviewPage(props) {
           </>
         ) : (
           <>
-            {props.instructor?.userReviews.length <= 2 ? (
+            {props.instructor?.userReviews?.length <= 2 ? (
               props.instructor.userReviews.map((userReview, i) => (
                 <div key={i}>
                   <ReviewContainer userReview={userReview} />
@@ -268,7 +268,7 @@ function EmbeddedReviewPage(props) {
                 variant='outline-success'
                 type='submit'
                 className='marginedTop'
-                disabled={rating < 0}
+                disabled={rating < 0 || review === ""}
               >
                 Post
               </Button>
@@ -276,7 +276,7 @@ function EmbeddedReviewPage(props) {
           </MuiCard>
         )}
         {(props.myReview === undefined ||
-          Object.keys(props.myReview).length === 0) &&
+          Object.keys(props.myReview)?.length === 0) &&
           editable === false &&
           location.state.displayAddReview && (
             <>
@@ -304,7 +304,7 @@ function EmbeddedReviewPage(props) {
           <div className='tos-border-success'>
             <Modal.Header closeButton>
               <Modal.Title>
-                {!props.instructor ? "Instructor Reviews" : "Course Reviews"}
+                {!props.instructor ? "Course Reviews" : "Instructor Reviews"}
               </Modal.Title>
             </Modal.Header>
             <Modal.Body
@@ -312,9 +312,21 @@ function EmbeddedReviewPage(props) {
               style={{ maxHeight: "700px", overFlowY: "auto" }}
             >
               {!props.instructor ? (
-                <ReviewsPage item={props.course} type='course' />
+                <ReviewsPage
+                  item={props.course}
+                  type='course'
+                  myReviews={props.myReviews}
+                  setMyReviews={props.setMyReviews}
+                  index={props.index}
+                />
               ) : (
-                <ReviewsPage item={props.instructor} type='instructor' />
+                <ReviewsPage
+                  item={props.instructor}
+                  type='instructor'
+                  myReviews={props.myReviews}
+                  setMyReviews={props.setMyReviews}
+                  index={props.index}
+                />
               )}
             </Modal.Body>
           </div>

@@ -52,15 +52,15 @@ function ChangePassword(props) {
         >
           <TextField
             type={showPassword ? "text" : "password"}
-            id="filled-hidden-label-small"
-            variant="outlined"
-            label="Password"
-            autoComplete="no"
+            id='filled-hidden-label-small'
+            variant='outlined'
+            label='Password'
+            autoComplete='no'
             InputProps={{
               autoComplete: showPassword ? "off" : "new-password",
               endAdornment: (
                 <InputAdornment
-                  position="end"
+                  position='end'
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     setShowPassword(!showPassword);
@@ -78,15 +78,15 @@ function ChangePassword(props) {
 
           <TextField
             type={showRepeatPassword ? "text" : "password"}
-            id="filled-hidden-label-small"
-            variant="outlined"
-            label="Repeat Password"
-            autoComplete="no"
+            id='filled-hidden-label-small'
+            variant='outlined'
+            label='Repeat Password'
+            autoComplete='no'
             InputProps={{
               autoComplete: showRepeatPassword ? "off" : "new-password",
               endAdornment: (
                 <InputAdornment
-                  position="end"
+                  position='end'
                   style={{ cursor: "pointer" }}
                   onClick={() => {
                     setShowRepeatPassword(!showRepeatPassword);
@@ -102,10 +102,9 @@ function ChangePassword(props) {
             }}
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            style={{ backgroundColor: "#96cea8", color: "white" }}
+          <button
+            className='btn btn-outline-success'
+            type='submit'
             onClick={(e) => {
               e.preventDefault();
               const obj = {
@@ -115,7 +114,7 @@ function ChangePassword(props) {
             }}
           >
             Change Password
-          </Button>
+          </button>
         </Box>
       </form>
     </Container>
