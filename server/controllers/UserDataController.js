@@ -172,35 +172,6 @@ async function getUser(req, res) {
   }
 }
 
-async function getUser(req, res) {
-  if (req.user.id) {
-    console.log("started");
-    let id = req.user.id;
-    console.log(req.headers);
-    if (req.headers.id) id = req.headers.id;
-    console.log(id);
-    let User;
-    switch (req.headers.type) {
-      case "corporate":
-        User = await Trainee.findById(id);
-        break;
-      case "individual":
-        User = await Trainee.findById(id);
-        break;
-      case "admin":
-        User = await Admin.findById(id);
-        break;
-      case "instructor":
-        User = await Instructor.findById(id).populate("userReviews.user");
-        break;
-      default:
-        res.status(400).send("Invalid UserType");
-        break;
-    }
-    res.send(User);
-  }
-}
-
 async function setCountry(req, res) {
   const valid = countrySchema.validate(req.body);
 
@@ -295,6 +266,13 @@ async function addInstructor(req, res) {
     email: "",
     country: "United States",
     biography: "",
+    money_owed: [
+      {
+        amount: 0,
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+      },
+    ],
   });
   await newInstructor
     .save()

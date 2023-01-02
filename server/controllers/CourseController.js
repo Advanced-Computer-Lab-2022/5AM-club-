@@ -701,27 +701,27 @@ const getCourseRequests = async (req, res) => {
       for (let accepted of course.accepted) {
         requests.accepted.push({
           course: course.title,
-          trainee: accepted.username,
+          trainee: accepted.trainee.username,
           courseId: course._id,
-          traineeId: accepted.trainee,
+          traineeId: accepted.trainee._id,
           date: accepted.date,
         });
       }
       for (let rejected of course.rejected) {
         requests.rejected.push({
           course: course.title,
-          trainee: rejected.username,
+          trainee: rejected.trainee.username,
           courseId: course._id,
-          traineeId: rejected.trainee,
+          traineeId: rejected.trainee._id,
           date: rejected.date,
         });
       }
       for (let pending of course.pending) {
         requests.pending.push({
           course: course.title,
-          trainee: pending.username,
+          trainee: pending.trainee.username,
           courseId: course._id,
-          traineeId: pending.trainee,
+          traineeId: pending.trainee._id,
           date: pending.date,
         });
       }
@@ -747,7 +747,9 @@ const acceptCourseAccess = async (req, res) => {
     const courseId = req.params.id;
     const traineeId = req.body.traineeId;
     const course = await Course.findById(courseId);
-    const pendingRequest = course.pending.filter((p) => p.trainee != traineeId);
+    const pendingRequest = course.pending.filter(
+      (p) => p.trainee !== traineeId
+    );
     const newCourse = await Course.findByIdAndUpdate(
       courseId,
       {
@@ -791,7 +793,9 @@ const rejectCourseAccess = async (req, res) => {
     const courseId = req.params.id;
     const traineeId = req.body.traineeId;
     const course = await Course.findById(courseId);
-    const pendingRequest = course.pending.filter((p) => p.trainee != traineeId);
+    const pendingRequest = course.pending.filter(
+      (p) => p.trainee !== traineeId
+    );
 
     const newCourse = await Course.findByIdAndUpdate(
       courseId,
