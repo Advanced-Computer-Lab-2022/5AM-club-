@@ -33,7 +33,11 @@ const pay = async (req, res) => {
               name: req.body.courseName,
             },
             unit_amount:
-              (req.body.coursePrice - tokenData.paidFromWallet) * 100,
+              Math.floor(
+                req.body.coursePrice - tokenData.paidFromWallet + 0.5
+              ) *
+                100 -
+              1,
           },
           quantity: 1,
         },
