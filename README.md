@@ -1,12 +1,8 @@
 # 5AM-club-
 
-
 # Canadian Chamber of Commerce Learning Platform
-
 Canadian Chamber of Commerce Learning Platform is an online learning and teaching platform meant to allow both students
-and teachers to be in one simple to use and convenient platform for learning.
-
- 
+and instructors to be in one simple to use and convenient platform for learning.
 
 ## Motivation
 As students, we created this project simply because we needed something like it, a place where
@@ -14,12 +10,14 @@ quality learning can be found with the touch a button. Also as Computer Science 
 to practice/learn web development, as it is the most popular form of Software development in recent years, so this project
 was a great entry and got us familiar with the technologies used in that particular field.
 It is also part of our curriculum CSEN 704.
+
 ## Build Status
 The project is complete as of January 2023
 
+## Code Style
+The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files.
+
 ## Screenshots
-
-
 
 Guest:
 
@@ -55,7 +53,6 @@ Instructor:
 ![9](https://user-images.githubusercontent.com/99425163/210193882-0538c5c8-5f67-42f7-8590-86c308762d23.png)
 ![10](https://user-images.githubusercontent.com/99425163/210193883-2b661031-357d-414d-b8c8-bd596bdb89e3.png)
 
-
 Admin:
 
 ![1](https://user-images.githubusercontent.com/99425163/210193842-5c4ecdcc-5f4d-4d25-8db9-cd09b81d69c9.png)
@@ -66,26 +63,24 @@ Admin:
 ![6](https://user-images.githubusercontent.com/99425163/210193847-1a65aa1b-77f2-46ba-8765-14fca7f59616.png)
 ![7](https://user-images.githubusercontent.com/99425163/210193848-838061a7-b9af-4d3c-a59f-cb9f37dee30d.png)
 
-
 ## Tech Stack
-
 **Client:** React, Axios 
 
 **Server:** Node, Express
 
 **Database:** MongoDB
 
-
 ## Features
 - Cross Platform
 - Intuitive design
-- Responsive 
+- Responsive
+- Very streamlined and easy to learn
+- Efficient and bug free
 
-
+## Code Examples
 
 ## Installation
-
-1) Install my-project        
+1) Clone the repository       
 ```bash
   git clone https://github.com/Advanced-Computer-Lab-2022/5AM-club-.git
 ```
@@ -96,18 +91,16 @@ Admin:
   cd ../server
   npm install --force
   ```
+  
 ## API Reference
-
 ```http
-  GET/contract
+GET/contract
 ```
 This API fetches the contract from the database and sends it.
-
 ```http
-  GET/terms-of-service
+GET/terms-of-service
 ```
 Fetches the most updated version of the tos in the database and sends it.
-
 ```http
 GET/get-user
 ```
@@ -120,12 +113,10 @@ gets users' data
 GET/get-trainee-course
 ```
 Fetches the trainee's data of a specific course
-
 ```http
 GET/get-course-instructor
 ```
 Fetches the instructor of a course
-
 ```http
 GET/get-user-type
 ```
@@ -146,12 +137,10 @@ Adds an instructor user to the database
 POST/add-corporate-trainee
 ```
 Adds a corporate trainee user to the database
-
 ```http
 POST/signUp
 ```
 Adds an individual trainee user to the database
-
 ```http
 POST/login
 ```
@@ -160,17 +149,14 @@ Allow the user to access the main home page
 GET/logout
 ```
 logs out a user from the page
-
 ```http
 PUT/set-country
 ```
 Changes the country of a user to the selected country
-
 ```http
 PUT/edit-personal-info
 ```
 Changes information of a instructor in the database
-
 ```http
 PUT/edit-trainee-course
 ```
@@ -219,7 +205,6 @@ allowes trainees to pay for courses
 PUT/refund
 ```
 Allows trainees to request a refund
-
 ```http
 PUT/update-profile
 ```
@@ -228,7 +213,6 @@ Allows the user to update his profile
 POST/add-course-to-individual
 ```
 Allows a course to be added to an individual courses
-
 ```http
 GET/my-reviews
 ```
@@ -370,37 +354,31 @@ DELETE/my-courses/${courseId}/delete-course
 ```
 instructor deletes his own course with id provided
 
+## Tests
+To run tests, run the following command
+```bash
+  npm run test
+```
 
+## How to Use?
+Run this command in the server folder
+```bash
+   node index
+```
+and this command in the client folder
+```bash
+  npm start
+```
+then you can proceed to use the website.
+### For Trainees
+After running the project, you can search and browse the available courses. You can then proceed to create an account to buy and take our courses. After signing up, you can purchase a course using your credit card information. Then the course is added to your catalog and you can view it at any time. You get a completion certificate for each course you finish. Happy Learning!
+### For Instructors
+After running the project, you can proceed to login with your information. You can then use our wizard to create and edit your courses. Once you are happy with the content, you can publish your course. Now all you need to do is wait for our userbase to start buying your course. You can check your profile to see the money owed for each month since you were first added to the site as a user.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Contribute
+You can open an issue if you have any suggestions for us to implement or you can create a branch directly and submit a pull request with your changes.
 
 ## Credits
- 
 - [Abdelraheman Khaled](https://github.com/abdelrahmankhaled2001)
 - [Amr Esmaeel El-Said](https://github.com/AmrKollohm)
 - [Amr Mohamed Abdelmonem](https://github.com/IrrationalInteger)
@@ -408,6 +386,4 @@ instructor deletes his own course with id provided
 - [Mahmoud Khaled](https://github.com/mahmouddkhaledd)
 
 ## License
-
 [MIT](https://choosealicense.com/licenses/mit/)
-
