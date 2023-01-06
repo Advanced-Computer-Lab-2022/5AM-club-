@@ -355,7 +355,7 @@ DELETE/my-courses/${courseId}/delete-course
 instructor deletes his own course with id provided
 
 ## Tests
-Testing was done using postman. Check out the API Refrences section above for all the endpoints.
+Testing was done using postman. Check out the API References section above for all the endpoints.
 
 ## How to Use?
 Run this command in the server folder
@@ -371,6 +371,8 @@ then you can proceed to use the website.
 After running the project, you can search and browse the available courses. You can then proceed to create an account to buy and take our courses. After signing up, you can purchase a course using your credit card information. Then the course is added to your catalog and you can view it at any time. You get a completion certificate for each course you finish. Happy Learning!
 ### For Instructors
 After running the project, you can proceed to login with your information. You can then use our wizard to create and edit your courses. Once you are happy with the content, you can publish your course. Now all you need to do is wait for our userbase to start buying your course. You can check your profile to see the money owed for each month since you were first added to the site as a user.
+### For Admins
+After running the project, you can proceed to login with your information. You can select from the panels what action you want to perform. This includes add promotions to any course, adding new users, viewing and resolving user reports on courses, and accepting corporate requests for course access.
 
 ## Contribute
 You can open an issue if you have any suggestions for us to implement or you can create a branch directly and submit a pull request with your changes.
