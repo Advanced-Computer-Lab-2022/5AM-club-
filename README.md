@@ -88,6 +88,332 @@ The project was built with the standard react functional component coding style 
 - Efficient and bug free
 
 ## Code Examples
+<details>
+<summary>Server</summary>
+Our backend is composed of routes that connect to controllers where all the logic is handled.
+
+This is an example of one of the routers:
+
+```javascript
+const express = require("express");
+const router = express.Router();
+const ReviewController = require("../../controllers/ReviewController");
+router.get("/my-reviews", ReviewController.getMyReviews);
+router.get(
+  "/my-courses/:id/get-my-reviews",
+  ReviewController.getTraineeReviews
+);
+router.post(
+  "/my-courses/:id/instructors/:id/add-review",
+  ReviewController.addInstructorReview
+);
+router.post("/my-courses/:id/add-review", ReviewController.addCourseReview);
+router.put(
+  "/my-courses/:id/instructors/:id/edit-review",
+  ReviewController.editInstructorReview
+);
+router.put("/my-courses/:id/edit-review", ReviewController.editCourseReview);
+router.delete(
+  "/my-courses/:id/delete-review",
+  ReviewController.deleteCourseReview
+);
+router.delete(
+  "/my-courses/:id/instructors/:id/delete-review",
+  ReviewController.deleteInstructorReview
+);
+
+module.exports = router;
+```
+Here is an example of a controller function:
+```javascript
+const getTraineeReviews = async (req, res) => {
+  const id = req.user.id;
+  const courseId = req.params.id;
+  const reviews = {};
+  const course = await Course.findById(courseId).select({
+    userReviews: { $elemMatch: { user: id } },
+  });
+  const courseInstructors = await Course.findById(courseId).populate(
+    "instructor"
+  );
+  reviews.instructorReview = [];
+  let i = 0;
+  for (const instructor of courseInstructors.instructor) {
+    reviews.instructorReview[i] = instructor.userReviews.find(
+      (review) => review.user.toString() === id
+    );
+    !reviews.instructorReview[i] && (reviews.instructorReview[i] = {});
+    i++;
+  }
+  reviews.courseReview = course.userReviews ? course.userReviews[0] : {};
+  res.send(reviews);
+};
+```
+All our routers pass through an authentication middleware for logged in users:
+```javascript
+const jwt = require("jsonwebtoken");
+const authenticateToken = (req, res, next) => {
+  if (req.cookies?.jwt && req.cookies?.accessToken) {
+    const accessToken = req.cookies.accessToken;
+    const refreshToken = req.cookies.jwt;
+    let validAccess = false,
+      validRefresh = false;
+    let data;
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        // Wrong or expired access token
+        return res.status(401).json({ message: "Unauthorized" });
+      } else {
+        validAccess = true;
+        data = decoded;
+      }
+    });
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      (err, decoded) => {
+        if (err) {
+          // Wrong or expired refresh token
+          return res
+            .status(401)
+            .json({ message: "Unauthorized,expired refresh" });
+        } else {
+          validRefresh = true;
+        }
+      }
+    );
+
+    if (validAccess && validRefresh) {
+      req.user = data;
+      const now = Math.floor(new Date().getTime() / 1000);
+      const newAccessToken = jwt.sign(
+        { ...data, exp: now + 60 * 30 * 4 },
+        process.env.ACCESS_TOKEN_SECRET
+      );
+
+      res.cookie("accessToken", `${newAccessToken}`);
+      return next();
+    } else {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized, some cookies are expired" });
+    }
+  } else {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, some cookies are missing" });
+  }
+};
+module.exports = authenticateToken;
+```
+</details>
+
+<details>
+<summary>Client</summary>
+  
+The client side is composed of a main router component responsible for resolving user routes to react components. The router works by using a custom PrivateRoute component that redirects unauthorized users to thier respective home pages.
+
+Here is a sample from the router:
+```javascript
+                {/* Admin */}
+                <Route
+                    path="/admin/reports"
+                    element={
+                      <PrivateRoute type={"admin"}>
+                        <ReportsPage />
+                      </PrivateRoute>
+                    }
+                  ></Route>
+                {/* Individual */}
+                  <Route
+                    path="/individual-trainee"
+                    element={
+                      <PrivateRoute type={"individual"}>
+                        <TraineeHomePage />
+                      </PrivateRoute>
+                    }
+                  ></Route>
+```
+This is the PrivateRoute component:
+```javascript
+import React from "react";
+import { Navigate } from "react-router-dom";
+
+function PrivateRoute({ type, children }) {
+  if (
+    localStorage.getItem("type") === type ||
+    (!localStorage.getItem("type") && type === "guest")
+  ) {
+    return <> {children} </>;
+  }
+  return (
+    <Navigate
+      to={
+        localStorage.getItem("type")
+          ? localStorage.getItem("type") === "individual" ||
+            localStorage.getItem("type") === "corporate"
+            ? "/" + localStorage.getItem("type") + "-trainee"
+            : "/" + localStorage.getItem("type")
+          : "/"
+      }
+    />
+  );
+}
+
+export default PrivateRoute;
+
+```
+Here is an example of a react page:
+```javascript
+import app from "../../utils/AxiosConfig.js";
+import "./ViewMyCourses.css";
+import { useEffect, useState, memo } from "react";
+import { useLocation } from "react-router-dom";
+import MyFiltersContainer from "../../components/ViewMyCourses/MyFiltersContainer";
+import MyCoursesContainer from "../../components/ViewMyCourses/MyCoursesContainer";
+import { useSearchParams } from "react-router-dom";
+
+function ViewMyCourses() {
+  const location = useLocation();
+
+  const [courses, setCourses] = useState([]);
+  const [noCourses, setNoCourses] = useState(false);
+  const [filter, setFilter] = useState({
+    searchItem:
+      location.state?.searchItem !== null &&
+      location.state?.searchItem !== undefined
+        ? location.state?.searchItem
+        : null,
+  });
+  // eslint-disable-next-line
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get("added");
+  useEffect(() => {
+    async function insideEffect() {
+      //handle somethingggg
+      if (token != null) {
+        await app.post("add-course-to-individual", { token }).then((res) => {});
+      }
+      setCourses([]);
+      await app
+        .get(
+          localStorage.getItem("type")
+            ? localStorage.getItem("type") === "corporate" ||
+              localStorage.getItem("type") === "individual"
+              ? "/trainee/my-populated-courses"
+              : "/" + localStorage.getItem("type") + "/my-populated-courses"
+            : "/my-populated-courses",
+          {
+            headers: {
+              type: localStorage.getItem("type"),
+              country: localStorage.getItem("country"),
+            },
+            params: { ...filter },
+          }
+        )
+        .then((response) => {
+          if (response.data.length === 0) setNoCourses(true);
+          else {
+            setNoCourses(false);
+            setCourses(response.data);
+          }
+        });
+    }
+    insideEffect();
+    //eslint-disable-next-line
+  }, [filter]);
+
+  return (
+    <div className="view-courses-wrapper">
+      {localStorage.getItem("type") === "instructor" && (
+        <MyFiltersContainer
+          setFilter={setFilter}
+          setNoCourses={setNoCourses}
+        ></MyFiltersContainer>
+      )}
+      <div className="main-content">
+        <MyCoursesContainer
+          courses={courses}
+          noCourses={noCourses}
+        ></MyCoursesContainer>
+      </div>
+    </div>
+  );
+}
+
+export default memo(ViewMyCourses);
+
+```
+Here is the MyCoursesContainer nested within the page:
+```javascript
+import { memo } from "react";
+import { Spinner } from "loading-animations-react";
+import noCourses from "../../assets/ViewCourses/noCourses.svg";
+import Pagination from "../../layouts/Pagination/Pagination";
+
+function MyCoursesContainer(props) {
+  return (
+    <>
+      {props.noCourses ? (
+        <>
+          <div
+            style={{
+              marginBottom: "200px",
+              width: "100%",
+              height: "100%",
+              flexGrow: "1",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              src={noCourses}
+              alt="noCourses"
+              style={{ width: "200px", height: "200px" }}
+            ></img>
+            <p
+              style={{ fontSize: "25px", fontWeight: "700", marginTop: "50px" }}
+            >
+              You have no courses yet.
+            </p>
+          </div>
+        </>
+      ) : props.courses.length === 0 ? (
+        <div
+          style={{
+            marginBottom: "300px",
+            width: "100%",
+            height: "100%",
+            flexGrow: "1",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: "200px", height: "200px" }}>
+            <Spinner
+              color1="#96cea8"
+              color2="#96cea8"
+              textColor="rgba(0,0,0, 0.5)"
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <Pagination items={props.courses} itemsPerPage={12} my={true} />
+        </>
+      )}
+    </>
+  );
+}
+export default memo(MyCoursesContainer);
+```
+This component employs pagination for a better user experience while also rendering the loading animations while the course data is loading. If no courses are found, an alert is rendered instead.
+</details>
+
 
 ## Installation
 1) Clone the repository       
@@ -483,7 +809,7 @@ PUT/set-problem-status
 
 Request Body
 ```json
-  {status:"resolved"}
+  {"status":"resolved"}
 ```
   
 Response 
@@ -566,15 +892,62 @@ Response
 ```http
 POST/pay
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+
+**Accessible by:** Individual Trainees
+
+Request Body
+```json
+{"courseId":"63b34f81d21f21568822c23a","coursePrice":"1300","courseName":"Test Course"}
+```
+
+Response
+```json
+{"url":"http://localhost:3000/individual-trainee/my-courses?added=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0cmFpbmVlSWQiOiI2M2IzNTE3NWQyMWYyMTU2ODgyMmM0NjQiLCJjb3Vyc2VJZCI6IjYzYjM0ZjgxZDIxZjIxNTY4ODIyYzIzYSIsInBhaWRGcm9tV2FsbGV0IjotOTk5Ljk5LCJpYXQiOjE2NzMwMzY0MjcsImV4cCI6MTY3NDMzMjQyN30.bN5dWSOvprZEbWep-Cb0VdvhXl5PVBP3lEj5jwHEK4c"}
+```
+
 **Requests a refund**
 ```http
 PUT/refund
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+
+**Accessible by:** Individual Trainees
+
+Request Body
+```json
+{"courseId":"63b34f81d21f21568822c23a"}
+```
+
+Response
+```json
+"refunded successfully"
 ```
 **Adds a course to an individual trainee**
 ```http
 POST/add-course-to-individual
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
 
+**Accessible by:** Individual Trainees
+
+Request Body
+```json
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0cmFpbmVlSWQiOiI2M2IzNTE3NWQyMWYyMTU2ODgyMmM0NjQiLCJjb3Vyc2VJZCI6IjYzYjM0ZjgxZDIxZjIxNTY4ODIyYzIzYSIsInBhaWRGcm9tV2FsbGV0IjotOTk5Ljk5LCJpYXQiOjE2NzMwMzY0MjcsImV4cCI6MTY3NDMzMjQyN30.bN5dWSOvprZEbWep-Cb0VdvhXl5PVBP3lEj5jwHEK4c"}
+```
+
+Response
+```
+"bought successfully"
+```
 **Updates a user's profile**
 ```http
 PUT/update-profile
@@ -587,7 +960,27 @@ PUT/update-profile
   
 Request Body
 ```json
-  {"password":"new password","email":"amrmohamedyoniss@gmail.com","firstName":Amr","lastName":"Mohamed"}
+  {"password":"new password","email":"amrmohamedyoniss@gmail.com","firstName":"Amr","lastName":"Mohamed"}
+```
+
+Response
+```json
+ {"username":"corporate2","password":"$2a$08$Ijewzx9FAKDikvHRWB.Vden4j1OAJAsNpjXf4drMT7DliStn2ggT.","type":"corporate","firstName":"Amr","lastName":"Mohamed","gender":"male","country":"United States","walletMoney":"0","courses":["63b34f81d21f21568822c23a"],"email":"amrmohamedyoniss@gmail.com"}
+
+```
+**Updates a user's profile**
+```http
+PUT/update-profile
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Corporate Trainees, Instructors
+  
+Request Body
+```json
+  {"password":"new password","email":"amrmohamedyoniss@gmail.com","firstName":"Amr","lastName":"Mohamed"}
 ```
 
 Response
@@ -606,35 +999,173 @@ Response
 ```http
 GET/my-reviews
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Instructors
+
+Response
+```JSON
+[{
+"user":"63b41b22a4407253aa59501d",
+"review":"instructor review",
+"rating":"5",
+}]
+```
 **Fetches a trainee's reviews for a specific course and its instructors**
 ```http
 GET/my-courses/${id}/get-my-reviews
+``` 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the course |
+
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Response
+```JSON
+[{"user":"63b41b22a4407253aa59501d",
+"review":"instructor review",
+"rating":"5"}]
 ```
+
 **Adds a review and rating for one of the instructors**
 ```http
 POST/my-courses/${id}/instructors/${id}/add-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the Instructor|
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+
+Request Body
+```JSON
+ {
+ "review": "Great Great job",
+ "rating": "5",
+ }
+```
+
+Response 
+```JSON
+"Review added successfully"
+```
+
+
 **Adds a review and rating for an owned course**
 ```http
 POST/my-courses/${id}/add-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the course|
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Request Body
+```JSON
+{
+ "review": "Average course",
+ "rating": "2",
+ }
+```
+
+Response 
+```JSON
+"Review added successfully"
+```
+
 **Edits a review and rating for one of the instructors** 
 ```http
 PUT/my-courses/${id}/instructors/${id}/edit-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the instructor|
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Request Body
+```JSON
+{
+ "review": " not useful",
+ "rating": "5",
+ }
+```
+Response
+```JSON
+"Review edited successfully"
+```
+
 **Edits a review and rating for an owned course**
 
 ```http
 PUT/my-courses/${id}/edit-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the course |
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Request Body
+```JSON
+{
+ "review": " Above-average course",
+ "rating": "4",
+}
+```
+
+
+
+Response
+```JSON
+"Review edited successfully"
+```
+
+
+
 **Deletes a review and rating for an owned course**
 ``` http
 DELETE/my-courses/${id}/delete-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the course |
+
+**Accessible by:** Corporate Trainees, Individual Trainees
+
+Response
+```JSON
+"Review deleted successfully"
+```
+
 **Deletes a review and rating for one of the instructors** 
 ```http
 DELETE/my-courses/${id}/instructors/${id}/delete-review
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id`  | `string`  |  **Required**. Specifies the instructor |
+
+**Accessible by:** Corporate Trainees, Individual Trainees
+
+Response
+```JSON
+"Review deleted successfully"
+```
+
 </details>
 
   <details>
@@ -791,7 +1322,9 @@ GET/courses/course-subjects
 Response
 ```json
 ["subject 1","test subject","sub","sub2"]
+```
 **Increment the number of views for a course**
+
 ```http
 PUT/my-courses/increment-views${id}
 ```
@@ -1005,7 +1538,8 @@ PUT/my-courses/edit-course/${courseid}/add-subtitle
 
 Request Body
 ```json
-{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}```
+{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}
+```
 Response
 ```json
 {"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
@@ -1023,7 +1557,8 @@ PUT/my-courses/edit-course/${courseid}/edit-subtitle/${subtitleid}
 
 Request Body
 ```json
-{"title":"Test Subtitle 5","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}```
+{"title":"Test Subtitle 5","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}
+```
 Response
 ```json
 {"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 5","description":"Subtitle 1 Description","sections":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
@@ -1112,7 +1647,8 @@ Response
 ```http
 PUT/set-multiple-promotions
 ```
-
+Parameters: None.
+  
 **Accessible by:** Instructors
 
 Request Body
@@ -1123,6 +1659,7 @@ Request Body
     "startDate": "2023-01-03T12:15:23.000+00:00",
     "endDate": "2023-01-04T13:19:23.000+00:00"
 }
+
 ```
 Response
 
