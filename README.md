@@ -15,7 +15,7 @@ It is also part of our curriculum CSEN 704.
 The project is complete as of January 2023
 
 ## Code Style
-The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files.
+The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files. Most of the code was written in camelCase except for react components which were declared using PascalCase.
 
 ## Screenshots
 
