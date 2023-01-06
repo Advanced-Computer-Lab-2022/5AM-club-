@@ -355,10 +355,7 @@ DELETE/my-courses/${courseId}/delete-course
 instructor deletes his own course with id provided
 
 ## Tests
-To run tests, run the following command
-```bash
-  npm run test
-```
+Testing was done using postman. Check out the API Refrences section above for all the endpoints.
 
 ## How to Use?
 Run this command in the server folder
