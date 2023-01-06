@@ -18,8 +18,8 @@ The project is complete as of January 2023. Unit tests could be added for stress
 The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files. Most of the code was written in camelCase except for react components which were declared using PascalCase.
 
 ## Screenshots
-
-Guest:
+<details>
+  <summary>Guest</summary>
 
 ![1](https://user-images.githubusercontent.com/99425163/210193774-5f68ebc4-3466-484f-a95b-d969d1b07ce4.png)
 ![2](https://user-images.githubusercontent.com/99425163/210193778-609b0213-b8ef-42ec-9111-e6d97c4f376a.png)
@@ -28,8 +28,12 @@ Guest:
 ![5](https://user-images.githubusercontent.com/99425163/210193782-ec2d4bfd-8c72-40b9-bf0e-67787fc0b595.png)
 ![6](https://user-images.githubusercontent.com/99425163/210193783-b451918a-9dfc-4d1a-bfc8-07e157049cd5.png)
 ![7](https://user-images.githubusercontent.com/99425163/210193785-f213f060-ece9-45e3-b6f6-77d1bee80aac.png)
+  
+</details>
 
-Trainee:
+<details>
+  <summary>Trainee</summary>
+
 
 ![1](https://user-images.githubusercontent.com/99425163/210193797-950c1248-c6a8-4f05-9263-425d1af4a61e.png)
 ![2](https://user-images.githubusercontent.com/99425163/210193799-dc9550ab-af32-4885-baf5-193e36840ce5.png)
@@ -39,8 +43,11 @@ Trainee:
 ![6](https://user-images.githubusercontent.com/99425163/210193808-48d5faaf-b988-4bf4-bdd7-831a845e2751.png)
 ![7](https://user-images.githubusercontent.com/99425163/210193811-15d2e799-5b26-4252-8381-b15ace769630.png)
 ![8](https://user-images.githubusercontent.com/99425163/210193813-b26f80e8-16ed-482f-8485-5944161a70ff.png)
+</details>
 
-Instructor:
+<details>
+  <summary>Instructor</summary>
+
 
 ![1](https://user-images.githubusercontent.com/99425163/210193870-714ea212-24ce-4396-a820-0aac7061aa66.png)
 ![2](https://user-images.githubusercontent.com/99425163/210193873-b961b84d-b63f-477e-9dfa-c34a0ac2656a.png)
@@ -52,8 +59,10 @@ Instructor:
 ![8](https://user-images.githubusercontent.com/99425163/210193881-012c528e-ce0f-41b5-8f39-aec11fcdddfc.png)
 ![9](https://user-images.githubusercontent.com/99425163/210193882-0538c5c8-5f67-42f7-8590-86c308762d23.png)
 ![10](https://user-images.githubusercontent.com/99425163/210193883-2b661031-357d-414d-b8c8-bd596bdb89e3.png)
+</details>
 
-Admin:
+<details>
+  <summary>Admin</summary>
 
 ![1](https://user-images.githubusercontent.com/99425163/210193842-5c4ecdcc-5f4d-4d25-8db9-cd09b81d69c9.png)
 ![2](https://user-images.githubusercontent.com/99425163/210193843-9d2d2d6b-eb73-46f8-b218-b17d20711646.png)
@@ -62,6 +71,8 @@ Admin:
 ![5](https://user-images.githubusercontent.com/99425163/210193846-798005d5-2503-4c6e-8d17-164a04f74ea5.png)
 ![6](https://user-images.githubusercontent.com/99425163/210193847-1a65aa1b-77f2-46ba-8765-14fca7f59616.png)
 ![7](https://user-images.githubusercontent.com/99425163/210193848-838061a7-b9af-4d3c-a59f-cb9f37dee30d.png)
+
+</details>
 
 ## Tech Stack
 **Client:** React, Axios 
@@ -93,11 +104,13 @@ Admin:
   ```
   
 ## API Reference
+
 The API routes are divided into 4 groups.
 
 Note: All endpoints were tested using postman to ensure correct response bodies were returned.
 
-### 1-Website
+<details>
+<summary> Website</summary>
 
 This endpoint fetches the contract from the database.
 
@@ -130,8 +143,10 @@ Response
 ```json
 {"content":"These are the terms of service", "type":"tos"}
 ```
+</details>
 
-### 2-User Data
+<details>
+<summary>User Data</summary>
 
 Fetches a user using his id.
 
@@ -410,7 +425,8 @@ POST/report-problem
 **Accessible by:** Individual Trainees, Coporate Trainees, Instructors
 
 Request Body
-```json{
+```json
+{
 "courseName":"Test Course",
 "problemType":"technical",
 "problem":"This is a problem"}
@@ -421,15 +437,26 @@ Response
 "Problem reported successfully!"
 ```
 
-Fetches all the submitted problems from the users
+Fetches all the submitted problems by a user
 ```http
 GET/view-problems
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
 
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+
+Response 
+```json
+  [{"userId":"63b35175d21f21568822c464","username":"individual","courseName":"Test Course","problemType":"financial","problem":"This is a problem 2","status":"unseen","comments":[],"createdAt":"1672696255786","updatedAt":"1672696255786"}]  
+```
+
+Adds a follow up to the report
 ```http
 PUT/follow-up
 ```
-Adds a follow up to the report
+
 ```http
 PUT/set-problem-status
 ```
@@ -466,6 +493,11 @@ Allows the user to update his profile
 POST/add-course-to-individual
 ```
 Allows a course to be added to an individual courses
+</details>
+
+<details>
+<summary> Reviews</summary>
+  
 ```http
 GET/my-reviews
 ```
@@ -498,6 +530,11 @@ allows a trainee to delete a review and rating for one of of his courses
 DELETE/my-courses/${id}/instructors/${id}/delete-review
 ```
 allows a trainee to delete a review and rating for one of the instructors of his courses 
+</details>
+
+  <details>
+<summary> Courses</summary>
+  
 ```http
 GET/my-courses
 ```
@@ -546,10 +583,19 @@ get all data associated for the course with id provided
 GET/course-requests
 ```
 the admin gets all requests done by corporate trainees on different courses
+
+Fetches all reports issued by users
 ```http
 GET/reports
 ```
-admin all reports (problems) issued by different users
+Parameters: None.
+**Accessible by:** Admins
+
+Response
+```json
+  ["userId":"63b35175d21f21568822c464","username":"individual","courseName":"Test Course","problemType":"financial","problem":"This is a problem 2","status":"unseen","comments":[],"createdAt":"1672696255786","updatedAt":"1672696255786"},{"userId":"63b34ec7d21f21568822c219","username":"instructor2","courseName":"Test Course","problemType":"technical","problem":"This is a problem","status":"unseen","comments":[],"createdAt":"1672695695111","updatedAt":"1672695695111"}]
+```
+  
 ```http
 PUT/my-courses/edit-course/${courseid}
 ```
@@ -606,7 +652,8 @@ instructor creates new course defining its main structure
 DELETE/my-courses/${courseId}/delete-course
 ```
 instructor deletes his own course with id provided
-
+  </details>
+ 
 ## Tests
 Testing was done using postman. Check out the API References section above for all the endpoints.
 
