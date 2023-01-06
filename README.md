@@ -12,10 +12,9 @@ was a great entry and got us familiar with the technologies used in that particu
 It is also part of our curriculum CSEN 704.
 
 ## Build Status
-The project is complete as of January 2023. Unit tests could be added for stress testing. For contributing, check out the contributions sections below.
-
+The project is complete as of January 2023. Unit tests could be added for stress testing.
 ## Code Style
-The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files. Most of the code was written in camelCase except for react components which were declared using PascalCase.
+The project was built with the standard react functional component coding style along with node and express. The client side was divided into page and component folders housing each react component along with the styling. The server side was divided into routes, controllers, and middlewares to serve all the client requests. Prettier was used for formatting all the files. Most of the code was written in camelCase except for react components which were declared using PascalCase. Server routes were written using kebab-case.
 
 ## Screenshots
 <details>
@@ -83,9 +82,9 @@ The project was built with the standard react functional component coding style 
 
 ## Features
 - Cross Platform
-- Intuitive design
+- Attractive design
 - Responsive
-- Very streamlined and easy to learn
+- Very streamlined and intuitive
 - Efficient and bug free
 
 ## Code Examples
@@ -511,13 +510,57 @@ Response
 ```http
 PUT/change-password
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+  
+Request Body
+```json
+  {"password":"new password"}
+```
+
+Response
+```
+  "Password changed successfully"
+```
+  
 **Changes the password of a user that forgot the old password**
 ```http
 PUT/change-forgotten-password
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string` | **Required**. Specifies the user.|
+| `type` | `string` | **Required**. Specifies the type of the user.|
+  
+**Accessible by:** Guests
+  
+Request Body
+```json
+  {"password":"new password"}
+```
+
+Response
+```
+  "Password changed successfully"
+```
+  
 **Fetches the amount of money in the wallet of the trainee**
 ```http
 GET/wallet-money
+```
+  
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+  
+**Accessible by:** Individual Trainees
+  
+Response
+```
+"2000"
 ```
 **Pays for a course**
 ```http
@@ -527,14 +570,32 @@ POST/pay
 ```http
 PUT/refund
 ```
-**Updates a user's profile**
-```http
-PUT/update-profile
-```
 **Adds a course to an individual trainee**
 ```http
 POST/add-course-to-individual
 ```
+
+**Updates a user's profile**
+```http
+PUT/update-profile
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Corporate Trainees, Instructors
+  
+Request Body
+```json
+  {"password":"new password","email":"amrmohamedyoniss@gmail.com","firstName":Amr","lastName":"Mohamed"}
+```
+
+Response
+```json
+ {"username":"corporate2","password":"$2a$08$Ijewzx9FAKDikvHRWB.Vden4j1OAJAsNpjXf4drMT7DliStn2ggT.","type":"corporate","firstName":"Amr","lastName":"Mohamed","gender":"male","country":"United States","walletMoney":"0","courses":["63b34f81d21f21568822c23a"],"email":"amrmohamedyoniss@gmail.com"}
+
+```
+
 
 </details>
 
@@ -583,58 +644,274 @@ DELETE/my-courses/${id}/instructors/${id}/delete-review
 ```http
 GET/my-courses
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Corporate Trainees, Instructors
+  
+Request Body
+```json
+  {"password":"new password","email":"amrmohamedyoniss@gmail.com","firstName":"Amr","lastName":"Mohamed"}
+```
+
+Response
+```json
+ {"username":"corporate2","password":"$2a$08$Ijewzx9FAKDikvHRWB.Vden4j1OAJAsNpjXf4drMT7DliStn2ggT.","type":"corporate","firstName":"Amr","lastName":"Mohamed","gender":"male","country":"United States","walletMoney":"0","courses":["63b34f81d21f21568822c23a"],"email":"amrmohamedyoniss@gmail.com"}
+
+```
+
 **Fetches all published courses**
 ```http
 GET/courses
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+[{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}]
+```
+
 **Fetches the data of owned courses with any data associated with it (like instructors data, owners data ...etc)**
 
 ```http
 GET/my-populated-courses
 ```
-**Fetches the data of all courses**
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+[{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":[object],"owners":[object,object,object,object,object],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}]
+```
+**Fetches the data of all courses with any data associated with it (like instructors data, owners data ...etc)**
 ```http
 GET/populated-courses
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+[{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":[object],"owners":[object,object,object,object,object],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}]
 ```
 **Fetches the maximum and minimum price of owned courses**
 ```http
 GET/my-courses/my-course-max-min
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+{"min":"200","max":"500"}
+```
 **Fetches the maximum and minimum price of all courses**
 ```http
 GET/courses/course-max-min
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+{"min":"100","max":"550"}
 ```
 **Fetches the subjects of owned courses**
 ```http
 GET/courses/my-course-subjects
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+["subject 1","test subject"]
+```
 **Fetches the subjects of all courses**
 ```http
 GET/courses/course-subjects
 ```
-**Increament the number of view for a course**
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+["subject 1","test subject","sub","sub2"]
+**Increment the number of views for a course**
 ```http
-PUT/my-courses/increament-views${courseId}
+PUT/my-courses/increment-views${id}
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+[{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":[object],"owners":[object,object,object,object,object],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}]
+```
+
 **Fetches a specific course**
 ```http
 GET/courses/${courseId}
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
 ```
 **Fetches a specific course with any data associated with it (like instructors data, owners data ...etc)**
 ```http
 GET/populated-courses/${courseId}
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `min` | `string` | **Required**. Specifies the minimum course price.|
+| `max` | `string` | **Required**. Specifies the maximum course price.|
+| `subject` | `string` | **Required**. Specifies the subjects of the course.|
+| `rating` | `string` | **Required**. Specifies the minimum rating of the course.|
+| `searchItem` | `string` | **Required**. Specifies the search query used to search for the course..|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+[{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":[object],"owners":[object,object,object,object,object],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}]
+```
+**Adds a corporate course request**
+```http
+PUT/courses/${courseId}/course-request
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `courseId` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Corporate Trainees
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
+```
+**Accepts a corporate course request**
+```http
+PUT/courses/${courseId}/accept-course-request
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `courseId` | `string` | **Required**. Specifies the course.|
+| `traineeId` | `string` | **Required**. Specifies the trainee.|
+
+**Accessible by:** Admins
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
+```
+
+**Rejects a corporate course request**
+```http
+PUT/courses/${courseId}/reject-course-request
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `courseId` | `string` | **Required**. Specifies the course.|
+| `traineeId` | `string` | **Required**. Specifies the trainee.|
+
+**Accessible by:** Admins
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
+```
 **Fetches all corporate requests for courses**
 ```http
 GET/course-requests
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
 
+**Accessible by:** Admins
+
+Response
+```json
+{"pending":[object],"accepted":[object,object,object,object,object],"rejected":[]}
+```
 **Fetches all reports issued by users**
 ```http
 GET/reports
 ```
-Parameters: None.
-  
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
 **Accessible by:** Admins
 
 Response
@@ -645,59 +922,213 @@ Response
 ```http
 POST/create-course
 ```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description"}
+```
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
+```
 **Deletes a specified course**  
 ```http
 DELETE/my-courses/${courseId}/delete-course
 ```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `id` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
+```
+
 **Edits course details**
 ```http
 PUT/my-courses/edit-course/${courseid}
 ```
-**Sets a promotion on a course**
-```http
-PUT/my-courses/${courseid}/set-promotion
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
 ```
-**Sets a promotion for multiple courses**
-```http
-PUT/set-multiple-promotions
+Response
+```json
+{"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
 ```
 **Adds a section to a specified subtitle**
 ```http
 PUT/my-courses/edit-course/${courseid}/${subtitleid}/add-section
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+| `subtitleid` | `string` | **Required**. Specifies the subtitle.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]}
+```
+Response
+```json
+{"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
+```
+
 **Adds a subtitle to a specific course**
 ```http
 PUT/my-courses/edit-course/${courseid}/add-subtitle
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}```
+Response
+```json
+{"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
+```
+
 **Edits a specified subtitle to a specific course**
 ```http
 PUT/my-courses/edit-course/${courseid}/edit-subtitle/${subtitleid}
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Subtitle 5","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}```
+Response
+```json
+{"title":"Test Course 5","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"0","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":[],"published":true,"closed":false,"userReviews":[],"accepted":[],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 5","description":"Subtitle 1 Description","sections":[],"createdAt":"1672695681007","updatedAt":"1672695681007"}
 ```
 **Edits a specified section in a specific subtitle to a specific course**
 ```http
 PUT/my-courses/edit-course/${courseid}/${subtitleid}/edit-section/${sectionid}
 ```  
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+| `subtitleid` | `string` | **Required**. Specifies the subtitle.|
+| `sectionid` | `string` | **Required**. Specifies the section.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"title":"Test Excercise 5","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]}
+```
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 5","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
+```
+
+
+
+
 **Deletes a specified subtitle to a specific course**
 ```http
 PUT/my-courses/edit-course/${courseid}/delete-subtitle/${subtitleid}/
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
 ```
 **Deletes a specified section in a specific subtitle to a specific course**
 ```http
 PUT/my-courses/edit-course/${courseid}/${subtitleid}/delete-section/${sectionid}
 ```
-**Adds a corporate course request**
-```http
-PUT/courses/${courseId}/course-request
-```
-**Accepts a corporate course request**
-```http
-PUT/courses/${courseId}/accept-course-request
-```
-**Rejects a corporate course request**
-```http
-PUT/courses/${courseId}/reject-course-request
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+| `subtitleid` | `string` | **Required**. Specifies the subtitle.|
+| `sectionid` | `string` | **Required**. Specifies the section.|
+
+**Accessible by:** Instructors
+
+
+Response
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
 ```
 
+**Sets a promotion on a course**
+```http
+PUT/my-courses/${courseid}/set-promotion
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{
+    "percentage": "100",
+    "startDate": "2023-01-03T12:15:23.000+00:00",
+    "endDate": "2023-01-04T13:19:23.000+00:00"
+}
+```
+Response
+
+```json
+{"title":"Test Course","price":"299.99","subject":["Test Subject","Test Subject 2"],"views":"10","preview_video":"https://www.youtube.com/watch?v=C0DPdy98e4c","summary":"This is a description","instructor":["63b34ec7d21f21568822c219"],"owners":["63b35175d21f21568822c464","63b34ed7d21f21568822c21c","63b41653a4407253aa594b8e","63b41922a4407253aa594dfd","63b41b22a4407253aa59501d"],"published":true,"closed":false,"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"course review","rating":"5",}],"accepted":[{"trainee":"63b34ed7d21f21568822c21c","date":"1672696364291"},{"trainee":"63b41922a4407253aa594dfd","date":"1672747649513"},{"trainee":"63b41b22a4407253aa59501d","date":"1672747842457"}],"pending":[],"rejected":[],"subtitles":[{"title":"Test Subtitle 1","description":"Subtitle 1 Description","sections":[{"title":"Test Excercise 1","minutes":"40","description":"Excercise 1 Description","content":{"exercise":{"questions":["Question 1","Question 2"],"choices":[{"c1":"Correct Answer","c2":"Wrong 1","c3":"Wrong 2","c4":"Wrong 3"},{"c1":"Wrong 1","c2":"Wrong 2","c3":"Correct Answer","c4":"Wrong 3"}],"answers":["1","3"]},},},{"title":"Test Video 1 ","minutes":"0","description":"Video 1 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}},{"title":"Test Exercise 2","minutes":"20"},"description":"Exercise 2 Description","content":{"exercise":{"questions":["Question 3"],"choices":[{"c1":"Wrong 1","c2":"Wrong 2","c3":"Wrong 3","c4":"Correct Answer"}],"answers":["4"]}}}]},{"title":"Test Subtitle 2","description":"Subtitle 2 Description","sections":[{"title":"Test Video 2","minutes":"0","description":"Video 2 Description","content":{"video":{"link":"https://www.youtube.com/watch?v=C0DPdy98e4c"}}}]}}],"createdAt":"1672695681007","updatedAt":"1672748201914","promotion":{"percentage":"100","startDate":"1672748123000","endDate":"1672838363000","type":"admin"}}
+```
+**Sets a promotion for multiple courses**
+```http
+PUT/set-multiple-promotions
+```
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{
+    "courses":["63b34f81d21f21568822c23a","63b419a4a4407253aa594e2c"]
+    "percentage": "100",
+    "startDate": "2023-01-03T12:15:23.000+00:00",
+    "endDate": "2023-01-04T13:19:23.000+00:00"
+}
+```
+Response
+
+```json
+"done"
+```
   </details>
  
 ## Tests
