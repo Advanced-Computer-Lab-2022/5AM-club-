@@ -93,86 +93,339 @@ Admin:
   ```
   
 ## API Reference
+The API routes are divided into 4 groups.
+
+Note: All endpoints were tested using postman to ensure correct response bodies were returned.
+
+### 1-Website
+
+This endpoint fetches the contract from the database.
+
 ```http
 GET/contract
 ```
-This API fetches the contract from the database and sends it.
+
+
+Parameters: None.
+
+**Accessible by:** Instructors
+
+Response
+```json
+{"content":"This is a contract", "type":"contract"}
+```
+
+This endpoint fetches the terms of service from the database.
+
+
 ```http
 GET/terms-of-service
 ```
-Fetches the most updated version of the tos in the database and sends it.
+
+Parameters: None.
+
+**Accessible by:**  Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+{"content":"These are the terms of service", "type":"tos"}
+```
+
+### 2-User Data
+
+Fetches a user using his id.
+
 ```http
 GET/get-user
 ```
-Fetches a user using his id 
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `type` | `string` | **Required**. Specifies the type of user to be fetched.|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors, Admins
+
+Response
+```json
+{"username":"corporate","password":"$2a$08$NZlSVgrj/hjKcWOKuazxB.0vA.777qDpiuPvwt3jotgnhMVEf2YXK","type":"corporate","firstName":"","lastName":"","gender":"","country":"United States","walletMoney":"0","courses":[]}
+```
+
+Fetches all users' data.
 ```http
 GET/get-users
 ```
-gets users' data
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `type` | `string` | **Required**. Specifies the type of users to be fetched.|
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors, Admins
+
+Response
+```json
+[
+{"username":"corporate","password":"$2a$08$NZlSVgrj/hjKcWOKuazxB.0vA.777qDpiuPvwt3jotgnhMVEf2YXK","type":"corporate","firstName":"","lastName":"","gender":"","country":"United States","walletMoney":"0","courses":[]},{"username":"corporate2","password":"$2a$08$Ijewzx9FAKDikvHRWB.Vden4j1OAJAsNpjXf4drMT7DliStn2ggT.","type":"corporate","firstName":"Amr","lastName":"Mohamed","gender":"male","country":"United States","walletMoney":"0","courses":["63b34f81d21f21568822c23a"],"email":"amrmohamedyonis@gmail.com"}]
+```
+Fetches the trainee's data associated with a specific course
 ```http
 GET/get-trainee-course
 ```
-Fetches the trainee's data of a specific course
-```http
-GET/get-course-instructor
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Response
+```json
+{"courseId":"63b41b88a4407253aa5951ab","traineeId":"63b35175d21f21568822c464","progress":[false],"answers":[["-1","-1","-1","-1"]],"notes":[[]],"lastSection":"0","grades":["0"],"purchasingCost":"999.99","sent":false,"createdAt":"1672748088649","updatedAt":"1672748088649"}
 ```
 Fetches the instructor of a course
 ```http
-GET/get-user-type
+GET/get-course-instructor
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseid` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors
+
+Response
+```json
+{"username":"instructor2","password":"$2a$08$y62vIAnkebL467eUJaSW6OQOeeizU5ZgAiV6U31xdH5tjOkdBTmmC","email":"amr.younis@student.guc.edu.eg","country":"United States","rating":"0","biography":"This is my biography","courses":["63b34f81d21f21568822c23a"],"money_owed":[{"year":"2023","month":"1","amount":"599.98"}],"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"instructor review","rating":"5"}]}
 ```
 Fetches the type a user using his Id
+
+```http
+GET/get-user-type
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `userid` | `string` | **Required**. Specifies the user.|
+
+**Accessible by:** Guests
+
+Response
+```
+"Instructor"
+```
+Checks if a profile is complete for a user created by the admin
 ```http
 GET/complete-profile
 ```
-Completes the missing fields for a created user by the admin
-```http
-POST/add-admin
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+
+**Accessible by:** Corporate Trainees, Instuctors
+
+Response
+``` 
+"true"
 ```
 Adds an admin user to the database  
 ```http
-POST/add-instructor
+POST/add-admin
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Admins
+
+Request Body
+```json
+{"username":"admin","password":"$2a$08$tdURlKJUGvi9QyaTl7q3Yexc6wD.H6JNx4wQhxYxMyObnLZGPaDKy"}
+```
+Response
+```
+"Admin added successfully!"
+```
+
 Adds an instructor user to the database
 ```http
-POST/add-corporate-trainee
+POST/add-instructor
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Admins
+
+Request Body
+```json
+{"username":"instructor","password":"$2a$08$tdURlKJUGvi9QyaTl7q3Yexc6wD.H6JNx4wQhxYxMyObnLZGPaDKy"}
+```
+Response
+```
+"Instructor added successfully!"
 ```
 Adds a corporate trainee user to the database
 ```http
-POST/signUp
+POST/add-corporate-trainee
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Admins
+
+Request Body
+```json
+{"username":"corporate","password":"Corporate-@2001"}
+```
+Response
+```
+"Trainee added successfully!"
 ```
 Adds an individual trainee user to the database
 ```http
-POST/login
+POST/signUp
+```
+Parameters: None.
+
+**Accessible by:** Guests
+
+Request Body
+```json
+{"username":"admin","password":"Admin-@2001","email":"amrmohamedyonis@gmail.com","gender":"male","firstName":"Amr","lastName":"Mohamed"}
+```
+Response
+```
+"Trainee added successfully!"
 ```
 Allow the user to access the main home page
 ```http
+POST/login
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Guests
+
+Request Body
+```json
+{"username":"admin","password":"Admin-@2001"}
+```
+Response
+```json
+{
+      "type":"admin",
+      "username": "admin",
+      "country":"United States",
+    }
+```
+
+Logs out a user from the site
+```http
 GET/logout
 ```
-logs out a user from the page
-```http
-PUT/set-country
+Parameters: None.
+
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors, Admins
+
+Response
+```
+"logging out!!"
 ```
 Changes the country of a user to the selected country
 ```http
+PUT/set-country
+```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | Holds the token for authorization.|
+
+**Accessible by:** Guests, Individual Trainees, Corporate Trainees, Instructors, Admins
+
+Request Body
+```json
+{"country":"egypt"}
+```
+Changes the personal information of an instructor in the database
+```http
 PUT/edit-personal-info
 ```
-Changes information of a instructor in the database
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+**Accessible by:** Instructors
+
+Request Body
+```json
+{"email":"amrmohamedyonis2@gmail.com","biography":"This is my biography2"}
+```
+Response
+```json
+{"username":"instructor2","password":"$2a$08$y62vIAnkebL467eUJaSW6OQOeeizU5ZgAiV6U31xdH5tjOkdBTmmC","email":"amrmohamedyonis2@gmail.com","country":"United States","rating":"0","biography":"This is my biography2","courses":["63b34f81d21f21568822c23a"],"money_owed":[{"year":"2023","month":"1","amount":"599.98"}],"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"instructor review","rating":"5"}]}
+```
+Updates the data of a trainee for a specific course
 ```http
 PUT/edit-trainee-course
 ```
-allows the instructor to change the 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `traineeId` | `string` | **Required**. Specifies the trainee.|
+| `courseId` | `string` | **Required**. Specifies the course.|
+
+**Accessible by:** Individual Trainees, Corporate Trainees.
+
+Request Body
+```json 
+{"progress":[true],"answers":[["-1","-1","-1","-1"]],"notes":[[]],"lastSection":"0","grades":["0"]}
+
+```
+Response
+```
+{"courseId":"63b41b88a4407253aa5951ab","63b35175d21f21568822c464","progress":[true],"answers":[["-1","-1","-1","-1"]],"notes":[[]],"lastSection":"0","grades":["0"],"purchasingCost":"999.99","sent":false,"createdAt":"1672748088649","updatedAt":"1672748088649"}
+```
+Sends an email to a user to change his/her password
 ```http
 PUT/change-password-email
 ```
-Allowes a user to change his/her password through an email
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `email` | `string` | **Required**. The user's email.|
+
+**Accessible by:** Individual Trainees, Coporate Trainees, Instructors
+
+Response
+```
+"email sent"
+```
+Submits a report from a user
 ```http
 POST/report-problem
 ```
-allowes a user to report a problem
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `authorization` | `string` | **Required**. Holds the token for authorization.|
+
+
+**Accessible by:** Individual Trainees, Coporate Trainees, Instructors
+
+Request Body
+```json{
+"courseName":"Test Course",
+"problemType":"technical",
+"problem":"This is a problem"}
+```
+
+Response
+```
+"Problem reported successfully!"
+```
+
+Fetches all the submitted problems from the users
 ```http
 GET/view-problems
 ```
-allowes the admin to view the sent problems from the users
+
 ```http
 PUT/follow-up
 ```
