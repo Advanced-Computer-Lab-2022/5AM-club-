@@ -112,7 +112,7 @@ Note: All endpoints were tested using postman to ensure correct response bodies 
 <details>
 <summary> Website</summary>
 
-This endpoint fetches the contract from the database.
+**This endpoint fetches the contract from the database**
 
 ```http
 GET/contract
@@ -128,7 +128,7 @@ Response
 {"content":"This is a contract", "type":"contract"}
 ```
 
-This endpoint fetches the terms of service from the database.
+**This endpoint fetches the terms of service from the database**
 
 
 ```http
@@ -148,7 +148,7 @@ Response
 <details>
 <summary>User Data</summary>
 
-Fetches a user using his id.
+**Fetches a user using his id**
 
 ```http
 GET/get-user
@@ -166,7 +166,7 @@ Response
 {"username":"corporate","password":"$2a$08$NZlSVgrj/hjKcWOKuazxB.0vA.777qDpiuPvwt3jotgnhMVEf2YXK","type":"corporate","firstName":"","lastName":"","gender":"","country":"United States","walletMoney":"0","courses":[]}
 ```
 
-Fetches all users' data.
+**Fetches all users' data**
 ```http
 GET/get-users
 ```
@@ -182,7 +182,7 @@ Response
 [
 {"username":"corporate","password":"$2a$08$NZlSVgrj/hjKcWOKuazxB.0vA.777qDpiuPvwt3jotgnhMVEf2YXK","type":"corporate","firstName":"","lastName":"","gender":"","country":"United States","walletMoney":"0","courses":[]},{"username":"corporate2","password":"$2a$08$Ijewzx9FAKDikvHRWB.Vden4j1OAJAsNpjXf4drMT7DliStn2ggT.","type":"corporate","firstName":"Amr","lastName":"Mohamed","gender":"male","country":"United States","walletMoney":"0","courses":["63b34f81d21f21568822c23a"],"email":"amrmohamedyonis@gmail.com"}]
 ```
-Fetches the trainee's data associated with a specific course
+**Fetches the trainee's data associated with a specific course**
 ```http
 GET/get-trainee-course
 ```
@@ -197,7 +197,7 @@ Response
 ```json
 {"courseId":"63b41b88a4407253aa5951ab","traineeId":"63b35175d21f21568822c464","progress":[false],"answers":[["-1","-1","-1","-1"]],"notes":[[]],"lastSection":"0","grades":["0"],"purchasingCost":"999.99","sent":false,"createdAt":"1672748088649","updatedAt":"1672748088649"}
 ```
-Fetches the instructor of a course
+**Fetches the instructor of a course**
 ```http
 GET/get-course-instructor
 ```
@@ -211,7 +211,7 @@ Response
 ```json
 {"username":"instructor2","password":"$2a$08$y62vIAnkebL467eUJaSW6OQOeeizU5ZgAiV6U31xdH5tjOkdBTmmC","email":"amr.younis@student.guc.edu.eg","country":"United States","rating":"0","biography":"This is my biography","courses":["63b34f81d21f21568822c23a"],"money_owed":[{"year":"2023","month":"1","amount":"599.98"}],"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"instructor review","rating":"5"}]}
 ```
-Fetches the type a user using his Id
+**Fetches the type a user using his Id**
 
 ```http
 GET/get-user-type
@@ -226,7 +226,7 @@ Response
 ```
 "Instructor"
 ```
-Checks if a profile is complete for a user created by the admin
+**Checks if a profile is complete for a user created by the admin**
 ```http
 GET/complete-profile
 ```
@@ -241,7 +241,7 @@ Response
 ``` 
 "true"
 ```
-Adds an admin user to the database  
+**Adds an admin user to the database**  
 ```http
 POST/add-admin
 ```
@@ -260,7 +260,7 @@ Response
 "Admin added successfully!"
 ```
 
-Adds an instructor user to the database
+**Adds an instructor user to the database**
 ```http
 POST/add-instructor
 ```
@@ -278,7 +278,7 @@ Response
 ```
 "Instructor added successfully!"
 ```
-Adds a corporate trainee user to the database
+**Adds a corporate trainee user to the database**
 ```http
 POST/add-corporate-trainee
 ```
@@ -296,7 +296,7 @@ Response
 ```
 "Trainee added successfully!"
 ```
-Adds an individual trainee user to the database
+**Adds an individual trainee user to the database**
 ```http
 POST/signUp
 ```
@@ -312,7 +312,7 @@ Response
 ```
 "Trainee added successfully!"
 ```
-Allow the user to access the main home page
+**Allow the user to access the main home page**
 ```http
 POST/login
 ```
@@ -335,7 +335,7 @@ Response
     }
 ```
 
-Logs out a user from the site
+**Logs out a user from the site**
 ```http
 GET/logout
 ```
@@ -347,7 +347,7 @@ Response
 ```
 "logging out!!"
 ```
-Changes the country of a user to the selected country
+**Changes the country of a user to the selected country**
 ```http
 PUT/set-country
 ```
@@ -361,7 +361,7 @@ Request Body
 ```json
 {"country":"egypt"}
 ```
-Changes the personal information of an instructor in the database
+**Changes the personal information of an instructor in the database**
 ```http
 PUT/edit-personal-info
 ```
@@ -379,7 +379,7 @@ Response
 ```json
 {"username":"instructor2","password":"$2a$08$y62vIAnkebL467eUJaSW6OQOeeizU5ZgAiV6U31xdH5tjOkdBTmmC","email":"amrmohamedyonis2@gmail.com","country":"United States","rating":"0","biography":"This is my biography2","courses":["63b34f81d21f21568822c23a"],"money_owed":[{"year":"2023","month":"1","amount":"599.98"}],"userReviews":[{"user":"63b41b22a4407253aa59501d","review":"instructor review","rating":"5"}]}
 ```
-Updates the data of a trainee for a specific course
+**Updates the data of a trainee for a specific course**
 ```http
 PUT/edit-trainee-course
 ```
@@ -399,7 +399,7 @@ Response
 ```
 {"courseId":"63b41b88a4407253aa5951ab","63b35175d21f21568822c464","progress":[true],"answers":[["-1","-1","-1","-1"]],"notes":[[]],"lastSection":"0","grades":["0"],"purchasingCost":"999.99","sent":false,"createdAt":"1672748088649","updatedAt":"1672748088649"}
 ```
-Sends an email to a user to change his/her password
+**Sends an email to a user to change his/her password**
 ```http
 PUT/change-password-email
 ```
@@ -413,7 +413,7 @@ Response
 ```
 "email sent"
 ```
-Submits a report from a user
+**Submits a report from a user**
 ```http
 POST/report-problem
 ```
@@ -437,7 +437,7 @@ Response
 "Problem reported successfully!"
 ```
 
-Fetches all the submitted problems by a user
+**Fetches all the submitted problems by a user**
 ```http
 GET/view-problems
 ```
@@ -452,206 +452,252 @@ Response
   [{"userId":"63b35175d21f21568822c464","username":"individual","courseName":"Test Course","problemType":"financial","problem":"This is a problem 2","status":"unseen","comments":[],"createdAt":"1672696255786","updatedAt":"1672696255786"}]  
 ```
 
-Adds a follow up to the report
+**Adds a follow up to the report**
 ```http
 PUT/follow-up
 ```
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string` | **Required**. Specifies the report.|
 
+**Accessible by:** Individual Trainees, Corporate Trainees, Instructors
+
+Request Body
+```json
+{"description":"Follow up",
+"createdAt":"2023-01-03T12:00:00.947Z"}  
+```
+  
+Response 
+```
+"comment added successfully" 
+```
+**Sets the problem status**  
 ```http
 PUT/set-problem-status
 ```
-allowes the admin to set the problem status 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `id` | `string` | **Required**. Specifies the report.|
+
+**Accessible by:** Admins
+
+Request Body
+```json
+  {status:"resolved"}
+```
+  
+Response 
+```json
+["userId":"63b41653a4407253aa594b8e","username":"hadwa.hassan","courseName":"Test Course","problemType":"technical","problem":"can't refund","status":"resolved","comments":[{"description":"Follow up","createdAt":"2023-01-03T12:00:00.947Z"}],"createdAt":"1672747084528","updatedAt":"1672747227527"},{"userId":"63b34ec7d21f21568822c219","username":"instructor2","courseName":"Test Course","problemType":"technical","problem":"This is a problem","status":"unseen","comments":[],"createdAt":"1672695695111","updatedAt":"1672695695111"}]
+```
+**Sends a certificate to the trainees by email upon finishing a course**
 ```http
 PUT/send-certificate
 ```
-sends a certificate to the trainees upon finishing a course 
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `courseId` | `string` | **Required**. Specifies the course.|
+| `traineeId` | `string` | **Required**. Specifies the trainee.|
+
+
+**Accessible by:** Individual Trainees, Corporate Trainees
+
+Response
+```
+"email sent"
+```
+**Changes the password for a user** 
 ```http
 PUT/change-password
 ```
-allowes user to change the password 
+**Changes the password of a user that forgot the old password**
 ```http
 PUT/change-forgotten-password
 ```
-allowes user to change password via email
+**Fetches the amount of money in the wallet of the trainee**
 ```http
 GET/wallet-money
 ```
-gets the amount of money in the wallet of the trainee
+**Pays for a course**
 ```http
 POST/pay
 ```
-allowes trainees to pay for courses
+**Requests a refund**
 ```http
 PUT/refund
 ```
-Allows trainees to request a refund
+**Updates a user's profile**
 ```http
 PUT/update-profile
 ```
-Allows the user to update his profile
+**Adds a course to an individual trainee**
 ```http
 POST/add-course-to-individual
 ```
-Allows a course to be added to an individual courses
+
 </details>
 
 <details>
 <summary> Reviews</summary>
   
+**Fetches the reviews of an instructor**
 ```http
 GET/my-reviews
 ```
-fetches the reviews of an instructor
+**Fetches a trainee's reviews for a specific course and its instructors**
 ```http
 GET/my-courses/${id}/get-my-reviews
 ```
-fetches a trainee reviews for a specific course and its instructors
+**Adds a review and rating for one of the instructors**
 ```http
 POST/my-courses/${id}/instructors/${id}/add-review
 ```
-allows a trainee to add a review and rating for one of the instructors of his courses 
+**Adds a review and rating for an owned course**
 ```http
 POST/my-courses/${id}/add-review
 ```
-allows a trainee to add a review and rating for an one of his courses
+**Edits a review and rating for one of the instructors** 
 ```http
 PUT/my-courses/${id}/instructors/${id}/edit-review
 ```
-allows a trainee to edit a review and rating for one of the instructors of his courses 
+**Edits a review and rating for an owned course**
+
 ```http
 PUT/my-courses/${id}/edit-review
 ```
-allows a trainee to edit a review and rating for one of of his courses 
+**Deletes a review and rating for an owned course**
 ``` http
 DELETE/my-courses/${id}/delete-review
 ```
-allows a trainee to delete a review and rating for one of of his courses 
+**Deletes a review and rating for one of the instructors** 
 ```http
 DELETE/my-courses/${id}/instructors/${id}/delete-review
 ```
-allows a trainee to delete a review and rating for one of the instructors of his courses 
 </details>
 
   <details>
 <summary> Courses</summary>
   
+**Fetches the user's courses**
 ```http
 GET/my-courses
 ```
-get the user courses (user can be Trainee(individual/corporate) or instructor)
-```http
-GET/my-courses${addCourse}
-```
-same as get/mycourses above but get a token as parameter to add a new course for individual trainee(this endPoint is dedicated for individual trainee users)
+**Fetches all published courses**
 ```http
 GET/courses
 ```
-gets all published courses
+**Fetches the data of owned courses with any data associated with it (like instructors data, owners data ...etc)**
+
 ```http
 GET/my-populated-courses
 ```
-get the data of my courses (as authorized type) with any data associated to(like instructors data, owners data ...etc)
+**Fetches the data of all courses**
 ```http
 GET/populated-courses
 ```
-get all details of courses (not only related to users)
+**Fetches the maximum and minimum price of owned courses**
 ```http
 GET/my-courses/my-course-max-min
 ```
-get user courses with filter on price to be between max and min values provided
+**Fetches the maximum and minimum price of all courses**
 ```http
 GET/courses/course-max-min
 ```
-get all courses with filter on price to be between max and min values provided
+**Fetches the subjects of owned courses**
+```http
+GET/courses/my-course-subjects
+```
+**Fetches the subjects of all courses**
 ```http
 GET/courses/course-subjects
 ```
-get all courses with filter on their subjects
+**Increament the number of view for a course**
 ```http
 PUT/my-courses/increament-views${courseId}
 ```
-increament the number of view for course with id provided
+**Fetches a specific course**
 ```http
 GET/courses/${courseId}
 ```
-get the course with id provided 
+**Fetches a specific course with any data associated with it (like instructors data, owners data ...etc)**
 ```http
 GET/populated-courses/${courseId}
 ```
-get all data associated for the course with id provided
+**Fetches all corporate requests for courses**
 ```http
 GET/course-requests
 ```
-the admin gets all requests done by corporate trainees on different courses
 
-Fetches all reports issued by users
+**Fetches all reports issued by users**
 ```http
 GET/reports
 ```
 Parameters: None.
+  
 **Accessible by:** Admins
 
 Response
 ```json
   ["userId":"63b35175d21f21568822c464","username":"individual","courseName":"Test Course","problemType":"financial","problem":"This is a problem 2","status":"unseen","comments":[],"createdAt":"1672696255786","updatedAt":"1672696255786"},{"userId":"63b34ec7d21f21568822c219","username":"instructor2","courseName":"Test Course","problemType":"technical","problem":"This is a problem","status":"unseen","comments":[],"createdAt":"1672695695111","updatedAt":"1672695695111"}]
 ```
-  
-```http
-PUT/my-courses/edit-course/${courseid}
-```
-instructor edit his own course content (edit the course with provided id)
-```http
-PUT/my-courses/${courseid}/set-promotion
-```
-instructor set a promotion (discount) for limited time on his course with id provided
-```http
-PUT/my-courses/edit-course/${courseid}/${subtitleid}/add-section
-```
-instructor add section to his course with id provided inside subtitle with provided id
-```http
-PUT/set-multiple-promotions
-```
-admin set discount on many courses at once
-```http
-PUT/my-courses/edit-course/${courseid}/add-subtitle
-```
-instructor add subtitle to his course with id provided 
-```http
-PUT/my-courses/edit-course/${courseid}/edit-subtitle/${subtitleid}
-```
-instructor edit the content of subtitle of id provided inside his course with provided id
-```http
-PUT/my-courses/edit-course/${courseid}/${subtitleid}/edit-section/${sectionid}
-```
-instructor edit the content of section with id provided inside subtitle of id provided inside his course with provided id
-```http
-PUT/my-courses/edit-course/${courseid}/delete-subtitle/${subtitleid}/
-```
-instructor delete a subtitle with id provided in his course with id provided
-```http
-PUT/my-courses/edit-course/${courseid}/${subtitleid}/delete-section/${sectionid}
-```
-instructor delete a section with id provided inside subtitle with id provided in his course with id provided
-```http
-PUT/courses/${courseId}/course-request
-```
-corporate trainee issue new request for a course with id provided
-```http
-PUT/courses/${courseId}/accept-course-request
-```
-admin accepts the request issued by corporate trainee
-```http
-PUT/courses/${courseId}/reject-course-request
-```
-admin rejects the request issued by corporate trainee
+**Creates a new course**
 ```http
 POST/create-course
 ```
-instructor creates new course defining its main structure
+**Deletes a specified course**  
 ```http
 DELETE/my-courses/${courseId}/delete-course
 ```
-instructor deletes his own course with id provided
+**Edits course details**
+```http
+PUT/my-courses/edit-course/${courseid}
+```
+**Sets a promotion on a course**
+```http
+PUT/my-courses/${courseid}/set-promotion
+```
+**Sets a promotion for multiple courses**
+```http
+PUT/set-multiple-promotions
+```
+**Adds a section to a specified subtitle**
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/add-section
+```
+**Adds a subtitle to a specific course**
+```http
+PUT/my-courses/edit-course/${courseid}/add-subtitle
+```
+**Edits a specified subtitle to a specific course**
+```http
+PUT/my-courses/edit-course/${courseid}/edit-subtitle/${subtitleid}
+```
+**Edits a specified section in a specific subtitle to a specific course**
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/edit-section/${sectionid}
+```  
+**Deletes a specified subtitle to a specific course**
+```http
+PUT/my-courses/edit-course/${courseid}/delete-subtitle/${subtitleid}/
+```
+**Deletes a specified section in a specific subtitle to a specific course**
+```http
+PUT/my-courses/edit-course/${courseid}/${subtitleid}/delete-section/${sectionid}
+```
+**Adds a corporate course request**
+```http
+PUT/courses/${courseId}/course-request
+```
+**Accepts a corporate course request**
+```http
+PUT/courses/${courseId}/accept-course-request
+```
+**Rejects a corporate course request**
+```http
+PUT/courses/${courseId}/reject-course-request
+```
+
   </details>
  
 ## Tests
@@ -660,7 +706,7 @@ Testing was done using postman. Check out the API References section above for a
 ## How to Use?
 Run this command in the server folder
 ```bash
-   node index
+  node index
 ```
 and this command in the client folder
 ```bash
